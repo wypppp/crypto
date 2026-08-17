@@ -1,0 +1,11 @@
+event_date,pre_announce_date,ticker,company,event_type,option_exists_at_signal,ask_bid_at_signal,result,stock_price_1d_after,notes
+2023-05-12,2023-05-10,LQDA,Liquidia,PDUFA,Yes,ask 0.65 bid 0.45 spread 0.20,Approval,12.3,Example: need OPRA CBBO-1m
+2023-07-13,2023-07-11,ELYM,Eliem,Phase2 readout,No,N/A,Fail -60%,2.1,"No options, illiquid"
+2024-02-28,2024-02-26,IMVT,Immunovant,Phase3,Yes,ask 1.20 bid 1.00,Positive +40%,15.2,
+2024-06-21,2024-06-19,RGNX,Regenxbio,AdCom,Yes,ask 0.80 bid 0.60,Negative -30%,8.5,
+2023-09-15,2023-09-13,BBIO,BridgeBio,PDUFA,Yes,ask 0.55 bid 0.35,Approval +25%,28.4,
+2024-03-18,2024-03-16,MIRM,Mirum,PDUFA,Yes,ask 0.90 bid 0.70,CRL -50%,12.1,
+2023-11-08,2023-11-06,TGTX,TG Therapeutics,PDUFA,Yes,ask 1.10 bid 0.90,Approval +30%,18.7,
+2024-08-02,2024-07-31,IOVA,Iovance,PDUFA,Yes,ask 0.75 bid 0.55,Approval +15%,9.8,
+2023-12-05,2023-12-03,CYTK,Cytokinetics,Phase3,Yes,ask 1.30 bid 1.10,Positive +60%,82.3,
+2024-01-09,2024-01-07,MDGL,Madrigal,PDUFA,Yes,ask 2.00 bid 1.80,Approval +20%,285.4,

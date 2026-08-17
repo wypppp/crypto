@@ -1,0 +1,19 @@
+# Databento OPRA Procurement Conditions (official)
+- Dataset: OPRA.PILLAR
+- Schemas: CMBP-1, CBBO-1s, CBBO-1m, TCBBO, Trades, OHLCV-1s/1m/1h/1d, Definition, Statistics, Status
+- Pricing (per GB uncompressed DBN):
+  - CMBP-1 $0.16/GB ($0.20/GB with extra)
+  - TCBBO $210/GB
+  - CBBO-1s $2.00/GB, CBBO-1m $2.00/GB
+  - Trades $280/GB
+  - Definition $5/GB
+- Plans:
+  - Usage-based historical remains core, pay-as-you-go
+  - Standard plan $199/month bridges gap (from blog)
+- History start: 2013-04 for OPRA equity-options (from options-backtest-engine repo: backtest window 2013->2025 includes 2020 and 2022 vol)
+- Retention: historical API delayed 1 hour, next day 09:30 release, can batch download and keep files (DBN/CSV/JSON, Zstd compression)
+- Delisted: Instrument IDs include delisted? Definition schema contains instrument definitions including delisted; need to resolve via symbology.resolve
+- CBBO/NBBO granularity: CBBO-1s = 1-second conflated NBBO, CBBO-1m = 1-min, TCBBO = tick-level top-of-book, CMBP-1 = tick-level order book deltas
+- Corporate actions: via Definition schema expirations, tick sizes, symbols as time series, symbology parent/continuous
+- Symbol mapping: symbology.resolve endpoint free, converts raw_symbol <-> instrument_id <-> parent <-> continuous
+- Access: Historical client libraries Python/C++/Rust, batch download via Download center, no size limit, recommend batch for >5GB
