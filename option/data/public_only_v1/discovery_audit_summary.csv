@@ -1,0 +1,14 @@
+﻿public_study_id,candidate_id,sample_row_count,mechanism_specific_name_count,ambiguous_name_count,false_positive_name_count,s1_sample_disposition,inference_limit
+PUB-A01,A01,10,0,10,0,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A02,A02,10,0,1,9,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A03,A03,10,0,1,9,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A04,A04,10,8,1,1,specific_rows_exist_but_not_universe_adjudication,deterministic_sample_distribution_not_full-universe_rate
+PUB-A05,A05,10,10,0,0,specific_rows_exist_but_not_universe_adjudication,deterministic_sample_distribution_not_full-universe_rate
+PUB-A06,A06,10,0,7,3,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A07,A07,10,5,3,2,specific_rows_exist_but_not_universe_adjudication,deterministic_sample_distribution_not_full-universe_rate
+PUB-A08,A08,2,0,1,1,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A09,A09,10,0,1,9,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A10,A10,10,0,0,10,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A11,A11,10,0,1,9,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A12,A12,10,0,4,6,no_specific_row_in_sample,deterministic_sample_distribution_not_full-universe_rate
+PUB-A13,A13,10,6,4,0,specific_rows_exist_but_not_universe_adjudication,deterministic_sample_distribution_not_full-universe_rate

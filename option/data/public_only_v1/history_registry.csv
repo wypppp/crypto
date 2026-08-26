@@ -1,0 +1,2 @@
+run_id,measurement_start_date,measurement_end_date,study_id,point_count,raw_file_count,manifest_path,manifest_sha256,hash_verified,role,availability_limit
+20260825T083300+0800,2026-08-18,2026-08-24,public-only-v1-history-current-view,5,10,history/20260825T083300+0800/manifest.json,748b282ab950c5984d924a3a7a2ca019725c4a42cc1ffdd79a753627e644684f,1,historical_current_view_shape_check,Cannot establish original publication latency or absence of revisions

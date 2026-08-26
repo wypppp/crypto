@@ -1,0 +1,6 @@
+enabled,candidate_id,legacy_candidate_id,ps_id,ps_name,port_id,port_name,port_type_id,data_type,selection_reason,internal_point_id,unique_mapping_status
+1,PUB-A01,A01,3ae5dcdbb5cd477996d267c2887a5afc,沙河市安全实业有限公司,87a0c4c824284813bf83052321482592,三线玻璃熔窑,port_type2,2061,Named production line and verified public columns; retained as no-numeric control,,not_applicable_public_only
+1,PUB-A01,A01,9dfc64d77ea04c729f700936637c84e6,河北正大玻璃有限公司,715f1873be964e15be8e13bc0176f8c6,新一线玻璃熔窑废气排放口,port_type2,2061,Named glass line with numeric public response,,not_applicable_public_only
+1,PUB-A04,A04,093f3d5039404b028b165fe301766caf,冀南钢铁集团有限公司,846a9beca37b434b847d7075ceea1500,DA015_1#高炉出铁场废气排放口,port_type2,2061,Blast-furnace number and cast-house name are explicit but iron-output mapping remains unproven,,not_applicable_public_only
+1,PUB-A05,A05,6aca7464ed854b81953245facb021d7d,河北中煤旭阳能源有限公司,a819212830ef4ba699245fe2eb074871,6号焦炉烟囱,port_type2,2061,Oven number is explicit and public visibility transition was observed,,not_applicable_public_only
+1,PUB-A07,A07,b3d071940fbc4dcc89920765d3bb5e5e,唐山三友氯碱有限责任公司,09e432c2b02e49dcb01e0e8adccc2621,聚合一期流化床VOCs固定在线出口,port_type3,2061,Process and phase name are explicit but main-line load mapping remains unproven,,not_applicable_public_only

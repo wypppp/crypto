@@ -1,0 +1,392 @@
+{
+  "capture_seconds": 63.127101338,
+  "checks": {
+    "all_expected_stream_groups_observed": true,
+    "has_run_complete": true,
+    "has_run_start": true,
+    "market_discovery_succeeded": true,
+    "no_decode_or_clock_errors": true,
+    "no_threads_left_alive": true,
+    "server_clock_sampled": true,
+    "writer_dropped_zero_events": true,
+    "writer_worker_healthy": true
+  },
+  "clock_samples_n": 1,
+  "errors": {
+    "clob_ws|stream_error": 1
+  },
+  "events_n": 25037,
+  "input": "crypto/prediction_market_research/data/shadow/smoke10_2026-08-25.jsonl.gz",
+  "markets_observed_n": 15,
+  "missing_expected_stream_groups": [],
+  "ready_for_pilot_capture": true,
+  "run_complete": {
+    "binance": {
+      "connections_n": 0,
+      "errors_n": 0,
+      "event_counts": {},
+      "messages_n": 0,
+      "reconnects_n": 0,
+      "skipped_messages_n": 0
+    },
+    "clob": {
+      "connections_n": 2,
+      "errors_n": 1,
+      "event_counts": {
+        "best_bid_ask": 1068,
+        "book": 484,
+        "last_trade_price": 208,
+        "new_market": 23,
+        "price_change": 20284,
+        "protocol_message": 1
+      },
+      "messages_n": 22068,
+      "reconnects_n": 1,
+      "skipped_messages_n": 0
+    },
+    "clock_errors_n": 0,
+    "clock_samples_n": 1,
+    "coinbase": {
+      "connections_n": 1,
+      "errors_n": 0,
+      "event_counts": {
+        "heartbeat": 165,
+        "subscriptions": 1,
+        "ticker": 953
+      },
+      "messages_n": 1119,
+      "reconnects_n": 0,
+      "skipped_messages_n": 0
+    },
+    "discovery_errors_n": 0,
+    "discovery_refreshes_n": 1,
+    "duration_seconds": 63.127103920999616,
+    "kraken": {
+      "connections_n": 1,
+      "errors_n": 0,
+      "event_counts": {
+        "protocol_message": 56,
+        "snapshot": 3,
+        "update": 1299
+      },
+      "messages_n": 1358,
+      "reconnects_n": 0,
+      "skipped_messages_n": 0
+    },
+    "market_revision": 1,
+    "markets_n": 15,
+    "rtds": {
+      "connections_n": 1,
+      "errors_n": 0,
+      "event_counts": {
+        "update": 477
+      },
+      "messages_n": 477,
+      "reconnects_n": 0,
+      "skipped_messages_n": 795
+    },
+    "threads_still_alive": [],
+    "transport": "public_websocket_shadow_only",
+    "writer": {
+      "events_dropped_n": 0,
+      "events_enqueued_n": 25036,
+      "events_written_n": 25036,
+      "queue_high_water_n": 121,
+      "queue_pending_n": 0,
+      "worker_error": null
+    }
+  },
+  "source_counts": {
+    "clob": 1,
+    "clob_ws": 22071,
+    "coinbase_ws": 1122,
+    "gamma": 1,
+    "kraken_ws": 1361,
+    "polymarket_rtds": 479,
+    "shadow_ws": 2
+  },
+  "source_event_counts": {
+    "clob_ws|best_bid_ask": 1068,
+    "clob_ws|book": 484,
+    "clob_ws|last_trade_price": 208,
+    "clob_ws|new_market": 23,
+    "clob_ws|price_change": 20284,
+    "clob_ws|protocol_message": 1,
+    "clob_ws|stream_connected": 2,
+    "clob_ws|stream_error": 1,
+    "clob|server_time": 1,
+    "coinbase_ws|heartbeat": 165,
+    "coinbase_ws|protocol_control": 2,
+    "coinbase_ws|stream_connected": 1,
+    "coinbase_ws|subscriptions": 1,
+    "coinbase_ws|ticker": 953,
+    "gamma|discovery_update": 1,
+    "kraken_ws|protocol_control": 2,
+    "kraken_ws|protocol_message": 56,
+    "kraken_ws|snapshot": 3,
+    "kraken_ws|stream_connected": 1,
+    "kraken_ws|update": 1299,
+    "polymarket_rtds|protocol_empty": 1,
+    "polymarket_rtds|stream_connected": 1,
+    "polymarket_rtds|update": 477,
+    "shadow_ws|run_complete": 1,
+    "shadow_ws|run_start": 1
+  },
+  "source_message_age": {
+    "clob_ws": {
+      "intervals_n": 22067,
+      "max_ms": 26881.540762,
+      "mean_ms": 4503.181778270885,
+      "negative_age_n": 0,
+      "observed_span_seconds": 0.0,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 5000,
+      "p95_upper_bound_ms": 30000
+    },
+    "coinbase_ws": {
+      "intervals_n": 1118,
+      "max_ms": 2975.029893,
+      "mean_ms": 1335.1138069812155,
+      "negative_age_n": 0,
+      "observed_span_seconds": 0.0,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 2000,
+      "p95_upper_bound_ms": 5000
+    },
+    "kraken_ws": {
+      "intervals_n": 1301,
+      "max_ms": 2669.039854,
+      "mean_ms": 1355.7881373520365,
+      "negative_age_n": 0,
+      "observed_span_seconds": 0.0,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 2000,
+      "p95_upper_bound_ms": 5000
+    },
+    "polymarket_rtds": {
+      "intervals_n": 477,
+      "max_ms": 4218.126945,
+      "mean_ms": 2841.798848125785,
+      "negative_age_n": 0,
+      "observed_span_seconds": 0.0,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 5000,
+      "p95_upper_bound_ms": 5000
+    }
+  },
+  "stream_errors_present": true,
+  "stream_group_counts": {
+    "clob_ws|BTC|15m": 3705,
+    "clob_ws|BTC|5m": 10914,
+    "clob_ws|ETH|15m": 1777,
+    "clob_ws|ETH|5m": 2732,
+    "clob_ws|SOL|15m": 946,
+    "clob_ws|SOL|5m": 1970,
+    "coinbase_ws|BTC": 616,
+    "coinbase_ws|ETH": 245,
+    "coinbase_ws|SOL": 257,
+    "kraken_ws|BTC": 495,
+    "kraken_ws|ETH": 364,
+    "kraken_ws|SOL": 442,
+    "polymarket_rtds|crypto_prices_chainlink|BTC": 53,
+    "polymarket_rtds|crypto_prices_chainlink|ETH": 53,
+    "polymarket_rtds|crypto_prices_chainlink|SOL": 53,
+    "polymarket_rtds|crypto_prices_twap_sixty|BTC": 53,
+    "polymarket_rtds|crypto_prices_twap_sixty|ETH": 53,
+    "polymarket_rtds|crypto_prices_twap_sixty|SOL": 53,
+    "polymarket_rtds|crypto_prices_twap_thirty|BTC": 53,
+    "polymarket_rtds|crypto_prices_twap_thirty|ETH": 53,
+    "polymarket_rtds|crypto_prices_twap_thirty|SOL": 53
+  },
+  "stream_group_gaps": {
+    "clob_ws|BTC|15m": {
+      "intervals_n": 3704,
+      "max_ms": 4020.035091,
+      "mean_ms": 14.81507089470844,
+      "observed_span_seconds": 54.875022594,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 100
+    },
+    "clob_ws|BTC|5m": {
+      "intervals_n": 10913,
+      "max_ms": 4016.04599,
+      "mean_ms": 5.032128981673244,
+      "observed_span_seconds": 54.915623577,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 25
+    },
+    "clob_ws|ETH|15m": {
+      "intervals_n": 1776,
+      "max_ms": 4055.082886,
+      "mean_ms": 30.794577368243278,
+      "observed_span_seconds": 54.691169406,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 250
+    },
+    "clob_ws|ETH|5m": {
+      "intervals_n": 2731,
+      "max_ms": 4056.314351,
+      "mean_ms": 20.087283335408245,
+      "observed_span_seconds": 54.858370789,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 100
+    },
+    "clob_ws|SOL|15m": {
+      "intervals_n": 945,
+      "max_ms": 4812.495827,
+      "mean_ms": 57.620801496296345,
+      "observed_span_seconds": 54.451657414,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 500
+    },
+    "clob_ws|SOL|5m": {
+      "intervals_n": 1969,
+      "max_ms": 4122.166778,
+      "mean_ms": 27.844051024885704,
+      "observed_span_seconds": 54.824936468,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 250
+    },
+    "coinbase_ws|BTC": {
+      "intervals_n": 615,
+      "max_ms": 2015.892384,
+      "mean_ms": 94.42846920650405,
+      "observed_span_seconds": 58.073508562,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 25,
+      "p95_upper_bound_ms": 500
+    },
+    "coinbase_ws|ETH": {
+      "intervals_n": 244,
+      "max_ms": 2024.299247,
+      "mean_ms": 238.49009241803265,
+      "observed_span_seconds": 58.19158255,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 2000
+    },
+    "coinbase_ws|SOL": {
+      "intervals_n": 256,
+      "max_ms": 2015.028554,
+      "mean_ms": 226.85261998828128,
+      "observed_span_seconds": 58.074270717,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 2000
+    },
+    "kraken_ws|BTC": {
+      "intervals_n": 494,
+      "max_ms": 1947.598789,
+      "mean_ms": 112.27284135627524,
+      "observed_span_seconds": 55.46278363,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 1000
+    },
+    "kraken_ws|ETH": {
+      "intervals_n": 363,
+      "max_ms": 3667.71395,
+      "mean_ms": 145.02532697245184,
+      "observed_span_seconds": 52.644193691,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 1000
+    },
+    "kraken_ws|SOL": {
+      "intervals_n": 441,
+      "max_ms": 3438.874559,
+      "mean_ms": 127.29317076190483,
+      "observed_span_seconds": 56.136288306,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 10,
+      "p95_upper_bound_ms": 1000
+    },
+    "polymarket_rtds|crypto_prices_chainlink|BTC": {
+      "intervals_n": 52,
+      "max_ms": 2397.90562,
+      "mean_ms": 1067.5715504423079,
+      "observed_span_seconds": 55.513720623,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 5000
+    },
+    "polymarket_rtds|crypto_prices_chainlink|ETH": {
+      "intervals_n": 52,
+      "max_ms": 2319.080506,
+      "mean_ms": 1068.2739533653844,
+      "observed_span_seconds": 55.550245575,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 2000
+    },
+    "polymarket_rtds|crypto_prices_chainlink|SOL": {
+      "intervals_n": 52,
+      "max_ms": 2174.110865,
+      "mean_ms": 1057.4005616923075,
+      "observed_span_seconds": 54.984829208,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 2000
+    },
+    "polymarket_rtds|crypto_prices_twap_sixty|BTC": {
+      "intervals_n": 52,
+      "max_ms": 2256.559744,
+      "mean_ms": 1064.1496290192308,
+      "observed_span_seconds": 55.335780709,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 5000
+    },
+    "polymarket_rtds|crypto_prices_twap_sixty|ETH": {
+      "intervals_n": 52,
+      "max_ms": 2192.065711,
+      "mean_ms": 1066.9483095576923,
+      "observed_span_seconds": 55.481312097,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 5000
+    },
+    "polymarket_rtds|crypto_prices_twap_sixty|SOL": {
+      "intervals_n": 52,
+      "max_ms": 2101.35938,
+      "mean_ms": 1066.4312577500002,
+      "observed_span_seconds": 55.454425403,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 2000
+    },
+    "polymarket_rtds|crypto_prices_twap_thirty|BTC": {
+      "intervals_n": 52,
+      "max_ms": 2110.622879,
+      "mean_ms": 1064.3326680769233,
+      "observed_span_seconds": 55.34529874,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 5000
+    },
+    "polymarket_rtds|crypto_prices_twap_thirty|ETH": {
+      "intervals_n": 52,
+      "max_ms": 2166.491581,
+      "mean_ms": 1067.4059288269232,
+      "observed_span_seconds": 55.505108299,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 2000
+    },
+    "polymarket_rtds|crypto_prices_twap_thirty|SOL": {
+      "intervals_n": 52,
+      "max_ms": 2145.674835,
+      "mean_ms": 1064.3639999423076,
+      "observed_span_seconds": 55.346927997,
+      "out_of_order_n": 0,
+      "p50_upper_bound_ms": 1000,
+      "p95_upper_bound_ms": 5000
+    }
+  }
+}

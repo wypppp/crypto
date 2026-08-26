@@ -1,0 +1,31 @@
+{
+  "as_of": "2026-08-25_after_day1_plus80",
+  "decision": "PUB-003 can proceed as a pre-adjudication now. Four numeric points continue; one no-numeric point is provisional PUBX. Final PUBX/PUB1 remains gated by the registered seven-day window and unresolved S2 semantics.",
+  "final_adjudication_earliest": "2026-08-31_after_plus80_slot",
+  "inputs": {
+    "historical_point_field_audit.csv": "57aac1ced3805d4b2199712147f74fb12072f0ca60738237dfd643126cd3a759",
+    "pilot_points.csv": "9985ec3457fbec79f6f0ed029d500d314ece09c9d4872905fa0b3647685893ca",
+    "point_field_audit.csv": "e9459d5dcdfaa8d91195473dd2ca59be8761d2e250b1dd1e022c0e394700151c",
+    "quick_feasibility/point_proxy_evaluation.csv": "88dfabcb78d6db735f149f18debd9c7899ffbf38a3aba3d0b575b73dd4fef23f",
+    "quick_feasibility/verdict.json": "562eca4583ea5828daabc33e7b66ae17192296ceb87ee25df7427dbd35fa5109",
+    "wave1_point_day_summary.csv": "7947c89235725aedf0ba64a93fee5aec9cc988677414daa04b999c48cd400c55"
+  },
+  "output": {
+    "path": "wave1_pre_adjudication.csv",
+    "sha256": "441d068cc0d444d33cc5c1fb6c82db9102899122b5f31b32464c6d1a82e244b6"
+  },
+  "point_count": 5,
+  "provisional_pubx_count": 1,
+  "pub1_awarded_count": 0,
+  "pub2_awarded_count": 0,
+  "s0_pass_count": 5,
+  "s1_diagnostic_pass_count": 5,
+  "s2_pass_count": 0,
+  "s3_provisional_fail_count": 1,
+  "s3_provisional_pass_count": 4,
+  "s4_retrospective_diagnostic_pass_count": 1,
+  "s5_complete_count": 0,
+  "schema_version": "public-only-wave1-pre-adjudication-v1",
+  "source_policy": "saved_public_platform_evidence_only_no_new_fetch",
+  "status": "pre_adjudication_in_progress"
+}

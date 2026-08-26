@@ -1,0 +1,4 @@
+wallet,records_returned,total_usdc,endpoint,interpretation_limit
+0x13E0D447520EBE7F8EEAF7817211201B2C585204,10,5589.1333,https://data-api.polymarket.com/activity?type=REWARD,Recent records returned by the public endpoint; not a complete-period total and not assumed independent of other reward programs
+0x95FA4CC0BE88B13A60529A651D82F940F38466B3,13,222.7962,https://data-api.polymarket.com/activity?type=REWARD,Recent records returned by the public endpoint; not a complete-period total and not assumed independent of other reward programs
+0x0CB85BE1B9BFC5291E3DF24B7969F6FB292D4484,0,0.0000,https://data-api.polymarket.com/activity?type=REWARD,Empty response is not proof that no rebate or reward was earned

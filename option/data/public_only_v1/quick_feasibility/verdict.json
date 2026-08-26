@@ -1,0 +1,113 @@
+{
+  "cross_point_event_contrast": {
+    "event_candidate_id": "PUB-A07",
+    "event_end": "2026-08-21 19:00:00",
+    "event_start": "2026-08-21 07:00:00",
+    "interpretation": "The event-point drop is not shared by the three numeric controls and velocity recovers after the event. This rejects a common-source outage explanation within the saved window, but not other confounding.",
+    "same_time_control_count": 3,
+    "same_time_controls_stable": true,
+    "status": "cross_point_event_contrast_diagnostic_pass",
+    "target_pollutant_event_to_pre_ratio": "0.385253",
+    "target_temperature_event_to_pre_ratio": "0.903551",
+    "target_velocity_event_to_pre_ratio": "0.065327",
+    "target_velocity_post_to_pre_ratio": "0.976704"
+  },
+  "decision": "Existing data are sufficient to show that a coarse multi-field proxy can identify the central portion of one recorded stop event. They are not sufficient to establish a general production proxy or a trading edge.",
+  "event_metadata_count": 2,
+  "followup_saved_snapshot": {
+    "event_first_observed_manifest_path": "../polls/20260825T081931+0800/manifest.json",
+    "event_first_observed_manifest_sha256": "e14a310b83052062f52a35716745a25a03f52e6d076c71598c12be1275a99503",
+    "event_start_hour_check_count": 1,
+    "interpretation": "A second weak event has only its start hour saved. The frozen rule did not alert, consistent with the first event's transition delay; this is not a second event-core validation.",
+    "manifest_path": "../polls/20260825T092000+0800/manifest.json",
+    "manifest_sha256": "84cf4d245804ec07e1234f13fffa432f118c80bfcbb0c2decdf970b5cb88fb61",
+    "proxy_alert_count": 0
+  },
+  "gate_results": {
+    "economic_mapping_and_market_edge": "not_tested",
+    "historical_numeric_coverage": "partial_pass_4_of_5_points",
+    "label_independence": "fail_platform_event_is_weak_label_and_status_fields_conflict",
+    "local_threshold_robustness": "local_threshold_grid_stable_zero_external_alerts",
+    "out_of_sample_generalization": "not_tested_one_event_one_mechanism",
+    "real_time_availability_and_revisions": "not_tested_by_historical_current_view",
+    "same_time_cross_point_contrast": "cross_point_event_contrast_diagnostic_pass",
+    "second_event_start_hour": "not_alerted_transition_hour_only",
+    "single_event_state_separability": "diagnostic_pass"
+  },
+  "local_threshold_sensitivity": {
+    "first_detection_delay_hours_range": [
+      "3.000",
+      "4.000"
+    ],
+    "grid_rule_count": 27,
+    "inference_limit": "same_event_in_sample_not_generalization_evidence",
+    "maximum_false_positive_hours": 0,
+    "maximum_true_positive_hours": 7,
+    "minimum_true_positive_hours": 6,
+    "pollutant_thresholds": [
+      "0.40",
+      "0.50",
+      "0.60"
+    ],
+    "status": "local_threshold_grid_stable_zero_external_alerts",
+    "temperature_thresholds": [
+      "0.85",
+      "0.90",
+      "0.95"
+    ],
+    "velocity_thresholds": [
+      "0.40",
+      "0.50",
+      "0.60"
+    ]
+  },
+  "measurement_window": {
+    "current_view_warning": "Fetched after the measurement dates; timing and revisions are not tested here.",
+    "end": "2026-08-24",
+    "start": "2026-08-18"
+  },
+  "minimum_viable_signal": {
+    "candidate_id": "PUB-A07",
+    "composed_physical_confirmation_lag_minutes": "302.333",
+    "composition_status": "cross_event_composition_not_observed_end_to_end",
+    "interpretation": "Metadata is the faster weak trigger. Conservative physical confirmation is composed from the first event's detection delay and the second event day's public numeric timing; it is not an observed end-to-end latency on one event.",
+    "market_edge_status": "not_established_public_source_and_economic_mapping_absent",
+    "numeric_publication_offset_from_row_start_minutes": "62.333",
+    "numeric_visibility_bound_status": "upper_bound_only_earlier_slot_incomplete",
+    "physical_rule_measurement_delay_hours": "4.000",
+    "port_id": "09e432c2b02e49dcb01e0e8adccc2621",
+    "ps_id": "b3d071940fbc4dcc89920765d3bb5e5e",
+    "reference_event_duration_minutes": 720,
+    "reference_event_time_remaining_after_confirmation_minutes": "417.667",
+    "source_signal_status": "technical_poc_only",
+    "timing_summary_path": "../wave1_point_day_summary.csv",
+    "timing_summary_sha256": "7947c89235725aedf0ba64a93fee5aec9cc988677414daa04b999c48cd400c55",
+    "weak_metadata_trigger_first_observed_lag_minutes": "20.333"
+  },
+  "outputs": {
+    "event_control_summary.csv": "df01f90980fc2c3cab61ca620bcba141f69b7806ba5c08919b4435d8eef19192",
+    "event_registry.csv": "6ded5e68988bc3ac8ee04c1924a031cb96796929b43f499ce282fdf717b12813",
+    "event_window_contrast.csv": "1b7743a6a88da3244ad9591485b61b5f515e2e2e2780ea7934ac918e0acc7406",
+    "followup_event_check.csv": "8ffc0f05ed54278c78447d2614c9e6436076a64d7978f87a9951988474523800",
+    "hourly_proxy_diagnostics.csv": "d5ceb5fd5ff0976c8876f002ccdc03ac666aaf3f354dc63f952c93217b953b65",
+    "minimum_viable_signal_card.csv": "26ba642e0dcd9011be329a9df614e8685fb617ff7f2e8e60278b6614ed18bcbc",
+    "point_proxy_evaluation.csv": "88dfabcb78d6db735f149f18debd9c7899ffbf38a3aba3d0b575b73dd4fef23f",
+    "proxy_threshold_sensitivity.csv": "98c9051476ec6b59132c186ed8c4af73b4647ddb8afb342b84f3ee87b366aa5d"
+  },
+  "point_count": 5,
+  "schema_version": "public-proxy-quick-feasibility-v1",
+  "source_manifest_path": "../history/20260825T083300+0800/manifest.json",
+  "source_manifest_sha256": "748b282ab950c5984d924a3a7a2ca019725c4a42cc1ffdd79a753627e644684f",
+  "source_policy": "saved_public_platform_responses_only_no_new_fetch",
+  "status": "diagnostic_complete",
+  "technical_proxy_verdict": "provisionally_supported_by_one_retrospective_event_and_cross_point_controls",
+  "totals": {
+    "numeric_measurement_rows": 672,
+    "proxy_alert_hours": 6,
+    "weak_label_false_negative_hours": 6,
+    "weak_label_false_positive_hours": 0,
+    "weak_label_true_positive_hours": 6,
+    "weak_stop_label_hours": 12
+  },
+  "trading_feasibility_verdict": "not_tested_and_not_authorized"
+}

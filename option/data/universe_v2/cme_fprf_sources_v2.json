@@ -1,0 +1,41 @@
+{
+  "source_date": "2026-08-21",
+  "vintage_cutoff": "2026-08-24T17:05:00+08:00",
+  "official_directory_url": "https://www.cmegroup.com/ftp/fprf/csv/",
+  "official_layout_url": "https://www.cmegroup.com/clearing/files/cme-group-product-reference-file-options.pdf",
+  "directory_accessed_at": "2026-08-24",
+  "files": [
+    {
+      "exchange": "CBOT",
+      "file": "cmeg.cbt.opt.prf.20260821.csv.zip",
+      "directory_timestamp": "2026-08-21 14:53",
+      "displayed_size": "1.9M"
+    },
+    {
+      "exchange": "CME",
+      "file": "cmeg.cme.opt.prf.20260821.csv.zip",
+      "directory_timestamp": "2026-08-21 14:59",
+      "displayed_size": "not captured in saved directory excerpt"
+    },
+    {
+      "exchange": "COMEX",
+      "file": "cmeg.comex.opt.prf.20260821.csv.zip",
+      "directory_timestamp": "2026-08-21 14:54",
+      "displayed_size": "not captured in saved directory excerpt"
+    },
+    {
+      "exchange": "NYMEX",
+      "file": "cmeg.nymex.opt.prf.20260821.csv.zip",
+      "directory_timestamp": "2026-08-21 15:00",
+      "displayed_size": "6.6M"
+    }
+  ],
+  "download_status": "blocked_in_current_environment",
+  "download_attempts": [
+    "www.cmegroup.com HTTPS: TLS SSL_ERROR_SYSCALL",
+    "ftp.cmegroup.com HTTPS: TLS SSL_ERROR_SYSCALL",
+    "ftp.cmegroup.com FTP through proxy: HTTP 503",
+    "Python urllib against www HTTPS: HTTP 403"
+  ],
+  "cutoff_treatment": "The dated files and their official directory timestamps pre-date the v2 cutoff. No CME U-MKT members are written until the ZIP bytes are saved, hashed, inventoried and commodity product-complex values are audited."
+}

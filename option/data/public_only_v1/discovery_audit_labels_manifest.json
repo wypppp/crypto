@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "ambiguous_name_evidence": 34,
+    "false_positive_name_evidence": 59,
+    "mechanism_specific_name_evidence": 29
+  },
+  "labels_path": "option/data/public_only_v1/discovery_audit_labels.csv",
+  "labels_sha256": "d68a1a8e56f218188ad84edea13d03b089da3cc8c215958d46a0bfb9d4856734",
+  "review_basis": "public catalog text only",
+  "s1_full_universe_pass_count": 0,
+  "sample_path": "option/data/public_only_v1/discovery_audit_sample.csv",
+  "sample_row_count": 122,
+  "sample_sha256": "0dd0f36b7965b722f711dc518ab867611d93439d6f8212f7ba06c09c78b2cfa9",
+  "schema_version": "public-discovery-name-review-v1",
+  "summary_path": "option/data/public_only_v1/discovery_audit_summary.csv",
+  "summary_sha256": "f61fd3af4c937d1307463c221eb29ce6bd43d489e4e83b170f6ed63f37e4e7f8"
+}

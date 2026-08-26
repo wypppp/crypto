@@ -1,0 +1,6 @@
+candidate_id,legacy_candidate_id,ps_id,port_id,point_name,polls_observed,latest_state,latest_numeric_measurement_time,latest_observed_lag_minutes,visibility_evidence,current_disposition
+PUB-A01,A01,3ae5dcdbb5cd477996d267c2887a5afc,87a0c4c824284813bf83052321482592,三线玻璃熔窑,3,no_numeric_visible,,,No numeric measurement row in three saved polls,retain_no_numeric_control
+PUB-A01,A01,9dfc64d77ea04c729f700936637c84e6,715f1873be964e15be8e13bc0176f8c6,新一线玻璃熔窑废气排放口,2,numeric_visible,2026-08-24 16:00:00,109.267,16:00 was already visible at its first saved poll 17:02:25,pending_seven_day_test
+PUB-A04,A04,093f3d5039404b028b165fe301766caf,846a9beca37b434b847d7075ceea1500,DA015_1#高炉出铁场废气排放口,3,numeric_visible,2026-08-24 16:00:00,109.317,16:00 was already visible at the first saved 17:00:28 poll,pending_seven_day_test
+PUB-A05,A05,6aca7464ed854b81953245facb021d7d,a819212830ef4ba699245fe2eb074871,6号焦炉烟囱,3,numeric_visible,2026-08-24 16:00:00,109.367,16:00 first observed between 17:00:30 and 17:02:30; lag in (60.500 62.500] minutes,pending_seven_day_test
+PUB-A07,A07,b3d071940fbc4dcc89920765d3bb5e5e,09e432c2b02e49dcb01e0e8adccc2621,聚合一期流化床VOCs固定在线出口,3,numeric_visible,2026-08-24 16:00:00,109.400,16:00 first observed between 17:00:35 and 17:02:32; lag in (60.583 62.533] minutes,pending_seven_day_test

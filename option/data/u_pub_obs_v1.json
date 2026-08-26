@@ -1,0 +1,31 @@
+{
+  "universe_id": "U-PUB-OBS-v1@2026-08-24T16:52:37+08:00",
+  "source_name": "河北省污染源自动监控信息公开系统",
+  "source_url": "https://111.62.218.180:9920/psIndex/",
+  "snapshot_run": "runs/20260824T171000+0800",
+  "query_started_at": "2026-08-24T16:52:37+08:00",
+  "query_finished_at": "2026-08-24T16:55:12+08:00",
+  "status": "catalog_enumerated_source_bounded",
+  "enabled_enterprises": 5951,
+  "source_reported_enabled_port_rows": 17412,
+  "unique_enabled_ports": 17408,
+  "ports_by_type": {
+    "wastewater": 4251,
+    "waste_gas": 7600,
+    "VOC": 5557
+  },
+  "candidate_discovery_hit_rows": 3177,
+  "raw_file_count": 29,
+  "raw_hash_verification": "passed",
+  "derived_members": {
+    "enterprises": "runs/20260824T171000+0800/derived/enterprises.csv",
+    "ports": "runs/20260824T171000+0800/derived/ports.csv",
+    "candidate_hits": "runs/20260824T171000+0800/derived/candidate_discovery_hits.csv"
+  },
+  "limitations": [
+    "This is the complete enabled catalog exposed by the verified public interfaces at query time, not an internal system.",
+    "Enterprise and point names do not establish product specification, capacity, core-facility mapping or outlet topology.",
+    "The source does not establish an information advantage over other market participants.",
+    "This universe does not substitute U-ECON-v2, U-OBS-v2 or U-PROC-v2 and does not complete Round 0 v2."
+  ]
+}

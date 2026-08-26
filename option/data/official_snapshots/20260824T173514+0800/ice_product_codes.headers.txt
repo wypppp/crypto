@@ -1,0 +1,18 @@
+HTTP/1.1 200 Connection established
+
+HTTP/1.1 200 OK
+Date: Mon, 24 Aug 2026 09:35:14 GMT
+Content-Type: application/vnd.ms-excel
+Transfer-Encoding: chunked
+Connection: keep-alive
+Content-Disposition: attachment; filename=ProductCodesReport.csv
+Set-Cookie: BIGipServerwebsitepublicgateway.c6s.intcx.net=1174809866.7436.0000; path=/; Httponly; Secure
+set-cookie: __cf_bm=DTcBPYE_hqDtYYh6Qtksy5xQ4GboGzD06Keuo8KsnIg-1787564114.406941-1.0.1.1-iXPpVrL5iepEsoC71iyQN5NYypKKxHXgfe33ME8P3uMqGHbW45D1oIJ_ia.oMS_8uB6_a.mDMydVXgkyFl0ejj0F4IPFluCcJKBPx7C_DkT1s6V9RzhvA8m30gJRnNLU; HttpOnly; SameSite=None; Secure; Path=/; Domain=ice.com; Expires=Mon, 24 Aug 2026 10:05:14 GMT
+set-cookie: _cfuvid=PM0EW5e80.C8ewZvY01HvlDgVoHpqOUKExrLDUjPiWo-1787564114.406941-1.0.1.1-PAvZdtgRBUx.JcS_5TR3Mizdpbeus.WU2IBXk_iJOrQ; HttpOnly; SameSite=None; Secure; Path=/; Domain=ice.com
+Link: <https://www.ice.com/api/productguide/info/codes/all/csv>; rel="canonical"
+Vary: Origin
+Strict-Transport-Security: max-age=16070400
+cf-cache-status: DYNAMIC
+Server: cloudflare
+CF-RAY: a3015da30f8de8d8-SJC
+

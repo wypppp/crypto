@@ -1,0 +1,3 @@
+﻿candidate_id,ps_id,port_id,event_index,event_start,event_end,duration_as_exposed,event_label,finish_status,reason_as_exposed,information_source_code,overlaps_measurement_window,weak_label_only,personal_operator_fields_excluded,data_response_sha256
+PUB-A01,3ae5dcdbb5cd477996d267c2887a5afc,87a0c4c824284813bf83052321482592,1,2025-11-06 18:01:00,open_or_unknown,-,停运,未完成,"因生产三线(600t/d)浮法玻璃生产线(3#生产线)停炉冷修,在采取停窑停产措施期间(预计持续过程96小时)，因烟气温度逐步下降，脱硝设施反应器温度降低，达不到喷氨要求，在线监测数据可能会出现异常。停",4,1,1,1,66df4346bce54f5e5e1116189fff1e3a8854677bc4afd77635c039b3c8bdd86d
+PUB-A07,b3d071940fbc4dcc89920765d3bb5e5e,09e432c2b02e49dcb01e0e8adccc2621,1,2026-08-21 07:00:00,2026-08-21 19:00:00,12时,停运,已完成,生产环保设施同步停运,3,1,1,1,f5620853b3ac497d68e7454aedd4d34a5883300095f787260384d83ce5e29341

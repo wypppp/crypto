@@ -1,0 +1,91 @@
+{
+  "candidate_counts": {
+    "A01": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 39
+    },
+    "A02": {
+      "enterprise_sample_rows": 1,
+      "point_sample_rows": 9,
+      "sample_rows": 10,
+      "source_rows": 153
+    },
+    "A03": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 21
+    },
+    "A04": {
+      "enterprise_sample_rows": 2,
+      "point_sample_rows": 8,
+      "sample_rows": 10,
+      "source_rows": 1569
+    },
+    "A05": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 421
+    },
+    "A06": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 442
+    },
+    "A07": {
+      "enterprise_sample_rows": 1,
+      "point_sample_rows": 9,
+      "sample_rows": 10,
+      "source_rows": 17
+    },
+    "A08": {
+      "enterprise_sample_rows": 1,
+      "point_sample_rows": 1,
+      "sample_rows": 2,
+      "source_rows": 2
+    },
+    "A09": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 12
+    },
+    "A10": {
+      "enterprise_sample_rows": 7,
+      "point_sample_rows": 3,
+      "sample_rows": 10,
+      "source_rows": 23
+    },
+    "A11": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 120
+    },
+    "A12": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 19
+    },
+    "A13": {
+      "enterprise_sample_rows": 0,
+      "point_sample_rows": 10,
+      "sample_rows": 10,
+      "source_rows": 339
+    }
+  },
+  "output_path": "option/data/public_only_v1/discovery_audit_sample.csv",
+  "output_sha256": "0dd0f36b7965b722f711dc518ab867611d93439d6f8212f7ba06c09c78b2cfa9",
+  "review_status": "unreviewed",
+  "sample_row_count": 122,
+  "schema_version": "public-discovery-audit-sample-v1",
+  "selection_method": "Per candidate reserve up to 2 enterprise-name rows, fill to 10 with point/process rows, then backfill enterprise rows; lowest SHA-256 stable keys.",
+  "source_path": "option/data/runs/20260824T171000+0800/derived/candidate_discovery_hits.csv",
+  "source_row_count": 3177,
+  "source_sha256": "9cd9b2acbaf06401b63598e50b7b5de5fd942af894944b6f2079a21cc2c295b1"
+}

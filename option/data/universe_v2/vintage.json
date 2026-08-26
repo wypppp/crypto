@@ -1,0 +1,12 @@
+{
+  "vintage_id": "v2@2026-08-24T17:05:00+08:00",
+  "cutoff": "2026-08-24T17:05:00+08:00",
+  "created_at": "2026-08-24",
+  "previous_vintage": "v1@2026-08-20T13:00:00+08:00",
+  "previous_vintage_status": "incomplete_historical_do_not_backfill",
+  "status": "source_scope_blocked",
+  "universes": ["U-MKT-v2", "U-ECON-v2", "U-OBS-v2", "U-PROC-v2"],
+  "decision_source": "crypto/roadmap/阶段二决策日志.md#2026-08-24-河北普查新建-round-0-v2",
+  "source_scope_decision": "2026-08-25: no internal observation source or product-capacity master is available; public pollution-source data cannot substitute U-ECON/U-OBS/U-PROC",
+  "notes": "All four universes share one cutoff. U-MKT remains partial; U-ECON/U-OBS/U-PROC cannot be completed from the current source scope, so the vintage is not frozen."
+}
