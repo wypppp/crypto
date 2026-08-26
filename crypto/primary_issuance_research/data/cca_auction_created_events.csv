@@ -1,0 +1,1 @@
+chain,chain_id,factory_version,factory,auction,token,token_amount_raw,block_number,transaction_hash,transaction_index,log_index,removed,currency,tokens_recipient,funds_recipient,start_block,end_block,claim_block,tick_spacing_q96,validation_hook,floor_price_q96,required_currency_raised_raw,auction_steps_data,config_data_abi

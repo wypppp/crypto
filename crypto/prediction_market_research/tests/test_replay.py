@@ -200,3 +200,119 @@ def test_replay_ignores_stale_incremental_trade() -> None:
     assert replay.summary()["stale_clob_incrementals_skipped"] == {
         "last_trade_price": 1
     }
+
+
+def test_fair_join_requires_frozen_margin_at_visible_bid() -> None:
+    base = datetime.now(timezone.utc)
+    base_ns = int(base.timestamp() * 1_000_000_000)
+    config = MakerReplayConfig(
+        name="fair",
+        latency_seconds=0,
+        quote_size=Decimal("2"),
+        policy="fair_join",
+        half_spread=Decimal("0.02"),
+        stop_before_end_seconds=0,
+    )
+    replay = ShadowReplay([config])
+    replay.process_event(
+        event(
+            "discovery_update",
+            {
+                "markets": [
+                    {
+                        "condition_id": "condition",
+                        "symbol": "BTC",
+                        "interval_minutes": 5,
+                        "window_start": (base - timedelta(seconds=1)).isoformat(),
+                        "end_time": (base + timedelta(minutes=5)).isoformat(),
+                        "minimum_tick_size": "0.01",
+                        "minimum_order_size": "1",
+                        "price_to_beat": "100",
+                        "tokens": [
+                            {"token_id": "up", "outcome": "Up"},
+                            {"token_id": "down", "outcome": "Down"},
+                        ],
+                    }
+                ]
+            },
+            base_ns,
+            source="gamma",
+        )
+    )
+    replay.process_event(
+        event(
+            "book",
+            {
+                "asset_id": "up",
+                "bids": [{"price": "0.52", "size": "1"}],
+                "asks": [{"price": "0.56", "size": "5"}],
+            },
+            base_ns,
+        )
+    )
+    strategy = replay.strategies[0]
+    replay.fair_values["up"] = Decimal("0.55")
+    strategy.observe_book("up", base_ns)
+    assert strategy.quotes_submitted == 1
+    quote = next(iter(strategy.engine.quotes.values()))
+    assert quote.price == Decimal("0.52")
+
+    replay.fair_values["up"] = Decimal("0.53")
+    strategy.observe_book("up", base_ns + 1)
+    assert strategy.current_quote.get("up") is None
+
+
+def test_resolution_sidecar_preloads_only_opening_target(tmp_path) -> None:
+    import json
+
+    base = datetime.now(timezone.utc)
+    base_ns = int(base.timestamp() * 1_000_000_000)
+    raw = tmp_path / "raw.jsonl"
+    sidecar = tmp_path / "resolutions.jsonl"
+    raw.write_text(
+        json.dumps(
+            event(
+                "discovery_update",
+                {
+                    "markets": [
+                        {
+                            "condition_id": "condition",
+                            "symbol": "BTC",
+                            "interval_minutes": 5,
+                            "window_start": base.isoformat(),
+                            "end_time": (base + timedelta(minutes=5)).isoformat(),
+                            "tokens": [
+                                {"token_id": "up", "outcome": "Up"},
+                                {"token_id": "down", "outcome": "Down"},
+                            ],
+                        }
+                    ]
+                },
+                base_ns,
+                source="gamma",
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    sidecar.write_text(
+        json.dumps(
+            event(
+                "market_resolved",
+                {
+                    "market": "condition",
+                    "price_to_beat": 100,
+                    "final_price": 999,
+                    "winning_asset_id": "up",
+                },
+                base_ns + 10,
+                source="gamma_resolution_backfill",
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    from shadow_mm.replay import replay_paths
+
+    result = replay_paths([raw, sidecar], [])
+    assert result["price_to_beat_overrides_n"] == 1

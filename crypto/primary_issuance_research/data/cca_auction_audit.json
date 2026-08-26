@@ -1,0 +1,92 @@
+{
+  "collected_at": "2026-08-26T09:43:09.673406+00:00",
+  "event_signature": "AuctionCreated(address,address,uint256,bytes)",
+  "factory_registry_source": "Uniswap/sdks main: sdks/liquidity-launcher-sdk/src/addresses.ts",
+  "factories": {
+    "v1_twa": "0xcccccccae7503cac057829bf2811de42e16e0bd5",
+    "v2_early_test": "0x088ca22b591f2f4bf0ad2780d2a44fa692e948d0",
+    "v2_legacy": "0x00cCa200BF124dBfA848937c553864f4B4CE0632",
+    "v2_current_2026_07_09": "0x000000001F26a0044BaA66024e7b6599c61963F8"
+  },
+  "chains": {
+    "ethereum": {
+      "rpc": "https://ethereum-rpc.publicnode.com",
+      "factories": {
+        "v1_twa": {
+          "address": "0xcccccccae7503cac057829bf2811de42e16e0bd5",
+          "error": "all network paths failed for https://ethereum-rpc.publicnode.com: env-proxy attempt 1: HTTP Error 403: Forbidden; env-proxy attempt 2: HTTP Error 403: Forbidden; direct attempt 1: HTTP Error 403: Forbidden; direct attempt 2: HTTP Error 403: Forbidden"
+        },
+        "v2_early_test": {
+          "address": "0x088ca22b591f2f4bf0ad2780d2a44fa692e948d0",
+          "deployment_block_method": "historical_eth_getCode_binary_search",
+          "deployment_block": null,
+          "deployed": false,
+          "log_count": 0
+        },
+        "v2_legacy": {
+          "address": "0x00cCa200BF124dBfA848937c553864f4B4CE0632",
+          "error": "all network paths failed for https://ethereum-rpc.publicnode.com: env-proxy attempt 1: HTTP Error 403: Forbidden; env-proxy attempt 2: HTTP Error 403: Forbidden; direct attempt 1: HTTP Error 403: Forbidden; direct attempt 2: HTTP Error 403: Forbidden"
+        },
+        "v2_current_2026_07_09": {
+          "address": "0x000000001F26a0044BaA66024e7b6599c61963F8",
+          "error": "all network paths failed for https://ethereum-rpc.publicnode.com: env-proxy attempt 1: HTTP Error 403: Forbidden; env-proxy attempt 2: HTTP Error 403: Forbidden; direct attempt 1: HTTP Error 403: Forbidden; direct attempt 2: HTTP Error 403: Forbidden"
+        }
+      },
+      "expected_chain_id": 1,
+      "observed_chain_id": 1,
+      "latest_block": 25838563,
+      "auction_created_topic0": "0x7ede475fad18ccf0039f2b956c4d43a8b4ed0853de4daaa8ae25299f331ae3b9"
+    },
+    "unichain": {
+      "rpc": "https://mainnet.unichain.org",
+      "factories": {},
+      "fatal_error": "all network paths failed for https://mainnet.unichain.org: env-proxy attempt 1: HTTP Error 403: Forbidden; env-proxy attempt 2: HTTP Error 403: Forbidden; direct attempt 1: HTTP Error 403: Forbidden; direct attempt 2: HTTP Error 403: Forbidden"
+    },
+    "base": {
+      "rpc": "https://mainnet.base.org",
+      "factories": {
+        "v1_twa": {
+          "address": "0xcccccccae7503cac057829bf2811de42e16e0bd5",
+          "error": "all network paths failed for https://mainnet.base.org: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+        },
+        "v2_early_test": {
+          "address": "0x088ca22b591f2f4bf0ad2780d2a44fa692e948d0",
+          "error": "all network paths failed for https://mainnet.base.org: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error _ssl.c:1114: The handshake operation timed out>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+        },
+        "v2_legacy": {
+          "address": "0x00cCa200BF124dBfA848937c553864f4B4CE0632",
+          "error": "all network paths failed for https://mainnet.base.org: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+        },
+        "v2_current_2026_07_09": {
+          "address": "0x000000001F26a0044BaA66024e7b6599c61963F8",
+          "error": "all network paths failed for https://mainnet.base.org: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+        }
+      },
+      "expected_chain_id": 8453,
+      "observed_chain_id": 8453,
+      "latest_block": 50474058,
+      "auction_created_topic0": "0x7ede475fad18ccf0039f2b956c4d43a8b4ed0853de4daaa8ae25299f331ae3b9"
+    },
+    "arbitrum": {
+      "rpc": "https://arb1.arbitrum.io/rpc",
+      "factories": {},
+      "fatal_error": "all network paths failed for https://arb1.arbitrum.io/rpc: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    },
+    "avalanche": {
+      "rpc": "https://api.avax.network/ext/bc/C/rpc",
+      "factories": {},
+      "fatal_error": "all network paths failed for https://api.avax.network/ext/bc/C/rpc: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    },
+    "xlayer": {
+      "rpc": "https://rpc.xlayer.tech",
+      "factories": {},
+      "fatal_error": "all network paths failed for https://rpc.xlayer.tech: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    },
+    "robinhood": {
+      "rpc": "https://rpc.mainnet.chain.robinhood.com",
+      "factories": {},
+      "fatal_error": "all network paths failed for https://rpc.mainnet.chain.robinhood.com: env-proxy attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; env-proxy attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 1: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>; direct attempt 2: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    }
+  },
+  "unique_auction_created_events": 0
+}

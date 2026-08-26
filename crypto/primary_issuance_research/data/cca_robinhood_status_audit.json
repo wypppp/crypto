@@ -1,0 +1,9 @@
+{
+  "snapshot_at": "2026-08-26T23:45:23.576270+00:00",
+  "rpc": "https://robinhood-rpc.publicnode.com",
+  "rows": 3827,
+  "rows_with_any_rpc_error": 0,
+  "graduated_true": 707,
+  "graduated_false": 3120,
+  "postprocessed_existing_json": true
+}

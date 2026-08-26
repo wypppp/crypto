@@ -15,13 +15,13 @@ class RollingSpotVolatility:
     squared_rates: Deque[Tuple[int, float]] = field(default_factory=deque)
     last_sample_second: Optional[int] = None
 
-    def update(self, venue: str, price: float, timestamp_ns: int) -> None:
+    def update(self, venue: str, price: float, timestamp_ns: int) -> bool:
         if price <= 0 or timestamp_ns <= 0:
-            return
+            return False
         self.latest[venue] = (price, timestamp_ns)
         second = timestamp_ns // 1_000_000_000
         if second == self.last_sample_second:
-            return
+            return False
         self.last_sample_second = second
         fresh = [
             value
@@ -29,7 +29,7 @@ class RollingSpotVolatility:
             if timestamp_ns - observed_ns <= 5_000_000_000
         ]
         if not fresh:
-            return
+            return False
         composite = sum(fresh) / len(fresh)
         log_price = math.log(composite)
         if self.samples:
@@ -43,6 +43,7 @@ class RollingSpotVolatility:
             self.samples.popleft()
         while self.squared_rates and self.squared_rates[0][0] < cutoff:
             self.squared_rates.popleft()
+        return True
 
     def sigma_per_sqrt_second(self, minimum_samples: int = 30) -> Optional[float]:
         if len(self.squared_rates) < minimum_samples:
@@ -102,8 +103,10 @@ class FairValueModel:
                 except (KeyError, TypeError, ValueError):
                     return None
             if symbol in self.volatility:
-                self.volatility[symbol].update("coinbase", price, timestamp_ns)
-                return symbol
+                changed = self.volatility[symbol].update(
+                    "coinbase", price, timestamp_ns
+                )
+                return symbol if changed else None
         if source == "kraken_ws":
             rows = payload.get("data", []) or []
             if rows and isinstance(rows[0], dict) and rows[0].get("symbol"):
@@ -114,8 +117,10 @@ class FairValueModel:
                 except (KeyError, TypeError, ValueError):
                     return None
                 if symbol in self.volatility:
-                    self.volatility[symbol].update("kraken", price, timestamp_ns)
-                    return symbol
+                    changed = self.volatility[symbol].update(
+                        "kraken", price, timestamp_ns
+                    )
+                    return symbol if changed else None
         if (
             source == "polymarket_rtds"
             and payload.get("topic") == "crypto_prices_twap_sixty"

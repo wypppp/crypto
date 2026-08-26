@@ -69,5 +69,5 @@
     }
   ],
   "overall_gate_result": "fail",
-  "interpretation": "The same minimal client alternated between a passing and a severely backlogged run. Public-path latency is not reliably below the preregistered threshold; a 14-day profitability experiment must not start on this collector path. This experiment cannot distinguish server/node variability from activity-dependent Python receive/decode saturation."
+  "interpretation": "The same minimal client alternated between a passing and a severely backlogged run. The local proxied path is not reliably below the preregistered threshold; a 14-day profitability experiment must not start on this host/path. Because HTTP(S)/ALL_PROXY variables were set in the experiment environment, this result cannot be generalized to the Polymarket public feed itself. A simultaneous same-event comparison from the local proxy and a US cloud host is required."
 }

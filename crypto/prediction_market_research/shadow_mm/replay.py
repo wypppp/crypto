@@ -4,7 +4,7 @@ import gzip
 import hashlib
 import json
 from collections import OrderedDict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from decimal import Decimal, ROUND_FLOOR
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence, Set, Tuple
@@ -137,6 +137,7 @@ class MakerReplayConfig:
     max_shares_per_token: Decimal = Decimal("50")
     max_unpaired_shares_per_market: Decimal = Decimal("15")
     half_spread: Decimal = Decimal("0.01")
+    start_before_end_seconds: Optional[float] = None
 
     @property
     def latency_ns(self) -> int:
@@ -176,6 +177,7 @@ class MakerReplayStrategy:
         self.market_estimated_rebate: Dict[str, Decimal] = {}
         self.resolved_results: Dict[str, Dict[str, Any]] = {}
         self.fill_reasons: Dict[str, int] = {}
+        self.fill_diagnostics: List[Dict[str, Any]] = []
 
     def _market_for(self, token_id: str) -> Optional[ReplayMarket]:
         condition_id = self.token_market.get(token_id)
@@ -185,6 +187,13 @@ class MakerReplayStrategy:
         if market.end_ns is None:
             return None
         return market.end_ns - int(self.config.stop_before_end_seconds * 1_000_000_000)
+
+    def _quote_start_ns(self, market: ReplayMarket) -> Optional[int]:
+        if market.end_ns is None or self.config.start_before_end_seconds is None:
+            return market.window_start_ns
+        return market.end_ns - int(
+            self.config.start_before_end_seconds * 1_000_000_000
+        )
 
     def _cancel_current(self, token_id: str, timestamp_ns: int) -> None:
         quote_id = self.current_quote.get(token_id)
@@ -203,6 +212,8 @@ class MakerReplayStrategy:
         ceiling = ask - tick
         if ceiling < tick:
             return None
+        if bid is None and self.config.policy == "fair_join":
+            return None
         if bid is None and self.config.policy != "fair_value":
             return ceiling
         if self.config.policy == "join_bbo":
@@ -219,6 +230,16 @@ class MakerReplayStrategy:
             if raw < tick:
                 return None
             desired = (raw / tick).to_integral_value(rounding=ROUND_FLOOR) * tick
+        elif self.config.policy == "fair_join":
+            fair_value = self.fair_values.get(token_id)
+            if fair_value is None or bid is None:
+                return None
+            # Keep queue priority at the visible BBO, but only when the model's
+            # contemporaneous probability leaves the frozen safety margin.
+            # Unlike fair_value this policy never improves or undercuts BBO.
+            if bid > fair_value - self.config.half_spread:
+                return None
+            desired = bid
         else:
             raise ValueError("unknown maker replay policy: {}".format(self.config.policy))
         return min(max(desired, tick), ceiling)
@@ -226,9 +247,16 @@ class MakerReplayStrategy:
     def advance(
         self, timestamp_ns: int, token_ids: Optional[Set[str]] = None
     ) -> None:
-        for quote in list(self.engine.quotes.values()):
-            if token_ids is not None and quote.token_id not in token_ids:
-                continue
+        candidates = (
+            list(self.engine.quotes.values())
+            if token_ids is None
+            else [
+                quote
+                for token_id in token_ids
+                for quote in self.engine.quotes_by_token.get(token_id, {}).values()
+            ]
+        )
+        for quote in candidates:
             market = self._market_for(quote.token_id)
             cutoff = self._cutoff_ns(market) if market else None
             if cutoff is not None and timestamp_ns >= cutoff and quote.cancel_effective_ns is None:
@@ -242,13 +270,22 @@ class MakerReplayStrategy:
             else:
                 self.activated.add(quote.quote_id)
         self.engine.prune(timestamp_ns, token_ids)
-        for token_id, quote_id in list(self.current_quote.items()):
+        current_items = (
+            list(self.current_quote.items())
+            if token_ids is None
+            else [
+                (token_id, self.current_quote[token_id])
+                for token_id in token_ids
+                if token_id in self.current_quote
+            ]
+        )
+        for token_id, quote_id in current_items:
             if quote_id not in self.engine.quotes:
                 self.current_quote.pop(token_id, None)
 
     def observe_book(self, token_id: str, timestamp_ns: int) -> None:
         book = self.books[token_id]
-        for quote in self.engine.quotes.values():
+        for quote in self.engine.quotes_by_token.get(token_id, {}).values():
             if (
                 quote.token_id == token_id
                 and quote.quote_id not in self.activated
@@ -262,9 +299,10 @@ class MakerReplayStrategy:
         if market is None:
             return
         cutoff = self._cutoff_ns(market)
+        quote_start = self._quote_start_ns(market)
         if (
-            market.window_start_ns is not None
-            and timestamp_ns < market.window_start_ns
+            quote_start is not None
+            and timestamp_ns < quote_start
         ) or (cutoff is not None and timestamp_ns >= cutoff):
             self._cancel_current(token_id, timestamp_ns)
             return
@@ -281,9 +319,8 @@ class MakerReplayStrategy:
         position = max(self.portfolio.positions.get(token_id, ZERO), ZERO)
         outstanding = sum(
             quote.remaining
-            for quote in self.engine.quotes.values()
-            if quote.token_id == token_id
-            and quote.remaining > 0
+            for quote in self.engine.quotes_by_token.get(token_id, {}).values()
+            if quote.remaining > 0
             and (quote.expires_ns is None or timestamp_ns < quote.expires_ns)
             and (
                 quote.cancel_effective_ns is None
@@ -349,6 +386,21 @@ class MakerReplayStrategy:
             self.matched_notional += notional
             self.fill_reasons[fill.reason] = self.fill_reasons.get(fill.reason, 0) + 1
             market = self.markets.get(condition_id)
+            fair_value = self.fair_values.get(fill.token_id)
+            self.fill_diagnostics.append(
+                {
+                    "condition_id": condition_id,
+                    "token_id": fill.token_id,
+                    "timestamp_ns": fill.timestamp_ns,
+                    "price": fill.price,
+                    "size": fill.size,
+                    "fair_value": fair_value,
+                    "model_edge_per_share": fair_value - fill.price
+                    if fair_value is not None
+                    else None,
+                    "reason": fill.reason,
+                }
+            )
             if market is not None:
                 self.market_estimated_rebate[condition_id] = (
                     self.market_estimated_rebate.get(condition_id, ZERO)
@@ -377,6 +429,30 @@ class MakerReplayStrategy:
         pnl = self.market_cash.get(condition_id, ZERO)
         notional = self.market_notional.get(condition_id, ZERO)
         estimated_rebate = self.market_estimated_rebate.get(condition_id, ZERO)
+        diagnostics = [
+            row
+            for row in self.fill_diagnostics
+            if row["condition_id"] == condition_id
+        ]
+        forecast_rows = [row for row in diagnostics if row["fair_value"] is not None]
+        forecast_shares = sum((row["size"] for row in forecast_rows), ZERO)
+        model_expected_pnl = sum(
+            (row["model_edge_per_share"] * row["size"] for row in forecast_rows),
+            ZERO,
+        )
+        winning_value = lambda row: ONE if row["token_id"] == winning_token_id else ZERO
+        forecast_brier = (
+            sum(
+                (
+                    ((row["fair_value"] - winning_value(row)) ** 2) * row["size"]
+                    for row in forecast_rows
+                ),
+                ZERO,
+            )
+            / forecast_shares
+            if forecast_shares > 0
+            else None
+        )
         self.resolved_results[condition_id] = {
             "condition_id": condition_id,
             "symbol": market.symbol,
@@ -387,6 +463,13 @@ class MakerReplayStrategy:
             "pnl_with_estimated_maker_rebate": pnl + estimated_rebate,
             "matched_notional": notional,
             "edge": pnl / notional if notional > 0 else None,
+            "forecast_fills_n": len(forecast_rows),
+            "forecast_shares": forecast_shares,
+            "model_expected_pnl": model_expected_pnl,
+            "model_expected_edge": model_expected_pnl / notional
+            if notional > 0
+            else None,
+            "fill_weighted_brier": forecast_brier,
         }
 
     def summary(self) -> Dict[str, Any]:
@@ -407,12 +490,27 @@ class MakerReplayStrategy:
             ZERO,
         )
         estimated_rebate = sum(self.market_estimated_rebate.values(), ZERO)
+        resolved_ids = set(self.resolved_results)
+        resolved_fill_diagnostics = [
+            row
+            for row in self.fill_diagnostics
+            if row["condition_id"] in resolved_ids
+        ]
+        model_expected_pnl = sum(
+            (
+                row["model_edge_per_share"] * row["size"]
+                for row in resolved_fill_diagnostics
+                if row["model_edge_per_share"] is not None
+            ),
+            ZERO,
+        )
         return {
             "name": self.config.name,
             "policy": self.config.policy,
             "latency_seconds": self.config.latency_seconds,
             "quote_size": self.config.quote_size,
             "max_unpaired_shares_per_market": self.config.max_unpaired_shares_per_market,
+            "start_before_end_seconds": self.config.start_before_end_seconds,
             "quotes_submitted_n": self.quotes_submitted,
             "post_only_rejections_n": self.post_only_rejections,
             "fills_n": self.fills_n,
@@ -438,6 +536,11 @@ class MakerReplayStrategy:
             "peak_external_capital": self.portfolio.peak_external_capital,
             "merged_complete_sets": self.merges,
             "fill_reasons": dict(self.fill_reasons),
+            "resolved_model_expected_pnl": model_expected_pnl,
+            "resolved_model_expected_edge": model_expected_pnl / resolved_notional
+            if resolved_notional > 0
+            else None,
+            "fill_diagnostics": resolved_fill_diagnostics,
             "open_positions": {
                 token_id: size
                 for token_id, size in self.portfolio.positions.items()
@@ -451,11 +554,13 @@ class ShadowReplay:
         self,
         configs: Sequence[MakerReplayConfig],
         max_clob_incremental_age_seconds: float = 5.0,
+        price_to_beat_overrides: Optional[Dict[str, Decimal]] = None,
     ) -> None:
         self.books: Dict[str, TokenBook] = {}
         self.markets: Dict[str, ReplayMarket] = {}
         self.token_market: Dict[str, str] = {}
         self.fair_values: Dict[str, Decimal] = {}
+        self.price_to_beat_overrides = price_to_beat_overrides or {}
         self.fair_model = FairValueModel(["BTC", "ETH", "SOL"])
         self.strategies = [
             MakerReplayStrategy(
@@ -485,6 +590,14 @@ class ShadowReplay:
             market = ReplayMarket.from_record(row)
             if not market.condition_id or len(market.token_ids) != 2:
                 continue
+            if market.price_to_beat is None:
+                target = self.price_to_beat_overrides.get(market.condition_id)
+                if target is not None:
+                    # Historical Gamma backfills expose the opening reference
+                    # that was fixed before trading.  Only this fixed input is
+                    # preloaded; finalPrice and the winning token remain unseen
+                    # until the resolution event is processed in event order.
+                    market = replace(market, price_to_beat=target)
             self.markets[market.condition_id] = market
             for token_id in market.token_ids:
                 self.token_market[token_id] = market.condition_id
@@ -660,7 +773,7 @@ def iter_events(path: Path) -> Iterator[Dict[str, Any]]:
 
 def default_replay_configs() -> List[MakerReplayConfig]:
     answer = []
-    for policy in ("join_bbo", "midpoint", "fair_value"):
+    for policy in ("join_bbo", "midpoint", "fair_value", "fair_join"):
         for latency in (5.0, 15.0, 30.0):
             name = "{}_{}s".format(policy, int(latency))
             answer.append(
@@ -682,7 +795,26 @@ def replay_paths(
     paths: Sequence[Path],
     configs: Optional[Sequence[MakerReplayConfig]] = None,
 ) -> Dict[str, Any]:
-    replay = ShadowReplay(configs or default_replay_configs())
+    # Resolution sidecars are conventionally appended after the raw capture.
+    # Preload only their fixed opening target so captures made before Gamma
+    # exposed eventMetadata can still exercise a causal fair-value model.
+    targets: Dict[str, Decimal] = {}
+    for path in paths[1:]:
+        for event in iter_events(path):
+            payload = event.get("payload")
+            if event.get("event_type") != "market_resolved" or not isinstance(payload, dict):
+                continue
+            condition_id = str(payload.get("market") or payload.get("condition_id") or "")
+            value = payload.get("price_to_beat")
+            if condition_id and value not in (None, ""):
+                try:
+                    targets[condition_id] = Decimal(str(value))
+                except (TypeError, ValueError):
+                    continue
+    replay = ShadowReplay(
+        configs or default_replay_configs(),
+        price_to_beat_overrides=targets,
+    )
     events_n = 0
     for path in paths:
         for event in iter_events(path):
@@ -692,4 +824,5 @@ def replay_paths(
     answer["events_read_n"] = events_n
     answer["inputs"] = [str(path) for path in paths]
     answer["input"] = str(paths[0]) if len(paths) == 1 else None
+    answer["price_to_beat_overrides_n"] = len(targets)
     return answer

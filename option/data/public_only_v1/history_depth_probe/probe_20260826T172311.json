@@ -1,0 +1,296 @@
+{
+ "probed_at": "2026-08-26T17:22:41+08:00",
+ "base": "https://111.62.218.180:9920",
+ "min_interval_s": 1.2,
+ "points": [
+  {
+   "point": {
+    "ps_name": "沙河市安全实业有限公司",
+    "ps_id": "3ae5dcdbb5cd477996d267c2887a5afc",
+    "port_id": "34f30973b6bb4befacf2d03932503d55",
+    "port_type_id": "port_type2",
+    "port_name": "五线玻璃熔窑"
+   },
+   "windows": [
+    {
+     "tag": "last7d",
+     "start": "2026-08-19",
+     "end": "2026-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 474,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-1y",
+     "start": "2025-08-19",
+     "end": "2025-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 1118,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-2y",
+     "start": "2024-08-19",
+     "end": "2024-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 852,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-3y",
+     "start": "2023-08-19",
+     "end": "2023-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 899,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-4y",
+     "start": "2022-08-19",
+     "end": "2022-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 1003,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-5y",
+     "start": "2021-08-19",
+     "end": "2021-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 1215,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "full_month",
+     "start": "2026-07-01",
+     "end": "2026-07-31",
+     "expected_hours": 744,
+     "ok": true,
+     "rows": 744,
+     "total": null,
+     "ms": 1943,
+     "code": null,
+     "msg": "None",
+     "err": null
+    }
+   ]
+  },
+  {
+   "point": {
+    "ps_name": "沙河市安全实业有限公司",
+    "ps_id": "3ae5dcdbb5cd477996d267c2887a5afc",
+    "port_id": "39f76f950a194ca3b2060a1b0561e162",
+    "port_type_id": "port_type2",
+    "port_name": "七线玻璃熔窑"
+   },
+   "windows": [
+    {
+     "tag": "last7d",
+     "start": "2026-08-19",
+     "end": "2026-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 829,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-1y",
+     "start": "2025-08-19",
+     "end": "2025-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 841,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-2y",
+     "start": "2024-08-19",
+     "end": "2024-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 884,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-3y",
+     "start": "2023-08-19",
+     "end": "2023-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 849,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-4y",
+     "start": "2022-08-19",
+     "end": "2022-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 766,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-5y",
+     "start": "2021-08-19",
+     "end": "2021-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 796,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "full_month",
+     "start": "2026-07-01",
+     "end": "2026-07-31",
+     "expected_hours": 744,
+     "ok": true,
+     "rows": 744,
+     "total": null,
+     "ms": 2143,
+     "code": null,
+     "msg": "None",
+     "err": null
+    }
+   ]
+  },
+  {
+   "point": {
+    "ps_name": "沙河市安全实业有限公司",
+    "ps_id": "3ae5dcdbb5cd477996d267c2887a5afc",
+    "port_id": "6a61f1db330a46fcb6d03ee4f6a8bf54",
+    "port_type_id": "port_type2",
+    "port_name": "四线玻璃熔窑"
+   },
+   "windows": [
+    {
+     "tag": "last7d",
+     "start": "2026-08-19",
+     "end": "2026-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 542,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-1y",
+     "start": "2025-08-19",
+     "end": "2025-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 665,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-2y",
+     "start": "2024-08-19",
+     "end": "2024-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 694,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-3y",
+     "start": "2023-08-19",
+     "end": "2023-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 742,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-4y",
+     "start": "2022-08-19",
+     "end": "2022-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 691,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "T-5y",
+     "start": "2021-08-19",
+     "end": "2021-08-26",
+     "ok": true,
+     "rows": 192,
+     "total": null,
+     "ms": 725,
+     "code": null,
+     "msg": "None",
+     "err": null
+    },
+    {
+     "tag": "full_month",
+     "start": "2026-07-01",
+     "end": "2026-07-31",
+     "expected_hours": 744,
+     "ok": true,
+     "rows": 744,
+     "total": null,
+     "ms": 1514,
+     "code": null,
+     "msg": "None",
+     "err": null
+    }
+   ]
+  }
+ ],
+ "notes": []
+}

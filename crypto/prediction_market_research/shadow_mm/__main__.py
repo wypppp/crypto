@@ -46,7 +46,7 @@ def parser() -> argparse.ArgumentParser:
     replay.add_argument("--resolutions", type=Path, action="append", default=[])
     replay.add_argument(
         "--policy",
-        choices=["join_bbo", "midpoint", "fair_value"],
+        choices=["join_bbo", "midpoint", "fair_value", "fair_join"],
         action="append",
     )
     replay.add_argument("--latency", type=float, action="append")
@@ -131,7 +131,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.command == "replay":
         configs = None
         if args.policy or args.latency:
-            policies = args.policy or ["join_bbo", "midpoint", "fair_value"]
+            policies = args.policy or ["join_bbo", "midpoint", "fair_value", "fair_join"]
             latencies = args.latency or [5.0, 15.0, 30.0]
             configs = [
                 MakerReplayConfig(
