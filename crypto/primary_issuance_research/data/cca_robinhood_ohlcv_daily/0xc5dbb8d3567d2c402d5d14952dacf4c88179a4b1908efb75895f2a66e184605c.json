@@ -1,0 +1,51 @@
+{
+  "fetched_at": "2026-08-27T00:29:08.721451+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0xc5dbb8d3567d2c402d5d14952dacf4c88179a4b1908efb75895f2a66e184605c/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0x167ce8feac3f1498834c0315a506b5fc04f5be0c",
+  "token": "0x08867937065593aeba357fe850c95f74d23e732f",
+  "pool_id": "0xc5dbb8d3567d2c402d5d14952dacf4c88179a4b1908efb75895f2a66e184605c",
+  "migration_block": 39157927,
+  "initial_sqrt_price_x96": 1666576924110137623894541652026981,
+  "currency_raised_raw": 1112700858593349020,
+  "total_cleared_raw": 500000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "0d61e29e-7b49-4c03-b24b-d9e0d88e274e",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1787011200,
+            5.16883508064072e-09,
+            5.16883508064072e-09,
+            5.16758541590897e-09,
+            5.16758541590897e-09,
+            0.000202446125973236
+          ],
+          [
+            1786924800,
+            2.28283234299325e-09,
+            5.25747050193097e-09,
+            2.28283234299325e-09,
+            5.16883508064072e-09,
+            1.1049289744249995
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Oreon",
+        "symbol": "OREON",
+        "coingecko_coin_id": null,
+        "address": "0x08867937065593aeba357fe850c95f74d23e732f"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

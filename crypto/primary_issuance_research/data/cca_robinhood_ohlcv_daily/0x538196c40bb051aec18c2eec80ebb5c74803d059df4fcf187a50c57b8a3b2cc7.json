@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:29:19.188391+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x538196c40bb051aec18c2eec80ebb5c74803d059df4fcf187a50c57b8a3b2cc7/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0x11df3c186d664eeeef42f7d76414ec9eaeab94e3",
+  "token": "0x08c38cd88cb4170837de8c9865a53441fe083eb8",
+  "pool_id": "0x538196c40bb051aec18c2eec80ebb5c74803d059df4fcf187a50c57b8a3b2cc7",
+  "migration_block": 39825401,
+  "initial_sqrt_price_x96": 1706419523474976133320043557390133,
+  "currency_raised_raw": 1074999999999999999,
+  "total_cleared_raw": 499999999999999999997731361,
+  "payload": {
+    "data": {
+      "id": "69bc1775-dceb-404a-b990-d5afc54d3f41",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1787011200,
+            2.19732330988935e-09,
+            7.13276728749612e-09,
+            2.19732330988935e-09,
+            7.13276728749612e-09,
+            1.251636841252445
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "uToken",
+        "symbol": "uTOKEN",
+        "coingecko_coin_id": null,
+        "address": "0x08c38cd88cb4170837de8c9865a53441fe083eb8"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

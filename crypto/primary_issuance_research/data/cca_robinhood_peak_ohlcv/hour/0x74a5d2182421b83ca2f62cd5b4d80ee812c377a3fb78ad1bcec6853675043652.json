@@ -1,0 +1,64 @@
+{
+  "candidate": {
+    "auction": "0x6177d4c81f1ec5e1ceccadb790c72a77a3894727",
+    "token": "0xb72808e26208a6fa75466e02b36780f90da84400",
+    "pool_id": "0x74a5d2182421b83ca2f62cd5b4d80ee812c377a3fb78ad1bcec6853675043652",
+    "token_side": "base",
+    "migration_timestamp": "1783965910",
+    "migration_time_utc": "2026-07-13T18:05:10+00:00",
+    "currency_raised_eth": "3.506644112388114",
+    "total_cleared_tokens": "500000000.0",
+    "issue_vwap_eth_per_token": "7.013288224776228e-09",
+    "daily_candles": "1",
+    "first_day_open_x": "1.2400331364877328",
+    "p1d_x": "0.31687722754041503",
+    "p7d_x": "0.31687722754041503",
+    "p30d_x": "0.31687722754041503",
+    "current_daily_close_x": "0.31687722754041503",
+    "max_spot_30d_x": "7.737551581793026",
+    "max_spot_30d_timestamp": "1783900800",
+    "max_spot_observed_x": "7.737551581793026",
+    "time_to_max_30d_days": "0.0",
+    "spot_5x_observed": "True",
+    "first_spot_5x_days": "0.0",
+    "mature_30d": "True",
+    "mature_180d": "False",
+    "current_spot_x": "0.323166779133773",
+    "current_reserve_usd": "565.132",
+    "current_native_side_liquidity_usd": "481.94848772007555",
+    "current_5pct_native_side_capacity_usd_approx": "24.09742438600378"
+  },
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x74a5d2182421b83ca2f62cd5b4d80ee812c377a3fb78ad1bcec6853675043652/ohlcv/hour?aggregate=1&limit=1000&currency=token&token=base",
+  "payload": {
+    "data": {
+      "id": "3dd77456-065a-4c68-a31c-f75d5cf255a1",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783965600,
+            8.69670979446175e-09,
+            5.42656793971877e-08,
+            2.22235132860893e-09,
+            2.22235132860893e-09,
+            51.44577913082441
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "winslow",
+        "symbol": "Winslow",
+        "coingecko_coin_id": null,
+        "address": "0xb72808e26208a6fa75466e02b36780f90da84400"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

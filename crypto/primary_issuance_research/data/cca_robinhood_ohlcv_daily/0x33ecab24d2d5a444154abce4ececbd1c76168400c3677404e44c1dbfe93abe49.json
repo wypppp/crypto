@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:12:00.260876+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x33ecab24d2d5a444154abce4ececbd1c76168400c3677404e44c1dbfe93abe49/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xa46f388764416221ebb28e1cbb18d82900c42548",
+  "token": "0x2db70c6d774d8bf9019b15901183d7331ee7a3fb",
+  "pool_id": "0x33ecab24d2d5a444154abce4ececbd1c76168400c3677404e44c1dbfe93abe49",
+  "migration_block": 8893398,
+  "initial_sqrt_price_x96": 1477379815236552294760448379746479,
+  "currency_raised_raw": 1437953524104999999,
+  "total_cleared_raw": 500000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "18b09515-8124-4964-9a96-606d9bf81766",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783900800,
+            2.91089661435354e-09,
+            5.01330479605347e-09,
+            2.91089661435354e-09,
+            2.9775030225846e-09,
+            1.8813146601438093
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Chef Nomi",
+        "symbol": "CHEFNOMI",
+        "coingecko_coin_id": null,
+        "address": "0x2db70c6d774d8bf9019b15901183d7331ee7a3fb"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

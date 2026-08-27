@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:12:47.475619+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x3893f02ce3eb66fe24b31fd8b2096d114e21559ebaee74cf12ae000f5807b91e/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0x16f0cdc6be126c410cce1d8f2aa618afdc259ac6",
+  "token": "0x65836ba98f7c3573372dcc308a659739822ec238",
+  "pool_id": "0x3893f02ce3eb66fe24b31fd8b2096d114e21559ebaee74cf12ae000f5807b91e",
+  "migration_block": 9203882,
+  "initial_sqrt_price_x96": 142379327981010816560644589314545,
+  "currency_raised_raw": 1542728620050142842,
+  "total_cleared_raw": 5000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "095a7449-6881-4192-b300-1934ef2aa7bd",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783987200,
+            3.12978084534434e-07,
+            4.78097559318422e-07,
+            3.12978084534434e-07,
+            4.78097559318422e-07,
+            0.49013717400896833
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "robinscribe",
+        "symbol": "RSC",
+        "coingecko_coin_id": null,
+        "address": "0x65836ba98f7c3573372dcc308a659739822ec238"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:13:31.314808+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x204519d0c39a3ba6499dce41ce46f8be1fd5fde1c3053966b09c27e3cdf335b6/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0x79683ab428934e6bc51d5a9095dbd66052640e8e",
+  "token": "0x678f0fda6312f474a6eb407ca1d004948478760e",
+  "pool_id": "0x204519d0c39a3ba6499dce41ce46f8be1fd5fde1c3053966b09c27e3cdf335b6",
+  "migration_block": 9663003,
+  "initial_sqrt_price_x96": 1249587169180194221453799880300942,
+  "currency_raised_raw": 1916751578128474844,
+  "total_cleared_raw": 500000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "f8060393-9079-4531-a9b5-374886f84afa",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783987200,
+            4.03212535747362e-09,
+            1.11593535620702e-08,
+            1.24495632480814e-09,
+            1.24495632480814e-09,
+            7.049008176080876
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "CASH CAT",
+        "symbol": "CASHCAT",
+        "coingecko_coin_id": null,
+        "address": "0x678f0fda6312f474a6eb407ca1d004948478760e"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

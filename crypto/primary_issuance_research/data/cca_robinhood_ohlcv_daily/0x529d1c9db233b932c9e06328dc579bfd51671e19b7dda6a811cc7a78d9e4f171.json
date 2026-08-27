@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:07:42.639142+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x529d1c9db233b932c9e06328dc579bfd51671e19b7dda6a811cc7a78d9e4f171/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xa2bc7c6ea11fc8688d9a9846e97e27b95230ea29",
+  "token": "0x688db8ab311e39a9e3343e861ff5420b1b7bdde8",
+  "pool_id": "0x529d1c9db233b932c9e06328dc579bfd51671e19b7dda6a811cc7a78d9e4f171",
+  "migration_block": 8819998,
+  "initial_sqrt_price_x96": 1109416180628588831191862688177774,
+  "currency_raised_raw": 2530785525851163862,
+  "total_cleared_raw": 500000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "735f0339-a3bd-487d-abe2-0f8ff2e107da",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783900800,
+            5.20139097019305e-09,
+            7.76785430904847e-08,
+            7.42172162434951e-10,
+            1.93894439237027e-09,
+            311.43361688690976
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "SOCKS",
+        "symbol": "SOCKS",
+        "coingecko_coin_id": null,
+        "address": "0x688db8ab311e39a9e3343e861ff5420b1b7bdde8"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

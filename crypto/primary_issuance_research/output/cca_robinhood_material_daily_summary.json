@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-08-27T00:41:02.914819+00:00",
+  "snapshot_timestamp": 1787789218,
+  "scope": "Robinhood native-currency CCA pools with successful migration and >=1 ETH raised",
+  "denominators": {
+    "all_v2_auctions": 3827,
+    "ended_v2_auctions": 3811,
+    "positive_required_and_migrated": 398,
+    "material_raised_ge_1_eth": 104,
+    "material_mature_30d": 31,
+    "material_mature_180d": 0
+  },
+  "coverage": {
+    "ohlcv_rows": 104,
+    "nonempty_ohlcv": 104,
+    "base_side": 101,
+    "quote_side_inverted": 3
+  },
+  "spot_upper_bound": {
+    "observed_5x_count": 30,
+    "observed_5x_share_material": 0.28846153846153844,
+    "mature30_5x_within_30d_count": 15,
+    "mature30_5x_within_30d_share": 0.4838709677419355,
+    "max_spot_30d_x_quantiles_mature30": {
+      "p25": 1.7209019329926099,
+      "p50": 4.714220418646483,
+      "p75": 14.338903873050803,
+      "p90": 132.8847894967429,
+      "p95": 178.1005831187975,
+      "p99": 546.0819113583418,
+      "max": 687.0916540153303
+    },
+    "p1d_x_quantiles": {
+      "p25": 0.31060665821423833,
+      "p50": 0.4652971038466584,
+      "p75": 1.1283317884245836,
+      "p90": 2.854035092443727,
+      "p95": 7.504017023855412,
+      "p99": 37.97189191089378,
+      "max": 89.99776020244116
+    },
+    "p7d_x_quantiles": {
+      "p25": 0.267720400827353,
+      "p50": 0.3219459054112216,
+      "p75": 1.0109712569087506,
+      "p90": 2.2495079823729864,
+      "p95": 3.291184391217931,
+      "p99": 9.80796360430295,
+      "max": 15.296135987694827
+    },
+    "p30d_x_quantiles_mature30": {
+      "p25": 0.3154792765462705,
+      "p50": 0.5684700596769345,
+      "p75": 1.1533909066152765,
+      "p90": 2.0708965324349693,
+      "p95": 3.3628982755554357,
+      "p99": 21.185075792321392,
+      "max": 28.34378725167
+    },
+    "time_to_max_30d_days_quantiles_mature30": {
+      "p25": 0.0,
+      "p50": 0.0,
+      "p75": 0.0,
+      "p90": 5.249895833333333,
+      "p95": 14.160596064814815,
+      "p99": 20.52778472222222,
+      "max": 22.349097222222223
+    },
+    "first_spot_5x_days_quantiles": {
+      "p25": 0.0,
+      "p50": 0.0,
+      "p75": 0.0,
+      "p90": 0.0,
+      "p95": 1.2821620370370304,
+      "p99": 3.6934751157407426,
+      "max": 4.249895833333333
+    },
+    "current_5pct_capacity_usd_quantiles_spot5": {
+      "p25": 82.68885382187246,
+      "p50": 273.557270806721,
+      "p75": 499.8636068688721,
+      "p90": 1507.6399424418896,
+      "p95": 4775.13010244265,
+      "p99": 6400.546137445511,
+      "max": 6997.264967726867
+    },
+    "spot5_current_capacity_ge_500_count": 8
+  },
+  "not_yet_measured": [
+    "ordinary-public bidder allocation and bidder-specific average cost",
+    "$100/$500/$1,000 historical executable exit depth at the high",
+    "fees, gas and 100 bps execution haircut",
+    "180-day outcomes (all Robinhood observations are right-censored)"
+  ]
+}

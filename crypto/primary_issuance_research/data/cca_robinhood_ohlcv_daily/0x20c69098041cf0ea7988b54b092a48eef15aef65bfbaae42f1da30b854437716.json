@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:07:50.340063+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x20c69098041cf0ea7988b54b092a48eef15aef65bfbaae42f1da30b854437716/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0x1d7e7aedf166bdfc5f0e48a0f9330d425ff8b386",
+  "token": "0x2525a5a91eba7d7fc8f84071533b6758f6effb04",
+  "pool_id": "0x20c69098041cf0ea7988b54b092a48eef15aef65bfbaae42f1da30b854437716",
+  "migration_block": 8830121,
+  "initial_sqrt_price_x96": 1389384787782858465547434249784808,
+  "currency_raised_raw": 1389215537628929423,
+  "total_cleared_raw": 500000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "abd41f4f-0eb3-4564-833d-3e60033a0aab",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783900800,
+            3.56836914943026e-09,
+            6.50952282972032e-09,
+            1.20769255990873e-09,
+            1.20769255990873e-09,
+            4.738107025999738
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Unicat",
+        "symbol": "UNICAT",
+        "coingecko_coin_id": null,
+        "address": "0x2525a5a91eba7d7fc8f84071533b6758f6effb04"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

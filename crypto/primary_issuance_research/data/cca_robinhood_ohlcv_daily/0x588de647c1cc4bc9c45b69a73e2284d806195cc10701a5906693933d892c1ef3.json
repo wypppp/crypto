@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:13:59.931114+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x588de647c1cc4bc9c45b69a73e2284d806195cc10701a5906693933d892c1ef3/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xa906d6623940b66aa71fa1fba93b6bcaee646156",
+  "token": "0x7b033e0092d01fad67338936dd79b95af6a54790",
+  "pool_id": "0x588de647c1cc4bc9c45b69a73e2284d806195cc10701a5906693933d892c1ef3",
+  "migration_block": 14961525,
+  "initial_sqrt_price_x96": 1538093376567036707781222900174806,
+  "currency_raised_raw": 1324632791174924411,
+  "total_cleared_raw": 500000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "19c6c5fc-2b6f-40ec-bf95-9f374d6f157a",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1784505600,
+            2.12611311239434e-09,
+            2.12611311239434e-09,
+            8.19628919848231e-10,
+            8.19628919848231e-10,
+            0.6153108997928426
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Uniswap Cat",
+        "symbol": "STELLA",
+        "coingecko_coin_id": null,
+        "address": "0x7b033e0092d01fad67338936dd79b95af6a54790"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

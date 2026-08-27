@@ -1,0 +1,80 @@
+{
+  "candidate": {
+    "auction": "0xa2bc7c6ea11fc8688d9a9846e97e27b95230ea29",
+    "token": "0x688db8ab311e39a9e3343e861ff5420b1b7bdde8",
+    "pool_id": "0x529d1c9db233b932c9e06328dc579bfd51671e19b7dda6a811cc7a78d9e4f171",
+    "token_side": "base",
+    "migration_timestamp": "1783960997",
+    "migration_time_utc": "2026-07-13T16:43:17+00:00",
+    "currency_raised_eth": "2.530785525851164",
+    "total_cleared_tokens": "500000000.0",
+    "issue_vwap_eth_per_token": "5.061571051702328e-09",
+    "daily_candles": "1",
+    "first_day_open_x": "1.0276238181905393",
+    "p1d_x": "0.38307165355668704",
+    "p7d_x": "0.38307165355668704",
+    "p30d_x": "0.38307165355668704",
+    "current_daily_close_x": "0.38307165355668704",
+    "max_spot_30d_x": "15.346725808454185",
+    "max_spot_30d_timestamp": "1783900800",
+    "max_spot_observed_x": "15.346725808454185",
+    "time_to_max_30d_days": "0.0",
+    "spot_5x_observed": "True",
+    "first_spot_5x_days": "0.0",
+    "mature_30d": "True",
+    "mature_180d": "False",
+    "current_spot_x": "0.3928905740388197",
+    "current_reserve_usd": "3249.4606",
+    "current_native_side_liquidity_usd": "3014.9043683357204",
+    "current_5pct_native_side_capacity_usd_approx": "150.74521841678603"
+  },
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x529d1c9db233b932c9e06328dc579bfd51671e19b7dda6a811cc7a78d9e4f171/ohlcv/hour?aggregate=1&limit=1000&currency=token&token=base",
+  "payload": {
+    "data": {
+      "id": "dd5e1b64-9b2b-4df8-95e4-c6bcbfd30291",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783965600,
+            2.82085103588219e-09,
+            7.68378427988637e-09,
+            1.16152636395358e-09,
+            1.93894439237027e-09,
+            0.2949512877362873
+          ],
+          [
+            1783962000,
+            3.14746601150022e-08,
+            7.65229509566597e-08,
+            7.42172162434951e-10,
+            2.82085103588219e-09,
+            99.04094022116467
+          ],
+          [
+            1783958400,
+            5.20139097019305e-09,
+            7.76785430904847e-08,
+            5.20139097019305e-09,
+            3.14746601150022e-08,
+            212.09772537800882
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "SOCKS",
+        "symbol": "SOCKS",
+        "coingecko_coin_id": null,
+        "address": "0x688db8ab311e39a9e3343e861ff5420b1b7bdde8"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

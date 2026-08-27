@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:29:56.496604+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0xce373808885e343495db877d8b02eb70066b1f364a1bd1bb849e87807bc02b19/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xcde14842a6655ab9b17c773c3b3b88c4438554ec",
+  "token": "0x0f5c38d1860fb3146bedb66d030bdb6a7bb54966",
+  "pool_id": "0xce373808885e343495db877d8b02eb70066b1f364a1bd1bb849e87807bc02b19",
+  "migration_block": 46948855,
+  "initial_sqrt_price_x96": 1721301421292584138005325703876142,
+  "currency_raised_raw": 1049999999999999999,
+  "total_cleared_raw": 499999999999999999999680754,
+  "payload": {
+    "data": {
+      "id": "1af1b3eb-2edd-41cc-890c-f56ae127dfaa",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1787702400,
+            2.13998602356882e-09,
+            5.43488768581442e-09,
+            2.13998602356882e-09,
+            4.7333126338482e-09,
+            1.0514900826064772
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Uni Hot Sauce",
+        "symbol": "HOTSAUCE",
+        "coingecko_coin_id": null,
+        "address": "0x0f5c38d1860fb3146bedb66d030bdb6a7bb54966"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

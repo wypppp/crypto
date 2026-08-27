@@ -1,0 +1,67 @@
+{
+  "fetched_at": "2026-08-27T00:27:45.442764+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0xab5c37f815a5c5c72445b6063221326f73400e835c8204c5e7d4db9448c5e3c4/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xccf1412db073cb444d7f1b5cfcf7775bb887bb7c",
+  "token": "0xff129bcbdca24eafc280357658c003fd61af33c6",
+  "pool_id": "0xab5c37f815a5c5c72445b6063221326f73400e835c8204c5e7d4db9448c5e3c4",
+  "migration_block": 33263440,
+  "initial_sqrt_price_x96": 724115944669385083043365806857102,
+  "currency_raised_raw": 5656813274998999189,
+  "total_cleared_raw": 499999999999999999999903309,
+  "payload": {
+    "data": {
+      "id": "50e2161b-a5cf-45d2-95ea-0908156eccb8",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1786665600,
+            3.40158744053121e-09,
+            3.40158744053121e-09,
+            3.33705217776689e-09,
+            3.33705217776689e-09,
+            0.003922541347530734
+          ],
+          [
+            1786579200,
+            3.63500616083794e-09,
+            3.63500616083794e-09,
+            3.36369346943057e-09,
+            3.40158744053121e-09,
+            0.1272803119465478
+          ],
+          [
+            1786492800,
+            3.93655673146849e-09,
+            3.93655673146849e-09,
+            3.63500616083794e-09,
+            3.63500616083794e-09,
+            0.1295637991407595
+          ],
+          [
+            1786406400,
+            1.19411158339933e-08,
+            1.19411158339933e-08,
+            3.93655673146849e-09,
+            3.93655673146849e-09,
+            4.791277592473868
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Quick Token",
+        "symbol": "QUICK",
+        "coingecko_coin_id": null,
+        "address": "0xff129bcbdca24eafc280357658c003fd61af33c6"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

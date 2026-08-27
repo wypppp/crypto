@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:12:20.112149+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0xb969bfdf118a3e79352378de6fa335186b948a3149e1cce2adae3c1c3e64a3fa/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0x02414af4ed4af5bcbed2a5d2a821788e0b261523",
+  "token": "0x5406dd2b63ff208854efc58aff0ba34d3a4a6f57",
+  "pool_id": "0xb969bfdf118a3e79352378de6fa335186b948a3149e1cce2adae3c1c3e64a3fa",
+  "migration_block": 9111558,
+  "initial_sqrt_price_x96": 1352197076163175569769313343001427,
+  "currency_raised_raw": 1709541205127898878,
+  "total_cleared_raw": 500000000000000000000000000,
+  "payload": {
+    "data": {
+      "id": "dd25f166-f441-4509-921b-666a9b081c36",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1783987200,
+            3.48760056055008e-09,
+            3.48760056055008e-09,
+            3.11672338659667e-09,
+            3.11672338659667e-09,
+            0.123320082072428
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Robin Rebels",
+        "symbol": "REBELS",
+        "coingecko_coin_id": null,
+        "address": "0x5406dd2b63ff208854efc58aff0ba34d3a4a6f57"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:27:05.878956+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0xa95ae4e5761465c12bbaac14133b51f396dee6f1faf92120a7ce4a0c492b8cb8/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xf0fe3127d3771e18500331911d26317a56bcba3d",
+  "token": "0x1be1803caeab02ad57f03a4a721d0dabe07ed57d",
+  "pool_id": "0xa95ae4e5761465c12bbaac14133b51f396dee6f1faf92120a7ce4a0c492b8cb8",
+  "migration_block": 33062275,
+  "initial_sqrt_price_x96": 1976654363091339690016226315854213,
+  "currency_raised_raw": 1040095714285714284,
+  "total_cleared_raw": 649999999999999999999429712,
+  "payload": {
+    "data": {
+      "id": "3dabc2cf-0bf8-4f7e-9034-9b527e8e51c4",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1786320000,
+            1.59022764414273e-09,
+            8.22570028565943e-09,
+            1.59022764414273e-09,
+            1.94583723518365e-09,
+            2.0534793067539323
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Strategy Protocol",
+        "symbol": "SRT",
+        "coingecko_coin_id": null,
+        "address": "0x1be1803caeab02ad57f03a4a721d0dabe07ed57d"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

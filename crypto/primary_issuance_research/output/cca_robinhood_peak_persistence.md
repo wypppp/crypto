@@ -1,0 +1,28 @@
+# Robinhood CCA 5x 候选：峰值持续性筛查
+
+> 全部 15 个候选；小时/分钟 OHLCV 只用于收缩逐笔审计范围，不等于可执行退出。
+
+- 小时 high 在 1% 内复现日线 high：15/15
+- 峰值小时成交量（ETH）P25/P50/P75/P90：14.805 / 53.733 / 192.172 / 235.283
+- 峰值小时内，分钟 close >=5x 的分钟数 P25/P50/P75/P90：2.50 / 16.00 / 58.50 / 60.00
+- 临时持久性筛选通过：9/15（>=5 个连续分钟 close 在 5x 以上，且峰值小时成交量 >=0.2 ETH）
+
+| token | max x | peak hour ETH vol | min close>=5x | longest min close>=5x | persistent | poolId |
+|---|---:|---:|---:|---:|---:|---|
+| `0x4a6eec8a30b49d289b9fc865fd374b4d61eab8fb` | 687.09 | 194.485 | 60 | 60 | true | `0x1f00bab0dfb60102287e2508b7d41a0a97a9dec2c9317bc9c81a4fb91a731be3` |
+| `0xbe4f4bc2ecdca72a6e0d9c963ad71a5869a9fa65` | 217.06 | 1942.875 | 60 | 60 | true | `0x4dfca89eb922ce39226d9f004fa737b8ce0959d68c509f7ddb711477350f53a1` |
+| `0xff0a037e3ecd3560b93e6b2163fea48b81feefd1` | 139.14 | 53.733 | 58 | 47 | true | `0xc38ad275369425047272f9b96f87c564005f2e1935ea89dfbce361b325fda901` |
+| `0x7d7285afa84703021eb63ce75910b155b824c9c2` | 132.88 | 10.276 | 40 | 8 | true | `0xddcfc96c1929a96302f9a6eef7a8ff621927228b7b15def509bded85f3b4b226` |
+| `0x8ad265268d66a551cf282cc1fdd0af2231accb0c` | 123.70 | 189.859 | 60 | 60 | true | `0xcf58708b8003d0ed4d493b02b3607d7a5facb854244808b2e080fd9201a004e2` |
+| `0x38673a2ea3a527214422c9dc0c83ac3bbd83bc72` | 39.52 | 58.757 | 59 | 58 | true | `0xb9c092777fe7fe978ab4dc7bac7b4f637c487a7aee97a51d2e36069099f53aec` |
+| `0xddb55e8e4990293d59e948b0b15bb5d3b096ea79` | 33.93 | 250.740 | 17 | 17 | true | `0x08395d90abab0bfb8a7281e5f2f56e3efd957d96726efaabcb2cccf7cb109021` |
+| `0x688db8ab311e39a9e3343e861ff5420b1b7bdde8` | 15.35 | 212.098 | 15 | 13 | true | `0x529d1c9db233b932c9e06328dc579bfd51671e19b7dda6a811cc7a78d9e4f171` |
+| `0x85be654b61303dd91897a754972e5f8600ac0416` | 13.33 | 2.384 | 16 | 7 | true | `0x17677bb6507416bc4741135d8220d252c2515ba957e17a942ee76173de5a925a` |
+| `0x8af8a4b49cc3e7b68e13f37dc3e4651d7ebee0eb` | 10.72 | 28.813 | 1 | 1 | false | `0x86ebe85fdd917cc2528d69d4b0a99e9fbf23750ab4d4e83469afb8b58392d70a` |
+| `0xf5e5f4d3c34a14b2fdfd59584fe555cd5e21f196` | 8.37 | 0.440 | 10 | 2 | false | `0x3f66e1430c12a7a64839f43050165db6d1bf1ae5bd7df11e47a37a8e73bc00ef` |
+| `0xe2b7cd9dbc5a93626700575a1d96a74e1dcc238d` | 7.94 | 56.475 | 4 | 3 | false | `0x6d49b75dfdd71871877528e6d74b076df6ab90ea2aa3d0caa3becb1ba8793181` |
+| `0xb72808e26208a6fa75466e02b36780f90da84400` | 7.74 | 51.446 | 1 | 1 | false | `0x74a5d2182421b83ca2f62cd5b4d80ee812c377a3fb78ad1bcec6853675043652` |
+| `0x93137ff8f11801b24f97d655a7097c1910857bf5` | 6.47 | 14.758 | 0 | 0 | false | `0xe764e515249dd959799850965d0b42fb39409861771f33c559ec2081122059bc` |
+| `0x577be142874bf666baf422b41a6099725cb12949` | 6.38 | 14.852 | 0 | 0 | false | `0xcf711c4f9a41b9e8656116f42c1f7414dedd97e34d112063c12343afac6ac318` |
+
+下一步只对临时通过者读取峰值分钟逐笔 Swap，并按成交方向和当时 liquidity 检查 $100/$500/$1,000 退出。

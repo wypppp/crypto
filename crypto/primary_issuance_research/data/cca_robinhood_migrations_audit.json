@@ -1,0 +1,112 @@
+{
+  "collected_at": "2026-08-26T23:58:51.868023+00:00",
+  "rpc": "https://rpc.mainnet.chain.robinhood.com",
+  "observed_chain_id": 4663,
+  "latest_block": 46996789,
+  "topics": {
+    "migrated": "0xbcc36534419debbbf0f25857d1fef3e4bbce9527091c805e9a7da93dbfd828f4",
+    "migration_failed": "0x68b0b16b3bdd5fa8045913c6519a56054f9ffabcc9d3ef1d71520fc0b61f1e15",
+    "funds_recovered": "0x13e06184555481b6d2cb327155e8d2e1d0b1f0252a7fe6621e32cf9988148835"
+  },
+  "auction_rows": 3827,
+  "strategy_addresses": 11,
+  "complete": true,
+  "migrated_auctions": 687,
+  "migration_failed_auctions": 37,
+  "funds_recovered_auctions": 37,
+  "strategies": {
+    "0x05d552391067389ee44fec3924157ed33f976000": {
+      "is_contract": true,
+      "from_block": 7153693,
+      "raw_log_count": 759,
+      "classified_counts": {
+        "migrated": 687,
+        "funds_recovered": 36,
+        "migration_failed": 36
+      },
+      "rpc_calls": 1,
+      "complete": true,
+      "unqueried_ranges": [],
+      "single_block_failures": []
+    },
+    "0x095e38a2135aebcffa98a5b6911591937f912000": {
+      "is_contract": true,
+      "from_block": 4727385,
+      "raw_log_count": 2,
+      "classified_counts": {
+        "funds_recovered": 1,
+        "migration_failed": 1
+      },
+      "rpc_calls": 1,
+      "complete": true,
+      "unqueried_ranges": [],
+      "single_block_failures": []
+    },
+    "0x1e5a3c8b0120e28ca3fc554e6a7b7957975ad492": {
+      "is_contract": false,
+      "log_count": 0
+    },
+    "0x36c083425f16b71019f47cb37d71457f8c3c6000": {
+      "is_contract": true,
+      "from_block": 43326570,
+      "raw_log_count": 0,
+      "classified_counts": {},
+      "rpc_calls": 1,
+      "complete": true,
+      "unqueried_ranges": [],
+      "single_block_failures": []
+    },
+    "0x4f6bcdade4123d1654f8530c0e76ca68c343a9ea": {
+      "is_contract": true,
+      "from_block": 25169835,
+      "raw_log_count": 0,
+      "classified_counts": {},
+      "rpc_calls": 1,
+      "complete": true,
+      "unqueried_ranges": [],
+      "single_block_failures": []
+    },
+    "0x53946363c102f180e63fdfa11295bbc3051801ce": {
+      "is_contract": false,
+      "log_count": 0
+    },
+    "0x843747f4c08e3393e55508f577296ba48e8ca000": {
+      "is_contract": true,
+      "from_block": 6301432,
+      "raw_log_count": 0,
+      "classified_counts": {},
+      "rpc_calls": 1,
+      "complete": true,
+      "unqueried_ranges": [],
+      "single_block_failures": []
+    },
+    "0x8ff1897ff9c8f16de1d1ffbd9c9292349213dc5c": {
+      "is_contract": true,
+      "from_block": 13176662,
+      "raw_log_count": 0,
+      "classified_counts": {},
+      "rpc_calls": 1,
+      "complete": true,
+      "unqueried_ranges": [],
+      "single_block_failures": []
+    },
+    "0xa043cabe645636899dde91cce4693c00a015e660": {
+      "is_contract": true,
+      "from_block": 42128221,
+      "raw_log_count": 0,
+      "classified_counts": {},
+      "rpc_calls": 1,
+      "complete": true,
+      "unqueried_ranges": [],
+      "single_block_failures": []
+    },
+    "0xda200d736a4753d82efa570e4c0af1da490e15d5": {
+      "is_contract": false,
+      "log_count": 0
+    },
+    "0xedb725eb8f5d14ed9912a78f80c6c785ad38ca2a": {
+      "is_contract": false,
+      "log_count": 0
+    }
+  }
+}

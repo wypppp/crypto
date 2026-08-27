@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from collect_cca_auctions import EvmRpc, get_logs_adaptive
+from collect_cca_auctions import EvmRpc
 
 
 EVENT_SIGNATURES = {
@@ -22,6 +22,63 @@ EVENT_SIGNATURES = {
 
 def topic_address(topic: str) -> str:
     return "0x" + topic[-40:].lower()
+
+
+def get_event_logs_adaptive(
+    rpc: EvmRpc,
+    address: str,
+    start_block: int,
+    end_block: int,
+    event_topics: list[str],
+    max_queries: int,
+    indexed_topic1: str | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Fetch only migration events and split ranges on provider/network errors.
+
+    Public RPCs commonly reject a full-history unfiltered address scan.  The
+    topic filter keeps successful responses small, while catching transport
+    errors as well as JSON-RPC errors prevents a failed scan from becoming a
+    false zero.
+    """
+    pending = [(start_block, end_block)]
+    logs: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+    calls = 0
+    while pending and calls < max_queries:
+        start, end = pending.pop()
+        calls += 1
+        try:
+            topic_filter: list[Any] = [event_topics]
+            if indexed_topic1 is not None:
+                topic_filter.append(indexed_topic1)
+            logs.extend(
+                rpc.call(
+                    "eth_getLogs",
+                    [
+                        {
+                            "fromBlock": hex(start),
+                            "toBlock": hex(end),
+                            "address": address,
+                            "topics": topic_filter,
+                        }
+                    ],
+                )
+            )
+        except Exception as exc:
+            if start == end:
+                failures.append(
+                    {"from_block": start, "to_block": end, "error": str(exc)}
+                )
+                continue
+            middle = (start + end) // 2
+            pending.append((middle + 1, end))
+            pending.append((start, middle))
+    return logs, {
+        "rpc_calls": calls,
+        "complete": not pending and not failures,
+        "unqueried_ranges": pending,
+        "single_block_failures": failures,
+    }
 
 
 def main() -> None:
@@ -62,6 +119,14 @@ def main() -> None:
         for name, signature in EVENT_SIGNATURES.items()
     }
     topic_to_name = {topic.lower(): name for name, topic in topics.items()}
+    first_auction_block = {
+        strategy: min(
+            int(row["block_number"])
+            for row in v2
+            if row.get("funds_recipient", "").lower() == strategy
+        )
+        for strategy in strategies
+    }
 
     event_rows = []
     audit_strategies: dict[str, Any] = {}
@@ -71,8 +136,13 @@ def main() -> None:
             if code in ("0x", "0x0"):
                 audit_strategies[strategy] = {"is_contract": False, "log_count": 0}
                 continue
-            logs, log_audit = get_logs_adaptive(
-                rpc, strategy, 0, latest_block, args.max_log_queries
+            logs, log_audit = get_event_logs_adaptive(
+                rpc,
+                strategy,
+                first_auction_block[strategy],
+                latest_block,
+                list(topics.values()),
+                args.max_log_queries,
             )
             counts: dict[str, int] = {}
             for log in logs:
@@ -110,6 +180,7 @@ def main() -> None:
                 )
             audit_strategies[strategy] = {
                 "is_contract": True,
+                "from_block": first_auction_block[strategy],
                 "raw_log_count": len(logs),
                 "classified_counts": counts,
                 **log_audit,
@@ -173,6 +244,10 @@ def main() -> None:
         "topics": topics,
         "auction_rows": len(joined),
         "strategy_addresses": len(strategies),
+        "complete": all(
+            not value.get("error") and value.get("complete", True)
+            for value in audit_strategies.values()
+        ),
         "migrated_auctions": sum(row["migrated"] for row in joined),
         "migration_failed_auctions": sum(row["migration_failed"] for row in joined),
         "funds_recovered_auctions": sum(row["funds_recovered"] for row in joined),

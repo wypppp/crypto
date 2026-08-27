@@ -1,0 +1,67 @@
+{
+  "fetched_at": "2026-08-27T00:19:36.239248+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x6d51d2bf1b3641252c0567b9584dc8be9063525d750872d228038f9860553fa0/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xaa56b0635c01424fe9b2ea838d98b1f1427abf4a",
+  "token": "0x1333ebb165f1af1103d907cdacfb70acf9854f6a",
+  "pool_id": "0x6d51d2bf1b3641252c0567b9584dc8be9063525d750872d228038f9860553fa0",
+  "migration_block": 28940532,
+  "initial_sqrt_price_x96": 1064464181070531812336032071130138,
+  "currency_raised_raw": 2596520050100771890,
+  "total_cleared_raw": 499999999999999999999513049,
+  "payload": {
+    "data": {
+      "id": "7467f10c-aabf-4014-8f40-1ef91428c002",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1787270400,
+            1.8355776e-09,
+            1.8355776e-09,
+            1.82482343781127e-09,
+            1.82482343781127e-09,
+            0.000104032182681947
+          ],
+          [
+            1786233600,
+            1.82511810582933e-09,
+            1.8355776e-09,
+            1.82511810582933e-09,
+            1.8355776e-09,
+            1.8355776e-11
+          ],
+          [
+            1786060800,
+            1.88296085628106e-09,
+            1.88296085628106e-09,
+            1.82511810582933e-09,
+            1.82511810582933e-09,
+            0.000137638662141912
+          ],
+          [
+            1785974400,
+            5.56650579618893e-09,
+            8.65672252272863e-09,
+            1.3602341240529e-09,
+            1.88296085628106e-09,
+            6.596945242811434
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Unicorn with Hood",
+        "symbol": "UWH",
+        "coingecko_coin_id": null,
+        "address": "0x1333ebb165f1af1103d907cdacfb70acf9854f6a"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

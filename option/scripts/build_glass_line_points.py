@@ -17,11 +17,22 @@ CN = {'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'�
 
 
 def line_numbers(n):
+    """返回 (线号列表, 是否共用/备用口)。
+
+    共用判定**优先于**线号解析：形如「玻璃熔窑1--4线备用排放口」会解析出唯一线号 4，
+    但它是 1-4 线的备用口，不是 4 线的主排口。此前按"唯一线号即主口"处理，
+    导致长城玻璃被多计一条线、并产生虚假的产能进出。
+    """
     n = n or ''
+    if re.search(r'备用|共用|应急|事故', n):
+        return [], True
+    if re.search(r'\d\s*[-–—]{1,2}\s*\d|[一二三四五六七八九十]\s*[-–—]{1,2}\s*[一二三四五六七八九十]', n):
+        return [], True
     nums = {int(m.group(1)) for m in re.finditer(r'(\d{1,2})\s*[#号]?\s*线', n)}
     nums |= {CN[m.group(1)] for m in re.finditer(r'([一二三四五六七八九十])\s*线', n)}
-    shared = bool(re.search(r'备用|共用|--|—|、', n)) and len(nums) != 1
-    return sorted(nums), shared
+    if re.search(r'[、,，]', n) and len(nums) > 1:
+        return sorted(nums), True
+    return sorted(nums), len(nums) != 1
 
 
 def main():

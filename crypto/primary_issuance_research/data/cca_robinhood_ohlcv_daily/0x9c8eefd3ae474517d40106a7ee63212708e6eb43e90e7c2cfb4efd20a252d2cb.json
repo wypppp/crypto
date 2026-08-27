@@ -1,0 +1,43 @@
+{
+  "fetched_at": "2026-08-27T00:17:52.089278+00:00",
+  "source_url": "https://api.geckoterminal.com/api/v2/networks/robinhood/pools/0x9c8eefd3ae474517d40106a7ee63212708e6eb43e90e7c2cfb4efd20a252d2cb/ohlcv/day?aggregate=1&limit=100&currency=token&token=base",
+  "auction": "0xd8d697088dcda8d965fb56d77f152117d397c80b",
+  "token": "0xb42b0e5a9377e4e20fbf535fe9e115dee1142726",
+  "pool_id": "0x9c8eefd3ae474517d40106a7ee63212708e6eb43e90e7c2cfb4efd20a252d2cb",
+  "migration_block": 28604268,
+  "initial_sqrt_price_x96": 1755359362666985257452444768109307,
+  "currency_raised_raw": 1018000007840127797,
+  "total_cleared_raw": 499999999999999999997020532,
+  "payload": {
+    "data": {
+      "id": "d73c832e-7134-43a4-9ecb-8da769c1ddd7",
+      "type": "ohlcv_request_response",
+      "attributes": {
+        "ohlcv_list": [
+          [
+            1785888000,
+            2.00112527669006e-09,
+            5.1114968630697e-09,
+            2.00112527669006e-09,
+            5.1114968630697e-09,
+            1.4777808772883327
+          ]
+        ]
+      }
+    },
+    "meta": {
+      "base": {
+        "name": "Saylis",
+        "symbol": "SAYLIS",
+        "coingecko_coin_id": null,
+        "address": "0xb42b0e5a9377e4e20fbf535fe9e115dee1142726"
+      },
+      "quote": {
+        "name": "WETH",
+        "symbol": "WETH",
+        "coingecko_coin_id": null,
+        "address": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  }
+}
