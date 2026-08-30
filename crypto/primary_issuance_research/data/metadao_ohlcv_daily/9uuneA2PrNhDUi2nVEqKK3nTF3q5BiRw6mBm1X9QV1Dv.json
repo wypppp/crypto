@@ -1,0 +1,16 @@
+{
+  "fetched_at": "2026-08-27T23:49:24.052382+00:00",
+  "launch_account": "9kx7UDFzFt7e2V4pFtawnupKKvRR3EhV7P1Pxmc5XCQj",
+  "token_mint": "PRVT6TB7uss3FrUd2D9xs2zqDBsa3GbMJMwCQsgmeta",
+  "token_symbol": "UMBRA",
+  "pool_address": "9uuneA2PrNhDUi2nVEqKK3nTF3q5BiRw6mBm1X9QV1Dv",
+  "accepted_usd": 3000000.0,
+  "public_tokens": 10000000,
+  "issue_price_usd": 0.3,
+  "launch_end_timestamp": 1760104804,
+  "target_end_timestamp": 1775656804,
+  "source_urls": [
+    "https://api.geckoterminal.com/api/v2/networks/solana/pools/9uuneA2PrNhDUi2nVEqKK3nTF3q5BiRw6mBm1X9QV1Dv/ohlcv/day?aggregate=1&limit=100&before_timestamp=1775743204&currency=token&token=base"
+  ],
+  "candles": []
+}

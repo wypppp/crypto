@@ -14,6 +14,7 @@ import csv
 import hashlib
 import json
 import re
+import shutil
 import struct
 import subprocess
 import time
@@ -139,15 +140,35 @@ process.stdin.on('end', () => {
   process.stdout.write(JSON.stringify(context.IDL));
 });
 """
-    completed = subprocess.run(
-        ["node", "-e", js],
-        input=literal,
-        text=True,
-        capture_output=True,
-        check=True,
-        timeout=10,
+    if shutil.which("node"):
+        completed = subprocess.run(
+            ["node", "-e", js],
+            input=literal,
+            text=True,
+            capture_output=True,
+            check=True,
+            timeout=10,
+        )
+        return json.loads(completed.stdout)
+
+    # Anchor's generated TypeScript IDL literal is JSON5-shaped: values are
+    # JSON primitives, while object keys are bare identifiers and containers
+    # have trailing commas.  This fallback keeps collection reproducible on
+    # minimal hosts that do not ship Node.  It deliberately does not evaluate
+    # arbitrary JavaScript.
+    literal = literal.strip()
+    if literal.endswith(";"):
+        literal = literal[:-1].rstrip()
+    json_source = re.sub(
+        r'([\{\[,]\s*)([A-Za-z_$][A-Za-z0-9_$]*)(\s*:)',
+        r'\1"\2"\3',
+        literal,
     )
-    return json.loads(completed.stdout)
+    json_source = re.sub(r",\s*([}\]])", r"\1", json_source)
+    value = json.loads(json_source)
+    if not isinstance(value, dict) or "accounts" not in value:
+        raise ValueError("parsed TypeScript IDL is not an Anchor IDL object")
+    return value
 
 
 @dataclass

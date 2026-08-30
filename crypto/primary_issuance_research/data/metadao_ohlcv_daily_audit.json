@@ -1,0 +1,15 @@
+{
+  "collected_at": "2026-08-27T23:54:08.864935+00:00",
+  "selection": "completed MetaDAO launch, accepted >= $10k, DexScreener market matched",
+  "selected_pools": 19,
+  "material_completed_without_matched_pair": 3,
+  "cached_or_collected": 15,
+  "request_count_this_run": 25,
+  "errors": {
+    "s45fTDhkzKPMFbNmUXA3bJNdF92z5cbVvHdY8LpznWQ": "HTTP 401: Unauthorized; HTTP 401: Unauthorized; HTTP 401: Unauthorized; HTTP 401: Unauthorized; HTTP 401: Unauthorized",
+    "5gB4NPgFB3MHFHSeKN4sbaY6t9MB8ikCe9HyiKYid4Td": "HTTP 401: Unauthorized; HTTP 429: Too Many Requests; HTTP 401: Unauthorized; HTTP 401: Unauthorized; HTTP 401: Unauthorized",
+    "MefEdd5fFcmFMm6Y2rWcP4F1wW3qbkdqqW9je1b1bXn": "HTTP 401: Unauthorized; HTTP 429: Too Many Requests; HTTP 401: Unauthorized; HTTP 401: Unauthorized; HTTP 401: Unauthorized",
+    "FB42gMaN856Xvpc5zNmNEidrXPinX4u1LLW69SYo34yQ": "HTTP 401: Unauthorized; HTTP 401: Unauthorized; HTTP 429: Too Many Requests; HTTP 401: Unauthorized; HTTP 401: Unauthorized"
+  },
+  "complete": false
+}

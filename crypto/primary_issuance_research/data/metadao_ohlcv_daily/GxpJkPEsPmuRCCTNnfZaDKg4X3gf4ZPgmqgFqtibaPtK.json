@@ -1,0 +1,16 @@
+{
+  "fetched_at": "2026-08-27T23:49:29.065441+00:00",
+  "launch_account": "E7kXdSdZrjVFDkLb6V7S8VihKookPviRJ7tXVik9qbdu",
+  "token_mint": "LYLikzBQtpa9ZgVrJsqYGQpR3cC1WMJrBHaXGrQmeta",
+  "token_symbol": "LOYAL",
+  "pool_address": "GxpJkPEsPmuRCCTNnfZaDKg4X3gf4ZPgmqgFqtibaPtK",
+  "accepted_usd": 2500000.0,
+  "public_tokens": 10000000,
+  "issue_price_usd": 0.25,
+  "launch_end_timestamp": 1761170409,
+  "target_end_timestamp": 1776722409,
+  "source_urls": [
+    "https://api.geckoterminal.com/api/v2/networks/solana/pools/GxpJkPEsPmuRCCTNnfZaDKg4X3gf4ZPgmqgFqtibaPtK/ohlcv/day?aggregate=1&limit=100&before_timestamp=1776808809&currency=token&token=base"
+  ],
+  "candles": []
+}

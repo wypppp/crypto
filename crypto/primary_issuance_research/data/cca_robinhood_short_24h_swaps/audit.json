@@ -1,0 +1,217 @@
+{
+  "collected_at": "2026-08-28T08:47:00.922618+00:00",
+  "rpc": "https://rpc.mainnet.chain.robinhood.com",
+  "observed_chain_id": 4663,
+  "latest_block": 48166645,
+  "pool_manager": "0x8366a39cc670b4001a1121b8f6a443a643e40951",
+  "swap_signature": "Swap(bytes32,address,int128,int128,uint160,uint128,int24,uint24)",
+  "swap_topic0": "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+  "selection": "successful migrated Robinhood native-currency CCAs with currencyRaised >= 1 ETH and auction_duration_seconds <= 600; swaps in [migration,migration+24h]",
+  "jobs": [
+    {
+      "pool_id": "0x04c0796a1501fceb58c9335537211b958bd8a960d980cf63328598f3c6414179",
+      "from_block": 9168383,
+      "to_block": 10030913,
+      "raw_log_count": 938,
+      "cached": true
+    },
+    {
+      "pool_id": "0x08395d90abab0bfb8a7281e5f2f56e3efd957d96726efaabcb2cccf7cb109021",
+      "from_block": 18287665,
+      "to_block": 19148472,
+      "raw_log_count": 4457,
+      "cached": true
+    },
+    {
+      "pool_id": "0x0efe8767dc4668ff115120fb4f601f086374aaa2f6686419ee29eb13929987de",
+      "from_block": 23385202,
+      "to_block": 24247154,
+      "raw_log_count": 2645,
+      "cached": true
+    },
+    {
+      "pool_id": "0x17677bb6507416bc4741135d8220d252c2515ba957e17a942ee76173de5a925a",
+      "from_block": 8866065,
+      "to_block": 9728413,
+      "raw_log_count": 1483,
+      "cached": true
+    },
+    {
+      "pool_id": "0x1f00bab0dfb60102287e2508b7d41a0a97a9dec2c9317bc9c81a4fb91a731be3",
+      "from_block": 17664293,
+      "to_block": 18525709,
+      "raw_log_count": 10533,
+      "cached": true
+    },
+    {
+      "pool_id": "0x204519d0c39a3ba6499dce41ce46f8be1fd5fde1c3053966b09c27e3cdf335b6",
+      "from_block": 9663003,
+      "to_block": 10527093,
+      "raw_log_count": 193,
+      "cached": true
+    },
+    {
+      "pool_id": "0x33ecab24d2d5a444154abce4ececbd1c76168400c3677404e44c1dbfe93abe49",
+      "from_block": 8893398,
+      "to_block": 9755768,
+      "raw_log_count": 59,
+      "cached": true
+    },
+    {
+      "pool_id": "0x48e94d991f89112d7aeccb8270f8645611f1a2dfd570a67d5da6c35c8f81077a",
+      "from_block": 9150563,
+      "to_block": 10013074,
+      "raw_log_count": 125,
+      "cached": true
+    },
+    {
+      "pool_id": "0x4dfca89eb922ce39226d9f004fa737b8ce0959d68c509f7ddb711477350f53a1",
+      "from_block": 8787803,
+      "to_block": 9649966,
+      "raw_log_count": 42512,
+      "cached": true
+    },
+    {
+      "pool_id": "0x529d1c9db233b932c9e06328dc579bfd51671e19b7dda6a811cc7a78d9e4f171",
+      "from_block": 8819998,
+      "to_block": 9682331,
+      "raw_log_count": 7944,
+      "cached": false
+    },
+    {
+      "pool_id": "0x538196c40bb051aec18c2eec80ebb5c74803d059df4fcf187a50c57b8a3b2cc7",
+      "from_block": 39825401,
+      "to_block": 40685848,
+      "raw_log_count": 54,
+      "cached": true
+    },
+    {
+      "pool_id": "0x558d86ff6299e0f250d8bd3aa38a6b924b1d6ac53f9711327b45c5cce2947ff5",
+      "from_block": 33040151,
+      "to_block": 33903923,
+      "raw_log_count": 199,
+      "cached": true
+    },
+    {
+      "pool_id": "0x6c559f5b876a2b77d5a4b8b42e6bea9c63b476456269adc7cba20fd652414c0b",
+      "from_block": 8863596,
+      "to_block": 9725942,
+      "raw_log_count": 350,
+      "cached": true
+    },
+    {
+      "pool_id": "0x6d49b75dfdd71871877528e6d74b076df6ab90ea2aa3d0caa3becb1ba8793181",
+      "from_block": 18305426,
+      "to_block": 19166196,
+      "raw_log_count": 1403,
+      "cached": true
+    },
+    {
+      "pool_id": "0x6d55a5f0a4ed8b39d41f7038ba837d2461c1a43dab3ad72b40e066704a4dbffc",
+      "from_block": 23691387,
+      "to_block": 24553971,
+      "raw_log_count": 482,
+      "cached": true
+    },
+    {
+      "pool_id": "0x74a5d2182421b83ca2f62cd5b4d80ee812c377a3fb78ad1bcec6853675043652",
+      "from_block": 8869065,
+      "to_block": 9731406,
+      "raw_log_count": 1311,
+      "cached": true
+    },
+    {
+      "pool_id": "0x9ae444518c3d6eee7b5ab463f13ce142c1dc38289886e7ae5db3dff6b1f551e6",
+      "from_block": 21896991,
+      "to_block": 22758895,
+      "raw_log_count": 2066,
+      "cached": true
+    },
+    {
+      "pool_id": "0x9c8eefd3ae474517d40106a7ee63212708e6eb43e90e7c2cfb4efd20a252d2cb",
+      "from_block": 28604268,
+      "to_block": 29467168,
+      "raw_log_count": 92,
+      "cached": true
+    },
+    {
+      "pool_id": "0xa95ae4e5761465c12bbaac14133b51f396dee6f1faf92120a7ce4a0c492b8cb8",
+      "from_block": 33062275,
+      "to_block": 33926138,
+      "raw_log_count": 121,
+      "cached": true
+    },
+    {
+      "pool_id": "0xaae0437fc169c994e24a5209ef492c44093010e680e3c14c4d6d96dcce7cbb32",
+      "from_block": 8843253,
+      "to_block": 9705599,
+      "raw_log_count": 125,
+      "cached": true
+    },
+    {
+      "pool_id": "0xb9c092777fe7fe978ab4dc7bac7b4f637c487a7aee97a51d2e36069099f53aec",
+      "from_block": 8817417,
+      "to_block": 9679743,
+      "raw_log_count": 6615,
+      "cached": true
+    },
+    {
+      "pool_id": "0xc38ad275369425047272f9b96f87c564005f2e1935ea89dfbce361b325fda901",
+      "from_block": 8780488,
+      "to_block": 9642638,
+      "raw_log_count": 12767,
+      "cached": true
+    },
+    {
+      "pool_id": "0xc49a236d0e90906c937d95b39d7daf0381ff2638a872949bf6f559940d94a740",
+      "from_block": 23392435,
+      "to_block": 24254394,
+      "raw_log_count": 8183,
+      "cached": true
+    },
+    {
+      "pool_id": "0xc6736cfd4d4d234d0a3a200f5a11d019d5d363190351040daaa272cc81da069e",
+      "from_block": 23405463,
+      "to_block": 24267433,
+      "raw_log_count": 1319,
+      "cached": true
+    },
+    {
+      "pool_id": "0xce373808885e343495db877d8b02eb70066b1f364a1bd1bb849e87807bc02b19",
+      "from_block": 46948855,
+      "to_block": 47805056,
+      "raw_log_count": 68,
+      "cached": true
+    },
+    {
+      "pool_id": "0xcf58708b8003d0ed4d493b02b3607d7a5facb854244808b2e080fd9201a004e2",
+      "from_block": 8841756,
+      "to_block": 9704102,
+      "raw_log_count": 11055,
+      "cached": true
+    },
+    {
+      "pool_id": "0xcf711c4f9a41b9e8656116f42c1f7414dedd97e34d112063c12343afac6ac318",
+      "from_block": 8834088,
+      "to_block": 9696434,
+      "raw_log_count": 354,
+      "cached": true
+    },
+    {
+      "pool_id": "0xeeb75f95e54338fdc56402405a572e813cb3b616576e2e11f6074ffafa5200e3",
+      "from_block": 21245937,
+      "to_block": 22107401,
+      "raw_log_count": 7077,
+      "cached": true
+    },
+    {
+      "pool_id": "0xf7728f1b3e4e5ba9d080fab8e7c36c37445b38a3e229d0250b7a43029c2e371e",
+      "from_block": 35567945,
+      "to_block": 36430280,
+      "raw_log_count": 6382,
+      "cached": true
+    }
+  ],
+  "errors": {},
+  "complete": true
+}

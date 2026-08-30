@@ -8,8 +8,10 @@ denominator.  The on-chain Launch-account snapshot remains the left table.
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import csv
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -70,28 +72,62 @@ def main() -> None:
         default="auto",
     )
     parser.add_argument("--timeout", type=int, default=30)
-    parser.add_argument("--batch-size", type=int, default=10)
+    parser.add_argument("--workers", type=int, default=6)
+    parser.add_argument("--min-accepted-usd", type=float, default=10_000)
+    parser.add_argument("--transport", choices=("urllib", "curl"), default="curl")
     args = parser.parse_args()
 
     launches = json.loads(args.launches.read_text())
-    completed = [row for row in launches if row["state"] == "Complete" and token_mint(row)]
+    completed = [
+        row
+        for row in launches
+        if row["state"] == "Complete"
+        and token_mint(row)
+        and accepted_raw(row) / 1_000_000 >= args.min_accepted_usd
+    ]
     mints = [token_mint(row) for row in completed]
+    pairs_by_mint: dict[str, list[dict[str, Any]]] = {}
+    query_failures: dict[str, str] = {}
     raw_pairs: list[dict[str, Any]] = []
-    if not 1 <= args.batch_size <= 30:
-        parser.error("--batch-size must be between 1 and 30")
-    for start in range(0, len(mints), args.batch_size):
-        batch = mints[start : start + args.batch_size]
-        url = "https://api.dexscreener.com/tokens/v1/solana/" + quote(",".join(batch), safe=",")
-        response = http_json(url, proxy_mode=args.proxy_mode, timeout=args.timeout)
+    if not 1 <= args.workers <= 16:
+        parser.error("--workers must be between 1 and 16")
+
+    def query_mint(mint: str) -> list[dict[str, Any]]:
+        url = "https://api.dexscreener.com/tokens/v1/solana/" + quote(mint)
+        if args.transport == "curl":
+            completed_process = subprocess.run(
+                ["curl", "--max-time", str(args.timeout), "-sS", url],
+                capture_output=True,
+                text=True,
+                timeout=args.timeout + 5,
+            )
+            if completed_process.returncode != 0:
+                raise RuntimeError(completed_process.stderr.strip() or "curl failed")
+            response = json.loads(completed_process.stdout)
+        else:
+            response = http_json(url, proxy_mode=args.proxy_mode, timeout=args.timeout)
         if not isinstance(response, list):
-            raise RuntimeError(f"unexpected DexScreener response for batch {start}: {type(response)}")
-        raw_pairs.extend(response)
+            raise RuntimeError(f"unexpected DexScreener response: {type(response)}")
+        return response
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
+        pending = {executor.submit(query_mint, mint): mint for mint in mints}
+        for index, future in enumerate(concurrent.futures.as_completed(pending), start=1):
+            mint = pending[future]
+            try:
+                response = future.result()
+                pairs_by_mint[mint] = response
+                raw_pairs.extend(response)
+            except Exception as exc:
+                query_failures[mint] = str(exc)
+            if index % 10 == 0 or index == len(mints):
+                print(json.dumps({"market_query_progress": f"{index}/{len(mints)}"}), flush=True)
 
     snapshot_at = datetime.now(timezone.utc).isoformat()
     output = []
     for launch in completed:
         mint = token_mint(launch)
-        pair = choose_pair(raw_pairs, mint)
+        pair = choose_pair(pairs_by_mint.get(mint, []), mint)
         accepted_usd = accepted_raw(launch) / 1_000_000
         result = {
             "snapshot_at": snapshot_at,
@@ -101,6 +137,8 @@ def main() -> None:
             "started_at": launch.get("started_at"),
             "closed_at": launch.get("closed_at"),
             "accepted_usd": accepted_usd,
+            "market_query_ok": mint not in query_failures,
+            "market_query_error": query_failures.get(mint, ""),
             "has_market_pair": pair is not None,
             "dex_id": "",
             "pair_address": "",
@@ -150,8 +188,24 @@ def main() -> None:
     json_path = args.out_dir / "metadao_market_snapshot.json"
     csv_path = args.out_dir / "metadao_market_snapshot.csv"
     raw_path = args.out_dir / "metadao_dexscreener_raw_pairs.json"
+    audit_path = args.out_dir / "metadao_market_snapshot_audit.json"
     json_path.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
     raw_path.write_text(json.dumps(raw_pairs, indent=2, ensure_ascii=False) + "\n")
+    audit_path.write_text(
+        json.dumps(
+            {
+                "snapshot_at": snapshot_at,
+                "complete_launches": len(completed),
+                "min_accepted_usd": args.min_accepted_usd,
+                "successful_market_queries": len(completed) - len(query_failures),
+                "failed_market_queries": query_failures,
+                "complete": not query_failures,
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n"
+    )
     with csv_path.open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(output[0]))
         writer.writeheader()
@@ -163,6 +217,8 @@ def main() -> None:
                 "complete_launches": len(completed),
                 "launches_with_pair": sum(row["has_market_pair"] for row in output),
                 "raw_pairs": len(raw_pairs),
+                "failed_market_queries": len(query_failures),
+                "complete": not query_failures,
                 "snapshot": str(csv_path),
             },
             indent=2,

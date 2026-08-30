@@ -1,0 +1,303 @@
+{
+  "generated_at": "2026-08-28T09:32:42.249761+00:00",
+  "protocol": "PUMP_TERMINAL_EXPERIMENT_2026-08-28.md",
+  "protocol_sha256": "4d68c40cb1ae1d4883413ca17544e895120e0c3939ca46eb1d71c783893dbfb4",
+  "jobs": [
+    {
+      "source": "09_t5m_features.sql",
+      "source_sha256": "767dd0d08e6f8444e3736915e44b3121a3cf6565cf15277b1e8249d43148be6a",
+      "output": "17_terminal_base_mayjul_30s.sql",
+      "output_sha256": "334e1589e530b73f2e52604805b318ccb02bcbff74855a3d960b32a8eeb0bb0a",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '30' SECOND",
+          "occurrences": 8
+        }
+      ]
+    },
+    {
+      "source": "09_t5m_features.sql",
+      "source_sha256": "767dd0d08e6f8444e3736915e44b3121a3cf6565cf15277b1e8249d43148be6a",
+      "output": "17_terminal_base_janfeb_30s.sql",
+      "output_sha256": "17c87b89961fca1215cd39681e53572c85bbd811257b6fa09c34164a80408088",
+      "replacements": [
+        {
+          "old": "TIMESTAMP '2026-05-01 00:00:00'",
+          "new": "TIMESTAMP '2026-01-01 00:00:00'",
+          "occurrences": 2
+        },
+        {
+          "old": "TIMESTAMP '2026-07-25 00:00:00'",
+          "new": "TIMESTAMP '2026-03-01 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "TIMESTAMP '2026-07-26 00:00:00'",
+          "new": "TIMESTAMP '2026-03-02 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-05-01'",
+          "new": "DATE '2026-01-01'",
+          "occurrences": 7
+        },
+        {
+          "old": "DATE '2026-07-24'",
+          "new": "DATE '2026-02-28'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-07-25'",
+          "new": "DATE '2026-03-01'",
+          "occurrences": 6
+        },
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '30' SECOND",
+          "occurrences": 8
+        }
+      ]
+    },
+    {
+      "source": "16_entity_features_core.sql",
+      "source_sha256": "9a9e90c32d8a58a1002c0c2e7753f1631d89d75b576229b17ec632a7efb17bdc",
+      "output": "17_terminal_entity_mayjul_30s.sql",
+      "output_sha256": "7961ab4db647f0b4f4b237212014ff01a7f0844bc17a5061bdad436d34479370",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '30' SECOND",
+          "occurrences": 1
+        }
+      ]
+    },
+    {
+      "source": "16_entity_features_core.sql",
+      "source_sha256": "9a9e90c32d8a58a1002c0c2e7753f1631d89d75b576229b17ec632a7efb17bdc",
+      "output": "17_terminal_entity_janfeb_30s.sql",
+      "output_sha256": "c1d413f1b04581d656223778172c1e9abeaef4a730f1b542ab58c480c29ef7b9",
+      "replacements": [
+        {
+          "old": "TIMESTAMP '2026-05-01 00:00:00'",
+          "new": "TIMESTAMP '2026-01-01 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "TIMESTAMP '2026-07-25 00:00:00'",
+          "new": "TIMESTAMP '2026-03-01 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-05-01'",
+          "new": "DATE '2026-01-01'",
+          "occurrences": 2
+        },
+        {
+          "old": "DATE '2026-07-24'",
+          "new": "DATE '2026-02-28'",
+          "occurrences": 2
+        },
+        {
+          "old": "DATE '2026-04-01'",
+          "new": "DATE '2025-12-01'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-07-25'",
+          "new": "DATE '2026-03-01'",
+          "occurrences": 1
+        },
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '30' SECOND",
+          "occurrences": 1
+        }
+      ]
+    },
+    {
+      "source": "09_t5m_features.sql",
+      "source_sha256": "767dd0d08e6f8444e3736915e44b3121a3cf6565cf15277b1e8249d43148be6a",
+      "output": "17_terminal_base_mayjul_60s.sql",
+      "output_sha256": "b039d47a98910096ac96eda23c4ddf3c8385c8c1f59e730ab3bc1a595b567bcb",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '1' MINUTE",
+          "occurrences": 8
+        }
+      ]
+    },
+    {
+      "source": "09_t5m_features.sql",
+      "source_sha256": "767dd0d08e6f8444e3736915e44b3121a3cf6565cf15277b1e8249d43148be6a",
+      "output": "17_terminal_base_janfeb_60s.sql",
+      "output_sha256": "8e8ca0aeba3e3172706da5de37efb42b2351827819a939168d47aa50860d4a11",
+      "replacements": [
+        {
+          "old": "TIMESTAMP '2026-05-01 00:00:00'",
+          "new": "TIMESTAMP '2026-01-01 00:00:00'",
+          "occurrences": 2
+        },
+        {
+          "old": "TIMESTAMP '2026-07-25 00:00:00'",
+          "new": "TIMESTAMP '2026-03-01 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "TIMESTAMP '2026-07-26 00:00:00'",
+          "new": "TIMESTAMP '2026-03-02 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-05-01'",
+          "new": "DATE '2026-01-01'",
+          "occurrences": 7
+        },
+        {
+          "old": "DATE '2026-07-24'",
+          "new": "DATE '2026-02-28'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-07-25'",
+          "new": "DATE '2026-03-01'",
+          "occurrences": 6
+        },
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '1' MINUTE",
+          "occurrences": 8
+        }
+      ]
+    },
+    {
+      "source": "16_entity_features_core.sql",
+      "source_sha256": "9a9e90c32d8a58a1002c0c2e7753f1631d89d75b576229b17ec632a7efb17bdc",
+      "output": "17_terminal_entity_mayjul_60s.sql",
+      "output_sha256": "b310693de1cb1ee82e0c2ffa654e58d3f9f2494b108b6da7b99c1507a256da8d",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '1' MINUTE",
+          "occurrences": 1
+        }
+      ]
+    },
+    {
+      "source": "16_entity_features_core.sql",
+      "source_sha256": "9a9e90c32d8a58a1002c0c2e7753f1631d89d75b576229b17ec632a7efb17bdc",
+      "output": "17_terminal_entity_janfeb_60s.sql",
+      "output_sha256": "e7f78393b9b91fa699fe5fd682c65806a4502e308cf6cf352bea47fbd6328005",
+      "replacements": [
+        {
+          "old": "TIMESTAMP '2026-05-01 00:00:00'",
+          "new": "TIMESTAMP '2026-01-01 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "TIMESTAMP '2026-07-25 00:00:00'",
+          "new": "TIMESTAMP '2026-03-01 00:00:00'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-05-01'",
+          "new": "DATE '2026-01-01'",
+          "occurrences": 2
+        },
+        {
+          "old": "DATE '2026-07-24'",
+          "new": "DATE '2026-02-28'",
+          "occurrences": 2
+        },
+        {
+          "old": "DATE '2026-04-01'",
+          "new": "DATE '2025-12-01'",
+          "occurrences": 1
+        },
+        {
+          "old": "DATE '2026-07-25'",
+          "new": "DATE '2026-03-01'",
+          "occurrences": 1
+        },
+        {
+          "old": "INTERVAL '5' MINUTE",
+          "new": "INTERVAL '1' MINUTE",
+          "occurrences": 1
+        }
+      ]
+    },
+    {
+      "source": "10_first_passage.sql",
+      "source_sha256": "92a721ea7d94603cde4636b952dbd4d70d5568d42fcfe8ff76f0065b4a581b49",
+      "output": "18_terminal_execution_mayjul_30s.sql",
+      "output_sha256": "d6075a39f0398b4b8ebd52a37d8b32438a8053dca991160af2961a3000c552ae",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE + INTERVAL '15' SECOND",
+          "new": "INTERVAL '45' SECOND",
+          "occurrences": 1
+        },
+        {
+          "old": "INTERVAL '24' HOUR",
+          "new": "INTERVAL '4' HOUR",
+          "occurrences": 3
+        }
+      ]
+    },
+    {
+      "source": "13_first_passage_janfeb.sql",
+      "source_sha256": "d72131e0152abae11c5312db05ad642593a0f8dcf1a9b814e45b314285ace19c",
+      "output": "18_terminal_execution_janfeb_30s.sql",
+      "output_sha256": "76b982656849544c7445044eb7947f31345fc81917e92a504e1dbf28fe568546",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE + INTERVAL '15' SECOND",
+          "new": "INTERVAL '45' SECOND",
+          "occurrences": 1
+        },
+        {
+          "old": "INTERVAL '24' HOUR",
+          "new": "INTERVAL '4' HOUR",
+          "occurrences": 3
+        }
+      ]
+    },
+    {
+      "source": "10_first_passage.sql",
+      "source_sha256": "92a721ea7d94603cde4636b952dbd4d70d5568d42fcfe8ff76f0065b4a581b49",
+      "output": "18_terminal_execution_mayjul_60s.sql",
+      "output_sha256": "e390ca9f0f624c9769751e2cf8a9c59114bd11d1464557bae574b0005dce0e53",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE + INTERVAL '15' SECOND",
+          "new": "INTERVAL '1' MINUTE + INTERVAL '15' SECOND",
+          "occurrences": 1
+        },
+        {
+          "old": "INTERVAL '24' HOUR",
+          "new": "INTERVAL '4' HOUR",
+          "occurrences": 3
+        }
+      ]
+    },
+    {
+      "source": "13_first_passage_janfeb.sql",
+      "source_sha256": "d72131e0152abae11c5312db05ad642593a0f8dcf1a9b814e45b314285ace19c",
+      "output": "18_terminal_execution_janfeb_60s.sql",
+      "output_sha256": "40db78c97fde2a24401f0b78a14457a535bb33cf8493201debae9888295907a9",
+      "replacements": [
+        {
+          "old": "INTERVAL '5' MINUTE + INTERVAL '15' SECOND",
+          "new": "INTERVAL '1' MINUTE + INTERVAL '15' SECOND",
+          "occurrences": 1
+        },
+        {
+          "old": "INTERVAL '24' HOUR",
+          "new": "INTERVAL '4' HOUR",
+          "occurrences": 3
+        }
+      ]
+    }
+  ]
+}

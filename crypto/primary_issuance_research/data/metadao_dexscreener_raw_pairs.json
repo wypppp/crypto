@@ -1,0 +1,1413 @@
+[
+  {
+    "chainId": "solana",
+    "dexId": "meteora",
+    "url": "https://dexscreener.com/solana/mefedd5ffcmfmm6y2rwcp4f1ww3qbkdqqw9je1b1bxn",
+    "pairAddress": "MefEdd5fFcmFMm6Y2rWcP4F1wW3qbkdqqW9je1b1bXn",
+    "labels": [
+      "DLMM"
+    ],
+    "baseToken": {
+      "address": "ZKFHiLAfAFMTcDAuCtjNW54VzpERvoe7PBF9mYgmeta",
+      "name": "ZKFG",
+      "symbol": "ZKFG"
+    },
+    "quoteToken": {
+      "address": "So11111111111111111111111111111111111111112",
+      "name": "Wrapped SOL",
+      "symbol": "SOL"
+    },
+    "priceNative": "0.001438",
+    "priceUsd": "0.1452",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 4,
+        "sells": 2
+      },
+      "h24": {
+        "buys": 4,
+        "sells": 3
+      }
+    },
+    "volume": {
+      "h24": 60.35,
+      "h6": 60.23,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h6": -3.84,
+      "h24": -3.84
+    },
+    "liquidity": {
+      "usd": 193.92,
+      "base": 922.9444,
+      "quote": 0.5927
+    },
+    "fdv": 3747433,
+    "marketCap": 3747433,
+    "pairCreatedAt": 1761285642000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/732fd7edee50f6d5c6d2918dd61f5e857a89f666e76004d85bac60ae3904c604?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/e5a4acc1814797430140e47e4e09b909b63a32dc1d1f413983a2fab1b978c515?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/ZKFHiLAfAFMTcDAuCtjNW54VzpERvoe7PBF9mYgmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://zklsol.org",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.zklsol.org",
+          "label": "Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/ZKLSOL",
+          "type": "twitter"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "meteora",
+    "url": "https://dexscreener.com/solana/5gb4npgfb3mhfhsekn4sbay6t9mb8ikce9hyikyid4td",
+    "pairAddress": "5gB4NPgFB3MHFHSeKN4sbaY6t9MB8ikCe9HyiKYid4Td",
+    "labels": [
+      "DYN2"
+    ],
+    "baseToken": {
+      "address": "BANKJmvhT8tiJRsBSS1n2HryMBPvT5Ze4HU95DUAmeta",
+      "name": "Avici",
+      "symbol": "AVICI"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.4316",
+    "priceUsd": "0.4316",
+    "txns": {
+      "m5": {
+        "buys": 1,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 13,
+        "sells": 2
+      },
+      "h6": {
+        "buys": 35,
+        "sells": 5
+      },
+      "h24": {
+        "buys": 212,
+        "sells": 66
+      }
+    },
+    "volume": {
+      "h24": 47137.73,
+      "h6": 3494.75,
+      "h1": 1545.92,
+      "m5": 0.57
+    },
+    "priceChange": {
+      "m5": 0.02,
+      "h1": -0.47,
+      "h6": 0.14,
+      "h24": -6.2
+    },
+    "liquidity": {
+      "usd": 384989.19,
+      "base": 811074,
+      "quote": 34861
+    },
+    "fdv": 5568509,
+    "marketCap": 5568509,
+    "pairCreatedAt": 1760806818000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/c4ba034e91f254cf25913e9d44080722b5f9f40957d5b14bca0836b4961c278d?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/423f25cc752c023e8dacdcb9f1ee460e528876d83289ff1a22426ec653926805?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/BANKJmvhT8tiJRsBSS1n2HryMBPvT5Ze4HU95DUAmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://avici.money/",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.avici.org/",
+          "label": "Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/Avici",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/Aviciclub",
+          "type": "telegram"
+        },
+        {
+          "url": "https://discord.gg/SJyNkRa6tg",
+          "type": "discord"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/6frxzte3hajl8fwmmkupp8g3y3wn3g3qejj8sabndre3",
+    "pairAddress": "6FRXzTe3HajL8Fwmmkupp8g3y3wn3g3QEjj8sABndre3",
+    "baseToken": {
+      "address": "PAYZP1W3UmdEsNLJwmH61TNqACYJTvhXy8SCN4Tmeta",
+      "name": "Paystream",
+      "symbol": "PAYS"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.02401",
+    "priceUsd": "0.02401",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 2,
+        "sells": 1
+      },
+      "h6": {
+        "buys": 3,
+        "sells": 2
+      },
+      "h24": {
+        "buys": 3,
+        "sells": 2
+      }
+    },
+    "volume": {
+      "h24": 163.95,
+      "h6": 163.95,
+      "h1": 163.55,
+      "m5": 0
+    },
+    "priceChange": {
+      "h1": -0.53,
+      "h6": -1.52,
+      "h24": -1.52
+    },
+    "liquidity": {
+      "usd": 42440.85,
+      "base": 885947,
+      "quote": 21167
+    },
+    "fdv": 594301,
+    "marketCap": 309757,
+    "pairCreatedAt": 1761588032000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/02c5a44785cc2b46dc7ffe7f3029e8b57d869db65e40da804a22955c17a089b8?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/0b521024711a1dbac219ea020d84eb1d6a1d7ae2d967332fcf01089eba822c72?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/PAYZP1W3UmdEsNLJwmH61TNqACYJTvhXy8SCN4Tmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://paystream.finance",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.paystream.finance",
+          "label": "Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/Paystreamlabs",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/paystreamfi",
+          "type": "telegram"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/dzytzonvpbyfczwza6csm9edeemxeb9f8agkjxuxgnsa",
+    "pairAddress": "DzYtzoNvPbyFCzwZA6cSm9eDEEmxEB9f8AGkJXUXgnSA",
+    "baseToken": {
+      "address": "SoLo9oxzLDpcq1dpqAgMwgce5WqkRDtNXK7EPnbmeta",
+      "name": "Solomon",
+      "symbol": "SOLO"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.7202",
+    "priceUsd": "0.7202",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 1,
+        "sells": 2
+      },
+      "h6": {
+        "buys": 3,
+        "sells": 5
+      },
+      "h24": {
+        "buys": 12,
+        "sells": 25
+      }
+    },
+    "volume": {
+      "h24": 29311.29,
+      "h6": 1082.67,
+      "h1": 10.15,
+      "m5": 0
+    },
+    "priceChange": {
+      "h1": 1.01,
+      "h6": 0.19,
+      "h24": 0.03
+    },
+    "liquidity": {
+      "usd": 3036305.91,
+      "base": 2113139,
+      "quote": 1514348
+    },
+    "fdv": 18582047,
+    "marketCap": 8228190,
+    "pairCreatedAt": 1763494224000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/f35a62bd4976fd5efe39a06850fa49dacafadd07e78433edb26b049135e1d32c?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/ca4f6371c42c35db0f936a37d62eec4cd2414a2b01cfe5f002b2d9eba372c299?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/SoLo9oxzLDpcq1dpqAgMwgce5WqkRDtNXK7EPnbmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://solomonlabs.org",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.solomonlabs.org",
+          "label": "Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/solomon_labs",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/solomonlabs",
+          "type": "telegram"
+        },
+        {
+          "url": "https://discord.gg/solomonlabs",
+          "type": "discord"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/s45ftdhkzkpmfbnmuxa3bjndf92z5cbvvhdy8lpznwq",
+    "pairAddress": "s45fTDhkzKPMFbNmUXA3bJNdF92z5cbVvHdY8LpznWQ",
+    "baseToken": {
+      "address": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+      "name": "Omnipair",
+      "symbol": "OMFG"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.2143",
+    "priceUsd": "0.2143",
+    "txns": {
+      "m5": {
+        "buys": 1,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 4,
+        "sells": 1
+      },
+      "h6": {
+        "buys": 16,
+        "sells": 27
+      },
+      "h24": {
+        "buys": 93,
+        "sells": 105
+      }
+    },
+    "volume": {
+      "h24": 69016.92,
+      "h6": 3695.49,
+      "h1": 390.87,
+      "m5": 0.79
+    },
+    "priceChange": {
+      "h1": -0.14,
+      "h6": -1.74,
+      "h24": 17.39
+    },
+    "liquidity": {
+      "usd": 630449.28,
+      "base": 1474428,
+      "quote": 314434
+    },
+    "fdv": 2957748,
+    "marketCap": 2957748,
+    "pairCreatedAt": 1771526178000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/WZkSw2L43Lnz0HYc?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/8cd192af18f8841764b8642e71350dd1f4e2a5393a95f8fd45fa763292d93f8f?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://omnipair.fi",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.omnipair.fi",
+          "label": "Docs"
+        },
+        {
+          "url": "https://github.com/omnipair",
+          "label": "Github"
+        },
+        {
+          "url": "https://app.omnipair.fi",
+          "label": "App"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/omnipair",
+          "type": "twitter"
+        },
+        {
+          "url": "https://discord.gg/omnipair",
+          "type": "discord"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "meteora",
+    "url": "https://dexscreener.com/solana/9uunea2prnhdui2nveqkk3ntf3q5birw6mbm1x9qv1dv",
+    "pairAddress": "9uuneA2PrNhDUi2nVEqKK3nTF3q5BiRw6mBm1X9QV1Dv",
+    "labels": [
+      "DYN2"
+    ],
+    "baseToken": {
+      "address": "PRVT6TB7uss3FrUd2D9xs2zqDBsa3GbMJMwCQsgmeta",
+      "name": "Umbra",
+      "symbol": "UMBRA"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.2206",
+    "priceUsd": "0.2206",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 1
+      },
+      "h1": {
+        "buys": 6,
+        "sells": 10
+      },
+      "h6": {
+        "buys": 15,
+        "sells": 36
+      },
+      "h24": {
+        "buys": 195,
+        "sells": 108
+      }
+    },
+    "volume": {
+      "h24": 13842.29,
+      "h6": 2521.27,
+      "h1": 577.46,
+      "m5": 1.45
+    },
+    "priceChange": {
+      "h1": 0.53,
+      "h6": 0.9,
+      "h24": -3.81
+    },
+    "liquidity": {
+      "usd": 326104.69,
+      "base": 738971,
+      "quote": 163051
+    },
+    "fdv": 6033501,
+    "marketCap": 3054750,
+    "pairCreatedAt": 1777962828000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/ee2528aec5c886bb1e1884b73a701a13214170c57a6637934ea3cd88ed3f1273?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/7c53b7f3763a8a6eddf6ec36263c453ee0944aed79e8b47c9991ba05f5b82ed7?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/PRVT6TB7uss3FrUd2D9xs2zqDBsa3GbMJMwCQsgmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://www.umbraprivacy.com/",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.umbraprivacy.com/docs/introduction",
+          "label": "Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/UmbraPrivacy",
+          "type": "twitter"
+        },
+        {
+          "url": "https://discord.gg/UmbraPrivacy",
+          "type": "discord"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/ffi7ba7w2fhicz9h4zrixuoi1pecvsl3ybc1ay2jnd4a",
+    "pairAddress": "Ffi7Ba7w2fhiCZ9H4ZRixuoi1peCVsL3YBc1Ay2JnD4A",
+    "baseToken": {
+      "address": "LASocYgQAo8GfypSjedNQgLft8y8DVGg1kSqR3smeta",
+      "name": "Laso Finance",
+      "symbol": "LASO"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.1052",
+    "priceUsd": "0.1052",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 12,
+        "sells": 6
+      }
+    },
+    "volume": {
+      "h24": 6519.47,
+      "h6": 0,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h24": 5.35
+    },
+    "liquidity": {
+      "usd": 410448.21,
+      "base": 1950866,
+      "quote": 205037
+    },
+    "fdv": 3158761,
+    "marketCap": 1358264,
+    "pairCreatedAt": 1783192028000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/CLZspDJVGiHXpbt2?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/JKVg04Vp2CYWELan?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/LASocYgQAo8GfypSjedNQgLft8y8DVGg1kSqR3smeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://laso.finance",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.laso.finance",
+          "label": "Docs"
+        },
+        {
+          "url": "https://agents.laso.finance",
+          "label": "AI Agent Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/lasofinance",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/lasofinancechannel",
+          "type": "telegram"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/6yv1ecbitvudf3ys4gthdlmwrggipyt2jrh2xdjcxyqq",
+    "pairAddress": "6yv1EcBitVUdf3YS4GTHdLmwrGGiPYT2jrh2xDjCxYQQ",
+    "baseToken": {
+      "address": "CREDBHvVqREBCAxMihzr8D1nepHMr2gmQoZWpmgGmeta",
+      "name": "Credible Finance",
+      "symbol": "CRED"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.6432",
+    "priceUsd": "0.6432",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 4,
+        "sells": 1
+      },
+      "h6": {
+        "buys": 62,
+        "sells": 17
+      },
+      "h24": {
+        "buys": 186,
+        "sells": 86
+      }
+    },
+    "volume": {
+      "h24": 203168.21,
+      "h6": 12895.05,
+      "h1": 806.58,
+      "m5": 0
+    },
+    "priceChange": {
+      "h1": 1.09,
+      "h6": 0.15,
+      "h24": -5.85
+    },
+    "liquidity": {
+      "usd": 2029004.64,
+      "base": 1581079,
+      "quote": 1011966
+    },
+    "fdv": 14578326,
+    "marketCap": 14578326,
+    "pairCreatedAt": 1784314799000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/5R-KDkndySaQwOM3?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/FwwORmRx-4Y2Qe71?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/CREDBHvVqREBCAxMihzr8D1nepHMr2gmQoZWpmgGmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://credible.finance",
+          "label": "Website"
+        },
+        {
+          "url": "https://credible.gitbook.io/docs",
+          "label": "Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/crediblefin",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/crediblefinance",
+          "type": "telegram"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/ckeucaooqi64ufhpfs5mwpzw6lqqjsdqbj3z5uixs1en",
+    "pairAddress": "CkEUCAooQi64UFhPFS5MWpZw6LQqjsDQBj3Z5uiXS1eN",
+    "baseToken": {
+      "address": "Cbjr1Nvcay3QWDriyRKtokJ7V4PMknesGxeK8z7Zmeta",
+      "name": "Futardio cult",
+      "symbol": "FUTARDIO"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.009810",
+    "priceUsd": "0.009810",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 11,
+        "sells": 3
+      },
+      "h24": {
+        "buys": 24,
+        "sells": 13
+      }
+    },
+    "volume": {
+      "h24": 4675.46,
+      "h6": 2565.2,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h6": -22.93,
+      "h24": -32.86
+    },
+    "liquidity": {
+      "usd": 28021.73,
+      "base": 1431305,
+      "quote": 13979
+    },
+    "fdv": 131459,
+    "marketCap": 131459,
+    "pairCreatedAt": 1772654190000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/rjua4sNIiWUnwFbi?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/cYOuqStredmQoBey?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/Cbjr1Nvcay3QWDriyRKtokJ7V4PMknesGxeK8z7Zmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://www.futard.io/launch/3EZBeQPQNHYkxnbrMRXG56DK1QRG8DR7VhYAUyvUFBzK",
+          "label": "Website"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/thefutardiocult",
+          "type": "twitter"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/3szfyfczcgxe6zptqqbfnkf24smakwchxp3au68hnyij",
+    "pairAddress": "3szfyfczcGxe6zpTQQBfnkF24SMakWChxp3aU68HNYij",
+    "baseToken": {
+      "address": "CARSsxWPkpQWvfyRBwfGMGvysJBHdHGfE46X5MNgmeta",
+      "name": "Rip Cars",
+      "symbol": "CARS"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.05394",
+    "priceUsd": "0.05394",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 6,
+        "sells": 6
+      },
+      "h24": {
+        "buys": 36,
+        "sells": 26
+      }
+    },
+    "volume": {
+      "h24": 13365.93,
+      "h6": 3170.44,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h6": -0.45,
+      "h24": -9.73
+    },
+    "liquidity": {
+      "usd": 146901.17,
+      "base": 1358118,
+      "quote": 73631
+    },
+    "fdv": 1391887,
+    "marketCap": 1391887,
+    "pairCreatedAt": 1785002401000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/WtLfga5bjZUHxw_N?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/wXXU9y2bwg_IX3UQ?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/CARSsxWPkpQWvfyRBwfGMGvysJBHdHGfE46X5MNgmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://ripcars.io/",
+          "label": "Website"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/ripcarsio",
+          "type": "twitter"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/gxpjkpespmurcctnnfzadkg4x3gf4zpgmqgfqtibaptk",
+    "pairAddress": "GxpJkPEsPmuRCCTNnfZaDKg4X3gf4ZPgmqgFqtibaPtK",
+    "baseToken": {
+      "address": "LYLikzBQtpa9ZgVrJsqYGQpR3cC1WMJrBHaXGrQmeta",
+      "name": "Loyal",
+      "symbol": "LOYAL"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.1173",
+    "priceUsd": "0.1173",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 4,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 4,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 4,
+        "sells": 4
+      }
+    },
+    "volume": {
+      "h24": 518.59,
+      "h6": 149.2,
+      "h1": 149.2,
+      "m5": 0
+    },
+    "priceChange": {
+      "h1": 1.11,
+      "h6": 1.11,
+      "h24": 0.89
+    },
+    "liquidity": {
+      "usd": 342586.2,
+      "base": 1462652,
+      "quote": 170923
+    },
+    "fdv": 2414380,
+    "marketCap": 2414380,
+    "pairCreatedAt": 1761174032000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/cx8JroBRZqmPnRPf?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/M-BYNcHGMp0birFH?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/LYLikzBQtpa9ZgVrJsqYGQpR3cC1WMJrBHaXGrQmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://askloyal.com/",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.askloyal.com/",
+          "label": "Docs"
+        },
+        {
+          "url": "https://blockworks.com/token-transparency/filing/loyal/loyal-2026-h1-b2-v1.0",
+          "label": "Blockworks B2 disclosure"
+        },
+        {
+          "url": "https://github.com/loyal-labs",
+          "label": "Github"
+        },
+        {
+          "url": "https://www.metadao.fi/projects/loyal/fundraise",
+          "label": "MetaDAO raise"
+        },
+        {
+          "url": "https://app.askloyal.com/",
+          "label": "App"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/loyal_hq",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/loyal_tgchat",
+          "type": "telegram"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "meteora",
+    "url": "https://dexscreener.com/solana/fb42gman856xvpc5znmneidrxpinx4u1llw69syo34yq",
+    "pairAddress": "FB42gMaN856Xvpc5zNmNEidrXPinX4u1LLW69SYo34yQ",
+    "labels": [
+      "DYN2"
+    ],
+    "baseToken": {
+      "address": "RNGRtJMbCveqCp7AC6U95KmrdKecFckaJZiWbPGmeta",
+      "name": "Ranger",
+      "symbol": "RNGR"
+    },
+    "quoteToken": {
+      "address": "D2DUi1ksddm5eN4y37Mf6ie42o3BKRqRmkgFPnfccBum",
+      "name": "Gud Cat",
+      "symbol": "GUD"
+    },
+    "priceNative": "1219.03585",
+    "priceUsd": "0.004129",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 2,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 3,
+        "sells": 1
+      }
+    },
+    "volume": {
+      "h24": 1.66,
+      "h6": 0.78,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h6": 70.39,
+      "h24": 93.69
+    },
+    "liquidity": {
+      "usd": 3.45,
+      "base": 371.3533,
+      "quote": 567994
+    },
+    "fdv": 19356,
+    "marketCap": 245,
+    "pairCreatedAt": 1768103200000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/3c79a0b5985a57235f7b3b12364df5fc9b0d613fd9159aebad847ec390831ffb?width=800&height=800&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/RNGRtJMbCveqCp7AC6U95KmrdKecFckaJZiWbPGmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://www.app.ranger.finance/perps",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.ranger.finance/",
+          "label": "Docs"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/ranger_finance",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/rangerfinancehq",
+          "type": "telegram"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/5bhksfdv3mnzuxcaaymztbakhkbapwzlbd4gnqmnoz3z",
+    "pairAddress": "5BhKSFDV3mNzUxCaAyMZtbakhkbApwzLBD4gnQmNoz3Z",
+    "baseToken": {
+      "address": "6JSXRGMH6wNiukuLi4x6rSHazJMQL51WGbzirXxsmeta",
+      "name": "Areal Finance",
+      "symbol": "ARL"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.001125",
+    "priceUsd": "0.001125",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 1,
+        "sells": 0
+      }
+    },
+    "volume": {
+      "h24": 4.17,
+      "h6": 0,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {},
+    "liquidity": {
+      "usd": 4242.79,
+      "base": 1888428,
+      "quote": 2118.1629
+    },
+    "fdv": 29017,
+    "marketCap": 19532,
+    "pairCreatedAt": 1782330538000
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/6wmtehrgbjrsvpg8jaiezzikf7n1itadmwjjwqjchcg1",
+    "pairAddress": "6wmteHRgbJRSVPg8jaieZziKf7n1itADmWjJWQjCHcG1",
+    "baseToken": {
+      "address": "4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta",
+      "name": "Jurassic",
+      "symbol": "RAWR"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.02439",
+    "priceUsd": "0.02439",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 4,
+        "sells": 2
+      },
+      "h24": {
+        "buys": 28,
+        "sells": 26
+      }
+    },
+    "volume": {
+      "h24": 7580.99,
+      "h6": 800.47,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h6": 1.99,
+      "h24": -10.43
+    },
+    "liquidity": {
+      "usd": 88356.58,
+      "base": 1815384,
+      "quote": 44067
+    },
+    "fdv": 629419,
+    "marketCap": 629419,
+    "pairCreatedAt": 1778846862000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/bhOl_WaHoniWIXl9?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/fMIpR4HsbtTBSLns?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://jurassic.finance/",
+          "label": "Website"
+        },
+        {
+          "url": "https://www.futard.io/launch/F5A6BchpqGbbBABtgRycJZGkqy2i5AgVJP1VKW5AGotG",
+          "label": "MetaDAO ICO Page"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/jurassicfi",
+          "type": "twitter"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/gezf81us2zmd9cozjera6nxxi1tc2adjvzxxkwcdvegm",
+    "pairAddress": "GEZF81Us2ZMD9cozjEra6NXxi1tC2AdjvZXxKWcdVEgm",
+    "baseToken": {
+      "address": "2rNBaMg5VAr1aMNCwAPdDZVgzzdTaNDebUnNqPFNmeta",
+      "name": "Basket",
+      "symbol": "BASKET"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.0007028",
+    "priceUsd": "0.0007028",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 2,
+        "sells": 4
+      }
+    },
+    "volume": {
+      "h24": 160.06,
+      "h6": 0,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h24": -7.12
+    },
+    "liquidity": {
+      "usd": 2515.08,
+      "base": 1784942,
+      "quote": 1260.5844
+    },
+    "fdv": 18132,
+    "marketCap": 18132,
+    "pairCreatedAt": 1785945912000
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/6sqhygsfhayrkqignyfhq6s1s8ycjoajnnavvus3duzv",
+    "pairAddress": "6sQHygsfhAYrkQiGnyFHQ6s1s8ycJoajnNaVVuS3duzv",
+    "baseToken": {
+      "address": "BGLJaGukwopAFUaVC9iJNqMYEeKwRf3LK65NttPVmeta",
+      "name": "Kimia",
+      "symbol": "KIMIA"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.003910",
+    "priceUsd": "0.003910",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 2,
+        "sells": 2
+      }
+    },
+    "volume": {
+      "h24": 120.19,
+      "h6": 0,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h24": 0.2
+    },
+    "liquidity": {
+      "usd": 19375.72,
+      "base": 2471170,
+      "quote": 9711.9982
+    },
+    "fdv": 100893,
+    "marketCap": 100893,
+    "pairCreatedAt": 1785945752000
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/cfymvueyikv8dakdns6wshc5uaxg6t7kqfbcsaebacfu",
+    "pairAddress": "CFYmVUEYikV8DaKDNs6WSHC5uAxG6T7KqFBCsAebACFu",
+    "baseToken": {
+      "address": "P2PXup1ZvMpCDkJn3PQxtBYgxeCSfH39SFeurGSmeta",
+      "name": "P2P Protocol",
+      "symbol": "P2P"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.4500",
+    "priceUsd": "0.4500",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 3,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 48,
+        "sells": 7
+      }
+    },
+    "volume": {
+      "h24": 10282.53,
+      "h6": 343.06,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h6": 1.05,
+      "h24": 1.03
+    },
+    "liquidity": {
+      "usd": 2078583.45,
+      "base": 2314939,
+      "quote": 1036744
+    },
+    "fdv": 11611298,
+    "marketCap": 5382243,
+    "pairCreatedAt": 1775052076000,
+    "info": {
+      "imageUrl": "https://cdn.dexscreener.com/cms/images/PH8ilmfzIjW_cp-x?width=800&height=800&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/aSNvfZxWQnzG90A1?width=1500&height=500&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/P2PXup1ZvMpCDkJn3PQxtBYgxeCSfH39SFeurGSmeta?timestamp=1787822400000",
+      "websites": [
+        {
+          "url": "https://p2p.foundation",
+          "label": "Website"
+        },
+        {
+          "url": "https://docs.p2p.foundation",
+          "label": "Docs"
+        },
+        {
+          "url": "https://app.p2p.me",
+          "label": "Ecosystem payments app"
+        },
+        {
+          "url": "https://app.coins.me",
+          "label": "Ecosystem neo-bank app"
+        }
+      ],
+      "socials": [
+        {
+          "url": "https://x.com/p2pdotfound",
+          "type": "twitter"
+        },
+        {
+          "url": "https://t.me/P2Pdotme",
+          "type": "telegram"
+        },
+        {
+          "url": "https://discord.gg/Y2TzquPVRY",
+          "type": "discord"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/cwxhqxkav3cum8nqjprzcr24qtacskdmrcsrfsqd6tem",
+    "pairAddress": "CWxhqXkav3cum8nqjprZCr24qTacskDMRcSrFSQD6TeM",
+    "baseToken": {
+      "address": "DwCBrWrAGokHmysLL2XbY7TCZpbRH9QUAZxHnyWxmeta",
+      "name": "GeSIM",
+      "symbol": "GSIM"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.001742",
+    "priceUsd": "0.001742",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 2,
+        "sells": 0
+      }
+    },
+    "volume": {
+      "h24": 35.07,
+      "h6": 0,
+      "h1": 0,
+      "m5": 0
+    },
+    "priceChange": {
+      "h24": 0.8
+    },
+    "liquidity": {
+      "usd": 8834.61,
+      "base": 2541576,
+      "quote": 4406.7146
+    },
+    "fdv": 44948,
+    "marketCap": 44948,
+    "pairCreatedAt": 1781042554000
+  },
+  {
+    "chainId": "solana",
+    "dexId": "metadao",
+    "url": "https://dexscreener.com/solana/8mzxyimv29ivabhdzln3xa39jmrgteahwe3rnpkcekpa",
+    "pairAddress": "8MzXyimv29ivabhdzLN3Xa39jMrgteahWE3rNPKcEKpA",
+    "baseToken": {
+      "address": "FgVcn25UXf4MoNf4coaz2o5xDGPK1goMbUBfyUgrmeta",
+      "name": "ORDR",
+      "symbol": "ORDR"
+    },
+    "quoteToken": {
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "name": "USD Coin",
+      "symbol": "USDC"
+    },
+    "priceNative": "0.008473",
+    "priceUsd": "0.008473",
+    "txns": {
+      "m5": {
+        "buys": 0,
+        "sells": 0
+      },
+      "h1": {
+        "buys": 1,
+        "sells": 0
+      },
+      "h6": {
+        "buys": 1,
+        "sells": 0
+      },
+      "h24": {
+        "buys": 3,
+        "sells": 1
+      }
+    },
+    "volume": {
+      "h24": 145.98,
+      "h6": 0.19,
+      "h1": 0.19,
+      "m5": 0
+    },
+    "priceChange": {
+      "h24": 0.63
+    },
+    "liquidity": {
+      "usd": 45095.18,
+      "base": 2667716,
+      "quote": 22491
+    },
+    "fdv": 218600,
+    "marketCap": 218600,
+    "pairCreatedAt": 1785513795000
+  }
+]

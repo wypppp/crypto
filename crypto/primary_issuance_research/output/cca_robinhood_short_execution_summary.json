@@ -1,0 +1,219 @@
+{
+  "generated_at": "2026-08-28T08:54:39.294416+00:00",
+  "universe": {
+    "short_auctions": 29,
+    "submitted_bids": 492,
+    "exited_bids": 455,
+    "claimed_bids": 454,
+    "unexited_unknown": 37,
+    "ordinary_public_positive_allocations": 444,
+    "all_zero_validation_hooks": true
+  },
+  "ordinary_public": {
+    "accepted_cost_usd_quantiles": {
+      "p10": 4.292260204844495,
+      "p25": 20.90383979715729,
+      "p50": 93.91647188516167,
+      "p75": 370.30438160123174,
+      "p90": 572.4432231925728
+    },
+    "acceptance_ratio_quantiles": {
+      "p10": 0.026043655052915962,
+      "p25": 0.08941430893589486,
+      "p50": 0.46910384660397597,
+      "p75": 1.0,
+      "p90": 1.0
+    },
+    "allocations_accepted_ge_100": 213,
+    "capacity_witness_5x_24h": 203,
+    "witness_auction_count_for_accepted_ge_100": 8,
+    "post_flood_witness_auction_count_for_accepted_ge_100": 1,
+    "direct_same_owner_full_size_witness_count": 2,
+    "direct_same_owner_full_size_witness_auction_count": 2
+  },
+  "matched_natural_experiments": {
+    "100": {
+      "matched_auctions": 9,
+      "accepted_cost_usd_quantiles": {
+        "p10": 10.885031648579261,
+        "p25": 50.842240983092715,
+        "p50": 87.5835,
+        "p75": 89.83586312121456,
+        "p90": 99.92715069571842
+      },
+      "acceptance_ratio_quantiles": {
+        "p10": 0.12302652392580438,
+        "p25": 0.47884142676179614,
+        "p50": 0.8068896234929812,
+        "p75": 1.0,
+        "p90": 1.0
+      },
+      "capacity_witness_5x_24h_count": 7,
+      "capacity_witness_5x_24h_auction_count": 7,
+      "post_flood_matched": 0,
+      "post_flood_witness": 0
+    },
+    "300": {
+      "matched_auctions": 10,
+      "accepted_cost_usd_quantiles": {
+        "p10": 8.499933818003727,
+        "p25": 64.16194282606857,
+        "p50": 286.551969694731,
+        "p75": 345.36890782320086,
+        "p90": 358.84819999999996
+      },
+      "acceptance_ratio_quantiles": {
+        "p10": 0.03490474915086657,
+        "p25": 0.18232525807009398,
+        "p50": 0.8282215407730351,
+        "p75": 1.0,
+        "p90": 1.0
+      },
+      "capacity_witness_5x_24h_count": 3,
+      "capacity_witness_5x_24h_auction_count": 3,
+      "post_flood_matched": 1,
+      "post_flood_witness": 1
+    },
+    "500": {
+      "matched_auctions": 5,
+      "accepted_cost_usd_quantiles": {
+        "p10": 63.60289996291323,
+        "p25": 120.32835132159956,
+        "p50": 485.0022828467973,
+        "p75": 534.228,
+        "p90": 558.4938
+      },
+      "acceptance_ratio_quantiles": {
+        "p10": 0.1210536676513341,
+        "p25": 0.22903031569002877,
+        "p50": 0.8833216208840936,
+        "p75": 1.0,
+        "p90": 1.0
+      },
+      "capacity_witness_5x_24h_count": 1,
+      "capacity_witness_5x_24h_auction_count": 1,
+      "post_flood_matched": 0,
+      "post_flood_witness": 0
+    }
+  },
+  "auction_strata": {
+    "iso_week": {
+      "2026-W29": {
+        "auctions": 14,
+        "spot_5x_observed": 8,
+        "auctions_with_accepted_ge_100_capacity_witness": 3,
+        "ordinary_accepted_ge_100": 90
+      },
+      "2026-W30": {
+        "auctions": 3,
+        "spot_5x_observed": 3,
+        "auctions_with_accepted_ge_100_capacity_witness": 1,
+        "ordinary_accepted_ge_100": 24
+      },
+      "2026-W31": {
+        "auctions": 6,
+        "spot_5x_observed": 5,
+        "auctions_with_accepted_ge_100_capacity_witness": 3,
+        "ordinary_accepted_ge_100": 60
+      },
+      "2026-W32": {
+        "auctions": 1,
+        "spot_5x_observed": 0,
+        "auctions_with_accepted_ge_100_capacity_witness": 0,
+        "ordinary_accepted_ge_100": 0
+      },
+      "2026-W33": {
+        "auctions": 3,
+        "spot_5x_observed": 2,
+        "auctions_with_accepted_ge_100_capacity_witness": 1,
+        "ordinary_accepted_ge_100": 27
+      },
+      "2026-W34": {
+        "auctions": 1,
+        "spot_5x_observed": 0,
+        "auctions_with_accepted_ge_100_capacity_witness": 0,
+        "ordinary_accepted_ge_100": 0
+      },
+      "2026-W35": {
+        "auctions": 1,
+        "spot_5x_observed": 0,
+        "auctions_with_accepted_ge_100_capacity_witness": 0,
+        "ordinary_accepted_ge_100": 12
+      }
+    },
+    "fundraise": {
+      "[1,2) ETH": {
+        "auctions": 16,
+        "spot_5x_observed": 6,
+        "auctions_with_accepted_ge_100_capacity_witness": 1,
+        "ordinary_accepted_ge_100": 59
+      },
+      "[2,5) ETH": {
+        "auctions": 13,
+        "spot_5x_observed": 12,
+        "auctions_with_accepted_ge_100_capacity_witness": 7,
+        "ordinary_accepted_ge_100": 154
+      }
+    },
+    "duration": {
+      "121-300s": {
+        "auctions": 5,
+        "spot_5x_observed": 2,
+        "auctions_with_accepted_ge_100_capacity_witness": 1,
+        "ordinary_accepted_ge_100": 21
+      },
+      "301-600s": {
+        "auctions": 10,
+        "spot_5x_observed": 6,
+        "auctions_with_accepted_ge_100_capacity_witness": 4,
+        "ordinary_accepted_ge_100": 102
+      },
+      "<=120s": {
+        "auctions": 14,
+        "spot_5x_observed": 10,
+        "auctions_with_accepted_ge_100_capacity_witness": 3,
+        "ordinary_accepted_ge_100": 90
+      }
+    },
+    "observed_5x_outcome": {
+      "False": {
+        "auctions": 11,
+        "spot_5x_observed": 0,
+        "auctions_with_accepted_ge_100_capacity_witness": 0,
+        "ordinary_accepted_ge_100": 48
+      },
+      "True": {
+        "auctions": 18,
+        "spot_5x_observed": 18,
+        "auctions_with_accepted_ge_100_capacity_witness": 8,
+        "ordinary_accepted_ge_100": 165
+      }
+    }
+  },
+  "concentration": {
+    "witness_allocations_accepted_ge_100": 41,
+    "top_auction": "0xa0266f6b55e610a6e5ff563fbc00a63d9b9626d0",
+    "top_auction_witness_allocations": 18,
+    "top_auction_share": 0.43902439024390244,
+    "leave_one_auction_out_passes": 28,
+    "leave_one_auction_out_total": 29,
+    "leave_one_out_failure_auctions": [
+      "0xa0266f6b55e610a6e5ff563fbc00a63d9b9626d0"
+    ],
+    "interpretation": "The post-flood requirement currently depends on one auction; removing that auction fails the cross-regime gate."
+  },
+  "historical_physical_gate": {
+    "requires_two_distinct_auctions": true,
+    "requires_one_post_flood": true,
+    "passes_before_gas_audit": true,
+    "gas_audit_complete": true,
+    "passes_after_gas_audit": true,
+    "status": "historical physical gate passed; forward judgment remains untested"
+  },
+  "definitions": {
+    "ordinary_public": "zero validation hook; owner not tokens/funds recipient; EOA-like at latest",
+    "capacity_witness": "observed 24h token->native swap at least as large as allocation; proportional native out after 100bps and the full observed tx gas >=5x accepted cost",
+    "direct_same_owner_full_size_witness": "selected capacity-witness tx.from equals bidder owner and its single swap covers >=99% of that owner's total observed allocation in auction; diagnostic, not an exhaustive wallet-history reconstruction",
+    "flood_start_utc": "2026-08-03T00:00:00+00:00"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "collected_at": "2026-08-28T00:15:33.352835+00:00",
+  "coin_list_url": "https://api.coingecko.com/api/v3/coins/list?include_platform=true",
+  "coin_list_sha256": "86b4f1432e2280ca01c2e88279561ed9503dff5b8473a9fc52f016788cffcd93",
+  "material_launches": 22,
+  "contract_matched": 16,
+  "matched_coin_ids": {
+    "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta": "omnipair",
+    "PAYZP1W3UmdEsNLJwmH61TNqACYJTvhXy8SCN4Tmeta": "paystream",
+    "BANKJmvhT8tiJRsBSS1n2HryMBPvT5Ze4HU95DUAmeta": "avici",
+    "ZKFHiLAfAFMTcDAuCtjNW54VzpERvoe7PBF9mYgmeta": "zklsol",
+    "SoLo9oxzLDpcq1dpqAgMwgce5WqkRDtNXK7EPnbmeta": "solomon",
+    "PRVT6TB7uss3FrUd2D9xs2zqDBsa3GbMJMwCQsgmeta": "umbra",
+    "LYLikzBQtpa9ZgVrJsqYGQpR3cC1WMJrBHaXGrQmeta": "loyal",
+    "Cbjr1Nvcay3QWDriyRKtokJ7V4PMknesGxeK8z7Zmeta": "futardio-cult",
+    "LASocYgQAo8GfypSjedNQgLft8y8DVGg1kSqR3smeta": "laso-finance",
+    "5TbDn1dFEcUTJp69Fxnu5wbwNec6LmoK42Sr5mmNmeta": "superclaw",
+    "CREDBHvVqREBCAxMihzr8D1nepHMr2gmQoZWpmgGmeta": "credible-finance",
+    "RNGRtJMbCveqCp7AC6U95KmrdKecFckaJZiWbPGmeta": "ranger",
+    "CARSsxWPkpQWvfyRBwfGMGvysJBHdHGfE46X5MNgmeta": "rip-cars",
+    "6JSXRGMH6wNiukuLi4x6rSHazJMQL51WGbzirXxsmeta": "areal-finance",
+    "4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta": "jurassic-finance",
+    "P2PXup1ZvMpCDkJn3PQxtBYgxeCSfH39SFeurGSmeta": "p2p-protocol"
+  },
+  "unmatched_mints": [
+    "mtnc7NNSpAJuvYNmayXU63WhWZGgFzwQ2yeYWqemeta",
+    "4Ueb677S8FVCH5ot5rrB6MFq5XsFgpQBgri1oNCnx6HW",
+    "DwCBrWrAGokHmysLL2XbY7TCZpbRH9QUAZxHnyWxmeta",
+    "2rNBaMg5VAr1aMNCwAPdDZVgzzdTaNDebUnNqPFNmeta",
+    "BGLJaGukwopAFUaVC9iJNqMYEeKwRf3LK65NttPVmeta",
+    "FgVcn25UXf4MoNf4coaz2o5xDGPK1goMbUBfyUgrmeta"
+  ],
+  "cached_or_collected": 10,
+  "errors": {
+    "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta": "{\"error\": {\"status\": {\"timestamp\": \"2026-08-28T00:13:00.235+00:00\", \"error_code\": 10012, \"error_message\": \"Your request exceeds the allowed time range. Public API users are limited to querying historical data within the past 365 days. Upgrade to a paid plan to enjoy full historical data access: https://www.coingecko.com/en/api/pricing. \"}}}",
+    "LASocYgQAo8GfypSjedNQgLft8y8DVGg1kSqR3smeta": "{\"status\": {\"error_code\": 429, \"error_message\": \"You've exceeded the Rate Limit. Please visit https://www.coingecko.com/en/api/pricing to subscribe to our API plans for higher rate limits.\"}}",
+    "5TbDn1dFEcUTJp69Fxnu5wbwNec6LmoK42Sr5mmNmeta": "{\"status\": {\"error_code\": 429, \"error_message\": \"You've exceeded the Rate Limit. Please visit https://www.coingecko.com/en/api/pricing to subscribe to our API plans for higher rate limits.\"}}",
+    "CREDBHvVqREBCAxMihzr8D1nepHMr2gmQoZWpmgGmeta": "{\"status\": {\"error_code\": 429, \"error_message\": \"You've exceeded the Rate Limit. Please visit https://www.coingecko.com/en/api/pricing to subscribe to our API plans for higher rate limits.\"}}",
+    "RNGRtJMbCveqCp7AC6U95KmrdKecFckaJZiWbPGmeta": "{\"status\": {\"error_code\": 429, \"error_message\": \"You've exceeded the Rate Limit. Please visit https://www.coingecko.com/en/api/pricing to subscribe to our API plans for higher rate limits.\"}}",
+    "CARSsxWPkpQWvfyRBwfGMGvysJBHdHGfE46X5MNgmeta": "{\"status\": {\"error_code\": 429, \"error_message\": \"You've exceeded the Rate Limit. Please visit https://www.coingecko.com/en/api/pricing to subscribe to our API plans for higher rate limits.\"}}"
+  },
+  "complete_for_contract_matched": false
+}

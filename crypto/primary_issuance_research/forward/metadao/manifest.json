@@ -1,0 +1,78 @@
+{
+  "baseline_account_count": 197,
+  "baseline_file": "/home/ancillary/crypto/primary_issuance_research/forward/metadao/baseline_launches.json",
+  "baseline_sha256": "bddd1131ee32e85c5cfa0cc6d9afd50b48fdd258cf8512a32694473d94a29c81",
+  "created_at": "2026-08-28T09:08:58.874798+00:00",
+  "deployments": {
+    "v0.4.1": {
+      "idl_file": "metadao_v04_type.ts",
+      "idl_path": "sdk/src/launchpad/v0.4/types/launchpad.ts",
+      "program": "AfJJJ5UqxhBKoE3grkKAZZsoXDE9kncbMKvqSHGsCNrE"
+    },
+    "v0.5.0": {
+      "idl_file": "metadao_v05_type.ts",
+      "idl_path": "sdk/src/launchpad/v0.5/types/launchpad.ts",
+      "program": "mooNhciQJi1LqHDmse2JPic2NqG2PXCanbE3ZYzP3qA"
+    },
+    "v0.6.x": {
+      "idl_file": "metadao_v06_type.ts",
+      "idl_path": "sdk/src/launchpad/v0.6/types/launchpad.ts",
+      "program": "MooNyh4CBUYEKyXVnjGYQ8mEiJDpGvJMdvrZx1iGeHV"
+    },
+    "v0.7.0": {
+      "idl_file": "metadao_v07_type.ts",
+      "idl_path": "sdk/src/launchpad/v0.7/types/launchpad_v7.ts",
+      "program": "moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM"
+    },
+    "v0.8.0": {
+      "idl_file": "metadao_v08_type.ts",
+      "idl_path": "sdk/src/launchpad/v0.8/types/launchpad_v8.ts",
+      "program": "moonDJUoHteKkGATejA5bdJVwJ6V6Dg74gyqyJTx73n"
+    }
+  },
+  "forward_rule": "only launch accounts first observed after freeze slot",
+  "freeze_block_time": 1787908122,
+  "freeze_slot": 442306369,
+  "idl_audit": {
+    "v0.4.1": {
+      "cache_file": "/home/ancillary/crypto/primary_issuance_research/forward/metadao/idls/metadao_v04_type.ts",
+      "program": "AfJJJ5UqxhBKoE3grkKAZZsoXDE9kncbMKvqSHGsCNrE",
+      "source_sha256": "3cc2d6774e561972b86ffe3ebd77e443e4d10c1624f459a24105377ecb70941d",
+      "source_url": "https://raw.githubusercontent.com/metaDAOproject/programs/6c373b35e34ec1a0dc6d55de67f0870d095ad987/sdk/src/launchpad/v0.4/types/launchpad.ts"
+    },
+    "v0.5.0": {
+      "cache_file": "/home/ancillary/crypto/primary_issuance_research/forward/metadao/idls/metadao_v05_type.ts",
+      "program": "mooNhciQJi1LqHDmse2JPic2NqG2PXCanbE3ZYzP3qA",
+      "source_sha256": "e185f7836f663762fbb2ed75eca150ddccb17b230be2be152649a16cfb28ad2b",
+      "source_url": "https://raw.githubusercontent.com/metaDAOproject/programs/6c373b35e34ec1a0dc6d55de67f0870d095ad987/sdk/src/launchpad/v0.5/types/launchpad.ts"
+    },
+    "v0.6.x": {
+      "cache_file": "/home/ancillary/crypto/primary_issuance_research/forward/metadao/idls/metadao_v06_type.ts",
+      "program": "MooNyh4CBUYEKyXVnjGYQ8mEiJDpGvJMdvrZx1iGeHV",
+      "source_sha256": "3536841f26dcfdcdfd3f3b3cc7d37e35cbd0c26901c5f1b6479a532f9dd1c520",
+      "source_url": "https://raw.githubusercontent.com/metaDAOproject/programs/6c373b35e34ec1a0dc6d55de67f0870d095ad987/sdk/src/launchpad/v0.6/types/launchpad.ts"
+    },
+    "v0.7.0": {
+      "cache_file": "/home/ancillary/crypto/primary_issuance_research/forward/metadao/idls/metadao_v07_type.ts",
+      "program": "moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM",
+      "source_sha256": "27bea8dff0dd3181f95feda215971c70e857a8ff2a995713a57fa36bfbcc777a",
+      "source_url": "https://raw.githubusercontent.com/metaDAOproject/programs/6c373b35e34ec1a0dc6d55de67f0870d095ad987/sdk/src/launchpad/v0.7/types/launchpad_v7.ts"
+    },
+    "v0.8.0": {
+      "cache_file": "/home/ancillary/crypto/primary_issuance_research/forward/metadao/idls/metadao_v08_type.ts",
+      "program": "moonDJUoHteKkGATejA5bdJVwJ6V6Dg74gyqyJTx73n",
+      "source_sha256": "2dc68be7df5ed563012973b9d28690fc9127f4d87689ba32e9392c7352e78a09",
+      "source_url": "https://raw.githubusercontent.com/metaDAOproject/programs/6c373b35e34ec1a0dc6d55de67f0870d095ad987/sdk/src/launchpad/v0.8/types/launchpad_v8.ts"
+    }
+  },
+  "material_rule": {
+    "minimum_raise_raw": 10000000000,
+    "quote_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  },
+  "programs_commit": "6c373b35e34ec1a0dc6d55de67f0870d095ad987",
+  "programs_repo": "metaDAOproject/programs",
+  "protocol_path": "crypto/primary_issuance_research/METADAO_FORWARD_BLIND_2026-08-28.md",
+  "protocol_sha256": "3d4181a595fea1e48c36ae2a4617f47fa47bf56e178730a3c5d02d8ec78c6572",
+  "purpose": "MetaDAO forward blind paper observer; read-only",
+  "rpc_at_initialization": "https://api.mainnet-beta.solana.com"
+}
