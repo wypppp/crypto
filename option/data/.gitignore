@@ -1,9 +1,0 @@
-# Raw API responses and generated tables are reproducible and may be large.
-/runs/*
-!/runs/.gitkeep
-/t026/*
-!/t026/.gitkeep
-/public_only_v1/polls/*
-!/public_only_v1/polls/.gitkeep
-/public_only_v1/history/*
-!/public_only_v1/history/.gitkeep

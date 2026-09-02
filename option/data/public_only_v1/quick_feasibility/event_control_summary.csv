@@ -1,5 +1,0 @@
-﻿candidate_id,ps_id,port_id,comparison_role,velocity_event_to_pre_ratio,velocity_post_to_pre_ratio,temperature_event_to_pre_ratio,temperature_post_to_pre_ratio,primary_pollutant_field,pollutant_event_to_pre_ratio,pollutant_post_to_pre_ratio,contrast_disposition
-PUB-A01,9dfc64d77ea04c729f700936637c84e6,715f1873be964e15be8e13bc0176f8c6,same_time_control,1.000543,1.005433,1.003629,1.005474,a21002-avg,1.129206,1.271250,same_time_control_stable
-PUB-A04,093f3d5039404b028b165fe301766caf,846a9beca37b434b847d7075ceea1500,same_time_control,1.017288,1.004409,1.051469,1.033931,a34013-avg,1.014362,1.016808,same_time_control_stable
-PUB-A05,6aca7464ed854b81953245facb021d7d,a819212830ef4ba699245fe2eb074871,same_time_control,0.996959,1.000676,1.011181,1.001713,a21001-avg,0.990491,1.073861,same_time_control_stable
-PUB-A07,b3d071940fbc4dcc89920765d3bb5e5e,09e432c2b02e49dcb01e0e8adccc2621,weak_label_event_point,0.065327,0.976704,0.903551,0.990700,a24088-avg,0.385253,0.763578,target_drop_and_physical_recovery

@@ -1,3 +1,0 @@
-universe_id,vintage_cutoff,entity_type,venue_or_source,entity_name,product_code,decision,effective_at_cutoff,reason,evidence_url,accessed_at,snapshot_hash,reopen_condition
-U-MKT-v2,2026-08-24T17:05:00+08:00,option_product,DCE,Coke options,J,exclude_not_listed_evidence,1,"registration or contract publication is not proof of listing",https://www.csrc.gov.cn/csrc/c100028/c7649078/content.shtml,2026-08-24,not_saved,"official exchange listing evidence in a later vintage"
-U-MKT-v2,2026-08-24T17:05:00+08:00,option_product,SHFE,Hot rolled coil options,HC,exclude_not_listed_evidence,1,"registration is not proof of listing",https://www.csrc.gov.cn/csrc/c100028/c7647255/content.shtml,2026-08-24,not_saved,"official exchange listing evidence in a later vintage"
