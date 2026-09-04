@@ -1,0 +1,15 @@
+{
+ "build_top20.py": "fd7259cf4ccdbb98",
+ "build_universe.py": "28bdffbe1ae5820a",
+ "events.csv": "b5cfd4871e151ad2",
+ "pull_data.py": "d46ea4e14ce67c3f",
+ "pull_hourly.py": "e0cbb60692751260",
+ "rerun_c1.py": "002c59ad98e2a2b4",
+ "run_full.py": "de704d3894747be6",
+ "universe.json": "0c725cba37316445",
+ "fundinginfo_snapshot": "a45b2947cfff49db",
+ "F_lambda_events.csv": "462d33c8085be69c",
+ "HASHES.json": "bf8859ac0d862d3d",
+ "detect_d1.py": "14188b9557754725",
+ "scan_d1.py": "44d2e47d20d5f971"
+}

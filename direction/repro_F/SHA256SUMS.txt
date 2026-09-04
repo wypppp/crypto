@@ -1,0 +1,9 @@
+# Probe F · F-λ 第一阶段 · 生成于 2026-09-03T08:19:21Z
+# 完整 SHA-256(非截断)。SHA256SUMS.txt 自身不列入。
+ca082b46214911db04e9ede53f450dd7605257e9bae7ce79f0646debf0d16a6b  F_final.json
+5782c451384b02158b6160f7632de8bf7e97db0d55094b69febec592c305a8ce  F_lambda_events.csv
+409b5c034faaa7e7046d64ff3a36220fdedbfd842cf36bb60f13e12dfd14e0bc  classify_f.py
+14188b9557754725c7a2b5ae38fb971a4f3fedbaa1b20f6ed745970960330d0f  detect_d1.py
+a45b2947cfff49dbc528d9ba44a62de8c3373b0119a4c53febc5dc96af454383  fundinginfo_perp.json
+44d2e47d20d5f97196fe9a8df3e08b81099935bce448ecfbc84770697594b8d7  scan_d1.py
+eec447aec1510dec56fea3a9b234a02e2fb62ca962dcaa96dbb381a971f0be13  universe_symbols.json
