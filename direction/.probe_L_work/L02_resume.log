@@ -1,0 +1,274 @@
+==============================================================================
+CONFIG /home/ancillary/direction/L_config.json  v1.6  frozen=2026-09-03
+  SHA256 f96252e77e43a1360395c3a130efffb4602d3b96d860320956332105d0936552  L_config.json
+  SHA256 b3bbc0885d573f51b6a8d7281ded22b9b513b34331b54a2277758d1a45e08b59  code:L_02_crawl.py
+  SHA256 f13ccad570f971d52642a4ff7cbde97a72fa0f3a47b680ca3d49aab519325e34  code:L_00_bootstrap.py
+  SHA256 c6e0111f82865880a1806c08862ebd914bb2b9e82358ff1f36cff999d097bdbf  input:ann_raw.json
+------------------------------------------------------------------------------
+CONFIG 全文回显:
+{
+ "_meta": {
+  "name": "PROBE_L",
+  "version": "1.6",
+  "frozen_utc": "2026-09-03",
+  "note": "本文件是 Probe L 的唯一可执行来源。PROBE_L_frozen.md 只解释它,不被脚本解析。脚本必须:载入本文件、回显完整内容、回显本文件与代码的完整 SHA-256、遇未识别或缺失键即失败。",
+  "changelog_v1.2": "v1.1 的两条假设落空:①CMS 列表接口只返回 title,无正文 ⟹ T_scheduled 取不到;②catalogId=48 是混合流(实测 2,244 条中含 558 永续/302 杠杆/128 Earn/835 其它),不是纯现货上市母体。v1.2 改用详情接口取正文,并把分类与提取规则显式冻结于此,先冻结后应用。",
+  "changelog_v1.3": "P0:v1.2 的爬虫 pending() 只遍历已存在文件,永远抓不到从未创建文件的 ~1,018 条 ⟹ 改为由 ann_raw 按冻结窗口算出 expected_ids。另修:①资产提取改为先截上市对象片段再提全部代号并与正文现货对交叉验证;②永续乘数改为保留原始 baseAsset + 显式白名单;③T_first_trade 绑定到公告所列交易对且晚于 T_scheduled;④FETCH_FAIL 与 PARSE_FAIL 分离;⑤窗口内公告数更正为 1,445(v1.2 进度文件误记 1,451)。",
+  "changelog_v1.4": "v1.3 解析器在 dryrun 中产生 9 条 PARSE_FAIL,逐条核原文后修四处**文本提取缺陷**(非策略调参):①代号可含小写(XAUt)⟹ 交叉验证改为大小写不敏感;②代号可为单字符(W=Wormhole)⟹ 长度下限 2→1;③日期与时间之间可能是 HTML 实体 &nbsp; ⟹ 解析前先规范化实体与空白;④资产可能裸写无括号(BFUSD)⟹ 括号式失败时回退到片段内裸 token 并强制交叉验证。PARSE_FAIL 桶的用途正是暴露这类漂移;所有改动只影响**文本抽取**,不改变哪些上市事件算数的判据。",
+  "changelog_v1.4.1": "①POSTPONED 桶在 v1.4 只是声明未实现(仍计入 PARSE_FAIL),且 POSTP 正则被『cancel all pending orders』误触发 —— 实测 FDUSD(id=171585)正文是 09:45 暂停、14:00 恢复,上市已发生,'will list' 仅出现在文末引用链接。改为 OPERATIONAL_UPDATE 独立桶,**原上市事件必须保留,不得删除或替换**;②T_scheduled 不得取全文首个 UTC 时间(Launchpool 正文含挖矿开始/Alpha 开盘/现货上市三个时间),必须绑定到 will list…open trading 同一结构内;③新增召回率审计:按年输出 SPOT_LISTING 篇数与事件数,并列出 OTHER 中标题含 list/listing/open trading/launchpool 的全部条目供逐条审阅;④config 与运行代码同步:抓取参数改为完整描述自适应算法;⑤T_first_trade 判据 > 改为 >=;⑥起始边界回看由 7 天扩到 30 天(1445→1453),防止提前较久发布但在窗口内开盘的公告被漏。",
+  "changelog_v1.5": "v1.4.1 的召回率审计发现:CAND 只认 'will list'+'spot trading pair' 一种措辞,已取 955 篇正文中 A 覆盖 80 篇,而 A∪B∪C 覆盖 364 篇(B='will open trading for…',C=Launchpool 'the listing of…/trading starting at'),**召回相差 4.5 倍**;2021 年 A 命中 0 篇。⟹ 公告正则不能承担『决定哪些事件进入母体』的角色。但也不改成『归档取代公告』——归档给不出未开盘/延期/取消。改为**双框架联合母表**:归档首笔成交做收益样本主源,公告做计划时间与未开盘/延期/取消的唯一一手来源,两者联合并分类。",
+  "parking_lot_paid_sources": {
+   "note": "以下为**未采用**的付费选项,记录以备决策;当前未支出、未接入",
+   "Kaiko": "提供各交易所交易对的 trade_start_time / trade_end_time,但那是『Kaiko 首次观测』,**不等于官方计划上市时间**",
+   "Tardis": "metadata 区分可选的 listing 与 availableSince 并说明二者可能不同;声称 Binance Spot 全交易对覆盖始于 2021-03-05(覆盖本 Probe 窗口);**更重要的是它保存历史 quotes / L2 更新与快照,若接入可能直接解决 0B 遗留的 C_abs = UNIDENTIFIED 容量腿**",
+   "budget_constraint": "须先核对 Mandate 的数据预算上限,并由使用者明确授权后才可支出"
+  },
+  "changelog_v1.6": "①杠杆代币后缀法 (UP|DOWN|BULL|BEAR)$ 误删真实资产 JUP(4 对)与 SYRUP(3 对) ⟹ 改为**显式白名单 50 个**,无法确认者标 SUSPECTED_LEVERAGED 保留,禁止凭后缀删除;②最早月份查询对任何异常写空缓存(scan_d1 以来第三次同类错误)⟹ 只有 HTTP 200 且 KeyCount=0 才记 NO_ARCHIVE,超时/429/5xx 分别记录并重试;3,608/3,628 只是观测值,未冻结;③每 baseAsset 只取一个交易对会取错 T0 —— 实测 **632/741 最早月份并列**,并列交易对 2,165 个;且 1m K 线只到分钟,而入场窗口是 T+30min,精度不足 ⟹ 改为『最早日元数据 → 该日全部并列对的 aggTrades → 全体最早精确成交』;④下载全部 741 会打开留出集(主 590 / 留出 151)⟹ **元数据层可含留出,行情下载层只限窗口内主集**;⑤时间戳单位实测:2024 年 13 位毫秒、2025/2026 年 16 位微秒 ⟹ 必须按位数归一,否则静默产出荒谬 T0。"
+ },
+ "mother_universe": {
+  "source": "binance_cms_announcement",
+  "endpoint": "https://www.binance.com/bapi/composite/v1/public/cms/article/list/query",
+  "catalog_id": 48,
+  "catalog_name_expected": "New Cryptocurrency Listing",
+  "event_id": "{articleId}::{baseAsset}",
+  "window_start_utc": "2021-09-01",
+  "window_end_utc": "2026-08-31",
+  "dedup_rule": "在**同一公告事件内部**,若列出多个报价对,取 T_first_trade 最早者;**不得跨不同公告按 baseAsset 去重** —— 重新上币/迁移是独立事件",
+  "no_trade_events": "保留为 no_T0,不得从母体删除",
+  "detail_endpoint": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode={code}",
+  "body_format": "嵌套 JSON 节点树;取 node=='text' 的 text 字段按顺序拼接",
+  "pull_range_note": "按 releaseDate 拉取 [window_start-30d, window_end+1d);最终按 T_scheduled 落窗过滤",
+  "classification": {
+   "SPOT_LISTING_CANDIDATE": "正文含 r'will list' 且 r'spot trading pair'",
+   "SPOT_LISTING": "CANDIDATE 且在 will list…open trading 结构内成功取得 ≥1 个交叉验证代号与同结构内的 T_scheduled",
+   "OPERATIONAL_UPDATE": "该文自身动作是暂停/恢复/推迟/延期(而非宣布上市);**原上市事件必须保留**,本桶条目不产生事件、不删除或替换任何已有事件",
+   "PARSE_FAIL": "CANDIDATE 且非 OPERATIONAL_UPDATE,但结构解析失败 —— 逐条列出,禁止归入 OTHER",
+   "FETCH_FAIL": "正文未取得(http != 200 或 text is None)",
+   "OTHER": "非 CANDIDATE",
+   "discipline": "五桶互斥且求和 == expected;分类只能在抓取完整性断言通过后运行"
+  },
+  "extract": {
+   "step1_span": "截取 r'will list(.*?)(?:open trading|and open)' 之间的上市对象片段",
+   "step2_assets": "片段内提取全部 r'([A-Za-z0-9 .\\-]{2,40}?)\\s*\\(([A-Za-z0-9]{1,15})\\)' —— 代号允许小写与单字符",
+   "step3_crossvalidate": "代号必须(**大小写不敏感**)出现在正文列出的现货交易对中(如 'XAUT/USDT'、'W/BTC');不通过者丢弃并计数",
+   "step4_time": "T_scheduled 必须在 will list…open trading **同一结构**内取得。接受两种句式:`will list … at TIME … open trading` 与 `will list … open trading … at TIME`。实现:取 will list 起至 open trading 之后 300 字符的片段,在该片段内取首个 UTC 时间。**禁止取全文首个 UTC 时间** —— Launchpool 正文常含挖矿开始/Alpha 开盘/现货上市三个不同时间",
+   "multi_asset": "一条公告含多个通过交叉验证的代号时,每个代号生成一个事件;事件 ID = {articleId}::{baseAsset}",
+   "forbidden": "禁止全局扫描所有括号 —— 会把时区、链名、缩写误识别为资产",
+   "step0_normalize": "解析前把 &nbsp;/&amp;/&#160; 等实体与不间断空格规范化为普通空格,压缩连续空白",
+   "step2b_fallback": "若括号式无命中,回退:取片段内长度 1–15 的裸 token 作候选,**必须通过 step3 交叉验证**方可采用"
+  },
+  "expected_count_in_window": 1453,
+  "crawl": {
+   "expected_ids": "由 ann_raw.json 按 [window_start-30d, window_end+1d) 的 releaseDate 计算",
+   "pending": "文件不存在 OR http != 200 OR text is None",
+   "concurrency": 1,
+   "adaptive": {
+    "burst_start_seconds": 0.6,
+    "floor_on_429_seconds": 11.0,
+    "max_seconds": 30.0,
+    "on_success": "delay = max(burst_start, delay*0.90)",
+    "on_429": "delay = min(max_seconds, max(floor_on_429, delay*1.8));若响应含 Retry-After 则额外 sleep min(120, Retry-After)",
+    "jitter": "每次实际等待 = delay * U(0.85, 1.15)",
+    "on_failure": "该条轮转队尾,不阻塞后续"
+   },
+   "priority_ordering": "标题匹配 will list|will add|new trading pair|adds…on binance spot 且不匹配 futures|margin|earn|launchpool|convert|collateral|trading bots 者优先;**仅影响顺序,绝不删减 expected_ids**",
+   "completion_assertions": [
+    "success_ids == expected_ids",
+    "missing_ids == 空集",
+    "extra_ids == 空集"
+   ]
+  },
+  "lookback_days": 30,
+  "lookback_rationale": "公告可能提前数周发布而在窗口内开盘;7 天不足以覆盖,30 天使边界遗漏可忽略(7d→30d 仅多 8 篇,已足够)",
+  "recall_audit": {
+   "required_before_freeze": true,
+   "outputs": [
+    "按年份的 SPOT_LISTING 文章数与事件数",
+    "OTHER 中标题匹配 r'list|listing|open trading|launchpool' 的**全部**条目清单",
+    "对上述疑似漏项逐条人工审阅结论"
+   ],
+   "rationale": "PARSE_FAIL=0 不证明没有漏事件;CAND 只认特定措辞,格式不同的真实上市文章会直接落入 OTHER",
+   "role": "不再决定母体大小;改为衡量**哨兵覆盖率**(有多少 U_trade 事件能取得 T_scheduled)"
+  },
+  "framework": "DUAL",
+  "layers": {
+   "U_pair": "归档中出现过的全部现货交易对(**仅覆盖清单,不是事件**)。实测 3,696 个,其中 USDT 计价 723",
+   "U_trade": "按 baseAsset 合并交易对后的**交易启动事件**;T0 = 该 baseAsset 全部合格现货对中的**最早实际成交**",
+   "U_announcement": "公告上市事件,含未开盘、延期、取消",
+   "U_master": "U_trade ∪ U_announcement"
+  },
+  "event_definition": "**冻结为『新 baseAsset 首次上市』**,不是『任何新增交易对』。理由:E1 的仓位结构是每币权益 10%,标的单位是资产不是交易对;旧资产新增报价对(如已上市币新增 FDUSD 对)不构成新事件",
+  "join_classes": {
+   "MATCHED": "公告与首笔成交均有且可靠链接",
+   "TRADE_ONLY": "有真实成交,但公告无法匹配(**仍进 U_trade,照常参与收益统计**)",
+   "ANNOUNCEMENT_ONLY": "有公告但无成交 ⟹ 未开盘",
+   "SCHEDULE_UPDATED_OR_CANCELLED": "存在延期/取消/恢复通知",
+   "AMBIGUOUS": "代码复用、迁移、改名或多事件无法可靠链接 —— **单列,禁止猜测**"
+  },
+  "statistics_scope": {
+   "收益 / 过滤器 / lambda_filter12": "**只在 U_trade 上计算**",
+   "lambda_announced / lambda_no_T0 / 未开盘率": "来自 U_announcement",
+   "lambda_exec": "**仍为 UNIDENTIFIED** —— 首笔成交不能认定可执行性(滑点、状态、容量均未识别)",
+   "公告匹配覆盖率 与 T0 - T_scheduled": "作为**归档首笔是否可信**的系统性审计"
+  },
+  "never_opened_caveat": "公告正则只覆盖部分措辞 ⟹ 『公告减归档』得到的未开盘数只能称 **已识别下界**,不得称完整计数。该下界随正则召回率提升而收紧",
+  "archive_coverage_caveat": "某标的在归档中的最早成交**可能只是归档覆盖起点**,不一定是实际上市首笔。须标记首月等于归档整体起点的标的,并在 MATCHED 子集上用 T0 - T_scheduled 分布检验该风险",
+  "leveraged_token_rule": {
+   "method": "显式白名单,**禁止后缀正则**",
+   "whitelist_file": "leverage_whitelist.json(50 个)",
+   "restored_false_positives": [
+    "JUP",
+    "SYRUP"
+   ],
+   "suspected_flag": "无法确认前缀为已知资产者(实测 BEAR / BULL)标 SUSPECTED_LEVERAGED 并保留在母体,单列报告"
+  },
+  "earliest_month_probe": {
+   "NO_ARCHIVE": "仅当 HTTP 200 且 KeyCount == 0",
+   "FETCH_FAIL": "超时 / 429 / 5xx —— 分别记录 HTTP 状态并重试,**禁止写空缓存**",
+   "must_report": "NO_ARCHIVE 与 FETCH_FAIL 分开计数"
+  },
+  "t0_procedure": {
+   "layer1_metadata_all": "对**全部**已解析交易对查询最早的 daily/aggTrades key,得 earliest_trade_day。仅文件名/日期元数据,**可含留出集**",
+   "layer2_download_gated": "仅当三条同时满足才下载行情正文:①earliest_trade_day ∈ [2021-09-01, 2026-08-31];②baseAsset ∈ 主分析集;③该对的日期 == 该 baseAsset 全部对中的最早日期",
+   "tied_pairs": "同日并列交易对**全部下载**,从所有首日文件中取最早成交;**必须保存全部并列对,不得任选其一**",
+   "why_aggTrades_not_klines": "aggTrades 文件对应真实成交;K 线文件存在不证明该月已有正成交。且 1m 只到分钟,入场窗口为 T+30min,精度不足",
+   "holdout_T0": "留出集只保留 S3 key 与月度/日度元数据,T0 标 **EMBARGOED**"
+  },
+  "timestamp_normalization": {
+   "target_unit": "整数微秒",
+   "rule": "13 位 → 原值 × 1000;16 位 → 原值;**其它位数立即失败**",
+   "assertions": [
+    "归一后的 UTC 日期 == 文件名中的日期",
+    "归一后年份落在研究范围内"
+   ],
+   "observed": "实测 BTCUSDT 2024-06-03 为 13 位毫秒;2025-06-03 与 2026-06-03 为 16 位微秒"
+  },
+  "fallback_mapping": {
+   "file": "fallback_mapping_evidence.json",
+   "n": 25,
+   "evidence_rule": "报价资产须在官方 quoteAsset 集合内;不在集合内者(实测 BTCGYEN / USDTGYEN 的 GYEN)标『历史资产,人工确认』",
+   "note": "『启发式成功拆出』不等于已权威识别"
+  }
+ },
+ "timestamps": {
+  "T_scheduled": "由公告正文按 mother_universe.extract.T_scheduled 提取(UTC)",
+  "T_first_trade": "在该公告所列的现货交易对中,**T_scheduled 之后(含等于,>=)**的最早 aggTrade;禁止取该 baseAsset 的历史第一笔",
+  "T0_for_strategy": "T_first_trade",
+  "lag_sentinel": "必须报告 (T_first_trade - T_scheduled) 的分布、最大值与异常清单"
+ },
+ "filters": {
+  "computable": {
+   "cond1_vwap": {
+    "window": "[T0, T0+30min)",
+    "vwap_def": "sum(price*qty)/sum(qty) over aggTrades in window, qty = base quantity",
+    "compare_price": "T0+30min 之后第一笔 aggTrade 的成交价(与入场代理为同一笔)",
+    "pass_if": "compare_price > vwap"
+   },
+   "cond2_taker_buy": {
+    "window": "[T0+20min, T0+30min)",
+    "taker_buy_def": "isBuyerMaker == false",
+    "measure": "quote_notional",
+    "pass_if": "taker_buy_notional / total_notional >= 0.60"
+   }
+  },
+  "not_computable": {
+   "cond3_slippage_le_1pct": "需订单簿;0B 已证现货无历史簿",
+   "cond4_trading_status_normal": "归档无该字段"
+  },
+  "main_spec": "只施加 cond1 + cond2,得 lambda_filter12"
+ },
+ "price_proxy": {
+  "entry": "T0+30min 之后第一笔 aggTrade 成交价",
+  "entry_tolerance_minutes": 10,
+  "exit": "T0+30min+7d 之后第一笔 aggTrade 成交价",
+  "exit_tolerance_hours": 24,
+  "on_missing": "记为 price_proxy_missing,保留在母体;不填 0、不填 -100%、不删除",
+  "must_report_alongside": [
+   "入场与出场时点前后各 1 小时的成交笔数"
+  ]
+ },
+ "estimators": {
+  "must_report_separately": [
+   "n_universe",
+   "n_price_observed",
+   "price_proxy_missing"
+  ],
+  "primary": "observed-only 的 r_price_proxy 均值/中位/p10/p25/p75/p90",
+  "full_universe_mean": "不计算。缺失值如何进入均值未冻结,禁止运行后再决定"
+ },
+ "concurrency": {
+  "f_policy_cap": 0.1,
+  "max_slots": 10,
+  "slot_hold_days": 7,
+  "slot_hold_rule": "严格 7 日占槽,不提前释放",
+  "selection_when_oversubscribed": "按 T0 升序;完全相同则按 baseAsset 字典序升序",
+  "output_name": "lambda_slot_admitted_upper"
+ },
+ "lambda_layers": [
+  "lambda_listed",
+  "lambda_filter12",
+  "lambda_slot_admitted_upper",
+  "lambda_exec"
+ ],
+ "lambda_exec": "UNIDENTIFIED",
+ "holdout": {
+  "rule": "sha256(baseAsset) 首字节 mod 5 == 0 为留出集(约 20%)",
+  "enforcement": "留出集的数据文件根本不下载",
+  "open_condition": "仅当 A 腿全部规则完全锁定、且已产出主分析集结果后,作一次性确认;不满足则永不打开",
+  "open_count_limit": 1
+ },
+ "b_leg": {
+  "status": "映射可预处理,收益计算未冻结",
+  "perp_onboard_source": "https://www.binance.com/fapi/v1/exchangeInfo 的 onboardDate 字段(2026-09-03 实测 892/892 全覆盖)",
+  "linkage_rule": "保留交易所原始 baseAsset,不做任意数字前缀剥离(实测 v1.2 误映射:2ZUSDT→Z 乘数2、42USDT→2 乘数4;且 1INCH / 1MBABYDOGE 的数字本就是币名一部分)。链接顺序:①原始 baseAsset 完全相等;②仅允许显式白名单前缀 1000 / 1000000,剥离后必须与一个实际现货 baseAsset 完全匹配;③歧义与未匹配单列,禁止猜测",
+  "allowed_outputs": [
+   "永续覆盖率",
+   "spot T0 与 perp onboardDate 的滞后分布",
+   "可做空窗口存在性"
+  ],
+  "forbidden_outputs": [
+   "任何反转收益",
+   "任何 P&L"
+  ],
+  "must_store": [
+   "onboardDate",
+   "deliveryDate",
+   "status",
+   "contractType",
+   "原始 baseAsset"
+  ],
+  "caveat": "当前快照可能遗漏已被彻底移除的合约;声称历史时点『可做空』须同时保存 deliveryDate 并说明该局限"
+ },
+ "assertions": [
+  "success_ids == expected_ids 且 missing_ids == 空集 且 extra_ids == 空集",
+  "PARSE_FAIL 逐条列出,FETCH_FAIL 附 HTTP 状态",
+  "每个 SPOT_LISTING 事件同时具备 base_asset 与 T_scheduled",
+  "所有 T_first_trade >= 对应事件的 T_scheduled",
+  "max(|T_first_trade - T_scheduled|) 必须打印;超过 6 小时的事件逐条列出",
+  "lambda_filter12 <= lambda_listed",
+  "lambda_slot_admitted_upper <= lambda_filter12",
+  "n_price_observed + price_proxy_missing == n_universe",
+  "A_input_event_ids == shared_mother_event_ids",
+  "set(留出集 baseAsset) 交 set(已下载市场数据文件对应 baseAsset) == 空集",
+  "召回率审计已产出且 OTHER 疑似漏项已逐条审阅",
+  "MATCHED + TRADE_ONLY + ANNOUNCEMENT_ONLY + SCHEDULE_UPDATED_OR_CANCELLED + AMBIGUOUS == |U_master|",
+  "U_trade 中每个事件的 baseAsset 唯一(已按资产合并交易对)",
+  "所有收益侧统计的输入事件集 ⊆ U_trade",
+  "标记 first_month == 归档起点 的标的数必须打印(归档覆盖起点风险)",
+  "杠杆代币剔除只依据显式白名单,JUP / SYRUP 必须在母体内",
+  "NO_ARCHIVE 与 FETCH_FAIL 分开计数且均已打印",
+  "每个 baseAsset 保存了其全部最早日并列交易对",
+  "时间戳归一后 UTC 日期 == 文件名日期",
+  "留出集 baseAsset 的 T0 == EMBARGOED 且无行情正文文件被下载"
+ ]
+}
+==============================================================================
+expected_ids = 1453
+pending = 464  (优先6/中性9/后置449)
+  ok=100 队列=364 轮转=0 delay=0.6s 速率=30.7/分 {'200': 100}
+  ok=195 队列=269 轮转=5 delay=0.6s 速率=15.7/分 {'200': 195, '429': 5}
+  ok=289 队列=175 轮转=11 delay=0.6s 速率=3.6/分 {'200': 289, '429': 10, 'URLError': 1}
+  ok=383 队列=81 轮转=17 delay=12.9s 速率=4.4/分 {'200': 383, '429': 16, 'URLError': 1}
+
+[完整性] success=1453 expected=1453 missing=0 extra=0  状态={'200': 464, '429': 16, 'URLError': 1}
+  ✅ 断言通过
