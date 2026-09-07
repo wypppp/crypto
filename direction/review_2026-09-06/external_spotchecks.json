@@ -1,0 +1,51 @@
+{
+  "ape_hourly": {
+    "url": "https://data.binance.vision/data/futures/um/monthly/klines/APEUSDT/1h/APEUSDT-1h-2022-04.zip",
+    "sha256": "b8823b65c44a6766315acf1cb5b5d3d067170305f8d4ae1223c6e76d37f934d3",
+    "official_checksum_equal": true,
+    "rows": 721,
+    "header": [
+      "open_time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "close_time",
+      "quote_volume",
+      "count",
+      "taker_buy_volume",
+      "taker_buy_quote_volume",
+      "ignore"
+    ],
+    "decision_time": "2022-04-23T16:00:00.012Z",
+    "used_bar_open_ms": "1650729600000",
+    "used_bar_close_ms": "1650733199999",
+    "reported_change": 0.226568,
+    "change_using_future_bar_close": 0.2265683156256344,
+    "change_using_last_completed_bar": 0.2169890079309864
+  },
+  "hippo_funding": {
+    "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/HIPPOUSDT/HIPPOUSDT-fundingRate-2025-11.zip",
+    "sha256": "d7653cb9bb72dd7634e825ee862a214846e2578ba2a15b8fbe8a158772e30cb9",
+    "official_checksum_equal": true,
+    "rows": 613,
+    "header": [
+      "calc_time",
+      "funding_interval_hours",
+      "last_funding_rate"
+    ],
+    "rows_near_reported_event": [
+      [
+        "1762473600005",
+        "4",
+        "0.02000000"
+      ],
+      [
+        "1762477200000",
+        "1",
+        "0.00328194"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,4039 @@
+{
+  "scope": "Only A predicate changed in a temporary copy; priority, extractors, expected counts and source files unchanged",
+  "output_directory": "/tmp/direction_a_gate_impact_dj2ky0vx",
+  "source_sha256": {
+    "/home/ancillary/direction/L_config.json": "6fac85986f4f9d2476996faf7135b57815b0b3a9ccf682b41765a3274a7215f3",
+    "/home/ancillary/direction/.probe_L_work/L_config.json": "6fac85986f4f9d2476996faf7135b57815b0b3a9ccf682b41765a3274a7215f3",
+    "/home/ancillary/direction/.probe_L_work/L_03_classify.py": "526ec86e4954be1eb93c188da15bf89ca2e6c1b1c8b40fc76f4714c9e0517ed4",
+    "/home/ancillary/direction/.probe_L_work/L_00_bootstrap.py": "3dbfdb0aa378dd4d293de6132a58235eae2fc5ac878b37c13f80b45a569d2d6c",
+    "/home/ancillary/direction/.probe_L_work/L_mother_events.json": "4553a105eecb839f70b11ed3f22f7841285cc41728d3d58988881ff983f0d54a"
+  },
+  "baseline": {
+    "status": "DIAGNOSTIC_CAPTURE_ONLY",
+    "exit_code": 1,
+    "exit_message": "FAIL-CLOSED:8 项检查未通过 ⟹ **拒绝写出母表**(既有正式产物未被覆盖)",
+    "temporary_code_sha256": "526ec86e4954be1eb93c188da15bf89ca2e6c1b1c8b40fc76f4714c9e0517ed4",
+    "config_sha256": "6fac85986f4f9d2476996faf7135b57815b0b3a9ccf682b41765a3274a7215f3",
+    "checks_passed": 81,
+    "checks_failed": [
+      {
+        "check": "regr 160049 事件数",
+        "got": 0,
+        "want": 1
+      },
+      {
+        "check": "regr 160049 kind/generator",
+        "got": "OTHER",
+        "want": "B_FIRST_CANDIDATE"
+      },
+      {
+        "check": "regr 160049 base",
+        "got": [],
+        "want": "SUI"
+      },
+      {
+        "check": "regr 160049 time",
+        "got": [],
+        "want": "2023-05-03T12:15:00+00:00"
+      },
+      {
+        "check": "regr 167392 事件数",
+        "got": 0,
+        "want": 1
+      },
+      {
+        "check": "regr 167392 kind/generator",
+        "got": "OTHER",
+        "want": "B_FIRST_CANDIDATE"
+      },
+      {
+        "check": "regr 167392 base",
+        "got": [],
+        "want": "MAV"
+      },
+      {
+        "check": "regr 167392 time",
+        "got": [],
+        "want": "2023-06-28T08:00:00+00:00"
+      }
+    ],
+    "mother_file_written": false
+  },
+  "candidate": {
+    "status": "DIAGNOSTIC_CAPTURE_ONLY",
+    "exit_code": 1,
+    "exit_message": "FAIL-CLOSED:7 项检查未通过 ⟹ **拒绝写出母表**(既有正式产物未被覆盖)",
+    "temporary_code_sha256": "fc87cecfa0f5c253b2bc2af4c4af71c9ec353e61fc2907be7ed936a947557f85",
+    "config_sha256": "6fac85986f4f9d2476996faf7135b57815b0b3a9ccf682b41765a3274a7215f3",
+    "checks_passed": 82,
+    "checks_failed": [
+      {
+        "check": "C2 来源篇数",
+        "got": 7,
+        "want": 22
+      },
+      {
+        "check": "C2 分组数",
+        "got": 4,
+        "want": 11
+      },
+      {
+        "check": "regr 80504 kind/generator",
+        "got": "A",
+        "want": "C_PROGRAM_LIST_OPEN"
+      },
+      {
+        "check": "regr 143460 kind/generator",
+        "got": "A",
+        "want": "C_PROGRAM_LIST_OPEN"
+      },
+      {
+        "check": "regr 153844 kind/generator",
+        "got": "A",
+        "want": "C_PROGRAM_LIST_OPEN"
+      },
+      {
+        "check": "regr 160049 kind/generator",
+        "got": "A",
+        "want": "B_FIRST_CANDIDATE"
+      },
+      {
+        "check": "regr 167392 kind/generator",
+        "got": "A",
+        "want": "B_FIRST_CANDIDATE"
+      }
+    ],
+    "mother_file_written": false
+  },
+  "baseline_buckets": {
+    "FUTURES_ONLY": 663,
+    "OTHER": 296,
+    "B_NEW_PAIR_CANDIDATE": 223,
+    "A": 78,
+    "PARSE_FAIL": 13,
+    "OPERATIONAL_UPDATE": 11,
+    "C_LAUNCH_THEN_LIST": 98,
+    "PREMARKET_TO_SPOT": 3,
+    "SPOT_COPY_TRADING": 1,
+    "C_PROGRAM_LIST_OPEN": 22,
+    "B_FIRST_CANDIDATE": 45
+  },
+  "candidate_buckets": {
+    "FUTURES_ONLY": 663,
+    "OTHER": 292,
+    "B_NEW_PAIR_CANDIDATE": 223,
+    "A": 142,
+    "PARSE_FAIL": 13,
+    "OPERATIONAL_UPDATE": 11,
+    "C_LAUNCH_THEN_LIST": 98,
+    "PREMARKET_TO_SPOT": 3,
+    "SPOT_COPY_TRADING": 1,
+    "C_PROGRAM_LIST_OPEN": 7
+  },
+  "baseline_raw_events": 1071,
+  "candidate_raw_events": 1076,
+  "baseline_groups": 1059,
+  "candidate_groups": 1062,
+  "gate_changes": [
+    {
+      "article_id": 173967,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "OTHER",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 171585,
+      "old_gate": true,
+      "new_gate": false,
+      "old_kind": "OPERATIONAL_UPDATE",
+      "new_kind": "OPERATIONAL_UPDATE"
+    },
+    {
+      "article_id": 169975,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 169808,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 167392,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "OTHER",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 160049,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "OTHER",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 159616,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 159542,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 153891,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 153844,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 143569,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 143460,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 123079,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 100349,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 93349,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 85800,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 85903,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 84707,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 84485,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 84403,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 83629,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 83307,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 81768,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 80890,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 80650,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 80596,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 80504,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 79469,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 79380,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 78447,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 78225,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 78029,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 77355,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 76999,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 76976,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 76772,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 76630,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 76206,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 75817,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 75502,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 75285,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 75118,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 74685,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 74376,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 73657,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 73129,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 73109,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 72929,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 72789,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 72633,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 71304,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 69844,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 69700,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 69373,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 69161,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 68640,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 68375,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 67504,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 67211,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 65724,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 65099,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 65011,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 64712,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "OTHER",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 63898,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    },
+    {
+      "article_id": 63793,
+      "old_gate": false,
+      "new_gate": true,
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A"
+    }
+  ],
+  "changed_articles": [
+    {
+      "article_id": 173967,
+      "title": "Binance Will Open Trading for CyberConnect (CYBER) and Sei (SEI)",
+      "old_kind": "OTHER",
+      "new_kind": "A",
+      "old_events": [],
+      "new_events": [
+        {
+          "article_id": 173967,
+          "base_asset": "CYBER",
+          "T_scheduled": "2023-08-15T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A"
+          ],
+          "title": "Binance Will Open Trading for CyberConnect (CYBER) and Sei (SEI)"
+        },
+        {
+          "article_id": 173967,
+          "base_asset": "SEI",
+          "T_scheduled": "2023-08-15T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A"
+          ],
+          "title": "Binance Will Open Trading for CyberConnect (CYBER) and Sei (SEI)"
+        }
+      ],
+      "old_matches": [],
+      "new_matches": [
+        "A"
+      ],
+      "head_match": "will list CyberConnect (CYBER) and Sei (SEI), and open trading for CYBER/BNB, CYBER/BTC, CYBER/FDUSD, CYBER/TRY, CYBER/USDT, SEI/BNB, SEI/BTC, SEI/FDUSD, SEI/TRY and SEI/USDT trading pairs at 2023-08-15 12:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list CyberConnect (CYBER) and Sei (SEI), and open trading for CYBER/BNB, CYBER/BTC, CYBER/FDUSD, CYBER/TRY, CYBER/USDT, SEI/BNB, SEI/BTC, SEI/FDUSD, SEI/TRY and SEI/USDT trading pairs at 2023-08-15 12:00 (UTC) . In addition, Binance Spot Grid will be enabled for the CYBER/BTC, CYBER/USDT, SEI/BTC and SEI/USDT trading pairs within 48 hours of the trading start time. S"
+    },
+    {
+      "article_id": 169975,
+      "title": "Binance Completes the Arkham Subscription Launchpad and Will Open Trading for ARKM",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 169975,
+          "base_asset": "ARKM",
+          "T_scheduled": "2023-07-18T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Arkham Subscription Launchpad and Will Open Trading for ARKM"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 169975,
+          "base_asset": "ARKM",
+          "T_scheduled": "2023-07-18T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Arkham Subscription Launchpad and Will Open Trading for ARKM"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Arkham (ARKM) in the innovation zone and open trading for ARKM/BTC, ARKM/USDT, ARKM/TUSD, ARKM/BNB and ARKM/TRY trading pairs at 2023-07-18 12:00 (UTC)",
+      "operation_context": "token allocation results are now showing on the Arkham Launchpad Page . Binance will list Arkham (ARKM) in the innovation zone and open trading for ARKM/BTC, ARKM/USDT, ARKM/TUSD, ARKM/BNB and ARKM/TRY trading pairs at 2023-07-18 12:00 (UTC) . Users will enjoy zero maker fees on the ARKM/TUSD trading pair until further notice. A total of 114,454 participants committed 10,182,983.2626 BNB during the"
+    },
+    {
+      "article_id": 169808,
+      "title": "Subscription for the Arkham (ARKM) Token Sale on Binance Launchpad Is Now Open",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 169808,
+          "base_asset": "ARKM",
+          "T_scheduled": "2023-07-18T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Arkham (ARKM) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 169808,
+          "base_asset": "ARKM",
+          "T_scheduled": "2023-07-18T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Arkham (ARKM) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Arkham (ARKM) in the innovation zone and open trading for ARKM/BTC, ARKM/USDT, ARKM/TUSD, ARKM/BNB and ARKM/TRY trading pairs at 2023-07-18 12:00 (UTC)",
+      "operation_context": "ARKM token sale has been set below. After the subscription is complete, Binance will list Arkham (ARKM) in the innovation zone and open trading for ARKM/BTC, ARKM/USDT, ARKM/TUSD, ARKM/BNB and ARKM/TRY trading pairs at 2023-07-18 12:00 (UTC) . Further information: 1 ARKM = 0.00020576 BNB or 0.05 USD (using a BNB price of 243 USD). Users will have 24 hours to subscribe by committing their BNB tokens"
+    },
+    {
+      "article_id": 167392,
+      "title": "Binance Will Open Trading for Maverick Protocol (MAV)",
+      "old_kind": "OTHER",
+      "new_kind": "A",
+      "old_events": [],
+      "new_events": [
+        {
+          "article_id": 167392,
+          "base_asset": "MAV",
+          "T_scheduled": "2023-06-28T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A"
+          ],
+          "title": "Binance Will Open Trading for Maverick Protocol (MAV)"
+        }
+      ],
+      "old_matches": [],
+      "new_matches": [
+        "A"
+      ],
+      "head_match": "will list Maverick Protocol (MAV) and open trading for MAV/BTC, MAV/USDT and MAV/TUSD trading pairs at 2023-06-28 08:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Maverick Protocol (MAV) and open trading for MAV/BTC, MAV/USDT and MAV/TUSD trading pairs at 2023-06-28 08:00 (UTC) . Notes : Users will enjoy zero maker fees on the MAV/TUSD trading pair until further notice. Where any discrepancy arises between the translated versions and "
+    },
+    {
+      "article_id": 160049,
+      "title": "Binance Will Open Trading for SUI",
+      "old_kind": "OTHER",
+      "new_kind": "A",
+      "old_events": [],
+      "new_events": [
+        {
+          "article_id": 160049,
+          "base_asset": "SUI",
+          "T_scheduled": "2023-05-03T12:15:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A"
+          ],
+          "title": "Binance Will Open Trading for SUI"
+        }
+      ],
+      "old_matches": [],
+      "new_matches": [
+        "A"
+      ],
+      "head_match": "will list Sui (SUI) and open trading for SUI/BTC, SUI/USDT, SUI/TUSD, SUI/BNB, SUI/EUR and SUI/TRY trading pairs at 2023-05-03 12:15 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Sui (SUI) and open trading for SUI/BTC, SUI/USDT, SUI/TUSD, SUI/BNB, SUI/EUR and SUI/TRY trading pairs at 2023-05-03 12:15 (UTC) . Notes : Users will enjoy zero maker fees on the SUI/TUSD trading pair until further notice. EUR and TRY are fiat currencies and do not represent any other di"
+    },
+    {
+      "article_id": 159616,
+      "title": "Binance Completes the Open Campus Subscription Launchpad and Will Open Trading for EDU",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 159616,
+          "base_asset": "EDU",
+          "T_scheduled": "2023-04-28T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Open Campus Subscription Launchpad and Will Open Trading for EDU"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 159616,
+          "base_asset": "EDU",
+          "T_scheduled": "2023-04-28T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Open Campus Subscription Launchpad and Will Open Trading for EDU"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Open Campus (EDU) in the innovation zone and open trading for EDU/BTC, EDU/USDT, EDU/TUSD and EDU/BNB trading pairs at 2023-04-28 12:00 (UTC)",
+      "operation_context": " allocation results are now showing on the Open Campus Launchpad Page . Binance will list Open Campus (EDU) in the innovation zone and open trading for EDU/BTC, EDU/USDT, EDU/TUSD and EDU/BNB trading pairs at 2023-04-28 12:00 (UTC) . Users will enjoy zero maker fees on the EDU/TUSD trading pair until further notice. A total of 120,292 participants committed 9,088,202.4116 BNB during the s"
+    },
+    {
+      "article_id": 159542,
+      "title": "Subscription for the Open Campus (EDU) Token Sale on Binance Launchpad Is Now Open",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 159542,
+          "base_asset": "EDU",
+          "T_scheduled": "2023-04-28T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Open Campus (EDU) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 159542,
+          "base_asset": "EDU",
+          "T_scheduled": "2023-04-28T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Open Campus (EDU) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Open Campus (EDU) in the innovation zone and open trading for EDU/BTC, EDU/USDT, EDU/TUSD and EDU/BNB trading pairs at 2023-04-28 12:00 (UTC)",
+      "operation_context": " EDU token sale has been set below. After the subscription is complete, Binance will list Open Campus (EDU) in the innovation zone and open trading for EDU/BTC, EDU/USDT, EDU/TUSD and EDU/BNB trading pairs at 2023-04-28 12:00 (UTC) . Further information: 1 EDU = 0.00015281 BNB or 0.05 USD (using a BNB price of 327.2 USD). Users will have three hours to subscribe by committing their BNB to"
+    },
+    {
+      "article_id": 153891,
+      "title": "Binance Completes the Space ID Subscription Launchpad and Will Open Trading for ID",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 153891,
+          "base_asset": "ID",
+          "T_scheduled": "2023-03-22T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Space ID Subscription Launchpad and Will Open Trading for ID"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 153891,
+          "base_asset": "ID",
+          "T_scheduled": "2023-03-22T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Space ID Subscription Launchpad and Will Open Trading for ID"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Space ID (ID) in the innovation zone and open trading for ID/BTC, ID/USDT and ID/BNB trading pairs at 2023-03-22 12:00 (UTC)",
+      "operation_context": " and remaining BNB tokens will both be transferred to your spot wallet. Binance will list Space ID (ID) in the innovation zone and open trading for ID/BTC, ID/USDT and ID/BNB trading pairs at 2023-03-22 12:00 (UTC) . Note: The token purchase price was set at 1 ID = 0.00007412 BNB or 0.025 USD (using a BNB price of 337.3 USD), as per the previous announcement here . The Sp"
+    },
+    {
+      "article_id": 153844,
+      "title": "Subscription for the Space ID (ID) Token Sale on Binance Launchpad Is Now Open",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 153844,
+          "base_asset": "ID",
+          "T_scheduled": "2023-03-22T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Space ID (ID) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 153844,
+          "base_asset": "ID",
+          "T_scheduled": "2023-03-22T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Space ID (ID) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Space ID (ID) in the innovation zone and open trading for ID/BTC, ID/USDT and ID/BNB trading pairs at 2023-03-22 12:00 (UTC)",
+      "operation_context": "e ID token sale has been set below. After the subscription is complete, Binance will list Space ID (ID) in the innovation zone and open trading for ID/BTC, ID/USDT and ID/BNB trading pairs at 2023-03-22 12:00 (UTC) . Further information: 1 ID = 0.00007412 BNB or 0.025 USD (using a BNB price of 337.3 USD). Users will have three hours to subscribe by committing their BNB to"
+    },
+    {
+      "article_id": 143569,
+      "title": "Binance Completes the Hooked Protocol Subscription Launchpad and Will Open Trading for HOOK",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 143569,
+          "base_asset": "HOOK",
+          "T_scheduled": "2022-12-01T14:30:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Hooked Protocol Subscription Launchpad and Will Open Trading for HOOK"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 143569,
+          "base_asset": "HOOK",
+          "T_scheduled": "2022-12-01T14:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Hooked Protocol Subscription Launchpad and Will Open Trading for HOOK"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Hooked Protocol (HOOK) in the innovation zone and open trading for HOOK/BTC, HOOK/USDT, HOOK/BUSD and HOOK/BNB trading pairs at 2022-12-01 14:30 (UTC)",
+      "operation_context": " and remaining BNB tokens will both be transferred to your spot wallet. Binance will list Hooked Protocol (HOOK) in the innovation zone and open trading for HOOK/BTC, HOOK/USDT, HOOK/BUSD and HOOK/BNB trading pairs at 2022-12-01 14:30 (UTC) . Note: The token purchase price was set at 1 HOOK = 0.0003381 BNB or 0.1 USD (using a BNB price of 295.8 USD), as per the previous announcement here . The Hoo"
+    },
+    {
+      "article_id": 143460,
+      "title": "Subscription for the Hooked Protocol (HOOK) Token Sale on Binance Launchpad Is Now Open",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 143460,
+          "base_asset": "HOOK",
+          "T_scheduled": "2022-12-01T14:30:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Hooked Protocol (HOOK) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 143460,
+          "base_asset": "HOOK",
+          "T_scheduled": "2022-12-01T14:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Hooked Protocol (HOOK) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Hooked Protocol (HOOK) in the innovation zone and open trading for HOOK/BTC, HOOK/USDT, HOOK/BUSD and HOOK/BNB trading pairs at 2022-12-01 14:30 (UTC)",
+      "operation_context": "tion as per the calculation rules . After the subscription is complete, Binance will list Hooked Protocol (HOOK) in the innovation zone and open trading for HOOK/BTC, HOOK/USDT, HOOK/BUSD and HOOK/BNB trading pairs at 2022-12-01 14:30 (UTC) . Further information: 1 HOOK = 0.0003381 BNB or 0.1 USD (using a BNB price of 295.8 USD). Users will have five hours to subscribe by committing their BNB toke"
+    },
+    {
+      "article_id": 123079,
+      "title": "Binance Will List GMX (GMX) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 123079,
+          "base_asset": "GMX",
+          "T_scheduled": "2022-10-05T10:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List GMX (GMX) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 123079,
+          "base_asset": "GMX",
+          "T_scheduled": "2022-10-05T10:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List GMX (GMX) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list GMX (GMX) in the Innovation Zone and will open trading for GMX/BTC, GMX/BUSD and GMX/USDT trading pairs at 2022-10-05 10:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list GMX (GMX) in the Innovation Zone and will open trading for GMX/BTC, GMX/BUSD and GMX/USDT trading pairs at 2022-10-05 10:00 (UTC). Users can now start depositing GMX in preparation for trading Withdrawals for GMX will open at 2022-10-06 10:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 100349,
+      "title": "Binance Will List Stargate (STG) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 100349,
+          "base_asset": "STG",
+          "T_scheduled": "2022-08-19T09:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Stargate (STG) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 100349,
+          "base_asset": "STG",
+          "T_scheduled": "2022-08-19T09:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Stargate (STG) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Stargate (STG) in the Innovation Zone and will open trading for STG/BTC, STG/BUSD and STG/USDT trading pairs at 2022-08-19 09:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Stargate (STG) in the Innovation Zone and will open trading for STG/BTC, STG/BUSD and STG/USDT trading pairs at 2022-08-19 09:00 (UTC). Users can now start depositing STG in preparation for trading Withdrawals for STG will open at 2022-08-19 09:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 93349,
+      "title": "Binance Will List Terra 2.0 (LUNA) in the Innovation Zone *LUNA (old) Renamed as LUNC",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 93349,
+          "base_asset": "LUNA",
+          "T_scheduled": "2022-05-31T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Terra 2.0 (LUNA) in the Innovation Zone *LUNA (old) Renamed as LUNC"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 93349,
+          "base_asset": "LUNA",
+          "T_scheduled": "2022-05-31T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Terra 2.0 (LUNA) in the Innovation Zone *LUNA (old) Renamed as LUNC"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Terra 2.0 (LUNA) in the Innovation Zone and will open trading for LUNA/USDT and LUNA/BUSD trading pairs at 2022-05-31 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Terra 2.0 (LUNA) in the Innovation Zone and will open trading for LUNA/USDT and LUNA/BUSD trading pairs at 2022-05-31 06:00 (UTC). Deposits and withdrawals for LUNA will open at 2022-05-31 05:30 (UTC) Terra 2.0 (LUNA) Airdrop Details: We will distribute Terra 2.0 (LUNA) to all eligible LU"
+    },
+    {
+      "article_id": 85800,
+      "title": "Binance Will List Biswap (BSW) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 85800,
+          "base_asset": "BSW",
+          "T_scheduled": "2022-03-21T13:30:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Biswap (BSW) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 85800,
+          "base_asset": "BSW",
+          "T_scheduled": "2022-03-21T13:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Biswap (BSW) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Biswap (BSW) in the Innovation Zone and will open trading for BSW/BNB , BSW/BUSD and BSW/USDT trading pairs at 2022-03-21 13:30 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Biswap (BSW) in the Innovation Zone and will open trading for BSW/BNB , BSW/BUSD and BSW/USDT trading pairs at 2022-03-21 13:30 (UTC). Users can now start depositing BSW in preparation for trading Withdrawals for BSW will open at 2022-03-22 13:30 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 85903,
+      "title": "Binance Will List ApeCoin (APE)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 85903,
+          "base_asset": "APE",
+          "T_scheduled": "2022-03-17T14:30:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List ApeCoin (APE)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 85903,
+          "base_asset": "APE",
+          "T_scheduled": "2022-03-17T14:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List ApeCoin (APE)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list ApeCoin (APE) and will open trading for APE/BTC , APE/BUSD and APE/USDT trading pairs at 2022-03-17 14:30 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list ApeCoin (APE) and will open trading for APE/BTC , APE/BUSD and APE/USDT trading pairs at 2022-03-17 14:30 (UTC). Users can now start depositing APE in preparation for trading Withdrawals for APE will open at 2022-03-18 14:30 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 84707,
+      "title": "Binance Will List Kadena (KDA)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 84707,
+          "base_asset": "KDA",
+          "T_scheduled": "2022-03-11T11:30:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Kadena (KDA)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 84707,
+          "base_asset": "KDA",
+          "T_scheduled": "2022-03-11T11:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Kadena (KDA)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Kadena (KDA) and will open trading for KDA/BTC , KDA/BUSD and KDA/USDT trading pairs at 2022-03-11 11:30 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Kadena (KDA) and will open trading for KDA/BTC , KDA/BUSD and KDA/USDT trading pairs at 2022-03-11 11:30 (UTC). Users can now start depositing KDA in preparation for trading Withdrawals for KDA will open at 2022-03-12 11:30 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 84485,
+      "title": "Binance Completes the STEPN Subscription Launchpad and Will Open Trading for GMT",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 84485,
+          "base_asset": "GMT",
+          "T_scheduled": "2022-03-09T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the STEPN Subscription Launchpad and Will Open Trading for GMT"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 84485,
+          "base_asset": "GMT",
+          "T_scheduled": "2022-03-09T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the STEPN Subscription Launchpad and Will Open Trading for GMT"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list STEPN (GMT) in the innovation zone and open trading for GMT/BTC, GMT/USDT, GMT/BNB and GMT/BUSD trading pairs at 2022-03-09 12:00 PM (UTC)",
+      "operation_context": " and remaining BNB tokens will both be transferred to your spot wallet. Binance will list STEPN (GMT) in the innovation zone and open trading for GMT/BTC, GMT/USDT, GMT/BNB and GMT/BUSD trading pairs at 2022-03-09 12:00 PM (UTC). Note: The token purchase price was set at 1 GMT = 0.00002514 BNB or 0.01 USD (using a BNB price of 397.9 USD), as per the previous announcement here . The STE"
+    },
+    {
+      "article_id": 84403,
+      "title": "Subscription for the STEPN (GMT) Token Sale on Binance Launchpad Is Now Open",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 84403,
+          "base_asset": "GMT",
+          "T_scheduled": "2022-03-09T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the STEPN (GMT) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 84403,
+          "base_asset": "GMT",
+          "T_scheduled": "2022-03-09T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the STEPN (GMT) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list STEPN (GMT) in the innovation zone and open trading for GMT/BTC, GMT/USDT, GMT/BUSD and GMT/BNB trading pairs at 2022-03-09 12:00 PM (UTC)",
+      "operation_context": " GMT token sale has been set below. After the subscription is complete, Binance will list STEPN (GMT) in the innovation zone and open trading for GMT/BTC, GMT/USDT, GMT/BUSD and GMT/BNB trading pairs at 2022-03-09 12:00 PM (UTC). Further information: 1 GMT = 0.00002514 BNB or 0.01 USD (using a BNB price of 397.9 USD). Users will have 3 hours to subscribe by committing their BNB tokens "
+    },
+    {
+      "article_id": 83629,
+      "title": "Binance Will List Astar (ASTR) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 83629,
+          "base_asset": "ASTR",
+          "T_scheduled": "2022-02-28T11:30:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Astar (ASTR) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 83629,
+          "base_asset": "ASTR",
+          "T_scheduled": "2022-02-28T11:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Astar (ASTR) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Astar (ASTR) in the Innovation Zone and will open trading for ASTR/BUSD and ASTR/USDT trading pairs at 2022-02-28 11:30 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Astar (ASTR) in the Innovation Zone and will open trading for ASTR/BUSD and ASTR/USDT trading pairs at 2022-02-28 11:30 (UTC). Users can now start depositing ASTR in preparation for trading Withdrawals for ASTR will open at 2022-03-01 11:30 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 83307,
+      "title": "Binance Completes the Alpine F1® Team Fan Token Subscription Launchpad and Will Open Trading for ALPINE",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 83307,
+          "base_asset": "ALPINE",
+          "T_scheduled": "2022-02-21T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Alpine F1® Team Fan Token Subscription Launchpad and Will Open Trading for ALPINE"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 83307,
+          "base_asset": "ALPINE",
+          "T_scheduled": "2022-02-21T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Alpine F1® Team Fan Token Subscription Launchpad and Will Open Trading for ALPINE"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Alpine F1® Team Fan Token (ALPINE) in the innovation zone and open trading for ALPINE/BTC, ALPINE/EUR, ALPINE/TRY and ALPINE/USDT trading pairs at 2022-02-21 12:00 PM (UTC)",
+      "operation_context": " and remaining BNB tokens will both be transferred to your spot wallet. Binance will list Alpine F1® Team Fan Token (ALPINE) in the innovation zone and open trading for ALPINE/BTC, ALPINE/EUR, ALPINE/TRY and ALPINE/USDT trading pairs at 2022-02-21 12:00 PM (UTC). Note: The token purchase price was set at 1 ALPINE = 0.00255755 BNB or 1 USD (using a BNB price of 391.00 USD), as per the previous announcement here . The Al"
+    },
+    {
+      "article_id": 81768,
+      "title": "Binance Will List WOO Network (WOO)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 81768,
+          "base_asset": "WOO",
+          "T_scheduled": "2022-02-08T06:30:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List WOO Network (WOO)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 81768,
+          "base_asset": "WOO",
+          "T_scheduled": "2022-02-08T06:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List WOO Network (WOO)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list WOO Network (WOO) and will open trading for WOO/BNB , WOO/BTC , WOO/BUSD and WOO/USDT trading pairs at 2022-02-08 06:30 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list WOO Network (WOO) and will open trading for WOO/BNB , WOO/BTC , WOO/BUSD and WOO/USDT trading pairs at 2022-02-08 06:30 (UTC). Users can now start depositing WOO in preparation for trading Withdrawals for WOO will open at 2022-02-09 06:30 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 80890,
+      "title": "Binance Will List Anchor Protocol (ANC)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 80890,
+          "base_asset": "ANC",
+          "T_scheduled": "2022-01-25T11:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Anchor Protocol (ANC)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 80890,
+          "base_asset": "ANC",
+          "T_scheduled": "2022-01-25T11:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Anchor Protocol (ANC)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Anchor Protocol (ANC) and will open trading for ANC/BTC , ANC/BUSD and ANC/USDT trading pairs at 2022-01-25 11:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Anchor Protocol (ANC) and will open trading for ANC/BTC , ANC/BUSD and ANC/USDT trading pairs at 2022-01-25 11:00 (UTC). Users can now start depositing ANC in preparation for trading Withdrawals for ANC will open at 2022-01-26 11:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 80650,
+      "title": "Binance Will List API3 (API3)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 80650,
+          "base_asset": "API3",
+          "T_scheduled": "2022-01-21T10:30:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List API3 (API3)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 80650,
+          "base_asset": "API3",
+          "T_scheduled": "2022-01-21T10:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List API3 (API3)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list API3 (API3) and will open trading for API3/BTC , API3/BUSD and API3/USDT trading pairs at 2022-01-21 10:30 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list API3 (API3) and will open trading for API3/BTC , API3/BUSD and API3/USDT trading pairs at 2022-01-21 10:30 (UTC). Users can now start depositing API3 in preparation for trading Withdrawals for API3 will open at 2022-01-22 10:30 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 80596,
+      "title": "Binance Completes the League of Kingdoms Subscription Launchpad and Will Open Trading for LOKA",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 80596,
+          "base_asset": "LOKA",
+          "T_scheduled": "2022-01-20T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the League of Kingdoms Subscription Launchpad and Will Open Trading for LOKA"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 80596,
+          "base_asset": "LOKA",
+          "T_scheduled": "2022-01-20T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the League of Kingdoms Subscription Launchpad and Will Open Trading for LOKA"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list League of Kingdoms (LOKA) in the innovation zone and open trading for LOKA/BTC, LOKA/USDT, LOKA/BNB and LOKA/BUSD trading pairs at 2022-01-20 12:00 PM (UTC)",
+      "operation_context": " and remaining BNB tokens will both be transferred to your spot wallet. Binance will list League of Kingdoms (LOKA) in the innovation zone and open trading for LOKA/BTC, LOKA/USDT, LOKA/BNB and LOKA/BUSD trading pairs at 2022-01-20 12:00 PM (UTC). Note: The token purchase price was set at 1 LOKA = 0.00033971 BNB or 0.16 USD (using a BNB price of 471 USD), as per the previous announcement here . The Leag"
+    },
+    {
+      "article_id": 80504,
+      "title": "Subscription for the League of Kingdoms (LOKA) Token Sale on Binance Launchpad Is Now Open",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 80504,
+          "base_asset": "LOKA",
+          "T_scheduled": "2022-01-20T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the League of Kingdoms (LOKA) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 80504,
+          "base_asset": "LOKA",
+          "T_scheduled": "2022-01-20T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the League of Kingdoms (LOKA) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list League of Kingdoms (LOKA) in the innovation zone and open trading for LOKA/BTC, LOKA/USDT, LOKA/BUSD and LOKA/BNB trading pairs at 2022-01-20 12:00 PM (UTC)",
+      "operation_context": " smart contract is available here . After the subscription is complete, Binance will list League of Kingdoms (LOKA) in the innovation zone and open trading for LOKA/BTC, LOKA/USDT, LOKA/BUSD and LOKA/BNB trading pairs at 2022-01-20 12:00 PM (UTC). Further Information: League of Kingdoms (LOKA) Project Research Report Introducing the League of Kingdoms (LOKA) Token Sale on Binance Launchpad! Launchpad Su"
+    },
+    {
+      "article_id": 79469,
+      "title": "Binance Will List Glimmer (GLMR)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 79469,
+          "base_asset": "GLMR",
+          "T_scheduled": "2022-01-11T16:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Glimmer (GLMR)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 79469,
+          "base_asset": "GLMR",
+          "T_scheduled": "2022-01-11T16:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Glimmer (GLMR)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Glimmer (GLMR) and will open trading for GLMR/BTC , GLMR/BUSD , and GLMR/USDT trading pairs at 2022-01-11 16:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Glimmer (GLMR) and will open trading for GLMR/BTC , GLMR/BUSD , and GLMR/USDT trading pairs at 2022-01-11 16:00 (UTC). Deposits for GLMR will open at 2022-01-11 10:00 (UTC) in preparation for trading Withdrawals for GLMR will open at 2022-01-12 15:00 (UTC) Note: The withdrawal"
+    },
+    {
+      "article_id": 79380,
+      "title": "Binance Will List Alchemy Pay (ACH) and Immutable X (IMX)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 79380,
+          "base_asset": "ACH",
+          "T_scheduled": "2022-01-10T10:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Alchemy Pay (ACH) and Immutable X (IMX)"
+        },
+        {
+          "article_id": 79380,
+          "base_asset": "IMX",
+          "T_scheduled": "2022-01-10T10:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Alchemy Pay (ACH) and Immutable X (IMX)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 79380,
+          "base_asset": "ACH",
+          "T_scheduled": "2022-01-10T10:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Alchemy Pay (ACH) and Immutable X (IMX)"
+        },
+        {
+          "article_id": 79380,
+          "base_asset": "IMX",
+          "T_scheduled": "2022-01-10T10:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Alchemy Pay (ACH) and Immutable X (IMX)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Alchemy Pay (ACH) and Immutable X (IMX) and will open trading for ACH/BTC , ACH/BUSD , ACH/USDT , IMX/BTC , IMX/BUSD , and IMX/USDT trading pairs at 2022-01-10 10:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Alchemy Pay (ACH) and Immutable X (IMX) and will open trading for ACH/BTC , ACH/BUSD , ACH/USDT , IMX/BTC , IMX/BUSD , and IMX/USDT trading pairs at 2022-01-10 10:00 (UTC). Users can now start depositing ACH and IMX in preparation for trading Withdrawals for ACH and IMX will open at 2022-01-11 10:00 (UTC) Note: The withdrawal ope"
+    },
+    {
+      "article_id": 78447,
+      "title": "Binance Will List JOE (JOE)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 78447,
+          "base_asset": "JOE",
+          "T_scheduled": "2021-12-28T11:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List JOE (JOE)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 78447,
+          "base_asset": "JOE",
+          "T_scheduled": "2021-12-28T11:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List JOE (JOE)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list JOE (JOE) and will open trading for JOE/BTC , JOE/BUSD and JOE/USDT trading pairs at 2021-12-28 11:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list JOE (JOE) and will open trading for JOE/BTC , JOE/BUSD and JOE/USDT trading pairs at 2021-12-28 11:00 (UTC). Users can now start depositing JOE in preparation for trading Withdrawals for JOE will open at 2021-12-29 11:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 78225,
+      "title": "Binance Will List Spell Token (SPELL) and TerraUSD (UST)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 78225,
+          "base_asset": "SPELL",
+          "T_scheduled": "2021-12-24T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Spell Token (SPELL) and TerraUSD (UST)"
+        },
+        {
+          "article_id": 78225,
+          "base_asset": "UST",
+          "T_scheduled": "2021-12-24T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Spell Token (SPELL) and TerraUSD (UST)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 78225,
+          "base_asset": "SPELL",
+          "T_scheduled": "2021-12-24T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Spell Token (SPELL) and TerraUSD (UST)"
+        },
+        {
+          "article_id": 78225,
+          "base_asset": "UST",
+          "T_scheduled": "2021-12-24T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Spell Token (SPELL) and TerraUSD (UST)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Spell Token (SPELL) and TerraUSD (UST) and will open trading for SPELL/BTC , SPELL/BUSD , SPELL/USDT , UST/BTC , UST/BUSD , and UST/USDT trading pairs at 2021-12-24 08:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Spell Token (SPELL) and TerraUSD (UST) and will open trading for SPELL/BTC , SPELL/BUSD , SPELL/USDT , UST/BTC , UST/BUSD , and UST/USDT trading pairs at 2021-12-24 08:00 (UTC). Users can now start depositing SPELL and UST in preparation for trading Withdrawals for SPELL and UST will open at 2021-12-25 08:00 (UTC) Note: Binance will o"
+    },
+    {
+      "article_id": 78029,
+      "title": "Binance Will List Convex Finance (CVX) and ConstitutionDAO (PEOPLE) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 78029,
+          "base_asset": "CVX",
+          "T_scheduled": "2021-12-23T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Convex Finance (CVX) and ConstitutionDAO (PEOPLE) in the Innovation Zone"
+        },
+        {
+          "article_id": 78029,
+          "base_asset": "PEOPLE",
+          "T_scheduled": "2021-12-23T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Convex Finance (CVX) and ConstitutionDAO (PEOPLE) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 78029,
+          "base_asset": "CVX",
+          "T_scheduled": "2021-12-23T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Convex Finance (CVX) and ConstitutionDAO (PEOPLE) in the Innovation Zone"
+        },
+        {
+          "article_id": 78029,
+          "base_asset": "PEOPLE",
+          "T_scheduled": "2021-12-23T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Convex Finance (CVX) and ConstitutionDAO (PEOPLE) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Convex Finance (CVX) and ConstitutionDAO (PEOPLE) in the Innovation Zone and will open trading for CVX/BTC , CVX/BUSD , CVX/USDT , PEOPLE/BTC , PEOPLE/BUSD and PEOPLE/USDT trading pairs at 2021-12-23 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Convex Finance (CVX) and ConstitutionDAO (PEOPLE) in the Innovation Zone and will open trading for CVX/BTC , CVX/BUSD , CVX/USDT , PEOPLE/BTC , PEOPLE/BUSD and PEOPLE/USDT trading pairs at 2021-12-23 06:00 (UTC). Users can now start depositing CVX and PEOPLE in preparation for trading Withdrawals for CVX and PEOPLE will open at 2021-12-24 06:00 (UTC) Note: The withdraw"
+    },
+    {
+      "article_id": 77355,
+      "title": "Binance Will List Highstreet (HIGH)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 77355,
+          "base_asset": "HIGH",
+          "T_scheduled": "2021-12-17T07:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Highstreet (HIGH)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 77355,
+          "base_asset": "HIGH",
+          "T_scheduled": "2021-12-17T07:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Highstreet (HIGH)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Highstreet (HIGH) and will open trading for HIGH/BTC , HIGH/BUSD , and HIGH/USDT trading pairs at 2021-12-17 07:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Highstreet (HIGH) and will open trading for HIGH/BTC , HIGH/BUSD , and HIGH/USDT trading pairs at 2021-12-17 07:00 (UTC). Users can now start depositing HIGH in preparation for trading Withdrawals for HIGH will open at 2021-12-18 07:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 76999,
+      "title": "Binance Completes the Voxies Subscription Launchpad and Will Open Trading for VOXEL",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 76999,
+          "base_asset": "VOXEL",
+          "T_scheduled": "2021-12-14T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Voxies Subscription Launchpad and Will Open Trading for VOXEL"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 76999,
+          "base_asset": "VOXEL",
+          "T_scheduled": "2021-12-14T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Binance Completes the Voxies Subscription Launchpad and Will Open Trading for VOXEL"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Voxies (VOXEL) in the innovation zone and open trading for VOXEL/BTC, VOXEL/USDT, VOXEL/BNB and VOXEL/BUSD trading pairs at 2021-12-14 12:00 PM (UTC)",
+      "operation_context": " and remaining BNB tokens will both be transferred to your spot wallet. Binance will list Voxies (VOXEL) in the innovation zone and open trading for VOXEL/BTC, VOXEL/USDT, VOXEL/BNB and VOXEL/BUSD trading pairs at 2021-12-14 12:00 PM (UTC). Note: The token purchase price was set at 1 VOXEL = 0.00037894 BNB or 0.2 USD (using a BNB price of 527.8 USD), as per the previous announcement here . The Vo"
+    },
+    {
+      "article_id": 76976,
+      "title": "Subscription for the Voxies (VOXEL) Token Sale on Binance Launchpad Is Now Open",
+      "old_kind": "C_PROGRAM_LIST_OPEN",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 76976,
+          "base_asset": "VOXEL",
+          "T_scheduled": "2021-12-14T12:00:00+00:00",
+          "generator": "C_PROGRAM_LIST_OPEN",
+          "prep": null,
+          "candidate_kind": "C_PROGRAM_LIST_OPEN",
+          "matched_generators": [
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Voxies (VOXEL) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 76976,
+          "base_asset": "VOXEL",
+          "T_scheduled": "2021-12-14T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "C_PROGRAM_LIST_OPEN"
+          ],
+          "title": "Subscription for the Voxies (VOXEL) Token Sale on Binance Launchpad Is Now Open"
+        }
+      ],
+      "old_matches": [
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "new_matches": [
+        "A",
+        "C_PROGRAM_LIST_OPEN"
+      ],
+      "head_match": "will list Voxies (VOXEL) in the innovation zone and open trading for VOXEL/BTC, VOXEL/USDT, VOXEL/BUSD and VOXEL/BNB trading pairs at 2021-12-14 12:00 PM (UTC)",
+      "operation_context": "ract on Polygon is available here . After the subscription is complete, Binance will list Voxies (VOXEL) in the innovation zone and open trading for VOXEL/BTC, VOXEL/USDT, VOXEL/BUSD and VOXEL/BNB trading pairs at 2021-12-14 12:00 PM (UTC). Further Information: Voxies (VOXEL) Project Research Report Introducing the Voxies (VOXEL) Token Sale on Binance Launchpad! Launchpad Subscription Format FAQ "
+    },
+    {
+      "article_id": 76772,
+      "title": "Binance Will List Flux (FLUX)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 76772,
+          "base_asset": "FLUX",
+          "T_scheduled": "2021-12-10T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Flux (FLUX)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 76772,
+          "base_asset": "FLUX",
+          "T_scheduled": "2021-12-10T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Flux (FLUX)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Flux (FLUX) and will open trading for FLUX/BTC , FLUX/BUSD , and FLUX/USDT trading pairs at 2021-12-10 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Flux (FLUX) and will open trading for FLUX/BTC , FLUX/BUSD , and FLUX/USDT trading pairs at 2021-12-10 06:00 (UTC). Users can now start depositing FLUX in preparation for trading Withdrawals for FLUX will open at 2021-12-11 06:00 (UTC) Note: Binance will only support FLUX B"
+    },
+    {
+      "article_id": 76630,
+      "title": "Binance Will List Biconomy (BICO)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 76630,
+          "base_asset": "BICO",
+          "T_scheduled": "2021-12-09T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Biconomy (BICO)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 76630,
+          "base_asset": "BICO",
+          "T_scheduled": "2021-12-09T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Biconomy (BICO)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Biconomy (BICO) and will open trading for BICO/BTC , BICO/BUSD , and BICO/USDT trading pairs at 2021-12-09 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Biconomy (BICO) and will open trading for BICO/BTC , BICO/BUSD , and BICO/USDT trading pairs at 2021-12-09 06:00 (UTC). Users can now start depositing BICO in preparation for trading Withdrawals for BICO will open at 2021-12-10 06:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 76206,
+      "title": "Binance Will List Anyswap (ANY)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 76206,
+          "base_asset": "ANY",
+          "T_scheduled": "2021-12-04T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Anyswap (ANY)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 76206,
+          "base_asset": "ANY",
+          "T_scheduled": "2021-12-04T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Anyswap (ANY)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Anyswap (ANY) and will open trading for ANY/BTC, ANY/BUSD, and ANY/USDT trading pairs at 2021-12-04 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Anyswap (ANY) and will open trading for ANY/BTC, ANY/BUSD, and ANY/USDT trading pairs at 2021-12-04 06:00 (UTC). Users can now start depositing ANY in preparation for trading Withdrawals for ANY will open at 2021-12-05 06:00 (UTC) Note: Binance will only support ANY BEP-"
+    },
+    {
+      "article_id": 75817,
+      "title": "Binance Will List Merit Circle (MC)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 75817,
+          "base_asset": "MC",
+          "T_scheduled": "2021-12-02T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Merit Circle (MC)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 75817,
+          "base_asset": "MC",
+          "T_scheduled": "2021-12-02T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Merit Circle (MC)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Merit Circle (MC) and will open trading for MC/BTC , MC/BUSD , and MC/USDT trading pairs at 2021-12-02 08:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Merit Circle (MC) and will open trading for MC/BTC , MC/BUSD , and MC/USDT trading pairs at 2021-12-02 08:00 (UTC). Users can now start depositing MC in preparation for trading Withdrawals for MC will open at 2021-12-03 08:00 (UTC) Note: The withdrawal open time is an estim"
+    },
+    {
+      "article_id": 75502,
+      "title": "Binance Will List Alchemix (ALCX)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 75502,
+          "base_asset": "ALCX",
+          "T_scheduled": "2021-11-30T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Alchemix (ALCX)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 75502,
+          "base_asset": "ALCX",
+          "T_scheduled": "2021-11-30T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Alchemix (ALCX)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Alchemix (ALCX) and will open trading for ALCX/BTC, ALCX/BUSD, and ALCX/USDT trading pairs at 2021-11-30 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Alchemix (ALCX) and will open trading for ALCX/BTC, ALCX/BUSD, and ALCX/USDT trading pairs at 2021-11-30 06:00 (UTC). Users can now start depositing ALCX in preparation for trading Withdrawals for ALCX will open at 2021-12-01 06:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 75285,
+      "title": "Binance Will List Render (RNDR)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 75285,
+          "base_asset": "RNDR",
+          "T_scheduled": "2021-11-27T10:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Render (RNDR)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 75285,
+          "base_asset": "RNDR",
+          "T_scheduled": "2021-11-27T10:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Render (RNDR)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Render (RNDR) and will open trading for RNDR/BTC , RNDR/BUSD , and RNDR/USDT trading pairs at 2021-11-27 10:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Render (RNDR) and will open trading for RNDR/BTC , RNDR/BUSD , and RNDR/USDT trading pairs at 2021-11-27 10:00 (UTC). Users can now start depositing RNDR in preparation for trading Withdrawals for RNDR will open at 2021-11-28 10:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 75118,
+      "title": "Binance Will List Vulcan Forged PYR (PYR)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 75118,
+          "base_asset": "PYR",
+          "T_scheduled": "2021-11-26T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Vulcan Forged PYR (PYR)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 75118,
+          "base_asset": "PYR",
+          "T_scheduled": "2021-11-26T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Vulcan Forged PYR (PYR)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Vulcan Forged PYR (PYR) and will open trading for PYR/BTC, PYR/BUSD, and PYR/USDT trading pairs at 2021-11-26 08:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Vulcan Forged PYR (PYR) and will open trading for PYR/BTC, PYR/BUSD, and PYR/USDT trading pairs at 2021-11-26 08:00 (UTC). Users can now start depositing PYR in preparation for trading Withdrawals for PYR will open at 2021-11-27 08:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 74685,
+      "title": "Binance Will List Amp (AMP) and PlayDapp (PLA)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 74685,
+          "base_asset": "AMP",
+          "T_scheduled": "2021-11-23T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Amp (AMP) and PlayDapp (PLA)"
+        },
+        {
+          "article_id": 74685,
+          "base_asset": "PLA",
+          "T_scheduled": "2021-11-23T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Amp (AMP) and PlayDapp (PLA)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 74685,
+          "base_asset": "AMP",
+          "T_scheduled": "2021-11-23T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Amp (AMP) and PlayDapp (PLA)"
+        },
+        {
+          "article_id": 74685,
+          "base_asset": "PLA",
+          "T_scheduled": "2021-11-23T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Amp (AMP) and PlayDapp (PLA)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Amp (AMP) and PlayDapp (PLA) and will open trading for AMP/BTC, AMP/BNB, AMP/BUSD, AMP/USDT, PLA/BTC, PLA/BNB, PLA/BUSD, and PLA/USDT trading pairs at 2021-11-23 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Amp (AMP) and PlayDapp (PLA) and will open trading for AMP/BTC, AMP/BNB, AMP/BUSD, AMP/USDT, PLA/BTC, PLA/BNB, PLA/BUSD, and PLA/USDT trading pairs at 2021-11-23 06:00 (UTC). Users can now start depositing AMP and PLA in preparation for trading Withdrawals for AMP and PLA will open at 2021-11-24 06:00 (UTC) Note: The withdrawal ope"
+    },
+    {
+      "article_id": 74376,
+      "title": "Binance Will List JasmyCoin (JASMY)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 74376,
+          "base_asset": "JASMY",
+          "T_scheduled": "2021-11-22T12:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List JasmyCoin (JASMY)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 74376,
+          "base_asset": "JASMY",
+          "T_scheduled": "2021-11-22T12:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List JasmyCoin (JASMY)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list JasmyCoin (JASMY) and will open trading for JASMY/BTC, JASMY/BNB, JASMY/BUSD, and JASMY/USDT trading pairs at 2021-11-22 12:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list JasmyCoin (JASMY) and will open trading for JASMY/BTC, JASMY/BNB, JASMY/BUSD, and JASMY/USDT trading pairs at 2021-11-22 12:00 (UTC). Users can now start depositing JASMY in preparation for trading Withdrawals for JASMY will open at 2021-11-23 12:00 (UTC) Note: The withdrawal open time is an"
+    },
+    {
+      "article_id": 73657,
+      "title": "Binance Will List BENQI (QI)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 73657,
+          "base_asset": "QI",
+          "T_scheduled": "2021-11-15T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List BENQI (QI)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 73657,
+          "base_asset": "QI",
+          "T_scheduled": "2021-11-15T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List BENQI (QI)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list BENQI (QI) and will open trading for QI/BTC, QI/BNB, QI/BUSD, and QI/USDT trading pairs at 2021-11-15 08:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list BENQI (QI) and will open trading for QI/BTC, QI/BNB, QI/BUSD, and QI/USDT trading pairs at 2021-11-15 08:00 (UTC). Users can now start depositing QI in preparation for trading Withdrawals for QI will open at 2021-11-16 08:00 (UTC) Note: Binance will only support QI AVAX C-"
+    },
+    {
+      "article_id": 73129,
+      "title": "Binance Will List Ethereum Name Service (ENS)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 73129,
+          "base_asset": "ENS",
+          "T_scheduled": "2021-11-10T07:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Ethereum Name Service (ENS)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 73129,
+          "base_asset": "ENS",
+          "T_scheduled": "2021-11-10T07:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Ethereum Name Service (ENS)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Ethereum Name Service (ENS) and will open trading for ENS/BTC , ENS/BNB , ENS/BUSD , and ENS/USDT trading pairs at 2021-11-10 07:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Ethereum Name Service (ENS) and will open trading for ENS/BTC , ENS/BNB , ENS/BUSD , and ENS/USDT trading pairs at 2021-11-10 07:00 (UTC). Users can now start depositing ENS in preparation for trading Withdrawals for ENS will open at 2021-11-11 07:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 73109,
+      "title": "Binance Will List Manchester City Fan Token (CITY)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 73109,
+          "base_asset": "CITY",
+          "T_scheduled": "2021-11-10T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Manchester City Fan Token (CITY)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 73109,
+          "base_asset": "CITY",
+          "T_scheduled": "2021-11-10T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Manchester City Fan Token (CITY)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Manchester City Fan Token (CITY) and will open trading for CITY/BTC, CITY/BNB, CITY/BUSD, and CITY/USDT trading pairs at 2021-11-10 08:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Manchester City Fan Token (CITY) and will open trading for CITY/BTC, CITY/BNB, CITY/BUSD, and CITY/USDT trading pairs at 2021-11-10 08:00 (UTC). Users can now start depositing CITY in preparation for trading Withdrawals for CITY will open at 2021-11-11 08:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 72929,
+      "title": "Binance Will List Moonriver (MOVR)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 72929,
+          "base_asset": "MOVR",
+          "T_scheduled": "2021-11-08T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Moonriver (MOVR)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 72929,
+          "base_asset": "MOVR",
+          "T_scheduled": "2021-11-08T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Moonriver (MOVR)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Moonriver (MOVR) and will open trading for MOVR/BTC , MOVR/BNB , MOVR/BUSD , and MOVR/USDT trading pairs at 2021-11-08 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Moonriver (MOVR) and will open trading for MOVR/BTC , MOVR/BNB , MOVR/BUSD , and MOVR/USDT trading pairs at 2021-11-08 06:00 (UTC). Users can now start depositing MOVR in preparation for trading Withdrawals for MOVR will open at 2021-11-09 06:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 72789,
+      "title": "Binance Will List Rari Governance Token (RGT)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 72789,
+          "base_asset": "RGT",
+          "T_scheduled": "2021-11-05T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Rari Governance Token (RGT)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 72789,
+          "base_asset": "RGT",
+          "T_scheduled": "2021-11-05T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Rari Governance Token (RGT)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Rari Governance Token (RGT) and will open trading for RGT/BTC, RGT/BNB, RGT/BUSD, and RGT/USDT trading pairs at 2021-11-05 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Rari Governance Token (RGT) and will open trading for RGT/BTC, RGT/BNB, RGT/BUSD, and RGT/USDT trading pairs at 2021-11-05 06:00 (UTC). Users can now start depositing RGT in preparation for trading Withdrawals for RGT will open at 2021-11-06 06:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 72633,
+      "title": "Binance Will List BinaryX (BNX) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 72633,
+          "base_asset": "BNX",
+          "T_scheduled": "2021-11-04T11:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List BinaryX (BNX) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 72633,
+          "base_asset": "BNX",
+          "T_scheduled": "2021-11-04T11:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List BinaryX (BNX) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list BinaryX (BNX) in the Innovation Zone and will open trading for BNX/BNB , BNX/BTC , BNX/BUSD and BNX/USDT trading pairs at 2021-11-04 11:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list BinaryX (BNX) in the Innovation Zone and will open trading for BNX/BNB , BNX/BTC , BNX/BUSD and BNX/USDT trading pairs at 2021-11-04 11:00 (UTC). Users can now start depositing BNX in preparation for trading Withdrawals for BNX will open at 2021-11-05 11:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 71304,
+      "title": "Binance Will List Tranchess (CHESS) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 71304,
+          "base_asset": "CHESS",
+          "T_scheduled": "2021-10-22T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Tranchess (CHESS) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 71304,
+          "base_asset": "CHESS",
+          "T_scheduled": "2021-10-22T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Tranchess (CHESS) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Tranchess (CHESS) in the Innovation Zone and will open trading for CHESS/BNB, CHESS/BTC, CHESS/BUSD and CHESS/USDT trading pairs at 2021-10-22 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Tranchess (CHESS) in the Innovation Zone and will open trading for CHESS/BNB, CHESS/BTC, CHESS/BUSD and CHESS/USDT trading pairs at 2021-10-22 06:00 (UTC). Users can now start depositing CHESS in preparation for trading Withdrawals for CHESS will open at 2021-10-23 06:00 (UTC) Note: The withdrawal open time is an"
+    },
+    {
+      "article_id": 69844,
+      "title": "Binance Will List SuperRare (RARE)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 69844,
+          "base_asset": "RARE",
+          "T_scheduled": "2021-10-11T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List SuperRare (RARE)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 69844,
+          "base_asset": "RARE",
+          "T_scheduled": "2021-10-11T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List SuperRare (RARE)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list SuperRare (RARE) and will open trading for RARE/BTC, RARE/BNB, RARE/BUSD, and RARE/USDT trading pairs at 2021-10-11 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list SuperRare (RARE) and will open trading for RARE/BTC, RARE/BNB, RARE/BUSD, and RARE/USDT trading pairs at 2021-10-11 06:00 (UTC). Users can now start depositing RARE in preparation for trading Withdrawals for RARE will open at 2021-10-12 06:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 69700,
+      "title": "Binance Will List Radicle (RAD)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 69700,
+          "base_asset": "RAD",
+          "T_scheduled": "2021-10-07T07:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Radicle (RAD)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 69700,
+          "base_asset": "RAD",
+          "T_scheduled": "2021-10-07T07:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Radicle (RAD)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Radicle (RAD) and will open trading for RAD/BTC, RAD/BNB, RAD/BUSD, and RAD/USDT trading pairs at 2021-10-07 07:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Radicle (RAD) and will open trading for RAD/BTC, RAD/BNB, RAD/BUSD, and RAD/USDT trading pairs at 2021-10-07 07:00 (UTC). Users can now start depositing RAD in preparation for trading Withdrawals for RAD will open at 2021-10-08 07:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 69373,
+      "title": "Binance Will List Adventure Gold (AGLD) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 69373,
+          "base_asset": "AGLD",
+          "T_scheduled": "2021-10-05T07:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Adventure Gold (AGLD) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 69373,
+          "base_asset": "AGLD",
+          "T_scheduled": "2021-10-05T07:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Adventure Gold (AGLD) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Adventure Gold (AGLD) in the Innovation Zone and will open trading for AGLD/BNB, AGLD/BTC, AGLD/BUSD and AGLD/USDT trading pairs at 2021-10-05 07:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Adventure Gold (AGLD) in the Innovation Zone and will open trading for AGLD/BNB, AGLD/BTC, AGLD/BUSD and AGLD/USDT trading pairs at 2021-10-05 07:00 (UTC). Users can now start depositing AGLD in preparation for trading Withdrawals for AGLD will open at 2021-10-06 07:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 69161,
+      "title": "Binance Will List Bonfida (FIDA)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 69161,
+          "base_asset": "FIDA",
+          "T_scheduled": "2021-09-30T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Bonfida (FIDA)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 69161,
+          "base_asset": "FIDA",
+          "T_scheduled": "2021-09-30T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Bonfida (FIDA)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Bonfida (FIDA) and will open trading for FIDA/BTC, FIDA/BNB, FIDA/BUSD, and FIDA/USDT trading pairs at 2021-09-30 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Bonfida (FIDA) and will open trading for FIDA/BTC, FIDA/BNB, FIDA/BUSD, and FIDA/USDT trading pairs at 2021-09-30 06:00 (UTC). Users can now start depositing FIDA in preparation for trading Withdrawals for FIDA will open at 2021-10-01 06:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 68640,
+      "title": "Binance Will List Yield Guild Games (YGG)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 68640,
+          "base_asset": "YGG",
+          "T_scheduled": "2021-09-24T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Yield Guild Games (YGG)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 68640,
+          "base_asset": "YGG",
+          "T_scheduled": "2021-09-24T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Yield Guild Games (YGG)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Yield Guild Games (YGG) and will open trading for YGG/BTC , YGG/BNB , YGG/BUSD , and YGG/USDT trading pairs at 2021-09-24 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Yield Guild Games (YGG) and will open trading for YGG/BTC , YGG/BNB , YGG/BUSD , and YGG/USDT trading pairs at 2021-09-24 06:00 (UTC). Users can now start depositing YGG in preparation for trading Withdrawals for YGG will open at 2021-09-25 06:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 68375,
+      "title": "Binance Will List Illuvium (ILV)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 68375,
+          "base_asset": "ILV",
+          "T_scheduled": "2021-09-22T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Illuvium (ILV)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 68375,
+          "base_asset": "ILV",
+          "T_scheduled": "2021-09-22T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Illuvium (ILV)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Illuvium (ILV) and will open trading for ILV/BTC, ILV/BNB, ILV/BUSD, and ILV/USDT trading pairs at 2021-09-22 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Illuvium (ILV) and will open trading for ILV/BTC, ILV/BNB, ILV/BUSD, and ILV/USDT trading pairs at 2021-09-22 06:00 (UTC). Users can now start depositing ILV in preparation for trading Withdrawals for ILV will open at 2021-09-23 06:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 67504,
+      "title": "Binance Will List Gala (GALA)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 67504,
+          "base_asset": "GALA",
+          "T_scheduled": "2021-09-13T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Gala (GALA)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 67504,
+          "base_asset": "GALA",
+          "T_scheduled": "2021-09-13T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Gala (GALA)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Gala (GALA) and will open trading for GALA/BTC , GALA/BNB , GALA/BUSD , and GALA/USDT trading pairs at 2021-09-13 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Gala (GALA) and will open trading for GALA/BTC , GALA/BNB , GALA/BUSD , and GALA/USDT trading pairs at 2021-09-13 06:00 (UTC). Users can now start depositing GALA in preparation for trading Withdrawals for GALA will open at 2021-09-14 06:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 67211,
+      "title": "Binance Will List dYdX (DYDX) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 67211,
+          "base_asset": "DYDX",
+          "T_scheduled": "2021-09-09T02:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List dYdX (DYDX) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 67211,
+          "base_asset": "DYDX",
+          "T_scheduled": "2021-09-09T02:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List dYdX (DYDX) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list dYdX (DYDX) in the Innovation Zone and will open trading for DYDX/BNB , DYDX/BTC , DYDX/BUSD and DYDX/USDT trading pairs at 2021-09-09 02:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list dYdX (DYDX) in the Innovation Zone and will open trading for DYDX/BNB , DYDX/BTC , DYDX/BUSD and DYDX/USDT trading pairs at 2021-09-09 02:00 (UTC). Users can now start depositing DYDX in preparation for trading Withdrawals for DYDX will open at 2021-09-10 02:00 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 65724,
+      "title": "Binance Will List Gnosis (GNO)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 65724,
+          "base_asset": "GNO",
+          "T_scheduled": "2021-08-30T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Gnosis (GNO)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 65724,
+          "base_asset": "GNO",
+          "T_scheduled": "2021-08-30T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Gnosis (GNO)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Gnosis (GNO) and will open trading for GNO/BTC, GNO/BNB, GNO/BUSD, and GNO/USDT trading pairs at 2021-08-30 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Gnosis (GNO) and will open trading for GNO/BTC, GNO/BNB, GNO/BUSD, and GNO/USDT trading pairs at 2021-08-30 06:00 (UTC). Users can now start depositing GNO in preparation for trading Withdrawals for GNO will open at 2021-08-31 06:00 (UTC) Note: The withdrawal open time is an est"
+    },
+    {
+      "article_id": 65099,
+      "title": "Binance Will List Tribe (TRIBE)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 65099,
+          "base_asset": "TRIBE",
+          "T_scheduled": "2021-08-24T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Tribe (TRIBE)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 65099,
+          "base_asset": "TRIBE",
+          "T_scheduled": "2021-08-24T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Tribe (TRIBE)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Tribe (TRIBE) and will open trading for TRIBE/BTC, TRIBE/BNB, TRIBE/BUSD and TRIBE/USDT trading pairs at 2021-08-24 06:00 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Tribe (TRIBE) and will open trading for TRIBE/BTC, TRIBE/BNB, TRIBE/BUSD and TRIBE/USDT trading pairs at 2021-08-24 06:00 (UTC). Users can now start depositing TRIBE in preparation for trading Withdrawals for TRIBE will open at 2021-08-25 06:00 (UTC) Note: The withdrawal open time is an"
+    },
+    {
+      "article_id": 65011,
+      "title": "Binance Will List WAX (WAXP)",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 65011,
+          "base_asset": "WAXP",
+          "T_scheduled": "2021-08-23T06:30:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List WAX (WAXP)"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 65011,
+          "base_asset": "WAXP",
+          "T_scheduled": "2021-08-23T06:30:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List WAX (WAXP)"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list WAX (WAXP) and will open trading for WAXP/BTC, WAXP/BNB, WAXP/BUSD, WAXP/USDT trading pairs at 2021-08-23 06:30 (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list WAX (WAXP) and will open trading for WAXP/BTC, WAXP/BNB, WAXP/BUSD, WAXP/USDT trading pairs at 2021-08-23 06:30 (UTC). Users can now start depositing WAXP in preparation for trading Withdrawals for WAXP will open at 2021-08-24 06:30 (UTC) Note: The withdrawal open time is an e"
+    },
+    {
+      "article_id": 64712,
+      "title": "Binance Will List MOBOX (MBOX)",
+      "old_kind": "OTHER",
+      "new_kind": "A",
+      "old_events": [],
+      "new_events": [
+        {
+          "article_id": 64712,
+          "base_asset": "MBOX",
+          "T_scheduled": "2021-08-19T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A"
+          ],
+          "title": "Binance Will List MOBOX (MBOX)"
+        }
+      ],
+      "old_matches": [],
+      "new_matches": [
+        "A"
+      ],
+      "head_match": "will list MOBOX (MBOX) and open trading for MBOX/BTC , MBOX/BNB , MBOX/BUSD and MBOX/USDT trading pairs at 2021-08-19 08:00 AM (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list MOBOX (MBOX) and open trading for MBOX/BTC , MBOX/BNB , MBOX/BUSD and MBOX/USDT trading pairs at 2021-08-19 08:00 AM (UTC). Users can now start depositing MBOX in preparation for trading Withdrawals for MBOX will open at 2021-08-20 08:00 AM (UTC). Note: The withdrawal open time is "
+    },
+    {
+      "article_id": 63898,
+      "title": "Binance Will List Alpaca Finance (ALPACA) and Harvest Finance (FARM) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 63898,
+          "base_asset": "ALPACA",
+          "T_scheduled": "2021-08-11T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Alpaca Finance (ALPACA) and Harvest Finance (FARM) in the Innovation Zone"
+        },
+        {
+          "article_id": 63898,
+          "base_asset": "FARM",
+          "T_scheduled": "2021-08-11T08:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Alpaca Finance (ALPACA) and Harvest Finance (FARM) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 63898,
+          "base_asset": "ALPACA",
+          "T_scheduled": "2021-08-11T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Alpaca Finance (ALPACA) and Harvest Finance (FARM) in the Innovation Zone"
+        },
+        {
+          "article_id": 63898,
+          "base_asset": "FARM",
+          "T_scheduled": "2021-08-11T08:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Alpaca Finance (ALPACA) and Harvest Finance (FARM) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Alpaca Finance (ALPACA) and Harvest Finance (FARM) in the Innovation Zone and will open trading for ALPACA/BTC, ALPACA/BNB, ALPACA/BUSD, ALPACA/USDT, FARM/BTC, FARM/BNB, FARM/BUSD and FARM/USDT trading pairs at 2021-08-11 08:00 AM (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Alpaca Finance (ALPACA) and Harvest Finance (FARM) in the Innovation Zone and will open trading for ALPACA/BTC, ALPACA/BNB, ALPACA/BUSD, ALPACA/USDT, FARM/BTC, FARM/BNB, FARM/BUSD and FARM/USDT trading pairs at 2021-08-11 08:00 AM (UTC). Users can now start depositing ALPACA and FARM in preparation for trading Withdrawals for ALPACA and FARM will open at 2021-08-12 08:00 AM (UTC) Note: The wit"
+    },
+    {
+      "article_id": 63793,
+      "title": "Binance Will List Mina (MINA) and Raydium (RAY) in the Innovation Zone",
+      "old_kind": "B_FIRST_CANDIDATE",
+      "new_kind": "A",
+      "old_events": [
+        {
+          "article_id": 63793,
+          "base_asset": "MINA",
+          "T_scheduled": "2021-08-10T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Mina (MINA) and Raydium (RAY) in the Innovation Zone"
+        },
+        {
+          "article_id": 63793,
+          "base_asset": "RAY",
+          "T_scheduled": "2021-08-10T06:00:00+00:00",
+          "generator": "B_FIRST_CANDIDATE",
+          "prep": null,
+          "candidate_kind": "B_FIRST_CANDIDATE",
+          "matched_generators": [
+            "B"
+          ],
+          "title": "Binance Will List Mina (MINA) and Raydium (RAY) in the Innovation Zone"
+        }
+      ],
+      "new_events": [
+        {
+          "article_id": 63793,
+          "base_asset": "MINA",
+          "T_scheduled": "2021-08-10T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Mina (MINA) and Raydium (RAY) in the Innovation Zone"
+        },
+        {
+          "article_id": 63793,
+          "base_asset": "RAY",
+          "T_scheduled": "2021-08-10T06:00:00+00:00",
+          "generator": "A",
+          "prep": null,
+          "candidate_kind": "A",
+          "matched_generators": [
+            "A",
+            "B"
+          ],
+          "title": "Binance Will List Mina (MINA) and Raydium (RAY) in the Innovation Zone"
+        }
+      ],
+      "old_matches": [
+        "B"
+      ],
+      "new_matches": [
+        "A",
+        "B"
+      ],
+      "head_match": "will list Mina (MINA) and Raydium (RAY) in the Innovation Zone and will open trading for MINA/BTC, MINA/BNB, MINA/BUSD, MINA/USDT, RAY/BNB, RAY/BUSD and RAY/USDT trading pairs at 2021-08-10 06:00 AM (UTC)",
+      "operation_context": "Fellow Binancians, Binance will list Mina (MINA) and Raydium (RAY) in the Innovation Zone and will open trading for MINA/BTC, MINA/BNB, MINA/BUSD, MINA/USDT, RAY/BNB, RAY/BUSD and RAY/USDT trading pairs at 2021-08-10 06:00 AM (UTC). Users can now start depositing MINA and RAY in preparation for trading Withdrawals for MINA and RAY will open at 2021-08-11 06:00 AM (UTC) Note: The withdrawa"
+    }
+  ],
+  "transition_counts": {
+    "OTHER -> A": 4,
+    "C_PROGRAM_LIST_OPEN -> A": 15,
+    "B_FIRST_CANDIDATE -> A": 45
+  },
+  "new_semantic_events": [
+    {
+      "article_id": 64712,
+      "base_asset": "MBOX",
+      "T_scheduled": "2021-08-19T08:00:00+00:00",
+      "generator": "A",
+      "prep": null,
+      "candidate_kind": "A",
+      "matched_generators": [
+        "A"
+      ],
+      "title": "Binance Will List MOBOX (MBOX)"
+    },
+    {
+      "article_id": 160049,
+      "base_asset": "SUI",
+      "T_scheduled": "2023-05-03T12:15:00+00:00",
+      "generator": "A",
+      "prep": null,
+      "candidate_kind": "A",
+      "matched_generators": [
+        "A"
+      ],
+      "title": "Binance Will Open Trading for SUI"
+    },
+    {
+      "article_id": 167392,
+      "base_asset": "MAV",
+      "T_scheduled": "2023-06-28T08:00:00+00:00",
+      "generator": "A",
+      "prep": null,
+      "candidate_kind": "A",
+      "matched_generators": [
+        "A"
+      ],
+      "title": "Binance Will Open Trading for Maverick Protocol (MAV)"
+    },
+    {
+      "article_id": 173967,
+      "base_asset": "CYBER",
+      "T_scheduled": "2023-08-15T12:00:00+00:00",
+      "generator": "A",
+      "prep": null,
+      "candidate_kind": "A",
+      "matched_generators": [
+        "A"
+      ],
+      "title": "Binance Will Open Trading for CyberConnect (CYBER) and Sei (SEI)"
+    },
+    {
+      "article_id": 173967,
+      "base_asset": "SEI",
+      "T_scheduled": "2023-08-15T12:00:00+00:00",
+      "generator": "A",
+      "prep": null,
+      "candidate_kind": "A",
+      "matched_generators": [
+        "A"
+      ],
+      "title": "Binance Will Open Trading for CyberConnect (CYBER) and Sei (SEI)"
+    }
+  ],
+  "removed_semantic_events": [],
+  "relabeled_events": [
+    {
+      "article_id": 63793,
+      "base": "MINA",
+      "time": "2021-08-10T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 63793,
+      "base": "RAY",
+      "time": "2021-08-10T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 63898,
+      "base": "ALPACA",
+      "time": "2021-08-11T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 63898,
+      "base": "FARM",
+      "time": "2021-08-11T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 65011,
+      "base": "WAXP",
+      "time": "2021-08-23T06:30:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 65099,
+      "base": "TRIBE",
+      "time": "2021-08-24T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 65724,
+      "base": "GNO",
+      "time": "2021-08-30T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 67211,
+      "base": "DYDX",
+      "time": "2021-09-09T02:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 67504,
+      "base": "GALA",
+      "time": "2021-09-13T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 68375,
+      "base": "ILV",
+      "time": "2021-09-22T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 68640,
+      "base": "YGG",
+      "time": "2021-09-24T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 69161,
+      "base": "FIDA",
+      "time": "2021-09-30T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 69373,
+      "base": "AGLD",
+      "time": "2021-10-05T07:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 69700,
+      "base": "RAD",
+      "time": "2021-10-07T07:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 69844,
+      "base": "RARE",
+      "time": "2021-10-11T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 71304,
+      "base": "CHESS",
+      "time": "2021-10-22T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 72633,
+      "base": "BNX",
+      "time": "2021-11-04T11:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 72789,
+      "base": "RGT",
+      "time": "2021-11-05T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 72929,
+      "base": "MOVR",
+      "time": "2021-11-08T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 73109,
+      "base": "CITY",
+      "time": "2021-11-10T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 73129,
+      "base": "ENS",
+      "time": "2021-11-10T07:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 73657,
+      "base": "QI",
+      "time": "2021-11-15T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 74376,
+      "base": "JASMY",
+      "time": "2021-11-22T12:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 74685,
+      "base": "AMP",
+      "time": "2021-11-23T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 74685,
+      "base": "PLA",
+      "time": "2021-11-23T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 75118,
+      "base": "PYR",
+      "time": "2021-11-26T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 75285,
+      "base": "RNDR",
+      "time": "2021-11-27T10:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 75502,
+      "base": "ALCX",
+      "time": "2021-11-30T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 75817,
+      "base": "MC",
+      "time": "2021-12-02T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 76206,
+      "base": "ANY",
+      "time": "2021-12-04T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 76630,
+      "base": "BICO",
+      "time": "2021-12-09T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 76772,
+      "base": "FLUX",
+      "time": "2021-12-10T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 76976,
+      "base": "VOXEL",
+      "time": "2021-12-14T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 76999,
+      "base": "VOXEL",
+      "time": "2021-12-14T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 77355,
+      "base": "HIGH",
+      "time": "2021-12-17T07:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 78029,
+      "base": "CVX",
+      "time": "2021-12-23T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 78029,
+      "base": "PEOPLE",
+      "time": "2021-12-23T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 78225,
+      "base": "SPELL",
+      "time": "2021-12-24T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 78225,
+      "base": "UST",
+      "time": "2021-12-24T08:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 78447,
+      "base": "JOE",
+      "time": "2021-12-28T11:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 79380,
+      "base": "ACH",
+      "time": "2022-01-10T10:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 79380,
+      "base": "IMX",
+      "time": "2022-01-10T10:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 79469,
+      "base": "GLMR",
+      "time": "2022-01-11T16:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 80504,
+      "base": "LOKA",
+      "time": "2022-01-20T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 80596,
+      "base": "LOKA",
+      "time": "2022-01-20T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 80650,
+      "base": "API3",
+      "time": "2022-01-21T10:30:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 80890,
+      "base": "ANC",
+      "time": "2022-01-25T11:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 81768,
+      "base": "WOO",
+      "time": "2022-02-08T06:30:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 83307,
+      "base": "ALPINE",
+      "time": "2022-02-21T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 83629,
+      "base": "ASTR",
+      "time": "2022-02-28T11:30:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 84403,
+      "base": "GMT",
+      "time": "2022-03-09T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 84485,
+      "base": "GMT",
+      "time": "2022-03-09T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 84707,
+      "base": "KDA",
+      "time": "2022-03-11T11:30:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 85800,
+      "base": "BSW",
+      "time": "2022-03-21T13:30:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 85903,
+      "base": "APE",
+      "time": "2022-03-17T14:30:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 93349,
+      "base": "LUNA",
+      "time": "2022-05-31T06:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 100349,
+      "base": "STG",
+      "time": "2022-08-19T09:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 123079,
+      "base": "GMX",
+      "time": "2022-10-05T10:00:00+00:00",
+      "old_generator": "B_FIRST_CANDIDATE",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 143460,
+      "base": "HOOK",
+      "time": "2022-12-01T14:30:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 143569,
+      "base": "HOOK",
+      "time": "2022-12-01T14:30:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 153844,
+      "base": "ID",
+      "time": "2023-03-22T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 153891,
+      "base": "ID",
+      "time": "2023-03-22T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 159542,
+      "base": "EDU",
+      "time": "2023-04-28T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 159616,
+      "base": "EDU",
+      "time": "2023-04-28T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 169808,
+      "base": "ARKM",
+      "time": "2023-07-18T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    },
+    {
+      "article_id": 169975,
+      "base": "ARKM",
+      "time": "2023-07-18T12:00:00+00:00",
+      "old_generator": "C_PROGRAM_LIST_OPEN",
+      "new_generator": "A"
+    }
+  ],
+  "project_source_and_mother_unchanged": true
+}

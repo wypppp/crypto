@@ -1,8 +1,13 @@
-"""Probe L · 引导(config v1.6)。
-唯一可执行来源 = L_config.json。回显全文、校验顶层与嵌套键。
-**每阶段显式声明 required_inputs,缺失立即失败**;输入哈希在读取前记录,输出哈希在写完后单独记录。"""
+"""Probe L · 引导。唯一可执行来源 = 与本脚本**同目录**的 L_config.json。
+回显全文、校验顶层与嵌套键;每阶段显式声明 required_inputs,缺失立即失败;
+输入哈希在读取前记录,输出哈希在写完后单独记录。
+
+⚠ CFG_PATH 默认**必须**是脚本同目录,不得指向仓库根目录 ——
+否则复现包不自足:校验包内 v1.6 哈希全通过,运行时却加载根目录的 v1.8.8 规则
+(2026-09-06 审查实证)。跨目录使用须显式设置 L_CONFIG 环境变量。"""
 import json,hashlib,sys,os
-CFG_PATH=os.environ.get("L_CONFIG","/home/ancillary/direction/L_config.json")
+_HERE=os.path.dirname(os.path.abspath(__file__))
+CFG_PATH=os.environ.get("L_CONFIG",os.path.join(_HERE,"L_config.json"))
 REQUIRED={
  "_meta":["version","frozen_utc"],
  "mother_universe":["endpoint","detail_endpoint","catalog_id","catalog_name_expected","window_start_utc",

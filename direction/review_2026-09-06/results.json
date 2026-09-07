@@ -1,0 +1,211 @@
+{
+  "artifact_dir": "/tmp/direction_review_20260906_wwe0eztz",
+  "scope": "offline file checks and synthetic counterexamples; no full market replay",
+  "l_versions": {
+    "L_config.json": {
+      "version": "1.8.8",
+      "sha256": "b80beb630c9474d7d88fd33d42511cb395a0d6d5e0d569ea24686b4e03534388"
+    },
+    ".probe_L_work/L_config.json": {
+      "version": "1.6",
+      "sha256": "f96252e77e43a1360395c3a130efffb4602d3b96d860320956332105d0936552"
+    },
+    "repro_L/L_config.json": {
+      "version": "1.6",
+      "sha256": "f96252e77e43a1360395c3a130efffb4602d3b96d860320956332105d0936552"
+    },
+    "archive/v1.8.8/L_config.json": {
+      "version": "1.8.8",
+      "sha256": "b80beb630c9474d7d88fd33d42511cb395a0d6d5e0d569ea24686b4e03534388"
+    }
+  },
+  "package_hashes": {
+    "repro_F": {
+      "ok": [
+        "F_final.json",
+        "F_lambda_events.csv",
+        "classify_f.py",
+        "detect_d1.py",
+        "fundinginfo_perp.json",
+        "scan_d1.py",
+        "universe_symbols.json"
+      ],
+      "mismatch": [],
+      "missing": [],
+      "digest_lengths": [
+        64
+      ]
+    },
+    "repro_L": {
+      "ok": [
+        "L_00_bootstrap.py",
+        "L_01_pull_ann.py",
+        "L_02_crawl.py",
+        "L_03_classify.py",
+        "L_04_utrade.py",
+        "L_05b_meta.py",
+        "L_06_manifest.py",
+        "L_07_download_t0.py",
+        "L_08_body_manifest.py",
+        "L_B0_perp_raw.py",
+        "L_config.json",
+        "README.md",
+        "agg_earliest_day.json",
+        "ann_body_manifest.json",
+        "ann_raw.json",
+        "crawl_report.json",
+        "fallback_mapping_evidence.json",
+        "leverage_whitelist.json",
+        "perp_contracts_raw.json",
+        "spot_exchangeinfo.json",
+        "t0_exact.json",
+        "t0_manifest.json",
+        "u_pair.json",
+        "u_trade_candidates.json"
+      ],
+      "mismatch": [],
+      "missing": [],
+      "digest_lengths": [
+        64
+      ]
+    },
+    "repro_C1BN": {
+      "ok": [
+        "build_top20.py",
+        "build_universe.py",
+        "events.csv",
+        "pull_data.py",
+        "pull_hourly.py",
+        "rerun_c1.py",
+        "run_full.py",
+        "universe.json",
+        "F_lambda_events.csv",
+        "detect_d1.py",
+        "scan_d1.py"
+      ],
+      "mismatch": [
+        "HASHES.json"
+      ],
+      "missing": [
+        "fundinginfo_snapshot"
+      ],
+      "digest_lengths": [
+        16
+      ]
+    },
+    "archive/v1.8.8": {
+      "ok": [
+        "L_00_bootstrap.py",
+        "L_03_classify.py",
+        "L_config.json",
+        "dryrun_stdout.txt",
+        "v188_dryrun_snapshot.json"
+      ],
+      "mismatch": [],
+      "missing": [],
+      "digest_lengths": [
+        64
+      ]
+    }
+  },
+  "l_body_integrity": {
+    "recorded_count": 1453,
+    "actual_files": 1453,
+    "hash_mismatch": [],
+    "complete": true
+  },
+  "l_t0_integrity": {
+    "bases": 282,
+    "files": 880,
+    "planned": 880,
+    "missing": 0,
+    "extra": 0,
+    "failures": [],
+    "overlap_with_holdout": [],
+    "inconsistent_minima": [],
+    "checksum_fields_equal": true,
+    "limitation": "checks stored metadata, not redownloaded official ZIP contents"
+  },
+  "f_counts": {
+    "rows": 256,
+    "counts": {
+      "negative": 203,
+      "administrative": 49,
+      "positive": 4
+    },
+    "positive_per_year": 3.0,
+    "garwood_two_sided_95": [
+      0.8173990302197438,
+      7.681191506552773
+    ],
+    "published_interval": [
+      1.0245000000000002,
+      7.681500000000001
+    ],
+    "limitation": "reclassifies stored event table; does not reconstruct all funding histories"
+  },
+  "c1_stored_counts": {
+    "180_settle": {
+      "rows": 73,
+      "episodes": 71
+    },
+    "365_ffill": {
+      "rows": 47,
+      "episodes": 47
+    },
+    "365_settle": {
+      "rows": 52,
+      "episodes": 50
+    }
+  },
+  "c1_warmup_counterexample": {
+    "history_days": 17,
+    "window_days_requested": 365,
+    "emitted_triggers": 1,
+    "trigger_days_since_first": [
+      17.0
+    ],
+    "expected_under_frozen_rule": 0
+  },
+  "c1_top20_lookahead_counterexample": {
+    "timestamp": "2021-09-01T00:00:00Z",
+    "all_prior_data_equal": true,
+    "surge_member_with_low_future_daily_volume": false,
+    "surge_member_with_high_future_daily_volume": true,
+    "expected": "membership at day start must be unchanged when only that future day volume is changed"
+  },
+  "c1_oi_lookahead_counterexample": {
+    "decision_time": "2022-01-01T16:00:00Z",
+    "available_value": 100.0,
+    "future_16_55_value": 200.0,
+    "loader_value_at_16_00": 200.0
+  },
+  "l_current_dryrun": {
+    "exit_code": 0,
+    "selected_output": [
+      "[复现门] manifest=1453 缺失=0 哈希不符=0",
+      "[复现门] 正文组合根哈希 = 3af4d9dd32cc66969c078d546e69429c8dfd560899b5b24a3136bd7a5a657d98  ✅",
+      "[来源断言] archive_pairs=3695 ✅  quote_assets=50 ✅",
+      "桶: {'FUTURES_ONLY': 663, 'OTHER': 296, 'B_NEW_PAIR_CANDIDATE': 223, 'A': 78, 'PARSE_FAIL': 13, 'OPERATIONAL_UPDATE': 11, 'C_LAUNCH_THEN_LIST': 98, 'PREMARKET_TO_SPOT': 3, 'SPOT_COPY_TRADING': 1, 'C_PROGRAM_LIST_OPEN': 22, 'B_FIRST_CANDIDATE': 45}   求和=1453 / 1453",
+      "[断言] PAIR_BLOCK 恰好截满 600 的块数 = 0  ✅",
+      "raw_events=1071  candidate_groups=1059(未合并、未删除)",
+      "[断言] C1 篇=98/98 事件=99/99  ✅",
+      "[断言] C2 篇=22/22 分组=11/11  ✅",
+      "[断言] MEME 分组=1 来源=2 gens=['A', 'C_LAUNCH_THEN_LIST']  ✅",
+      "[断言] 伪资产在事件中 = 0  ✅",
+      "[断言] 1MBABYDOGE 事件 = 1  ✅"
+    ],
+    "stderr": ""
+  },
+  "l_nonblocking_assertion_counterexample": {
+    "mutation": "C1_raw_articles expectation increased by one in temporary config only",
+    "original_expected": 98,
+    "mutated_expected": 99,
+    "failed_checks": [
+      "[断言] C1 篇=98/99 事件=99/99  ❌"
+    ],
+    "exit_code": 0,
+    "mother_file_written": true,
+    "stderr": ""
+  }
+}

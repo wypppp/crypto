@@ -1,0 +1,20 @@
+{
+ "_status": "UNRECOVERABLE_BASELINE",
+ "version": "v1.8.5",
+ "what": "该版本 PARSE_FAIL 的 69 个 article_id",
+ "why": "config 被后续版本覆盖;仅保留了旧脚本 L_03_prev_v185.py,未保留当时的 L_config.json。旧脚本配当前 config 重跑得 76 条,非 69 条",
+ "recovery_paths_checked": [
+  "Git 历史 / reflog / stash / 悬空对象",
+  "工作区备份文件",
+  "/tmp 与 scratchpad",
+  "L_mother_events.json 与 _v16.json(均为 v1.6 产物,内容相同,无 per_article 结构)"
+ ],
+ "remaining_paths": [
+  "IDE Local History",
+  "系统快照",
+  "模型运行日志"
+ ],
+ "consequence": "**不得凭总数编造 69→13 迁移表**;改以 v1.8.8 的 13 条为基线做逐条审计",
+ "corrective_action": "自 v1.8.8 起,每个版本的 config + 代码 + 产物 + SHA 一并归档到 direction/archive/<version>/",
+ "root_cause": "changelog 记录『改了什么』,但复现需要『当时那个文件』——changelog 不是产物"
+}

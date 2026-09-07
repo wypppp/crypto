@@ -1,0 +1,1183 @@
+==============================================================================
+CONFIG /tmp/publish_L_v1810_t0jx1ed5/isolated_reproduction/L_config.json  v1.8.10  frozen=2026-09-03
+  SHA256 db024e5cf87a24b4b9526663c19458eabba7fcdfec68e8d904583d0f2b5f3c95  L_config.json
+  SHA256 2a93afa202657b7a75aa6ebc824a941a8bfec73b3b142f0363412e49a414e814  code:L_03_classify.py
+  SHA256 3dbfdb0aa378dd4d293de6132a58235eae2fc5ac878b37c13f80b45a569d2d6c  code:L_00_bootstrap.py
+  SHA256 c6e0111f82865880a1806c08862ebd914bb2b9e82358ff1f36cff999d097bdbf  input:ann_raw.json
+  SHA256 54eaa904ae1f605dc2619417219ad51cd996de2b1014c7d48d5eeeca8f35c93e  input:crawl_report.json
+  SHA256 aeaf1879311dfe3157e90dfedd00248638f60beab36d31a6208d5524d69f8cdc  input:ann_body_manifest.json
+  SHA256 8c6e0c53c5df6b50a2c07630f18510fcda0581b593df2aaec5a2ceb8117ab460  input:u_trade_candidates.json
+  SHA256 a19dfd8154af4374cb8b02f15cf479f45f3d52ab1d2a711b188406b47dba9895  input:spot_exchangeinfo.json
+------------------------------------------------------------------------------
+CONFIG 全文回显:
+{
+ "_meta": {
+  "name": "PROBE_L",
+  "version": "1.8.10",
+  "frozen_utc": "2026-09-03",
+  "note": "本文件是 Probe L 的唯一可执行来源。PROBE_L_frozen.md 只解释它,不被脚本解析。脚本必须:载入本文件、回显完整内容、回显本文件与代码的完整 SHA-256、遇未识别或缺失键即失败。",
+  "changelog_v1.2": "v1.1 的两条假设落空:①CMS 列表接口只返回 title,无正文 ⟹ T_scheduled 取不到;②catalogId=48 是混合流(实测 2,244 条中含 558 永续/302 杠杆/128 Earn/835 其它),不是纯现货上市母体。v1.2 改用详情接口取正文,并把分类与提取规则显式冻结于此,先冻结后应用。",
+  "changelog_v1.3": "P0:v1.2 的爬虫 pending() 只遍历已存在文件,永远抓不到从未创建文件的 ~1,018 条 ⟹ 改为由 ann_raw 按冻结窗口算出 expected_ids。另修:①资产提取改为先截上市对象片段再提全部代号并与正文现货对交叉验证;②永续乘数改为保留原始 baseAsset + 显式白名单;③T_first_trade 绑定到公告所列交易对且晚于 T_scheduled;④FETCH_FAIL 与 PARSE_FAIL 分离;⑤窗口内公告数更正为 1,445(v1.2 进度文件误记 1,451)。",
+  "changelog_v1.4": "v1.3 解析器在 dryrun 中产生 9 条 PARSE_FAIL,逐条核原文后修四处**文本提取缺陷**(非策略调参):①代号可含小写(XAUt)⟹ 交叉验证改为大小写不敏感;②代号可为单字符(W=Wormhole)⟹ 长度下限 2→1;③日期与时间之间可能是 HTML 实体 &nbsp; ⟹ 解析前先规范化实体与空白;④资产可能裸写无括号(BFUSD)⟹ 括号式失败时回退到片段内裸 token 并强制交叉验证。PARSE_FAIL 桶的用途正是暴露这类漂移;所有改动只影响**文本抽取**,不改变哪些上市事件算数的判据。",
+  "changelog_v1.4.1": "①POSTPONED 桶在 v1.4 只是声明未实现(仍计入 PARSE_FAIL),且 POSTP 正则被『cancel all pending orders』误触发 —— 实测 FDUSD(id=171585)正文是 09:45 暂停、14:00 恢复,上市已发生,'will list' 仅出现在文末引用链接。改为 OPERATIONAL_UPDATE 独立桶,**原上市事件必须保留,不得删除或替换**;②T_scheduled 不得取全文首个 UTC 时间(Launchpool 正文含挖矿开始/Alpha 开盘/现货上市三个时间),必须绑定到 will list…open trading 同一结构内;③新增召回率审计:按年输出 SPOT_LISTING 篇数与事件数,并列出 OTHER 中标题含 list/listing/open trading/launchpool 的全部条目供逐条审阅;④config 与运行代码同步:抓取参数改为完整描述自适应算法;⑤T_first_trade 判据 > 改为 >=;⑥起始边界回看由 7 天扩到 30 天(1445→1453),防止提前较久发布但在窗口内开盘的公告被漏。",
+  "changelog_v1.5": "v1.4.1 的召回率审计发现:CAND 只认 'will list'+'spot trading pair' 一种措辞,已取 955 篇正文中 A 覆盖 80 篇,而 A∪B∪C 覆盖 364 篇(B='will open trading for…',C=Launchpool 'the listing of…/trading starting at'),**召回相差 4.5 倍**;2021 年 A 命中 0 篇。⟹ 公告正则不能承担『决定哪些事件进入母体』的角色。但也不改成『归档取代公告』——归档给不出未开盘/延期/取消。改为**双框架联合母表**:归档首笔成交做收益样本主源,公告做计划时间与未开盘/延期/取消的唯一一手来源,两者联合并分类。",
+  "parking_lot_paid_sources": {
+   "note": "以下为**未采用**的付费选项,记录以备决策;当前未支出、未接入",
+   "Kaiko": "提供各交易所交易对的 trade_start_time / trade_end_time,但那是『Kaiko 首次观测』,**不等于官方计划上市时间**",
+   "Tardis": "metadata 区分可选的 listing 与 availableSince 并说明二者可能不同;声称 Binance Spot 全交易对覆盖始于 2021-03-05(覆盖本 Probe 窗口);**更重要的是它保存历史 quotes / L2 更新与快照,若接入可能直接解决 0B 遗留的 C_abs = UNIDENTIFIED 容量腿**",
+   "budget_constraint": "须先核对 Mandate 的数据预算上限,并由使用者明确授权后才可支出"
+  },
+  "changelog_v1.6": "①杠杆代币后缀法 (UP|DOWN|BULL|BEAR)$ 误删真实资产 JUP(4 对)与 SYRUP(3 对) ⟹ 改为**显式白名单 50 个**,无法确认者标 SUSPECTED_LEVERAGED 保留,禁止凭后缀删除;②最早月份查询对任何异常写空缓存(scan_d1 以来第三次同类错误)⟹ 只有 HTTP 200 且 KeyCount=0 才记 NO_ARCHIVE,超时/429/5xx 分别记录并重试;3,608/3,628 只是观测值,未冻结;③每 baseAsset 只取一个交易对会取错 T0 —— 实测 **632/741 最早月份并列**,并列交易对 2,165 个;且 1m K 线只到分钟,而入场窗口是 T+30min,精度不足 ⟹ 改为『最早日元数据 → 该日全部并列对的 aggTrades → 全体最早精确成交』;④下载全部 741 会打开留出集(主 590 / 留出 151)⟹ **元数据层可含留出,行情下载层只限窗口内主集**;⑤时间戳单位实测:2024 年 13 位毫秒、2025/2026 年 16 位微秒 ⟹ 必须按位数归一,否则静默产出荒谬 T0。",
+  "changelog_v1.8": "v1.7(sha d2f618e8)保留为 **draft** —— 其 classification/extract 仍是 A-only,classification_v17.C 只是占位描述。v1.8 把 C 落成两个**强语义模板**并冻结生成器优先级;另修 bStock 标注:该标注规则此前未冻结,同句邻近启发式在主集 2026 得 46/67、全量 2026 得 57/81,与分层抽样结论(45/67、46/81)不一致 ⟹ **标注规则本身必须冻结**,数字随规则重算。",
+  "changelog_v1.8.1": "①bStock 数字全部降级为 OBSOLETE_DIAGNOSTIC —— 主集分子/分母口径不一致,且旧值来自未冻结的邻近启发式;正式数字须由新脚本按冻结规则重算后写入。②规则改为**机器可执行**:A/B/两个 C 模板、program 标题、FUTURES/OPERATIONAL/PREMARKET 排除、UTC 与 AM/PM 时间、同句边界与交叉验证参数全部存为显式正则字段,`L_03` 直接从 config 编译,**不得在 Python 中另写一份**。③清理版本遗留:删除 classification_v17 占位块,version_diff_required 更新为 v1.6 → v1.8.1。v1.8(sha 5fe64191)保留,不覆盖。",
+  "changelog_v1.8.2": "v1.8.1 能编译但过不了自己的回归测试。四项修正:①C1 强制 `名称(代号)` 使 ETHFI/BIO/INIT 全灭(全量仅命中 5)⟹ 支持裸代号、innovation-zone 修饰、逗号、the、with|against 变体,定为 **98 篇 / 99 事件**(103 篇含 will then list = 98 命中 + 3 pre-market + 2 无时间,零残余);②C2 的 22 篇是 11 个资产各有『认购开放』+『认购完成』两篇,给出同一开盘时间 ⟹ 文档层保留 22 个 source_article_id,事件层合并为 11;③B 的 292 篇含大量新增报价对,必须分流 FIRST_SPOT_LISTING / NEW_QUOTE_PAIR_EXISTING_ASSET;④新发现**时间更新链**:SUI 159763(无时间)→160049(12:15)→160121(提前至 12:00);MAV 165961→167392。OPERATIONAL_UPDATE 此前不含 advanced,会使 SUI 用错时间、且被 B 从引用链接误判为新事件。",
+  "changelog_v1.8.3": "①B_SPLIT 仅看『窗口内此前已接受事件』会误判 —— 实证反例 article 66920(标题即 `Binance Adds ELF/USDT & POLY/BUSD Trading Pairs`,2021-09-08):ELFBTC/ELFETH 最早成交 2017-12-21、POLYBTC 2018-07-31,窗口内无更早 A/C 事件 ⟹ 旧规则会错判为 FIRST_SPOT_LISTING。改为两层:L_03 只按公告语义输出候选,联合前用 agg_earliest_day.json(**日粒度元数据,非精确 T0**)裁定;②时间更新链补可编译的 UPDATE_ADVANCED 模板(提取 baseAsset/old_time/new_time/action);③清理三处遗留冲突并把回归样本结构化为可自动断言的字段。",
+  "changelog_v1.8.4": "①UPDATE_ADVANCED 的 extract/fallback 把带命名组的 TIME 展开两次 ⟹ `redefinition of group name 'd'`,**两条均无法编译**;改为只捕获完整的 old/new 字符串,再各自用 TIME 二次解析。②B 层二须比 **UTC-date(T_scheduled)** 而非 releaseDate(公告通常提前发布);且无归档的明确首次上市公告**不得消失为 AMBIGUOUS**,应保留并在联合层标 ANNOUNCEMENT_ONLY。③24 条回归混了三个执行阶段 ⟹ 增加 stage 字段并区分 expect_candidate_kind / expect_final_kind。C1/C2 已全部通过(98篇/99事件,with=42/against=57;22篇/11事件),本版不动 C。",
+  "changelog_v1.8.5": "①**严重解析污染**:B/A 对全文调用 PAIR.finditer,把 URL 的 `twitter.com/binance` 与 `iOS/Android` 当成交易对 —— 全量实测伪资产 **COM 1010 次、IOS 430 次**(如 article 90885/90971 凭空生成 COM/IOS)。⟹ PAIR 只允许在**操作句**内运行,新增 OPERATION_CLAUSE 与 PAIR_EXCLUDE。②L03_CLASSIFY 阶段**不合并**:输出 raw_events + 非破坏性 candidate_groups(按 base+T_scheduled 分组,保存全部 source_records);最终合并推迟到 B_RESOLVE 拿到 kind 之后。跨 generator 碰撞实例:MEME 由 article 181301(C1)与 181807(A)各出一条,同一时间,旧代码只保留先入者的 generator ⟹ C1 统计由 99 掉到 98。③把仍硬编码在代码中的 `will list` 与正文规范化正则移入 config。",
+  "changelog_v1.8.6": "v1.8.5 收紧 clause 后 A 桶 77→16、PARSE_FAIL 3→69。逐条分解:A 63 篇 / B 6 篇,其中 65 篇是『clause 内没有交易对』。根因**不是句号截断**,而是 A 型公告本身是**两段结构**:上市头给时间,交易对在其后的 `New Spot Trading Pairs:` 块中(实测 79 个 A 候选里 **74 个**有该块)。⟹ 改为『上市头 + 相邻交易对块』的结构解析,而非继续修句号。另补三种变体:裸代号(BFUSD)、Unicode 代号(币安人生)、Spot Copy Trading 公告(命中 B 但非新增现货上市)。并把 v1.8.5 声称已移入 config 但实际仍硬编码的 NORMALIZE 真正接上(上一轮 replace 静默失败,我未验证即报告)。",
+  "changelog_v1.8.7": "v1.8.6 三个 P0(直接运行冻结规则实测):①SPOT_COPY_TRADING 未限定作用域 ⟹ 全文命中 120 篇,与 A/C1/C2 重叠 **116 篇**,而标题真正属于该类的只有 article 202145 一篇 ⟹ 冻结 scope=title_only;②A_LISTING_HEAD 在 80 个候选中只命中 73,漏 7 篇:ARB/WLD/TIA(`tentatively set to open`)、BNSOL/BFUSD(直接内联 `open trading for BNSOL/SOL`,无 `spot trading pairs`)、PUMP(`Pump.fun` 被 `[^.]` 截断)、FDUSD(更新公告,应归 OPERATIONAL);⟹ 改按**语义锚点**截取,asset_segment 非贪婪匹配至 `and … open trading`;③PAIR 的 quote 要求 ≥2 字符 ⟹ 漏掉实存的 `AVAX/U` 与 `币安人生/U`;且『不在 u_pair 即丢弃』会删掉**已公告但从未开盘**的交易对,正好破坏 ANNOUNCEMENT_ONLY ⟹ 改三态。",
+  "changelog_v1.8.8": "v1.8.7 三项修复经复现全部成立(SHA 038d0088、Copy Trading 标题仅 202145、A 79/80 且唯一漏项确为 FDUSD 更新公告、AVAX/U 与 币安人生/U 可解析)。但实测又发现三处:①PAIR_VALIDATE 未指定来源字段,且 u_pair.json 有 3696 项含字符串 `klines`(真实交易对 3695);②PAIR_BLOCK 用 `[^\\n]{1,300}` —— 1453 篇正文仅 9 篇含换行且 NORMALIZE 会压缩空白,**81 个块全部恰好截满 300 字符**,已吞进充值/提现/手续费/推广内容;③`1 MBABYDOGE /USDT`(base 内含空格)被解析为 `MBABYDOGE/USDT`,无法与资产段的 `1MBABYDOGE` 交叉验证,会漏真实事件。",
+  "changelog_v1.8.9": "①回归样本的 expect_candidate_kind 被错填为 FIRST_SPOT_LISTING —— 那是 B_RESOLVE 阶段的 final kind,而 L03_CLASSIFY 阶段的桶就是 generator 本身 ⟹ 对有 expect_generator 的样本,candidate_kind 修正为该 generator;②L_00_bootstrap 的 CFG_PATH 默认值由仓库根目录改为**脚本同目录** —— 2026-09-06 审查实证:校验 v1.6 复现包哈希 24/24 全通过,运行时却加载根目录 v1.8.8 规则,复现包不自足;③L_03 的展示性检查全部改为 fail-closed(登记失败 → 非零退出 → 拒绝写母表),并执行 config 中的结构化回归样本;④C1-BN 结果标记为『测量待修正』(前视/预热四处缺陷,见 c1bn_measurement_status)。",
+  "changelog_v1.8.10": "A 门禁漏检 SUI(160049)/MAV(167392):其正文为 `will list X (SYM) and open trading for X/USDT … trading pairs at TIME`,缺 `spot` 一词,被 A 的双词门禁挡在外,落入 OTHER;而 A_LISTING_HEAD 本可匹配。影响面对比(同一 1453 篇正文、同提取器与优先级):**直接用 HEAD 替换 A 门禁** ⟹ A 78→142、B_FIRST 45→0、C2 22→7、64 篇改归类(4 OTHER→A、45 B_FIRST→A、15 C2→A);**仅未命中时兜底** ⟹ A 78→82、B_FIRST/C2 不变、仅 4 篇改归类。两者补回的增量完全相同 ⟹ **采用兜底**。⚠ 64 篇重归类涉及 66 条来源事件,其 article_id+base+T_scheduled 均未丢失或改变,变的只是 generator 标签;**不得把 A 桶 +64 理解为补回 64 次上市**。"
+ },
+ "mother_universe": {
+  "source": "binance_cms_announcement",
+  "endpoint": "https://www.binance.com/bapi/composite/v1/public/cms/article/list/query",
+  "catalog_id": 48,
+  "catalog_name_expected": "New Cryptocurrency Listing",
+  "event_id": "{baseAsset}::{T_scheduled}  —— 取代 v1.6 的 {articleId}::{baseAsset}(后者会把 11 次上市算成 22 次)",
+  "window_start_utc": "2021-09-01",
+  "window_end_utc": "2026-08-31",
+  "dedup_rule": "**跨公告合并仅在以下唯一情形允许**:相同 baseAsset + 相同 T_scheduled + kind==FIRST_SPOT_LISTING(C2 的『认购开放』+『认购完成』双篇即属此类,22 篇 → 11 事件);其余情形**禁止跨公告按 baseAsset 去重** —— 会误吞真正的重新上市。同一公告内多报价对取最早 T_first_trade",
+  "no_trade_events": "保留为 no_T0,不得从母体删除",
+  "detail_endpoint": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode={code}",
+  "body_format": "嵌套 JSON 节点树;取 node=='text' 的 text 字段按顺序拼接",
+  "pull_range_note": "按 releaseDate 拉取 [window_start-30d, window_end+1d);最终按 T_scheduled 落窗过滤",
+  "classification": {
+   "generator_priority": [
+    "OPERATIONAL_UPDATE / FUTURES_ONLY / PREMARKET_TO_SPOT",
+    "A",
+    "C_LAUNCH_THEN_LIST",
+    "C_PROGRAM_LIST_OPEN",
+    "B",
+    "AMBIGUOUS / OTHER"
+   ],
+   "must_store": "matched_generators —— **保存全部命中的生成器**,避免优先级把重叠静默吞掉",
+   "A": "正文含 r'will list' 且 r'spot trading pair',并能取得同句结构化资产与时间",
+   "B": "r'will open trading for' 的剩余**非项目型直接上市**",
+   "rejected_patterns": {
+    "announce the listing of": "**只作一致性校验**,不独立产生 SPOT_LISTING。14 个现代模板均能找到其后的强语义上市句,**两个时间必须相等**",
+    "trading starting at": "**不得单用** —— 实测会命中 BREV / ZAMA / ANTHROPIC 等期货与 Pre-IPO",
+    "launchpool": "**不得单用** —— MBOX / HIGH 等文章只有挖矿时间,没有现货开盘时间",
+    "will be listed on Binance Spot | mentioned token": "**不得单用** —— 大量来自期货免责声明,甚至是『期货上市不保证现货上市』的**反向语义**"
+   },
+   "PREMARKET_TO_SPOT": "含 `Pre-Market trading starting at` 的 3 篇归此桶,**不得进入首次现货哨兵**;等待其正式现货公告",
+   "OPERATIONAL_UPDATE": "该文自身动作为暂停/恢复/推迟(非宣布上市);不产生事件、不删除或替换任何已有事件",
+   "PARSE_FAIL": "命中生成器但结构解析失败 —— 逐条列出,禁止归入 OTHER",
+   "FETCH_FAIL": "正文未取得",
+   "OTHER": "未命中任何生成器",
+   "discipline": "各桶互斥且求和 == expected;分类只能在抓取完整性断言通过后运行",
+   "_authoritative": "规则以 mother_universe.rules 为准;本节仅为语义说明,**不含计数**"
+  },
+  "extract": {
+   "step0_normalize": "解析前把 &nbsp;/&amp;/&#160; 与不间断空格规范化,压缩连续空白",
+   "step1_sentence": "**时间与资产必须来自同一上市句**;禁止跨句、禁止取全文首个时间",
+   "step2_asset": "资产由**同句交易对**交叉验证(大小写不敏感);代号允许小写与单字符",
+   "step3_time": "支持 24 小时制与 **12 小时制**;12 小时制**必须显式解析 AM/PM**,并正确处理 **12:00 AM(= 00:00)与 12:00 PM(= 12:00)**",
+   "step4_multi_asset": "一句含多个通过交叉验证的代号时,每个代号生成一个事件",
+   "forbidden": [
+    "全局扫描所有括号",
+    "跨句取时间",
+    "**用 T0 或 |T0−T_scheduled| 选择公告或时间**"
+   ]
+  },
+  "expected_count_in_window": 1453,
+  "crawl": {
+   "expected_ids": "由 ann_raw.json 按 [window_start-30d, window_end+1d) 的 releaseDate 计算",
+   "pending": "文件不存在 OR http != 200 OR text is None",
+   "concurrency": 1,
+   "adaptive": {
+    "burst_start_seconds": 0.6,
+    "floor_on_429_seconds": 11.0,
+    "max_seconds": 30.0,
+    "on_success": "delay = max(burst_start, delay*0.90)",
+    "on_429": "delay = min(max_seconds, max(floor_on_429, delay*1.8));若响应含 Retry-After 则额外 sleep min(120, Retry-After)",
+    "jitter": "每次实际等待 = delay * U(0.85, 1.15)",
+    "on_failure": "该条轮转队尾,不阻塞后续"
+   },
+   "priority_ordering": "标题匹配 will list|will add|new trading pair|adds…on binance spot 且不匹配 futures|margin|earn|launchpool|convert|collateral|trading bots 者优先;**仅影响顺序,绝不删减 expected_ids**",
+   "completion_assertions": [
+    "success_ids == expected_ids",
+    "missing_ids == 空集",
+    "extra_ids == 空集"
+   ]
+  },
+  "lookback_days": 30,
+  "lookback_rationale": "公告可能提前数周发布而在窗口内开盘;7 天不足以覆盖,30 天使边界遗漏可忽略(7d→30d 仅多 8 篇,已足够)",
+  "recall_audit": {
+   "required_before_freeze": true,
+   "outputs": [
+    "按年份的 SPOT_LISTING 文章数与事件数",
+    "OTHER 中标题匹配 r'list|listing|open trading|launchpool' 的**全部**条目清单",
+    "对上述疑似漏项逐条人工审阅结论"
+   ],
+   "rationale": "PARSE_FAIL=0 不证明没有漏事件;CAND 只认特定措辞,格式不同的真实上市文章会直接落入 OTHER",
+   "role": "不再决定母体大小;改为衡量**哨兵覆盖率**(有多少 U_trade 事件能取得 T_scheduled)"
+  },
+  "framework": "DUAL",
+  "layers": {
+   "U_pair": "归档中出现过的全部现货交易对(**仅覆盖清单,不是事件**)。实测 3,696 个,其中 USDT 计价 723",
+   "U_trade": "按 baseAsset 合并交易对后的**交易启动事件**;T0 = 该 baseAsset 全部合格现货对中的**最早实际成交**",
+   "U_announcement": "公告上市事件,含未开盘、延期、取消",
+   "U_master": "U_trade ∪ U_announcement"
+  },
+  "event_definition": "**冻结为『新 baseAsset 首次上市』**,不是『任何新增交易对』。理由:E1 的仓位结构是每币权益 10%,标的单位是资产不是交易对;旧资产新增报价对(如已上市币新增 FDUSD 对)不构成新事件",
+  "join_classes": {
+   "MATCHED": "公告与首笔成交均有且可靠链接",
+   "TRADE_ONLY": "有真实成交,但公告无法匹配(**仍进 U_trade,照常参与收益统计**)",
+   "ANNOUNCEMENT_ONLY": "**有公告但无归档成交匹配**(不等同『未开盘』)。只有在**排除代码迁移、改名与归档缺口**之后,才可计入『已识别未开盘下界』",
+   "SCHEDULE_UPDATED_OR_CANCELLED": "存在延期/取消/恢复通知",
+   "AMBIGUOUS": "代码复用、迁移、改名或多事件无法可靠链接 —— **单列,禁止猜测**"
+  },
+  "statistics_scope": {
+   "收益 / 过滤器 / lambda_filter12": "**只在 U_trade 上计算**",
+   "lambda_announced / lambda_no_T0 / 未开盘率": "来自 U_announcement",
+   "lambda_exec": "**仍为 UNIDENTIFIED** —— 首笔成交不能认定可执行性(滑点、状态、容量均未识别)",
+   "公告匹配覆盖率 与 T0 - T_scheduled": "作为**归档首笔是否可信**的系统性审计"
+  },
+  "never_opened_caveat": "公告正则只覆盖部分措辞 ⟹ 『公告减归档』得到的未开盘数只能称 **已识别下界**,不得称完整计数。该下界随正则召回率提升而收紧",
+  "archive_coverage_caveat": "某标的在归档中的最早成交**可能只是归档覆盖起点**,不一定是实际上市首笔。须标记首月等于归档整体起点的标的,并在 MATCHED 子集上用 T0 - T_scheduled 分布检验该风险",
+  "leveraged_token_rule": {
+   "method": "显式白名单,**禁止后缀正则**",
+   "whitelist_file": "leverage_whitelist.json(50 个)",
+   "restored_false_positives": [
+    "JUP",
+    "SYRUP"
+   ],
+   "suspected_flag": "无法确认前缀为已知资产者(实测 BEAR / BULL)标 SUSPECTED_LEVERAGED 并保留在母体,单列报告"
+  },
+  "earliest_month_probe": {
+   "NO_ARCHIVE": "仅当 HTTP 200 且 KeyCount == 0",
+   "FETCH_FAIL": "超时 / 429 / 5xx —— 分别记录 HTTP 状态并重试,**禁止写空缓存**",
+   "must_report": "NO_ARCHIVE 与 FETCH_FAIL 分开计数"
+  },
+  "t0_procedure": {
+   "layer1_metadata_all": "对**全部**已解析交易对查询最早的 daily/aggTrades key,得 earliest_trade_day。仅文件名/日期元数据,**可含留出集**",
+   "layer2_download_gated": "仅当三条同时满足才下载行情正文:①earliest_trade_day ∈ [2021-09-01, 2026-08-31];②baseAsset ∈ 主分析集;③该对的日期 == 该 baseAsset 全部对中的最早日期",
+   "tied_pairs": "同日并列交易对**全部下载**,从所有首日文件中取最早成交;**必须保存全部并列对,不得任选其一**",
+   "why_aggTrades_not_klines": "aggTrades 文件对应真实成交;K 线文件存在不证明该月已有正成交。且 1m 只到分钟,入场窗口为 T+30min,精度不足",
+   "holdout_T0": "留出集只保留 S3 key 与月度/日度元数据,T0 标 **EMBARGOED**"
+  },
+  "timestamp_normalization": {
+   "target_unit": "整数微秒",
+   "rule": "13 位 → 原值 × 1000;16 位 → 原值;**其它位数立即失败**",
+   "assertions": [
+    "归一后的 UTC 日期 == 文件名中的日期",
+    "归一后年份落在研究范围内"
+   ],
+   "observed": "实测 BTCUSDT 2024-06-03 为 13 位毫秒;2025-06-03 与 2026-06-03 为 16 位微秒"
+  },
+  "fallback_mapping": {
+   "file": "fallback_mapping_evidence.json",
+   "n": 25,
+   "evidence_rule": "报价资产须在官方 quoteAsset 集合内;不在集合内者(实测 BTCGYEN / USDTGYEN 的 GYEN)标『历史资产,人工确认』",
+   "note": "『启发式成功拆出』不等于已权威识别"
+  },
+  "sentinel_discipline": {
+   "no_circularity": "**禁止用 |T0 − T_scheduled| 最小来选择公告或时间** —— 那会使哨兵变成循环论证。资产与时间只能由**正文结构**确定;确定之后才允许查看差值",
+   "launchpool_rule": "Launchpool 公告只有**明确绑定『现货开始交易』**的时间才能进入哨兵;挖矿开始时间、Alpha 开盘时间、盘前时间**一律不得代替**",
+   "scope": "哨兵**只在 282 个主集精确 T0 上计算**;留出集只做结构链接,**不打开精确行情**",
+   "reporting": "按**年份**与**generator**分组报告覆盖率与差值分布",
+   "time_source": "哨兵所用 T_scheduled 必须来自 extract.step1 的同一上市句"
+  },
+  "event_kind_taxonomy": {
+   "required_before_join": true,
+   "kinds": [
+    "FIRST_SPOT_LISTING",
+    "NEW_QUOTE_PAIR_EXISTING_ASSET",
+    "RELISTING",
+    "PREMARKET_TO_SPOT",
+    "FUTURES_ONLY",
+    "POSTPONED_OR_CANCELLED",
+    "AMBIGUOUS"
+   ],
+   "rule": "必须在联合前预先区分;不得在看到收益后再归类"
+  },
+  "asset_class_tagging": {
+   "labels": [
+    "CRYPTO",
+    "BSTOCK",
+    "UNKNOWN"
+   ],
+   "frozen_rule": "以 Binance 公告中对该资产的**显式指称**为准:同一句内出现 `bStock` 或 `tokenized securit*` 且该句包含该资产的交易对或代号;无法判定者标 UNKNOWN,**不得猜测**",
+   "denominator_discipline": "主集数字只能用 282 精确主集作分母,全量数字只能用 359 作分母,**禁止混用**",
+   "measured_values_status": "OBSOLETE_DIAGNOSTIC",
+   "obsolete_diagnostics": {
+    "同句邻近启发式(未冻结规则)": "主集 2026 = 46/67;主集全部 = 51/282;全量 2026 = 57/81",
+    "分层抽样": "主集 2026 = 45/67;全量 2026 = 46/81(多出的 1 个为 MSTRB,属留出集)",
+    "status": "两组均**不得引用**;正式数字待新脚本按 frozen_rule 重算后写入"
+   }
+  },
+  "version_diff_required": {
+   "keep_previous": "v1.6 的 95 事件已另存 L_mother_events_v16.json,不得覆盖",
+   "outputs": [
+    "v1.6 → v1.8.3 的逐事件增删表",
+    "按年份与 generator 的覆盖率对比"
+   ]
+  },
+  "rules": {
+   "_note": "以下为唯一权威规则;L_03 必须 re.compile 这些字符串,禁止在代码中另写。flags 见 regex_flags",
+   "regex_flags": "IGNORECASE | DOTALL",
+   "sentence_window": {
+    "asset_to_time_max_chars": 300,
+    "time_to_openphrase_max_chars": 300,
+    "same_sentence_only": true,
+    "sentence_split": "(?<=[.;])\\s+"
+   },
+   "TIME": "(?P<d>\\d{4}-\\d{2}-\\d{2})\\s*(?P<h>\\d{1,2}):(?P<mi>\\d{2})\\s*(?P<ap>AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?",
+   "TIME_12H_RULE": "若捕获组 ap 非空则按 12 小时制解析:12:00 AM → 00:00,12:00 PM → 12:00,其余 PM 加 12 小时",
+   "PAIR": "\\b(?P<base>[^\\s/,()]{1,20})\\s*/\\s*(?P<quote>[A-Za-z0-9]{1,10})\\b",
+   "ASSET_PAREN": "(?P<name>[^()\\n]{1,60}?)\\s*\\((?P<sym>[^\\s()]{1,20})\\)",
+   "EXCLUDE": {
+    "OPERATIONAL_UPDATE": "we will\\s+(halt|suspend|pause)|listing will be (postponed|advanced)|will be (postponed|advanced|brought forward|rescheduled)|originally set at|will restart|resume trading",
+    "PREMARKET_TO_SPOT": "Pre-?Market trading starting at",
+    "FUTURES_ONLY": "(USDⓈ-M|COIN-M|perpetual contract|delivery contract|futures will (launch|list))",
+    "_note": "新增 advanced / brought forward / rescheduled / originally set at —— 否则 SUI 160121 会被 B 误判为新事件",
+    "SPOT_COPY_TRADING": "Spot Copy Trading"
+   },
+   "GEN": {
+    "A": {
+     "require_all": [
+      "will list",
+      "spot trading pair"
+     ],
+     "fallback_when_unmatched": {
+      "_note": "仅当排除类与 A/C1/C2/B **全部未命中**时,以已编译的 A_LISTING_HEAD 作为 A 的兜底入口;随后沿用原 A 提取器。**引用 rules.A_LISTING_HEAD,不得复制正则**",
+      "pattern_ref": "rules.A_LISTING_HEAD",
+      "rationale": "直接替换会把 60 篇已识别公告重新归类,本轮无必要为补漏同时重做归类"
+     }
+    },
+    "C_LAUNCH_THEN_LIST": {
+     "require": "will then list\\s+(?:[^()\\n]{1,60}?\\()?(?P<sym>[A-Za-z0-9]{1,15})\\)?(?:\\s+into the innovation zone)?\\s+at\\s+(?P<d>\\d{4}-\\d{2}-\\d{2})\\s*(?P<h>\\d{1,2}):(?P<mi>\\d{2})\\s*(?P<ap>AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?\\s*,?\\s*and open trading\\s+(?P<prep>with|against)\\s*(?:the\\s+)?",
+     "iteration": "**必须用 finditer 逐 clause 提取**,否则 220669 只会取到第一个资产(该篇含 1000CAT@09:00 与 PENGU@14:00)",
+     "crossvalidate": {
+      "with 分支": "代号须与同句 SYM/QUOTE 交易对的 base 一致",
+      "against 分支": "**该分支无 SYM/QUOTE 交易对**(仅 `against USDT, USDC…`)⟹ 改为要求**裸代号匹配标题中的资产代号**"
+     },
+     "expected": {
+      "articles": 98,
+      "events": 99,
+      "unique_base_time": 99,
+      "decomposition": "103 含 will then list = 98 命中 + 3 pre-market(SCR/USUAL/RED)+ 2 无时间(SUI/MAV)"
+     }
+    },
+    "C_PROGRAM_LIST_OPEN": {
+     "title_require": "Launchpool|Launchpad|Megadrop|HODLer",
+     "body_require_time_after": "will list\\s+[^()\\n]{1,60}?\\((?P<sym>[A-Za-z0-9]{1,15})\\).{0,300}?open trading for.{0,200}?(?P<d>\\d{4}-\\d{2}-\\d{2})\\s*(?P<h>\\d{1,2}):(?P<mi>\\d{2})\\s*(?P<ap>AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?",
+     "body_require_time_before": "will list\\s+[^()\\n]{1,60}?\\((?P<sym>[A-Za-z0-9]{1,15})\\).{0,120}?at\\s+(?P<d>\\d{4}-\\d{2}-\\d{2})\\s*(?P<h>\\d{1,2}):(?P<mi>\\d{2})\\s*(?P<ap>AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?\\s+and open trading for",
+     "name_charclass_note": "NAME 用 [^()\\n] 而非 [A-Za-z0-9 .-],否则 `Alpine F1® Team Fan Token` 因 ® 漏配",
+     "expected": {
+      "source_articles": 22,
+      "events": 11,
+      "assets": [
+       "BETA",
+       "LAZIO",
+       "PORTO",
+       "VOXEL",
+       "LOKA",
+       "ALPINE",
+       "GMT",
+       "HOOK",
+       "ID",
+       "EDU",
+       "ARKM"
+      ],
+      "why": "每个资产各有『认购开放公告』+『认购完成公告』两篇,给出同一开盘时间"
+     }
+    },
+    "B": {
+     "require": "will open trading for"
+    }
+   },
+   "CONSISTENCY_ONLY": {
+    "announce_the_listing_of": "announce the listing of",
+    "rule": "仅作一致性校验:若同文另有强语义上市句,两个时间**必须相等**;不独立产生 SPOT_LISTING"
+   },
+   "NEVER_ALONE": [
+    "trading starting at",
+    "launchpool",
+    "will be listed on Binance Spot",
+    "listing of the mentioned token"
+   ],
+   "PRIORITY": [
+    "OPERATIONAL_UPDATE",
+    "FUTURES_ONLY",
+    "PREMARKET_TO_SPOT",
+    "SPOT_COPY_TRADING",
+    "A",
+    "C_LAUNCH_THEN_LIST",
+    "C_PROGRAM_LIST_OPEN",
+    "B",
+    "OTHER"
+   ],
+   "store_all_matches": "matched_generators",
+   "NAME": "[^()\\n]{1,60}?",
+   "B_SPLIT": {
+    "layer1_L03_semantic_only": {
+     "B_FIRST_CANDIDATE": "正文明确 `will list {asset}` 且非 OPERATIONAL/FUTURES/PREMARKET",
+     "B_NEW_PAIR_CANDIDATE": "仅有 `will open trading for {pairs}`,无 `will list {asset}`",
+     "note": "L_03 **只输出候选**,不做首次/新增的最终裁定",
+     "first_marker": "will list"
+    },
+    "layer2_join_evidence": {
+     "evidence_source": "agg_earliest_day.json(日粒度元数据;不读 t0_exact.json / t0_manifest.json,不触碰留出行情正文)",
+     "compare_against": "**UTC-date(T_scheduled)**,**不得使用 releaseDate**(公告通常提前数日至数周发布)",
+     "NEW_QUOTE_PAIR_EXISTING_ASSET": "该 baseAsset 任一交易对的 earliest_trade_day **<** UTC-date(T_scheduled)",
+     "FIRST_SPOT_LISTING": "earliest_trade_day **==** UTC-date(T_scheduled),且正文明确 `will list {asset}`",
+     "ANNOUNCEMENT_ONLY": "**无归档记录**的明确首次上市公告 ⟹ **保留该公告事件**,在联合层标 ANNOUNCEMENT_ONLY,并注明**无法区分『未开盘』与『归档缺口』**;**不得消失为 AMBIGUOUS**",
+     "AMBIGUOUS": "仅用于证据**冲突**(如同一 baseAsset 出现互斥判据)"
+    },
+    "counterexample": "66920:ELF 最早 2017-12-21、POLY 最早 2018-07-31,均应判 NEW_QUOTE_PAIR_EXISTING_ASSET",
+    "order": "B 在 A / C1 / C2 之后处理;第二层裁定在联合阶段执行"
+   },
+   "UPDATE_ADVANCED": {
+    "detect": "(?P<action>advanced|brought forward|postponed|rescheduled|delayed)",
+    "extract": "(?:listing|trading start)\\s*(?:start\\s*)?time\\s+for\\s+(?P<name>[^()\\n]{1,60}?)\\s*\\((?P<sym>[A-Za-z0-9]{1,15})\\)\\s*,?\\s*originally set at\\s+(?P<old>\\d{4}-\\d{2}-\\d{2}\\s*\\d{1,2}:\\d{2}\\s*(?:AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?)\\s*,?\\s*will be\\s+(?P<action2>advanced|brought forward|postponed|rescheduled|delayed)\\s+to\\s+(?P<new>\\d{4}-\\d{2}-\\d{2}\\s*\\d{1,2}:\\d{2}\\s*(?:AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?)",
+    "fallback": "originally set at\\s+(?P<old>\\d{4}-\\d{2}-\\d{2}\\s*\\d{1,2}:\\d{2}\\s*(?:AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?).{0,80}?will be\\s+(?P<action2>advanced|brought forward|postponed|rescheduled|delayed)\\s+to\\s+(?P<new>\\d{4}-\\d{2}-\\d{2}\\s*\\d{1,2}:\\d{2}\\s*(?:AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?)",
+    "time_parse": "old / new 捕获的是**完整时间字符串**,须各自再用 rules.TIME(含命名组)解析;**禁止把 TIME 展开进本模板**",
+    "link_rule": "按 (baseAsset, old_time) 匹配既有事件;成功则更新 T_scheduled 为 new_time 并追加 time_versions[];失败标 AMBIGUOUS",
+    "verified_example": "SUI 160121:old=2023-05-03 12:15 UTC → new=2023-05-03 12:00 UTC(action=advanced)"
+   },
+   "TIME_NOGROUP": "\\d{4}-\\d{2}-\\d{2}\\s*\\d{1,2}:\\d{2}\\s*(?:AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?",
+   "NORMALIZE": {
+    "entities": "&nbsp;|&#160;| ",
+    "collapse_ws": "\\s+",
+    "amp": "&amp;"
+   },
+   "OPERATION_CLAUSE": {
+    "_note": "PAIR 只允许在此句内运行;**禁止对全文调用 PAIR.finditer**",
+    "B": "will open trading for(?P<clause>[^.]{0,400}?)(?:trading pairs?|pair)\\s+at\\s+[^.]{0,60}?UTC\\s*\\)?",
+    "A": "will list(?P<clause>[^.]{0,400})",
+    "generic": "(?:will list|will then list|open trading (?:for|with|against))(?P<clause>[^.]{0,400})"
+   },
+   "PAIR_EXCLUDE": {
+    "_note": "即便在操作句内,以下 base 一律丢弃(URL / 平台名 / 通用词)",
+    "list": [
+     "COM",
+     "IOS",
+     "WWW",
+     "HTTPS",
+     "HTTP",
+     "EN",
+     "APP",
+     "ANDROID",
+     "ME",
+     "NET",
+     "ORG",
+     "TWITTER",
+     "FACEBOOK",
+     "INSTAGRAM",
+     "TELEGRAM",
+     "T"
+    ],
+    "url_guard": "https?://|www\\.|\\.com|\\.me|\\.org"
+   },
+   "A_LISTING_HEAD": "will list\\s+(?P<asset_segment>.{1,200}?)\\s+and\\s+(?:tentatively\\s+)?(?:set\\s+to\\s+)?(?:will\\s+)?open trading\\s+for\\s+(?P<tail>.{0,220}?)\\s*at\\s+(?P<time>\\d{4}-\\d{2}-\\d{2}[^)]{0,30}?UTC\\s*\\)?)",
+   "PAIR_BLOCK": {
+    "_note": "正文几乎无换行(1453 篇仅 9 篇),不得用 [^\\n];必须用**显式终止锚点**",
+    "start": "New Spot Trading Pairs?\\s*:?\\s*",
+    "terminators": [
+     "Users can",
+     "Withdrawals",
+     "Listing Fee",
+     "Notes?\\s*:",
+     "Start Trading",
+     "Deposits?\\s+for",
+     "To celebrate",
+     "Risk warning",
+     "Terms of Use",
+     "Binance reserves"
+    ],
+    "max_chars_after_head": 600,
+    "asset_side_requirement": "每个被接受的交易对须满足 **asset_symbol ∈ {pair.base, pair.quote}** —— 不能只校验 base,因 `BNB/FDUSD`、`XRP/RLUSD`、`BTC/AEUR` 均为合法反向表示"
+   },
+   "ASSET_SEGMENT": {
+    "_note": "支持多个 `名称 (SYM)`、裸代号、Unicode 代号",
+    "paren": "(?P<name>[^()\\n]{1,60}?)\\s*\\((?P<sym>[^\\s()]{1,20})\\)",
+    "bare": "^\\s*(?P<sym>[^\\s()]{1,20})\\s*$",
+    "unicode_ok": true
+   },
+   "PAIR_VALIDATE": {
+    "_note": "三态,非硬白名单。来源字段显式指定,实现不得自行决定",
+    "archive_pair_source": "u_trade_candidates.json → pairs[*].symbol",
+    "archive_pair_assert": {
+     "count": 3695,
+     "unresolved": 0,
+     "must_not_contain": [
+      "klines"
+     ]
+    },
+    "quote_asset_source": "spot_exchangeinfo.json.quote_assets ∪ u_trade_candidates.json.pairs[*].quote",
+    "quote_asset_assert": {
+     "count": 50,
+     "note": "exchangeInfo 快照 49 个 + 历史报价资产 GYEN"
+    },
+    "ARCHIVE_CONFIRMED": "base+quote 拼接 ∈ archive_pair_source",
+    "UNSEEN_IN_ARCHIVE": "结构合法且 quote ∈ quote_asset_source,但不在 archive_pair_source ⟹ **保留为公告候选**",
+    "INVALID_PAIR": "命中 URL/界面文本,或 quote ∉ quote_asset_source ⟹ **仅此态丢弃**",
+    "must_report": "三态各自计数",
+    "required_inputs_add": [
+     "u_trade_candidates.json",
+     "spot_exchangeinfo.json"
+    ]
+   },
+   "EXCLUDE_SCOPE": {
+    "_note": "每条排除规则的作用范围;未列出者默认 body_or_title",
+    "SPOT_COPY_TRADING": "title_only",
+    "FUTURES_ONLY": "body_or_title",
+    "OPERATIONAL_UPDATE": "body_or_title",
+    "PREMARKET_TO_SPOT": "body_or_title"
+   },
+   "A_LISTING_HEAD_NOTE": "asset_segment 用**非贪婪**匹配至 `and … open trading`,不按句点截断(保留 `Pump.fun`);tail 可为内联交易对(`BNSOL/SOL`、`the BFUSD/USDT pair`)或交易对清单引导语(`the following spot trading pairs` / `these spot trading pairs`)",
+   "PAIR_NORMALIZE_SPACE": {
+    "_note": "安全规范化:仅当去除 base 内部空格后与已从 asset_segment 提取的某个资产代号**完全相等**才允许",
+    "rule": "strip_inner_spaces(pair.base) == asset_symbol ⟹ 采用规范化后的 base;否则保持原样",
+    "verified_example": "article 211378:`1 MBABYDOGE /USDT` → `1MBABYDOGE/USDT`(资产段含 1MBABYDOGE)",
+    "forbidden": "禁止无条件去空格 —— 会把无关 token 粘成伪资产"
+   }
+  },
+  "classification_stage_isolation": "**分类阶段不得读取 T0 / t0_exact.json / t0_manifest.json**",
+  "regression_samples": [
+   {
+    "article_id": 194456,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "ETHFI",
+    "expect_time": "2024-03-18T12:00:00Z",
+    "expect_events": 1,
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 221560,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "BIO",
+    "expect_time": "2025-01-03T10:00:00Z",
+    "expect_events": 1,
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 233811,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "INIT",
+    "expect_time": "2025-04-24T11:00:00Z",
+    "expect_events": 1,
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 71918,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "DAR",
+    "expect_time": "2021-11-04T08:00:00Z",
+    "expect_events": 1,
+    "note": "innovation zone + 08:00 AM",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 90285,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "GAL",
+    "expect_time": "2022-05-05T12:00:00Z",
+    "expect_events": 1,
+    "note": "12:00 PM",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 75194,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "SANTOS",
+    "expect_time": "2021-12-01T11:00:00Z",
+    "expect_events": 1,
+    "note": "11:00 AM",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 139815,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "HFT",
+    "expect_time": "2022-11-07T13:00:00Z",
+    "expect_events": 1,
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 187039,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "AI",
+    "expect_time": "2024-01-04T10:00:00Z",
+    "expect_events": 1,
+    "note": "逗号+the",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 187730,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_base": "XAI",
+    "expect_time": "2024-01-09T10:00:00Z",
+    "expect_events": 1,
+    "note": "逗号+the",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 220669,
+    "expect_generator": "C_LAUNCH_THEN_LIST",
+    "expect_bases": [
+     "1000CAT",
+     "PENGU"
+    ],
+    "expect_times": [
+     "2024-12-17T09:00:00Z",
+     "2024-12-17T14:00:00Z"
+    ],
+    "expect_events": 2,
+    "note": "一篇两事件,必须 finditer",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_LAUNCH_THEN_LIST",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 80504,
+    "expect_generator": "C_PROGRAM_LIST_OPEN",
+    "expect_base": "LOKA",
+    "expect_time": "2022-01-20T12:00:00Z",
+    "expect_events": 1,
+    "note": "12:00 PM 检验 12 小时制",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_PROGRAM_LIST_OPEN",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 143460,
+    "expect_generator": "C_PROGRAM_LIST_OPEN",
+    "expect_base": "HOOK",
+    "expect_time": "2022-12-01T14:30:00Z",
+    "expect_events": 1,
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_PROGRAM_LIST_OPEN",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 153844,
+    "expect_generator": "C_PROGRAM_LIST_OPEN",
+    "expect_base": "ID",
+    "expect_time": "2023-03-22T12:00:00Z",
+    "expect_events": 1,
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_PROGRAM_LIST_OPEN",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 83215,
+    "expect_generator": "C_PROGRAM_LIST_OPEN",
+    "expect_base": "ALPINE",
+    "expect_time": "2022-02-21T12:00:00Z",
+    "expect_events": 1,
+    "note": "名称含 ®",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "C_PROGRAM_LIST_OPEN",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 227075,
+    "expect_events": 0,
+    "expect_base": "RED",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "PREMARKET_TO_SPOT",
+    "expect_final_kind": "PREMARKET_TO_SPOT"
+   },
+   {
+    "article_id": 261112,
+    "expect_events": 0,
+    "expect_base": "BREV",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "FUTURES_ONLY",
+    "expect_final_kind": "FUTURES_ONLY"
+   },
+   {
+    "article_id": 262153,
+    "expect_events": 0,
+    "expect_base": "ZAMA",
+    "note": "其现货公告应由 A 接受(另篇)",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "FUTURES_ONLY",
+    "expect_final_kind": "FUTURES_ONLY"
+   },
+   {
+    "article_id": 275737,
+    "expect_events": 0,
+    "expect_base": "ANTHROPIC",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "FUTURES_ONLY",
+    "expect_final_kind": "FUTURES_ONLY"
+   },
+   {
+    "article_id": 64767,
+    "expect_events": 0,
+    "expect_base": "MBOX",
+    "note": "仅挖矿时间,无现货开盘时间",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "OTHER",
+    "expect_final_kind": "OTHER"
+   },
+   {
+    "article_id": 77430,
+    "expect_events": 0,
+    "expect_base": "HIGH",
+    "note": "仅挖矿时间",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "OTHER",
+    "expect_final_kind": "OTHER"
+   },
+   {
+    "article_id": 66920,
+    "expect_events": 0,
+    "expect_bases": [
+     "ELF",
+     "POLY"
+    ],
+    "note": "层2 证据:ELF 最早 2017-12-21、POLY 2018-07-31",
+    "stage": "B_RESOLVE",
+    "expect_candidate_kind": "B_NEW_PAIR_CANDIDATE",
+    "expect_final_kind": "NEW_QUOTE_PAIR_EXISTING_ASSET"
+   },
+   {
+    "article_id": 160121,
+    "expect_events": 0,
+    "expect_base": "SUI",
+    "expect_update": {
+     "old": "2023-05-03T12:15:00Z",
+     "new": "2023-05-03T12:00:00Z",
+     "action": "advanced"
+    },
+    "stage": "TIME_CHAIN",
+    "expect_candidate_kind": "OPERATIONAL_UPDATE",
+    "expect_final_kind": "OPERATIONAL_UPDATE"
+   },
+   {
+    "article_id": 160049,
+    "expect_generator": "A",
+    "expect_base": "SUI",
+    "expect_time": "2023-05-03T12:15:00Z",
+    "expect_events": 1,
+    "note": "经 160121 更新后最终 T_scheduled = 12:00 | A 兜底入口;expect_final_kind 仍由 B_RESOLVE 的首次上市语义决定;L03 期望保持起点时间,不得改为时间链最终值",
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "A",
+    "expect_final_kind": "FIRST_SPOT_LISTING"
+   },
+   {
+    "article_id": 167392,
+    "expect_generator": "A",
+    "expect_base": "MAV",
+    "expect_time": "2023-06-28T08:00:00Z",
+    "expect_events": 1,
+    "stage": "L03_CLASSIFY",
+    "expect_candidate_kind": "A",
+    "expect_final_kind": "FIRST_SPOT_LISTING",
+    "note": "A 兜底入口;expect_final_kind 仍由 B_RESOLVE 的首次上市语义决定;L03 期望保持起点时间,不得改为时间链最终值"
+   },
+   {
+    "article_id": 160049,
+    "stage": "TIME_CHAIN",
+    "expect_base": "SUI",
+    "expect_final_time": "2023-05-03T12:00:00Z",
+    "note": "经 160121 更新后最终 T_scheduled;L03 阶段仍应为 12:15"
+   },
+   {
+    "article_id": 173967,
+    "stage": "L03_CLASSIFY",
+    "expect_generator": "A",
+    "expect_candidate_kind": "A",
+    "expect_bases": [
+     "CYBER",
+     "SEI"
+    ],
+    "expect_events": 2,
+    "expect_time": "2023-08-15T12:00:00Z",
+    "note": "A 兜底补回;**两资产来源不得重复计事件**"
+   },
+   {
+    "article_id": 64712,
+    "stage": "L03_CLASSIFY",
+    "expect_generator": "A",
+    "expect_candidate_kind": "A",
+    "expect_base": "MBOX",
+    "expect_events": 1,
+    "expect_time": "2021-08-19T08:00:00Z",
+    "note": "A 兜底补回;**位于回看缓冲区,不进入主窗口统计**"
+   }
+  ],
+  "time_version_chain": {
+   "required": true,
+   "structure": "无时间公告 → 正式上市公告 → 时间更新公告",
+   "resolution": "哨兵采用**链末的最终有效时间**;完整链保存为 time_versions[]",
+   "no_time_marker": "when its liquidity meets the requirement",
+   "examples": {
+    "SUI": [
+     "159763 无时间",
+     "160049 → 2023-05-03 12:15 UTC",
+     "160121 → 提前至 2023-05-03 12:00 UTC(最终)"
+    ],
+    "MAV": [
+     "165961 无时间",
+     "167392 → 2023-06-28 08:00 UTC(最终)"
+    ]
+   },
+   "link_rule": "按 baseAsset 链接;更新公告须显式引用原时间(`originally set at {旧时间}`)方可并入该链,否则标 AMBIGUOUS",
+   "machine_rule": "见 rules.UPDATE_ADVANCED;禁止在代码中另写解析逻辑"
+  },
+  "event_merge": {
+   "key": "baseAsset + T_scheduled + kind==FIRST_SPOT_LISTING",
+   "store": "source_article_ids[](保留全部来源篇)",
+   "mismatch": "两篇时间不一致时**不得合并**,转入 time_version_chain 或 AMBIGUOUS",
+   "why_not_base_only": "仅按 baseAsset 合并会误吞真正的**重新上市**"
+  },
+  "expected_counts": {
+   "C1_articles": 98,
+   "C1_events": 99,
+   "C1_with": 42,
+   "C1_against": 57,
+   "C2_source_articles": 22,
+   "C2_events": 11,
+   "_note": "C1/C2 的旧估计 39/19 已作废,不得引用",
+   "C1_raw_articles": 98,
+   "C1_raw_events": 99,
+   "C2_raw_articles": 22,
+   "C2_groups": 11,
+   "MEME_group": {
+    "groups": 1,
+    "sources": 2,
+    "source_generators": [
+     "A",
+     "C_LAUNCH_THEN_LIST"
+    ],
+    "articles": [
+     181301,
+     181807
+    ],
+    "T_scheduled": "2023-11-03T08:00:00Z"
+   },
+   "A_note": "修后 A 预计接近原 77,但**77 不是强制目标**;以逐条去向说明为准"
+  },
+  "regression_stages": [
+   "L03_CLASSIFY",
+   "B_RESOLVE",
+   "TIME_CHAIN"
+  ],
+  "stage_outputs": {
+   "L03_CLASSIFY": {
+    "raw_events": "每篇公告 / 每个 clause 一条,**不合并、不删除**",
+    "candidate_groups": "仅按 (base_asset, T_scheduled) 分组的**非破坏性视图**;保存 source_records[{article_id, generator, matched_generators}];**此阶段不删除、不选主来源**"
+   },
+   "B_RESOLVE": "拿到 kind 后再执行最终合并(dedup_rule)",
+   "TIME_CHAIN": "应用 UPDATE_ADVANCED 更新 T_scheduled"
+  },
+  "parse_fail_accounting": "**69 条 PARSE_FAIL 必须逐条说明去向**(转入哪个桶或仍失败及原因),不得只报总数",
+  "regression_extra": [
+   {
+    "case": "AVAX/U",
+    "expect": "PAIR 解析成功,quote=U"
+   },
+   {
+    "case": "币安人生/U",
+    "expect": "PAIR 解析成功,Unicode base"
+   },
+   {
+    "case": "1 MBABYDOGE /USDT",
+    "expect": "规范化为 1MBABYDOGE/USDT(article 211378)"
+   },
+   {
+    "case": "反向报价",
+    "expect": "BNB/FDUSD、XRP/RLUSD、BTC/AEUR 中 asset 在 quote 侧时仍被接受"
+   }
+  ],
+  "regression_stage_semantics": {
+   "L03_CLASSIFY": "桶 == generator(A / C_LAUNCH_THEN_LIST / C_PROGRAM_LIST_OPEN / B_FIRST_CANDIDATE / B_NEW_PAIR_CANDIDATE / 排除类)",
+   "B_RESOLVE": "此阶段才产生 FIRST_SPOT_LISTING / NEW_QUOTE_PAIR_EXISTING_ASSET / ANNOUNCEMENT_ONLY / AMBIGUOUS",
+   "rule": "expect_candidate_kind 属 L03 语义,expect_final_kind 属 B_RESOLVE 语义,**不得混用**"
+  },
+  "c1bn_measurement_status": {
+   "status": "MEASUREMENT_PENDING_CORRECTION",
+   "previous_result": "λ_cluster = 11.12/年 → BUDGET-NO-GO(**不再作为已核实的筛选依据**)",
+   "defects": [
+    {
+     "file": "repro_C1BN/build_top20.py",
+     "lines": "16-18,25",
+     "defect": "当日完整成交额先入滚动值再存 top20[d];run_full.py:7 用它筛当日任意时点(含 00:00)⟹ 前视"
+    },
+    {
+     "file": "repro_C1BN/pull_hourly.py",
+     "lines": "17",
+     "defect": "存 [Open time, Close] ⟹ rerun_c1.py:60 使 px[16:00] 装的是 16:59:59 收盘价,用未来价判小时开盘条件"
+    },
+    {
+     "file": "repro_C1BN/rerun_c1.py",
+     "lines": "72",
+     "defect": "o[t//H*H]=v 按文件序迭代 ⟹ 16:55 的 OI 覆盖 16:00 键"
+    },
+    {
+     "file": "repro_C1BN/rerun_c1.py",
+     "lines": "43",
+     "defect": "只检查 len(sl)>=50,未检查 365 天历史年龄(冻结要求)"
+    }
+   ],
+   "evidence": "direction/review_2026-09-06/审查报告.md 第 2 节,四项均已本地复核",
+   "note": "APE 抽查改用已完成小时 K 线后变化 22.66%→21.70%,**仍过 10% 门槛** ⟹ 证明用了未来数据,但**不证明该事件去留已改变**;总频率影响须重算,不得假定偏差方向或幅度",
+   "rerun_requires": [
+    "点时名单去当日未来量",
+    "改用已完成小时价格",
+    "OI 按可得时间对齐(不得后值覆盖)",
+    "补 365/180 天预热年龄检查",
+    "补全输入清单"
+   ],
+   "priority_note": "修正测量与恢复研究优先级是两件事;C1 的反向先验(#40 免费工具覆盖、#41/#48 3.9 次/年且均值为负、CoinGlass 已publish同一框架)未变"
+  },
+  "a_gate_recovered_articles": [
+   {
+    "article_id": 160049,
+    "assets": [
+     "SUI"
+    ],
+    "T_scheduled": "2023-05-03T12:15:00Z",
+    "note": "窗口内新增分组;**后续必须接 160121 的时间更新**(L03 期望保持 12:15,不得为最终时间改成 12:00)"
+   },
+   {
+    "article_id": 167392,
+    "assets": [
+     "MAV"
+    ],
+    "T_scheduled": "2023-06-28T08:00:00Z",
+    "note": "窗口内新增分组"
+   },
+   {
+    "article_id": 173967,
+    "assets": [
+     "CYBER",
+     "SEI"
+    ],
+    "T_scheduled": "2023-08-15T12:00:00Z",
+    "note": "仅增加**来源记录**;相同资产+时间已由其他公告提供,**不得重复计上市次数**"
+   },
+   {
+    "article_id": 64712,
+    "assets": [
+     "MBOX"
+    ],
+    "T_scheduled": "2021-08-19T08:00:00Z",
+    "note": "**位于回看缓冲区**,早于 2021-09-01 主窗口 ⟹ **不计入主窗口新上市次数**"
+   }
+  ],
+  "a_gate_impact_summary": {
+   "new_source_events": 5,
+   "new_groups": 3,
+   "new_groups_in_main_window": 2,
+   "in_window_assets": [
+    "SUI",
+    "MAV"
+   ],
+   "warning": "A 桶新值 82 是运行结果,**不得当作独立正确性证明**;A_note 已写明 77 非强制目标"
+  }
+ },
+ "timestamps": {
+  "T_scheduled": "由公告正文按 mother_universe.extract.T_scheduled 提取(UTC)",
+  "T_first_trade": "在该公告所列的现货交易对中,**T_scheduled 之后(含等于,>=)**的最早 aggTrade;禁止取该 baseAsset 的历史第一笔",
+  "T0_for_strategy": "T_first_trade",
+  "lag_sentinel": "必须报告 (T_first_trade - T_scheduled) 的分布、最大值与异常清单"
+ },
+ "filters": {
+  "computable": {
+   "cond1_vwap": {
+    "window": "[T0, T0+30min)",
+    "vwap_def": "sum(price*qty)/sum(qty) over aggTrades in window, qty = base quantity",
+    "compare_price": "T0+30min 之后第一笔 aggTrade 的成交价(与入场代理为同一笔)",
+    "pass_if": "compare_price > vwap"
+   },
+   "cond2_taker_buy": {
+    "window": "[T0+20min, T0+30min)",
+    "taker_buy_def": "isBuyerMaker == false",
+    "measure": "quote_notional",
+    "pass_if": "taker_buy_notional / total_notional >= 0.60"
+   }
+  },
+  "not_computable": {
+   "cond3_slippage_le_1pct": "需订单簿;0B 已证现货无历史簿",
+   "cond4_trading_status_normal": "归档无该字段"
+  },
+  "main_spec": "只施加 cond1 + cond2,得 lambda_filter12"
+ },
+ "price_proxy": {
+  "entry": "T0+30min 之后第一笔 aggTrade 成交价",
+  "entry_tolerance_minutes": 10,
+  "exit": "T0+30min+7d 之后第一笔 aggTrade 成交价",
+  "exit_tolerance_hours": 24,
+  "on_missing": "记为 price_proxy_missing,保留在母体;不填 0、不填 -100%、不删除",
+  "must_report_alongside": [
+   "入场与出场时点前后各 1 小时的成交笔数"
+  ]
+ },
+ "estimators": {
+  "must_report_separately": [
+   "n_universe",
+   "n_price_observed",
+   "price_proxy_missing"
+  ],
+  "primary": "observed-only 的 r_price_proxy 均值/中位/p10/p25/p75/p90",
+  "full_universe_mean": "不计算。缺失值如何进入均值未冻结,禁止运行后再决定"
+ },
+ "concurrency": {
+  "f_policy_cap": 0.1,
+  "max_slots": 10,
+  "slot_hold_days": 7,
+  "slot_hold_rule": "严格 7 日占槽,不提前释放",
+  "selection_when_oversubscribed": "按 T0 升序;完全相同则按 baseAsset 字典序升序",
+  "output_name": "lambda_slot_admitted_upper"
+ },
+ "lambda_layers": [
+  "lambda_listed",
+  "lambda_filter12",
+  "lambda_slot_admitted_upper",
+  "lambda_exec"
+ ],
+ "lambda_exec": "UNIDENTIFIED",
+ "holdout": {
+  "rule": "sha256(baseAsset) 首字节 mod 5 == 0 为留出集(约 20%)",
+  "enforcement": "留出集的数据文件根本不下载",
+  "open_condition": "仅当 A 腿全部规则完全锁定、且已产出主分析集结果后,作一次性确认;不满足则永不打开",
+  "open_count_limit": 1
+ },
+ "b_leg": {
+  "status": "映射可预处理,收益计算未冻结",
+  "perp_onboard_source": "https://www.binance.com/fapi/v1/exchangeInfo 的 onboardDate 字段(2026-09-03 实测 892/892 全覆盖)",
+  "linkage_rule": "保留交易所原始 baseAsset,不做任意数字前缀剥离(实测 v1.2 误映射:2ZUSDT→Z 乘数2、42USDT→2 乘数4;且 1INCH / 1MBABYDOGE 的数字本就是币名一部分)。链接顺序:①原始 baseAsset 完全相等;②仅允许显式白名单前缀 1000 / 1000000,剥离后必须与一个实际现货 baseAsset 完全匹配;③歧义与未匹配单列,禁止猜测",
+  "allowed_outputs": [
+   "永续覆盖率",
+   "spot T0 与 perp onboardDate 的滞后分布",
+   "可做空窗口存在性"
+  ],
+  "forbidden_outputs": [
+   "任何反转收益",
+   "任何 P&L"
+  ],
+  "must_store": [
+   "onboardDate",
+   "deliveryDate",
+   "status",
+   "contractType",
+   "原始 baseAsset"
+  ],
+  "caveat": "当前快照可能遗漏已被彻底移除的合约;声称历史时点『可做空』须同时保存 deliveryDate 并说明该局限"
+ },
+ "assertions": [
+  "success_ids == expected_ids 且 missing_ids == 空集 且 extra_ids == 空集",
+  "PARSE_FAIL 逐条列出,FETCH_FAIL 附 HTTP 状态",
+  "每个 SPOT_LISTING 事件同时具备 base_asset 与 T_scheduled",
+  "所有 T_first_trade >= 对应事件的 T_scheduled",
+  "max(|T_first_trade - T_scheduled|) 必须打印;超过 6 小时的事件逐条列出",
+  "lambda_filter12 <= lambda_listed",
+  "lambda_slot_admitted_upper <= lambda_filter12",
+  "n_price_observed + price_proxy_missing == n_universe",
+  "A_input_event_ids == shared_mother_event_ids",
+  "set(留出集 baseAsset) 交 set(已下载市场数据文件对应 baseAsset) == 空集",
+  "召回率审计已产出且 OTHER 疑似漏项已逐条审阅",
+  "MATCHED + TRADE_ONLY + ANNOUNCEMENT_ONLY + SCHEDULE_UPDATED_OR_CANCELLED + AMBIGUOUS == |U_master|",
+  "U_trade 中每个事件的 baseAsset 唯一(已按资产合并交易对)",
+  "所有收益侧统计的输入事件集 ⊆ U_trade",
+  "标记 first_month == 归档起点 的标的数必须打印(归档覆盖起点风险)",
+  "杠杆代币剔除只依据显式白名单,JUP / SYRUP 必须在母体内",
+  "NO_ARCHIVE 与 FETCH_FAIL 分开计数且均已打印",
+  "每个 baseAsset 保存了其全部最早日并列交易对",
+  "时间戳归一后 UTC 日期 == 文件名日期",
+  "留出集 baseAsset 的 T0 == EMBARGOED 且无行情正文文件被下载",
+  "每个公告事件带 generator 标签(A / B / C_<子模式>)",
+  "哨兵仅在主集 282 个精确 T0 上计算,未打开留出集行情",
+  "哨兵的资产与时间由正文结构确定,未使用 |T0-T_scheduled| 择优",
+  "每个 U_trade 事件带 CRYPTO/BSTOCK/UNKNOWN 标签且分组报告",
+  "v1.6 事件结果已保留且已产出逐事件增删表",
+  "每个事件保存 matched_generators(全部命中,非仅优先级胜出者)",
+  "含 Pre-Market trading starting at 的公告归 PREMARKET_TO_SPOT,未进入首次现货哨兵",
+  "12 小时制时间已显式解析 AM/PM,且 12:00 AM/PM 处理正确",
+  "bStock 标注按冻结规则计算,主集/全量分母未混用",
+  "L_03 的规则全部由 config.mother_universe.rules 编译得到,代码中无另写正则",
+  "分类阶段未读取任何 T0 相关文件",
+  "回归样本全部通过后才允许正式产出母表",
+  "C1 用 finditer 逐 clause 提取,220669 产出 2 个事件",
+  "C1 的 against 分支用标题代号交叉验证(该分支无 SYM/QUOTE 对)",
+  "B 在 A/C1/C2 之后按 T_scheduled 升序判定首次上市 vs 新增报价对",
+  "时间更新链已解析,SUI 哨兵时间为 12:00",
+  "B 的首次/新增裁定使用 agg_earliest_day.json 作证据,未读 t0_exact / t0_manifest",
+  "UPDATE_ADVANCED 由 config 编译,代码未另写更新句解析",
+  "每条回归样本带 stage,且仅在对应阶段断言",
+  "UPDATE_ADVANCED 的 extract/fallback 可 re.compile(不得内嵌带命名组的 TIME)",
+  "B 层二比较 UTC-date(T_scheduled),未使用 releaseDate",
+  "无归档的首次上市公告保留为 ANNOUNCEMENT_ONLY,未被吞为 AMBIGUOUS",
+  "PAIR 仅在 OPERATION_CLAUSE 内运行,伪资产 COM/IOS 不出现在任何事件中",
+  "L03_CLASSIFY 输出 raw_events 与 candidate_groups,**未做任何合并或删除**",
+  "C2 的 11 个事件由 candidate_groups 分组断言验证,而非删除来源记录",
+  "MEME 分组含 2 个来源且 source_generators == {A, C_LAUNCH_THEN_LIST}",
+  "代码中不存在硬编码正则(含 will list 与正文规范化)",
+  "A 用上市头 + 相邻 New Spot Trading Pairs 块解析,交易对取两者并集",
+  "Spot Copy Trading 公告单独排除,未产生上市事件",
+  "NORMALIZE 实际由 config 读取(不得仅在配置中声明)",
+  "69 条 PARSE_FAIL 已逐条说明去向",
+  "SPOT_COPY_TRADING 仅匹配标题,未误杀 A/C1/C2 公告",
+  "A_LISTING_HEAD 覆盖 tentatively set to / 内联交易对 / 含点资产名",
+  "交易对校验为三态,UNSEEN_IN_ARCHIVE 被保留而非丢弃",
+  "三态各自计数并报告",
+  "archive_pair_source 断言 3695 项、unresolved=0、不含 klines",
+  "quote_asset_source 并集为 50(含 GYEN)",
+  "PAIR_BLOCK 用显式终止锚点,无块恰好截满上限",
+  "每个接受的交易对满足 asset_symbol ∈ {base, quote}",
+  "1 MBABYDOGE /USDT 已规范化为 1MBABYDOGE/USDT",
+  "L_00_bootstrap 的 CFG_PATH 默认指向脚本同目录(复现包自足)",
+  "L_03 全部检查 fail-closed:任一失败则非零退出且不写母表",
+  "config 中 stage=L03_CLASSIFY 的回归样本全部执行并通过",
+  "C1-BN 标记为 MEASUREMENT_PENDING_CORRECTION",
+  "A 兜底仅在全部未命中时启用,引用 rules.A_LISTING_HEAD 而非复制正则",
+  "SUI/MAV 的 L03 期望时间为起点值(12:15 / 08:00),未被时间链最终值覆盖",
+  "173967 的 CYBER/SEI 只增来源记录,未重复计上市次数",
+  "64712(MBOX)位于回看缓冲区,未计入主窗口新上市次数"
+ ]
+}
+==============================================================================
+[复现门] manifest=1453 缺失=0 哈希不符=0
+[复现门] 正文组合根哈希 = 3af4d9dd32cc66969c078d546e69429c8dfd560899b5b24a3136bd7a5a657d98  ✅
+[来源断言] archive_pairs=3695 ✅  quote_assets=50 ✅
+
+桶: {'FUTURES_ONLY': 663, 'OTHER': 292, 'B_NEW_PAIR_CANDIDATE': 223, 'A': 82, 'PARSE_FAIL': 13, 'OPERATIONAL_UPDATE': 11, 'C_LAUNCH_THEN_LIST': 98, 'PREMARKET_TO_SPOT': 3, 'SPOT_COPY_TRADING': 1, 'C_PROGRAM_LIST_OPEN': 22, 'B_FIRST_CANDIDATE': 45}   求和=1453 / 1453
+  [断言] 各桶互斥且求和 == expected  ✅
+生成器命中(可重叠): {'FUTURES_ONLY': 664, 'B': 292, 'A': 84, 'PREMARKET_TO_SPOT': 31, 'OPERATIONAL_UPDATE': 11, 'C_LAUNCH_THEN_LIST': 98, 'SPOT_COPY_TRADING': 1, 'A_FALLBACK': 4, 'C_PROGRAM_LIST_OPEN': 22}
+三态: {'UNSEEN_IN_ARCHIVE': 5, 'ARCHIVE_CONFIRMED': 1599, 'INVALID_PAIR': 7}
+[断言] PAIR_BLOCK 恰好截满上限的块数: got=0 want=0  ✅
+
+raw_events=1076  candidate_groups=1062(未合并、未删除)
+  按 generator(raw): {'B_NEW_PAIR_CANDIDATE': 803, 'A': 101, 'C_LAUNCH_THEN_LIST': 99, 'C_PROGRAM_LIST_OPEN': 22, 'B_FIRST_CANDIDATE': 51}
+[断言] C1 篇数: got=98 want=98  ✅
+[断言] C1 事件数: got=99 want=99  ✅
+[断言] C1 with 分支: got=42 want=42  ✅
+[断言] C1 against 分支: got=57 want=57  ✅
+[断言] C2 来源篇数: got=22 want=22  ✅
+[断言] C2 分组数: got=11 want=11  ✅
+[断言] MEME 分组数: got=1 want=1  ✅
+[断言] MEME 来源数: got=2 want=2  ✅
+[断言] MEME source_generators: got=['A', 'C_LAUNCH_THEN_LIST'] want=['A', 'C_LAUNCH_THEN_LIST']  ✅
+[断言] MEME 来源 article_ids: got=[181301, 181807] want=[181301, 181807]  ✅
+[断言] 伪资产出现在事件中: got=[] want=[]  ✅
+[断言] 1MBABYDOGE 事件数: got=1 want=1  ✅
+
+--- 结构化回归样本(stage=L03_CLASSIFY,24 条)---
+[断言] regr 194456 事件数: got=1 want=1  ✅
+[断言] regr 194456 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 194456 base: got=['ETHFI'] want=ETHFI  ✅
+[断言] regr 194456 time: got=['2024-03-18T12:00:00+00:00'] want=2024-03-18T12:00:00+00:00  ✅
+[断言] regr 221560 事件数: got=1 want=1  ✅
+[断言] regr 221560 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 221560 base: got=['BIO'] want=BIO  ✅
+[断言] regr 221560 time: got=['2025-01-03T10:00:00+00:00'] want=2025-01-03T10:00:00+00:00  ✅
+[断言] regr 233811 事件数: got=1 want=1  ✅
+[断言] regr 233811 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 233811 base: got=['INIT'] want=INIT  ✅
+[断言] regr 233811 time: got=['2025-04-24T11:00:00+00:00'] want=2025-04-24T11:00:00+00:00  ✅
+[断言] regr 71918 事件数: got=1 want=1  ✅
+[断言] regr 71918 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 71918 base: got=['DAR'] want=DAR  ✅
+[断言] regr 71918 time: got=['2021-11-04T08:00:00+00:00'] want=2021-11-04T08:00:00+00:00  ✅
+[断言] regr 90285 事件数: got=1 want=1  ✅
+[断言] regr 90285 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 90285 base: got=['GAL'] want=GAL  ✅
+[断言] regr 90285 time: got=['2022-05-05T12:00:00+00:00'] want=2022-05-05T12:00:00+00:00  ✅
+[断言] regr 75194 事件数: got=1 want=1  ✅
+[断言] regr 75194 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 75194 base: got=['SANTOS'] want=SANTOS  ✅
+[断言] regr 75194 time: got=['2021-12-01T11:00:00+00:00'] want=2021-12-01T11:00:00+00:00  ✅
+[断言] regr 139815 事件数: got=1 want=1  ✅
+[断言] regr 139815 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 139815 base: got=['HFT'] want=HFT  ✅
+[断言] regr 139815 time: got=['2022-11-07T13:00:00+00:00'] want=2022-11-07T13:00:00+00:00  ✅
+[断言] regr 187039 事件数: got=1 want=1  ✅
+[断言] regr 187039 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 187039 base: got=['AI'] want=AI  ✅
+[断言] regr 187039 time: got=['2024-01-04T10:00:00+00:00'] want=2024-01-04T10:00:00+00:00  ✅
+[断言] regr 187730 事件数: got=1 want=1  ✅
+[断言] regr 187730 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 187730 base: got=['XAI'] want=XAI  ✅
+[断言] regr 187730 time: got=['2024-01-09T10:00:00+00:00'] want=2024-01-09T10:00:00+00:00  ✅
+[断言] regr 220669 事件数: got=2 want=2  ✅
+[断言] regr 220669 kind/generator: got=C_LAUNCH_THEN_LIST want=C_LAUNCH_THEN_LIST  ✅
+[断言] regr 220669 bases: got=['1000CAT', 'PENGU'] want=['1000CAT', 'PENGU']  ✅
+[断言] regr 220669 times: got=['2024-12-17T09:00:00+00:00', '2024-12-17T14:00:00+00:00'] want=['2024-12-17T09:00:00+00:00', '2024-12-17T14:00:00+00:00']  ✅
+[断言] regr 80504 事件数: got=1 want=1  ✅
+[断言] regr 80504 kind/generator: got=C_PROGRAM_LIST_OPEN want=C_PROGRAM_LIST_OPEN  ✅
+[断言] regr 80504 base: got=['LOKA'] want=LOKA  ✅
+[断言] regr 80504 time: got=['2022-01-20T12:00:00+00:00'] want=2022-01-20T12:00:00+00:00  ✅
+[断言] regr 143460 事件数: got=1 want=1  ✅
+[断言] regr 143460 kind/generator: got=C_PROGRAM_LIST_OPEN want=C_PROGRAM_LIST_OPEN  ✅
+[断言] regr 143460 base: got=['HOOK'] want=HOOK  ✅
+[断言] regr 143460 time: got=['2022-12-01T14:30:00+00:00'] want=2022-12-01T14:30:00+00:00  ✅
+[断言] regr 153844 事件数: got=1 want=1  ✅
+[断言] regr 153844 kind/generator: got=C_PROGRAM_LIST_OPEN want=C_PROGRAM_LIST_OPEN  ✅
+[断言] regr 153844 base: got=['ID'] want=ID  ✅
+[断言] regr 153844 time: got=['2023-03-22T12:00:00+00:00'] want=2023-03-22T12:00:00+00:00  ✅
+[断言] regr 83215 事件数: got=1 want=1  ✅
+[断言] regr 83215 kind/generator: got=C_PROGRAM_LIST_OPEN want=C_PROGRAM_LIST_OPEN  ✅
+[断言] regr 83215 base: got=['ALPINE'] want=ALPINE  ✅
+[断言] regr 83215 time: got=['2022-02-21T12:00:00+00:00'] want=2022-02-21T12:00:00+00:00  ✅
+[断言] regr 227075 事件数: got=0 want=0  ✅
+[断言] regr 227075 kind/generator: got=PREMARKET_TO_SPOT want=PREMARKET_TO_SPOT  ✅
+[断言] regr 261112 事件数: got=0 want=0  ✅
+[断言] regr 261112 kind/generator: got=FUTURES_ONLY want=FUTURES_ONLY  ✅
+[断言] regr 262153 事件数: got=0 want=0  ✅
+[断言] regr 262153 kind/generator: got=FUTURES_ONLY want=FUTURES_ONLY  ✅
+[断言] regr 275737 事件数: got=0 want=0  ✅
+[断言] regr 275737 kind/generator: got=FUTURES_ONLY want=FUTURES_ONLY  ✅
+[断言] regr 64767 事件数: got=0 want=0  ✅
+[断言] regr 64767 kind/generator: got=OTHER want=OTHER  ✅
+[断言] regr 77430 事件数: got=0 want=0  ✅
+[断言] regr 77430 kind/generator: got=OTHER want=OTHER  ✅
+[断言] regr 160049 事件数: got=1 want=1  ✅
+[断言] regr 160049 kind/generator: got=A want=A  ✅
+[断言] regr 160049 base: got=['SUI'] want=SUI  ✅
+[断言] regr 160049 time: got=['2023-05-03T12:15:00+00:00'] want=2023-05-03T12:15:00+00:00  ✅
+[断言] regr 167392 事件数: got=1 want=1  ✅
+[断言] regr 167392 kind/generator: got=A want=A  ✅
+[断言] regr 167392 base: got=['MAV'] want=MAV  ✅
+[断言] regr 167392 time: got=['2023-06-28T08:00:00+00:00'] want=2023-06-28T08:00:00+00:00  ✅
+[断言] regr 173967 事件数: got=2 want=2  ✅
+[断言] regr 173967 kind/generator: got=A want=A  ✅
+[断言] regr 173967 bases: got=['CYBER', 'SEI'] want=['CYBER', 'SEI']  ✅
+[断言] regr 173967 time: got=['2023-08-15T12:00:00+00:00'] want=2023-08-15T12:00:00+00:00  ✅
+[断言] regr 64712 事件数: got=1 want=1  ✅
+[断言] regr 64712 kind/generator: got=A want=A  ✅
+[断言] regr 64712 base: got=['MBOX'] want=MBOX  ✅
+[断言] regr 64712 time: got=['2021-08-19T08:00:00+00:00'] want=2021-08-19T08:00:00+00:00  ✅
+
+======================================================================
+检查失败 0 项
+全部检查通过 ✅
+------------------------------------------------------------------------------
+输出产物哈希(写入后):
+  SHA256 33ecd0989e0db9f29e48d05e5079afebeed5613bdcbe7983680dd98a87791880  output:L_mother_events.json
+------------------------------------------------------------------------------
