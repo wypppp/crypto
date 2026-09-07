@@ -1,7 +1,7 @@
 /.agents
+/.benchmarks
 /.claude
 /.codex
+/.pytest_cache
 /.venv
-/申论
 /.env
-/option

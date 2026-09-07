@@ -33,7 +33,9 @@ KEY = {
   "l2_source 看状态":                     find('        "l2_source": ("etherscan" if (a_cr and l2a == "ok")'),
   "fully 按库中实际量判":                  find('    fully = have_hs >= total_hist'),
   "forward 回看窗口取自 SPEC":            find('                            max(1, bn - SPEC["forward_lookback_blocks"]),'),
-  "报告回看窗口分叉告警":                  find('两个模式的回看窗口不同'),
+  # 分叉告警改用场景 14 的行为断言验证；这里只查真分支的赋值语句是否可达。
+  # （原先指向多行条件表达式，Python 3.8 会把每一行都误标为已执行。）
+  "报告回看窗口分叉告警(真分支)":            find('            lookback_warn = ('),
   "自足通道兜底需 creator 非空":           find('        if prior_s > 0 and creator:'),
   "creator 未知不宣称 no_history":        find('            hist_status = creator_status'),
 }

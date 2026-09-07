@@ -86,8 +86,11 @@ try:
         return "0x" + _keccak(text=sig).hex()
 except Exception:                                                  # noqa: BLE001
     TOPIC_SOURCE = "verified_constant_fallback"
-    print('[warn] keccak 后端不可用，改用已校验常量。'
-          'pip install "eth-hash[pycryptodome]" 可恢复运行时计算。', file=sys.stderr)
+    print('[warn] keccak 后端不可用，改用已校验常量（topic0 仍然正确，只是不再运行时计算）。\n'
+          '[warn] 恢复运行时计算需要【两个】包，缺一不可：\n'
+          '[warn]     pip install eth-utils "eth-hash[pycryptodome]"\n'
+          '[warn] 只装 eth-hash 不够 —— 本脚本 import 的是 eth_utils.keccak。',
+          file=sys.stderr)
 
     def topic0(sig):
         return _FALLBACK_TOPICS[sig]
@@ -983,6 +986,12 @@ def report():
         n = len(rs)
         lookback = (SPEC["history_lookback_blocks"] if mode == "backfill"
                     else SPEC["forward_lookback_blocks"])
+        # 写成真分支而不是多行条件表达式：Python 3.8 的行号归属会把条件表达式的
+        # 每一行都标成"已执行"，行覆盖因此测不出这个告警到底有没有触发。
+        lookback_warn = ""
+        if SPEC["history_lookback_blocks"] != SPEC["forward_lookback_blocks"]:
+            lookback_warn = ("   ⚠ 两个模式的回看窗口不同，L2b 的 history_truncated "
+                             "门槛不同，两份报告的 L2b 覆盖率不可直接比较")
         hashes = sorted({r["spec_hash"] for r in rs})
         L = [f"\n{'='*78}",
              f"模式：{mode}    候选数 N = {n}",
@@ -991,11 +1000,7 @@ def report():
              f"当前进程 spec_hash：{spec_hash()}"
              + ("   ⚠ 与采集时不同" if spec_hash() not in hashes else ""),
              f"链 = {SPEC['chain']}   决策窗口 = {SPEC['decision_window_seconds']}s",
-             f"本模式回看窗口 = {lookback} 区块"
-             + ("   ⚠ 两个模式的回看窗口不同，L2b 的 history_truncated 门槛不同，"
-                "两份报告的 L2b 覆盖率不可直接比较"
-                if SPEC["history_lookback_blocks"] != SPEC["forward_lookback_blocks"]
-                else ""),
+             f"本模式回看窗口 = {lookback} 区块" + lookback_warn,
              "=" * 78]
 
         L.append("\n【1】四条链路各自状态分布（分母 = N）")
@@ -1265,7 +1270,7 @@ def _std_pairs(n=120, start=200, step=10):
 def selftest():
     global rpc, etherscan, ETHERSCAN_KEY, OUTDIR, DB_PATH, POLL_SLEEP, IDLE_SLEEP
     global L2B_USABLE, L2B_NOTE
-    import shutil, tempfile                                          # noqa: E401
+    import shutil, tempfile, io                                      # noqa: E401
     POLL_SLEEP = IDLE_SLEEP = 0.0
     rpc_limiter.min_gap = scan_limiter.min_gap = 0.0
     ETHERSCAN_KEY = "MOCK"
@@ -1538,6 +1543,31 @@ def selftest():
     check("creator 已知 + 发送者有前科 → 仍是 ok（口径未变）",
           row13c["creator_prior_activity_known"] == "ok",
           row13c["creator_prior_activity_known"])
+
+    # =====================================================================
+    print("\n【场景 14】回看窗口分叉告警：行覆盖测不出分支输出，必须断言字面量")
+    # =====================================================================
+    import contextlib                                                # noqa: E401
+    MARK = "两个模式的回看窗口不同"
+
+    def report_text():
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            report()
+        return buf.getvalue()
+
+    _hl, _fl = SPEC["history_lookback_blocks"], SPEC["forward_lookback_blocks"]
+    SPEC["history_lookback_blocks"] = SPEC["forward_lookback_blocks"] = 900
+    txt_same = report_text()
+    check("两窗口相同 → 不出现告警", MARK not in txt_same,
+          "未出现" if MARK not in txt_same else "不该出现却出现了")
+    SPEC["forward_lookback_blocks"] = 500000
+    txt_diff = report_text()
+    check("两窗口分叉 → 出现告警", MARK in txt_diff,
+          "已出现" if MARK in txt_diff else "该出现却没有")
+    check("告警同时出现在两份报告里", txt_diff.count(MARK) == 2,
+          f"出现 {txt_diff.count(MARK)} 次，期望 2（backfill + forward 各一）")
+    SPEC["history_lookback_blocks"], SPEC["forward_lookback_blocks"] = _hl, _fl
 
     # =====================================================================
     print(f"\n{'='*70}\n通过 {len(passed)} / 失败 {len(failed)}")
