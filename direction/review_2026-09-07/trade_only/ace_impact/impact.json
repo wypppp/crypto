@@ -1,0 +1,25 @@
+{
+  "status": "ISOLATED_IMPACT_ONLY_NOT_PUBLISHED",
+  "baseline_config_sha256": "91dc0a15e57d3626c449ce46630cb9d63f243d96b13c8279f34c354ab2dac50f",
+  "baseline_raw": 1134,
+  "experimental_raw": 1135,
+  "added": [
+    [
+      185740,
+      "ACE",
+      "2023-12-18T06:00:00+00:00",
+      "C_LAUNCH_THEN_LIST"
+    ]
+  ],
+  "removed": [],
+  "checks_failed": [],
+  "unchanged_full_records": 1134,
+  "announced_pairs": [
+    "ACEBNB",
+    "ACEBTC",
+    "ACEFDUSD",
+    "ACETRY",
+    "ACEUSDT"
+  ],
+  "scope": "Active config, production outputs and fixed 37-event sample unchanged"
+}

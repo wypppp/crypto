@@ -1,59 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-RT-A 第一周：身份归因可行性门（只读取数，不涉及价格、不涉及收益、不下单）  v2
-
-本脚本只回答一个问题：
-    在候选出现的那一刻，RT-A 所需的身份与历史信息，能不能及时、可靠地取得？
-
-它【不】回答：RT-A 有没有 edge、筛选有没有用、能不能赚钱。
-
-------------------------------------------------------------------------------
-v2 相对 v1 的修改（v1 的对应缺陷会让报出的低覆盖率由脚本自身决定，而不是由数据源决定）
-
-[崩溃] forward 的 INSERT 占位符 28 个、表 29 列 —— 第一个候选就抛。
-       结构性修复：所有写入改成【具名列 + 字典绑定】，列数漂移在语法上不再可能。
-
-[口径] no_history 曾被算进"不可用"。"确认这个创建者没有前科"是一个已判完的答案，
-       不是缺失。联合覆盖率现在接受 ok 与 no_history；真正的不可用只有
-       history_truncated / api_failure / timeout / ambiguous。
-
-[口径] HIST_SAMPLED_FULLY 在以太坊上几乎恒为 False，于是所有零关联候选一律被记
-       history_truncated，把上一条再放大一次。现在按通道判：外部通道（创建者历史
-       部署）给出确定答案时就是确定答案，自足通道的抽样上限只影响自足通道本身。
-
-[口径] probe 对历史 eth_getCode 只检查"不报错"。非归档节点的典型失败是不报错地
-       返回错误内容。现在对 factory 自己跑一次双向断言（创建区块-1 必须为 0x，
-       创建区块必须非空）；不满足则把 L2b 整条标为 data_source_unavailable，
-       而不是逐候选记成 no_history / history_truncated。
-
-[性能] l2b 曾对创建区块的每一笔交易各取一次回执（150-200 次 RPC/候选）。现在改成
-       eth_getLogs(address=token, 单区块) → 命中则 1-2 次调用；未命中再试
-       eth_getBlockReceipts（1 次）；都不行才退化到逐笔回执并带上限与提前退出。
-
-[数据] L3 曾用 bn+50000 单次 getLogs，超出多数供应商 10k 上限。现在分块 + 首个
-       Mint 即停 + 区分 api_failure 与 no_history。
-[数据] L4 只取前 20 笔却在找不到入账时返回 no_history。现在分页打满即记
-       history_truncated。
-[数据] creator 历史部署曾只数 to 为空的外部交易，漏掉工厂内 CREATE/CREATE2
-       （新币的主流方式）。现在同时数 txlistinternal 里 type=create 的记录。
-[数据] 通道乙 JOIN 正在写入的表，存在处理顺序偏置。改为主循环结束后的第二遍统一重算。
-[数据] forward 曾把 token_had_prior_pair 硬写 0，污染报告【5】。现在写 NULL，
-       且报告【5】只统计 backfill 行。
-[性能] block_timestamps 曾对 2.5M 区块内的全部历史事件逐块取时间戳，而历史比较用的
-       是 block_number。现在只对候选区间取时间戳。
-[审计] report 曾打当前 spec_hash 而不是采数时那次。现在每行存 spec_hash，报告按
-       哈希分组并在混用时明确告警。
-[计时] 曾把"单候选处理耗时"报成"从事件到全部链路返回"。现在两个量分开存、分开报。
-
-------------------------------------------------------------------------------
-依赖：  pip install requests "eth-utils" "eth-hash[pycryptodome]"
-运行：
-    python rt_a_attribution.py selftest              # 离线自测，不需要网络
-    python rt_a_attribution.py probe
-    python rt_a_attribution.py backfill
-    python rt_a_attribution.py forward --minutes 120
-    python rt_a_attribution.py report
+"""RT-A v4.1：身份与历史活动取数可行性实验（只读、不测收益）。
+creation_tx_sender 仅为创建交易外层 from；历史活动不等于恶意。
+采集批次、区间完整性与归因绑定；reconcile 只核验指定小区间。
 """
 
 import argparse
@@ -64,6 +13,7 @@ import random
 import sqlite3
 import sys
 import time
+import uuid
 from datetime import datetime, timezone
 
 import requests
@@ -100,7 +50,7 @@ except Exception:                                                  # noqa: BLE00
 # 冻结规格
 # =============================================================================
 SPEC = {
-    "spec_version": "rt-a-feasibility-v3.1",
+    "spec_version": "rt-a-feasibility-v4.1",
     "purpose": "身份归因可行性门；不测收益",
     "chain": os.environ.get("RTA_CHAIN", "ethereum"),
     "chains": {
@@ -121,15 +71,21 @@ SPEC = {
     "audit_sample_size": 20,
     "random_seed": 20260906,
     # 联合覆盖率所依据的字段组合
-    "required_fields_for_rule": ["pair_created_tx_sender", "token_creator",
+    "required_fields_for_rule": ["pair_created_tx_sender", "creation_tx_sender",
                                  "creator_prior_activity_known"],
     # 哪些状态算"已判完"（可用），哪些算"不可用"
     "decisive_statuses": ["ok", "no_history"],
     "unavailable_statuses": ["history_truncated", "api_failure", "timeout", "ambiguous"],
-    # 归因口径的标识符。它不是开关，是"这批数据是按哪一版规则算出来的"的记号——
-    # 改了 attribute() 里 token_creator 的取值规则，就要改这里，否则两版数据会
-    # 带着同一个 spec_hash 混进同一个库而报告不告警（v2→v3 就发生过）。
-    "attribution_rule": "creator-from-ok-status-only-v3.1-no-unknown-subject-claims",
+    # 身份规则的标识符（只管"这一列是什么口径"，不掺采集来源）。
+    # creation-tx-sender-v1：creation_tx_sender = 已定位创建交易的外层 from。
+    # 它【不是】发行者、不是实控人；两路冲突时不写确定值。
+    "attribution_rule": "creation-tx-sender-v1",
+    # 候选母体的采集来源与分页策略（与身份规则分开，两者都进 spec_hash）。
+    "pair_logs_source": os.environ.get("RTA_PAIR_LOGS", "auto"),  # auto|rpc|etherscan
+    "pair_logs_page_size": int(os.environ.get("RTA_PAIR_LOGS_PAGE", "1000")),
+    # 批量回填对 RPC 的最低跨度要求。它是【固定标准】，不随 log_chunk_blocks 被
+    # 自动下调而变——否则会出现"先把标准降到实测值、再宣布实测值够用"的循环。
+    "min_bulk_log_span": int(os.environ.get("RTA_MIN_BULK_SPAN", "500")),
     # forward 的回看窗口。此前硬编码 500_000，既与 backfill 的 2.5M 不同，
     # 又不进 spec_hash —— 两个模式的 L2b history_truncated 门槛因此不可比。
     # 默认与 backfill 取同一个值，两份报告的 L2b 覆盖率才可比；
@@ -137,13 +93,15 @@ SPEC = {
     "forward_lookback_blocks": int(os.environ.get(
         "RTA_FWD_LOOKBACK", os.environ.get("RTA_LOOKBACK", "2500000"))),
     "rpc_qps": float(os.environ.get("RTA_RPC_QPS", "8")),
-    "etherscan_qps": float(os.environ.get("RTA_SCAN_QPS", "4")),
+    "etherscan_qps": float(os.environ.get("RTA_SCAN_QPS", "3")),   # 免费档文档 3/s
     "log_chunk_blocks": int(os.environ.get("RTA_LOG_CHUNK", "2000")),
     "l2b_receipt_scan_cap": int(os.environ.get("RTA_RECEIPT_CAP", "40")),
     "l3_scan_blocks": int(os.environ.get("RTA_L3_SCAN", "20000")),
+    "deploy_page_size": int(os.environ.get("RTA_DEPLOY_PAGE", "5000")),
 }
 
-OUTDIR = os.environ.get("RTA_OUT", "./rt_a_out")
+# 本轮口径与列结构都变了，默认换新目录：旧库里的行是另一次实验
+OUTDIR = os.environ.get("RTA_OUT", "./rt_a_out_v4")
 DB_PATH = os.path.join(OUTDIR, "rt_a.sqlite")
 ETHERSCAN_KEY = os.environ.get("ETHERSCAN_API_KEY", "")
 ETHERSCAN_V2 = "https://api.etherscan.io/v2/api"
@@ -275,14 +233,21 @@ def spec_hash():
 # 数据库 —— 所有写入用具名列，杜绝列数漂移
 # =============================================================================
 ATTR_COLS = [
-    "pair", "spec_hash", "mode", "fetched_at", "event_time", "decision_deadline",
+    "pair", "spec_hash", "batch", "mode", "fetched_at", "event_time", "decision_deadline",
     "pair_created_tx_sender", "pair_created_tx_to", "l1_status",
-    "token_creator", "token_creation_tx", "l2_source",
-    "l2a_creator", "l2a_status", "l2b_creator", "l2b_status", "l2_agree",
+    # A 冻结口径 creation-tx-sender-v1：这一列是【已定位创建交易的外层 from】，
+    # 不是"发行者"、不是"实控人"。旧名 token_creator 已废弃。
+    "creation_tx_sender", "creation_tx", "creation_block", "l2_source",
+    "deployment_factory",
+    "l2a_creator", "l2a_status", "l2a_creation_tx", "l2a_creation_block",
+    "l2b_creator", "l2b_status", "l2b_creation_tx", "l2b_creation_block",
+    "l2_agree", "l2_agreement",
     "first_mint_tx_sender", "first_mint_event_sender", "lp_token_recipient",
-    "first_mint_block", "l3_status",
+    "first_mint_block", "l3_status", "minimum_liquidity_locked",
+    "lag_l1_seconds", "lag_l2_seconds", "lag_l3_seconds", "lag_l4_seconds",
+    "lag_hist_seconds", "lag_required_seconds",
     "earliest_observed_inbound", "earliest_inbound_block", "l4_status", "l4_subject",
-    "deploy_kind", "creator_status",
+    "deploy_kind", "creator_status", "creator_is_7702_delegated",
     "creator_prior_pairs_in_sample", "sender_prior_pairs", "creator_prior_deploys",
     "creator_prior_activity_known", "earliest_prior_block",
     "processing_seconds", "resolution_lag_seconds",
@@ -301,7 +266,26 @@ CREATE TABLE IF NOT EXISTS attribution (
   {', '.join(c + (' TEXT PRIMARY KEY' if c == 'pair' else '') for c in ATTR_COLS)}
 );
 CREATE INDEX IF NOT EXISTS ix_hs ON hist_sender(tx_sender, block_number);
-CREATE INDEX IF NOT EXISTS ix_at ON attribution(token_creator);
+CREATE INDEX IF NOT EXISTS ix_at ON attribution(creation_tx_sender);
+CREATE TABLE IF NOT EXISTS log_gaps (
+  chain TEXT, factory TEXT, role TEXT, batch TEXT,
+  from_block INTEGER, to_block INTEGER, source TEXT, err TEXT, seen_at TEXT,
+  resolved INTEGER DEFAULT 0,
+  PRIMARY KEY (chain, factory, role, batch, from_block, to_block)
+);
+CREATE TABLE IF NOT EXISTS run_integrity (
+  spec_hash TEXT, mode TEXT, role TEXT, from_block INTEGER, to_block INTEGER,
+  ok INTEGER, detail TEXT, checked_at TEXT,
+  PRIMARY KEY (spec_hash, mode, role)
+);
+CREATE TABLE IF NOT EXISTS collection_runs (
+  batch TEXT PRIMARY KEY, spec_hash TEXT, mode TEXT, chain TEXT, factory TEXT,
+  from_block INTEGER, to_block INTEGER, status TEXT, spec_json TEXT, started_at TEXT
+);
+CREATE TABLE IF NOT EXISTS batch_integrity (
+  batch TEXT, role TEXT, from_block INTEGER, to_block INTEGER,
+  ok INTEGER, detail TEXT, PRIMARY KEY(batch,role,from_block,to_block)
+);
 CREATE TABLE IF NOT EXISTS capability (
   probed_at TEXT, chain TEXT, source TEXT, ok INTEGER, detail TEXT
 );
@@ -319,6 +303,24 @@ def migrate(con):
     added = [c for c in ATTR_COLS if c not in have]
     for c in added:
         con.execute(f"ALTER TABLE attribution ADD COLUMN {c}")
+    have_g = {d[1] for d in con.execute("PRAGMA table_info(log_gaps)")}
+    if have_g:
+        for c in ("chain", "factory", "role", "batch"):
+            if c not in have_g:
+                con.execute(f"ALTER TABLE log_gaps ADD COLUMN {c}")
+                added.append("log_gaps." + c)
+    # ALTER ADD COLUMN cannot change an old primary key. Rebuild, preserving unknown ownership.
+    pk = [r[1] for r in sorted(con.execute("PRAGMA table_info(log_gaps)"), key=lambda r: r[5]) if r[5]]
+    if pk != ["chain", "factory", "role", "batch", "from_block", "to_block"]:
+        con.execute("ALTER TABLE log_gaps RENAME TO log_gaps_legacy")
+        con.execute("CREATE TABLE log_gaps (chain TEXT,factory TEXT,role TEXT,batch TEXT,"
+                    "from_block INTEGER,to_block INTEGER,source TEXT,err TEXT,seen_at TEXT,"
+                    "resolved INTEGER DEFAULT 0, PRIMARY KEY(chain,factory,role,batch,from_block,to_block))")
+        con.execute("INSERT INTO log_gaps SELECT COALESCE(chain,'unknown'),COALESCE(factory,'unknown'),"
+                    "COALESCE(role,'unknown'),COALESCE(batch,'legacy'),from_block,to_block,source,err,seen_at,resolved "
+                    "FROM log_gaps_legacy")
+        con.execute("DROP TABLE log_gaps_legacy")
+        con.commit()
     if added:
         con.commit()
         print(f"[migrate] attribution 补列 {len(added)} 个：{', '.join(added)}\n"
@@ -326,6 +328,23 @@ def migrate(con):
               f"报告的 spec_hash 一行会告警——那两批数据不是一次实验。",
               file=sys.stderr)
     return added
+
+
+def freeze_spec(extra=None):
+    """
+    把 SPEC 落盘。必须在【能力探测与自动调参之后】调用 —— 早先在 main() 里
+    先写再跑，跨度自动下调、日志来源自动选择都没被记进去；而 report 又会再覆盖一次。
+    现在只有真正采数的步骤写它，report 只读不写。
+    """
+    ensure_out()
+    blob = {"spec": SPEC, "spec_hash": spec_hash(), "frozen_at": now_iso(),
+            "pair_logs_source_resolved": PAIR_LOGS_SOURCE}
+    if extra:
+        blob.update(extra)
+    with open(os.path.join(OUTDIR, f"spec_frozen_{spec_hash()}.json"),
+              "w", encoding="utf-8") as f:
+        json.dump(blob, f, ensure_ascii=False, indent=2)
+    return blob
 
 
 def db():
@@ -337,6 +356,8 @@ def db():
 
 
 def upsert_attr(con, row):
+    row = dict(row)
+    row.setdefault("batch", ACTIVE_BATCH)
     row = {k: row.get(k) for k in ATTR_COLS}
     cols = ", ".join(ATTR_COLS)
     binds = ", ".join(":" + c for c in ATTR_COLS)
@@ -348,7 +369,7 @@ def upsert_attr(con, row):
 # =============================================================================
 def l2b_self_test():
     """对 factory 自己二分一次，双向断言。返回 (usable: bool, note: str)。"""
-    global L2B_USABLE, L2B_NOTE
+    global L2B_USABLE, L2B_NOTE, PAIR_LOGS_SOURCE
     cfg = chain_cfg()
     head, err = rpc("eth_blockNumber", [])
     if err:
@@ -462,6 +483,7 @@ def probe():
            "suggested_candidate_range":
                ({"from_block": head_n - 200_000, "to_block": head_n - 100_000}
                 if head_n else None)}
+    freeze_spec()
     p = os.path.join(OUTDIR, "capability_report.json")
     with open(p, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
@@ -481,15 +503,173 @@ BASE_ASSETS = {
 }
 
 
+def etherscan_pair_logs(a, b, _depth=0):
+    """
+    用 Etherscan 的 logs 模块取 PairCreated。Alchemy 免费档 eth_getLogs 只给 10 个
+    区块，这条路径不受此限（实测 10 万区块跨度可用，单次上限 1000 条）。
+
+    返回 (logs, gaps)。字段与 RPC 版同构（blockNumber / logIndex 都是十六进制串）。
+    返回条数打满 page_size 时【对半切分递归】，不依赖翻页语义 —— 保证不静默截断。
+    """
+    cfg = chain_cfg()
+    page = SPEC["pair_logs_page_size"]
+    if a > b:
+        return [], []
+    r, e = etherscan("logs", "getLogs", address=cfg["factory"],
+                     topic0=TOPIC_PAIR_CREATED, fromBlock=a, toBlock=b,
+                     page=1, offset=page)
+    rows = as_rows(r) if e is None else None
+    if rows is None:
+        # Auth/rate/provider failures are not evidence of oversized responses.
+        return [], [{"from": a, "to": b, "err": str(e)[:200], "source": "etherscan"}]
+    if len(rows) >= page:
+        if _depth >= 12 or b <= a:
+            return rows, [{"from": a, "to": b, "source": "etherscan",
+                           "err": f"单区块日志数 >= {page}，无法再切分"}]
+        m = (a + b) // 2
+        l1, g1 = etherscan_pair_logs(a, m, _depth + 1)
+        l2, g2 = etherscan_pair_logs(m + 1, b, _depth + 1)
+        return l1 + l2, g1 + g2
+    return rows, []
+
+
+def pair_index_of(lg):
+    """PairCreated 的 data 第二个 32 字节字 = 追加后的 allPairs 长度（即本池序号）。"""
+    d = lg["data"][2:]
+    return int(d[64:128], 16) if len(d) >= 128 else None
+
+
+def all_pairs_length_at(block):
+    """allPairsLength() = 0x574f2ba3，按历史区块查（需归档）。"""
+    r, e = rpc("eth_call", [{"to": chain_cfg()["factory"], "data": "0x574f2ba3"},
+                            hex(block)])
+    if e or not r or r == "0x":
+        return None, str(e or "empty")
+    return int(r, 16), None
+
+
+def reconcile_pair_logs(logs, a, b):
+    """
+    日志完整性对账。Uniswap V2 每次建池都会追加 allPairs 并把追加后的长度写进
+    PairCreated 的最后一个字段，所以对任意冻结区间 [a,b]：
+
+        N = allPairsLength(b) - allPairsLength(a-1)
+
+    检查三件事：条数是否等于 N、池序号是否连续、首尾序号是否与边界吻合。
+    返回一个 dict；任一项不成立都说明日志有遗漏，母体不得标为完整。
+    """
+    out = {"range": [a, b], "n_logs_deduped": None, "n_expected": None,
+           "count_match": None, "contiguous": None, "boundary_match": None,
+           "ok": False, "note": ""}
+    try:
+        valid = all(a <= hex_int(l["blockNumber"]) <= b
+                    and l.get("address", "").lower() == chain_cfg()["factory"].lower()
+                    and l["topics"][0].lower() == TOPIC_PAIR_CREATED
+                    and not l.get("removed", False) and len(l["data"]) == 130 for l in logs)
+        uniq = {(l["transactionHash"].lower(), hex_int(l["logIndex"])): l for l in logs}
+    except (KeyError, ValueError, TypeError, IndexError):
+        valid, uniq = False, {}
+    if not valid:
+        out.update(n_logs_deduped=len(uniq), note="日志格式/链上范围/Factory/topic 校验失败")
+        return out
+    out["n_logs_deduped"] = len(uniq)
+    lo_n, e1 = all_pairs_length_at(max(0, a - 1))
+    hi_n, e2 = all_pairs_length_at(b)
+    if lo_n is None or hi_n is None:
+        out["note"] = f"allPairsLength 取不到（{e1 or ''} {e2 or ''}）；无法对账"
+        return out
+    out["all_pairs_length_before"] = lo_n
+    out["all_pairs_length_end"] = hi_n
+    out["n_expected"] = hi_n - lo_n
+    out["count_match"] = (out["n_expected"] == len(uniq))
+    idxs = sorted(i for i in (pair_index_of(l) for l in uniq.values()) if i is not None)
+    out["index_first"] = min(idxs, default=None)
+    out["index_last"] = max(idxs, default=None)
+    if out["n_expected"] == 0 and not uniq:
+        # 空区间是合法的：链上这段确实没建过池。连续性/边界无从谈起，不算失败。
+        out["contiguous"] = out["boundary_match"] = True
+        out["ok"] = True
+        out["note"] = "空区间（链上该段无建池），对账通过"
+        return out
+    out["contiguous"] = bool(idxs) and idxs == list(range(idxs[0], idxs[0] + len(idxs)))
+    out["boundary_match"] = bool(idxs) and idxs[0] == lo_n + 1 and idxs[-1] == hi_n
+    out["ok"] = all([out["count_match"], out["contiguous"], out["boundary_match"]])
+    if not out["ok"]:
+        out["note"] = "对账不通过：日志有遗漏，该区间不得标为完整母体"
+    return out
+
+
+def rpc_getlogs_max_span(probe_spans=(2000, 1000, 200, 50, 10)):
+    """
+    实测本端点单次 eth_getLogs 允许的最大区块跨度。供应商差异极大：
+    Alchemy 免费档只有 10 个区块，付费档 10000+。默认 2000 在免费档上会让
+    每一个 chunk 都变成 _gap —— 那是静默的空数据，比报错更危险。
+    返回 (max_span, note)；全失败返回 (0, 错误信息)。
+    """
+    cfg = chain_cfg()
+    head, err = rpc("eth_blockNumber", [])
+    if err or not head:
+        return 0, f"eth_blockNumber 失败: {err}"
+    h = hex_int(head)
+    last_err = ""
+    for span in probe_spans:
+        _, e = rpc("eth_getLogs", [{"address": cfg["factory"],
+                                    "topics": [TOPIC_PAIR_CREATED],
+                                    "fromBlock": hex(h - span), "toBlock": hex(h)}])
+        if e is None:
+            return span, f"实测可用跨度 {span}（试过 {probe_spans[:probe_spans.index(span)+1]}）"
+        last_err = str(e)[:160]
+    return 0, f"全部跨度失败，最后错误: {last_err}"
+
+
+ACTIVE_BATCH = None
+
+PAIR_LOGS_SOURCE = None      # 由 choose_pair_logs_source() 定；进 capability 记录
+
+
+def choose_pair_logs_source():
+    """
+    决定 PairCreated 从哪里取。SPEC["pair_logs_source"]:
+      rpc / etherscan 强制；auto = 实测 RPC 跨度，够大就用 RPC，否则用 Etherscan。
+    换来源【不改变研究母体的定义】（链/Factory/事件/区间/候选规则都没动），
+    改变的是采集来源与遗漏风险 —— 所以它进 spec_hash，并且必须过 reconcile 对账。
+    """
+    global PAIR_LOGS_SOURCE
+    want = SPEC["pair_logs_source"]
+    if want in ("rpc", "etherscan"):
+        PAIR_LOGS_SOURCE = want
+        return want, f"由 SPEC 指定：{want}"
+    span, note = rpc_getlogs_max_span()
+    # 与固定标准比，不与可被下调的 log_chunk_blocks 比
+    bar = SPEC["min_bulk_log_span"]
+    if span >= bar:
+        PAIR_LOGS_SOURCE = "rpc"
+        SPEC["log_chunk_blocks"] = min(SPEC["log_chunk_blocks"], span)
+        return "rpc", f"RPC 跨度 {span} >= 批量标准 {bar}（{note}）"
+    if ETHERSCAN_KEY:
+        PAIR_LOGS_SOURCE = "etherscan"
+        return "etherscan", (f"RPC 跨度 {span} < 批量标准 {bar}（{note}）"
+                             f" → 改用 Etherscan logs 模块")
+    PAIR_LOGS_SOURCE = "rpc"
+    SPEC["log_chunk_blocks"] = max(1, span)
+    return "rpc", (f"RPC 跨度 {span} < 批量标准 {bar} 且无 Etherscan key"
+                   f" → 只能降到 {span} 硬跑，调用量会非常大")
+
+
 def fetch_pair_created(a, b):
-    cfg, chunk, out = chain_cfg(), SPEC["log_chunk_blocks"], []
+    """返回 (logs, gaps)。缺口是数据，必须被记录，不能过滤掉。"""
+    if PAIR_LOGS_SOURCE == "etherscan":
+        logs, gaps = etherscan_pair_logs(a, b)
+        print(f"  Etherscan logs {a}-{b}：{len(logs)} 条，缺口 {len(gaps)} 段")
+        return logs, gaps
+    cfg, chunk, out, gaps = chain_cfg(), SPEC["log_chunk_blocks"], [], []
     while a <= b:
         e = min(a + chunk - 1, b)
         logs, err = rpc("eth_getLogs", [{"address": cfg["factory"],
                                          "topics": [TOPIC_PAIR_CREATED],
                                          "fromBlock": hex(a), "toBlock": hex(e)}])
-        if err and chunk > 200:
-            half = max(200, chunk // 2)
+        if err and chunk > 1:
+            half = max(1, chunk // 2)
             e2 = min(a + half - 1, b)
             logs, err2 = rpc("eth_getLogs", [{"address": cfg["factory"],
                                               "topics": [TOPIC_PAIR_CREATED],
@@ -498,13 +678,91 @@ def fetch_pair_created(a, b):
                 err, e = None, e2
         if err:
             print(f"  ! {a}-{e} 日志失败: {err}（记为缺口）", file=sys.stderr)
-            out.append({"_gap": [a, e], "_err": err})
+            gaps.append({"from": a, "to": e, "err": str(err)[:200], "source": "rpc"})
         else:
             out.extend(logs or [])
-        print(f"  .. {a}-{e}  累计 {sum(1 for o in out if '_gap' not in o)}", end="\r")
+        print(f"  .. {a}-{e}  累计 {len(out)}", end="\r")
         a = e + 1
     print()
-    return out
+    return out, gaps
+
+
+def record_gaps(con, gaps, role):
+    """
+    缺口必须带归属：链 / Factory / 区间角色 / 采集批次。
+    role ∈ history | candidate | forward。历史缺口由历史流程补，前向只处理
+    属于本次观察范围的事件 —— 否则补回来的历史事件会被写成前向样本。
+    """
+    if not gaps:
+        return
+    cfg = chain_cfg()
+    con.executemany(
+        "INSERT OR REPLACE INTO log_gaps "
+        "(chain,factory,role,batch,from_block,to_block,source,err,seen_at,resolved) "
+        "VALUES (?,?,?,?,?,?,?,?,?,0)",
+        [(SPEC["chain"], cfg["factory"], role, ACTIVE_BATCH or "unowned",
+          g["from"], g["to"], g.get("source", ""), g.get("err", ""), now_iso())
+         for g in gaps])
+    con.commit()
+
+
+def record_integrity(con, mode, role, a, b, rec):
+    if ACTIVE_BATCH:
+        con.execute("INSERT OR REPLACE INTO batch_integrity VALUES(?,?,?,?,?,?)",
+                    (ACTIVE_BATCH, role, a, b, int(rec["ok"]), json.dumps(rec, ensure_ascii=False)))
+    con.execute(
+        "INSERT OR REPLACE INTO run_integrity "
+        "(spec_hash,mode,role,from_block,to_block,ok,detail,checked_at) "
+        "VALUES (?,?,?,?,?,?,?,?)",
+        (spec_hash(), mode, role, a, b, 1 if rec["ok"] else 0,
+         json.dumps(rec, ensure_ascii=False), now_iso()))
+    con.commit()
+
+
+def begin_run(con, mode, a, b):
+    global ACTIVE_BATCH
+    ACTIVE_BATCH = uuid.uuid4().hex
+    cfg = chain_cfg()
+    con.execute("INSERT INTO collection_runs VALUES(?,?,?,?,?,?,?,?,?,?)",
+                (ACTIVE_BATCH, spec_hash(), mode, SPEC["chain"], cfg["factory"],
+                 a, b, "pending", json.dumps(SPEC), now_iso()))
+    con.commit()
+    return ACTIVE_BATCH
+
+
+def finish_run(con, ok):
+    con.execute("UPDATE collection_runs SET status=? WHERE batch=?",
+                ("complete" if ok else "incomplete", ACTIVE_BATCH))
+    con.commit()
+
+
+def integrity_of(con, mode):
+    """Every reported attribution must be backed by its own complete collection batch."""
+    runs = con.execute("SELECT batch,spec_hash,status FROM collection_runs WHERE mode=? ORDER BY rowid", (mode,)).fetchall()
+    attrs = con.execute("SELECT DISTINCT batch,spec_hash FROM attribution WHERE mode=?", (mode,)).fetchall()
+    known = {r[0]: r for r in runs}
+    batches = {r[0] for r in attrs}
+    if mode == "forward":
+        batches.update(r[0] for r in runs)
+    if runs:
+        batches.add(runs[-1][0])  # Failed/empty latest attempt must also block stale output.
+    if not batches:
+        return None, []
+    rows = []
+    valid = bool(runs)
+    for batch in batches:
+        run = known.get(batch)
+        if not run:
+            valid = False
+            continue
+        rs = con.execute("SELECT role,from_block,to_block,ok,detail FROM batch_integrity WHERE batch=?", (batch,)).fetchall()
+        roles = {r[0] for r in rs}
+        valid &= (run[2] == "complete" and bool(rs) and all(r[3] == 1 for r in rs)
+                  and (mode != "backfill" or roles == {"history", "candidate"}))
+        rows.extend(rs)
+    valid &= all(batch in known and sh == known[batch][1] for batch, sh in attrs)
+    return bool(valid), rows
+
 
 
 def parse_pair_created(lg):
@@ -533,42 +791,51 @@ def l1_tx_sender(tx_hash):
 
 
 def l2a_creator(token):
+    """返回 (creator, tx_hash, block_number, contract_factory, status)。
+    实测 29/29：工厂创建时 contractCreator 返回的就是发起那笔交易的外层 from。"""
     r, e = etherscan("contract", "getcontractcreation", contractaddresses=token)
     if e:
-        return None, None, "api_failure"
+        return None, None, None, None, "api_failure"
     rows = as_rows(r)
     if rows is None:
-        return None, None, "api_failure"        # 形状异常按接口失败记
+        return None, None, None, None, "api_failure"     # 形状异常按接口失败记
     if not rows:
-        return None, None, "no_history"
+        return None, None, None, None, "no_history"
     row = rows[0]
-    return (row.get("contractCreator") or "").lower() or None, row.get("txHash"), "ok"
+    bn = row.get("blockNumber")
+    try:
+        bn = int(bn) if bn not in (None, "") else None
+    except (TypeError, ValueError):
+        bn = None
+    return ((row.get("contractCreator") or "").lower() or None,
+            row.get("txHash"), bn,
+            (row.get("contractFactory") or "").strip().lower() or None, "ok")
 
 
-def l2b_creator(token, lo, hi):
+def l2b_creator(token, lo, hi):   # -> (creator, tx, block, status, kind)
     """
     纯 RPC 创建归因。调用量：约 log2(区间) 次 getCode + 1~2 次定位调用。
     L2B_USABLE 为 False（非归档等）时直接返回 api_failure —— 这是数据源限制，
     不能记成 no_history 或 history_truncated。
     """
     if L2B_USABLE is False:
-        return None, None, "api_failure", "unknown"
+        return None, None, None, "api_failure", "unknown"
     c_hi, err = rpc("eth_getCode", [token, hex(hi)])
     if err:
-        return None, None, "api_failure", "unknown"
+        return None, None, None, "api_failure", "unknown"
     if not c_hi or c_hi == "0x":
-        return None, None, "no_history", "unknown"
+        return None, None, None, "no_history", "unknown"
     c_lo, err = rpc("eth_getCode", [token, hex(lo)])
     if err:
-        return None, None, "api_failure", "unknown"
+        return None, None, None, "api_failure", "unknown"
     if c_lo and c_lo != "0x":
-        return None, None, "history_truncated", "unknown"   # 创建早于回看窗口
+        return None, None, None, "history_truncated", "unknown"   # 创建早于回看窗口
     a, b = lo, hi
     while a + 1 < b:
         m = (a + b) // 2
         c, err = rpc("eth_getCode", [token, hex(m)])
         if err:
-            return None, None, "api_failure", "unknown"
+            return None, None, None, "api_failure", "unknown"
         if c and c != "0x":
             b = m
         else:
@@ -584,7 +851,7 @@ def l2b_creator(token, lo, hi):
         if not e2 and tx:
             direct = (tx.get("to") or "") in ("", None)
             # 工厂部署时该地址只是"发起那笔交易的人"，不是合约创建者 → ambiguous
-            return ((tx.get("from") or "").lower(), txh,
+            return ((tx.get("from") or "").lower(), txh, cb,
                     "ok" if direct else "ambiguous", "direct" if direct else "factory")
 
     # 便宜路径 2：整块回执一次拿完
@@ -594,28 +861,30 @@ def l2b_creator(token, lo, hi):
             if (r.get("contractAddress") or "").lower() == token:
                 tx, _ = rpc("eth_getTransactionByHash", [r["transactionHash"]])
                 return ((tx or {}).get("from", "").lower() or None,
-                        r["transactionHash"], "ok", "direct")
-        return None, None, "ambiguous", "factory"
+                        r["transactionHash"], cb, "ok", "direct")
+        return None, None, cb, "ambiguous", "factory"
 
     # 退化路径：逐笔回执，带上限与提前退出
     blk, err = rpc("eth_getBlockByNumber", [hex(cb), True])
     if err or not blk:
-        return None, None, "api_failure", "unknown"
+        return None, None, None, "api_failure", "unknown"
     for i, tx in enumerate(blk.get("transactions", [])):
         if i >= SPEC["l2b_receipt_scan_cap"]:
-            return None, None, "history_truncated", "unknown"   # 扫描上限，不是"没有"
+            return None, None, cb, "history_truncated", "unknown"   # 扫描上限，不是"没有"
         rc, e2 = rpc("eth_getTransactionReceipt", [tx["hash"]])
         if e2 or not rc:
             continue
         if (rc.get("contractAddress") or "").lower() == token:
-            return (tx.get("from") or "").lower(), tx["hash"], "ok", "direct"
-    return None, None, "ambiguous", "unknown"
+            return (tx.get("from") or "").lower(), tx["hash"], cb, "ok", "direct"
+    return None, None, cb, "ambiguous", "unknown"
 
 
-def l3_first_mint(pair, bn):
+def l3_first_mint(pair, bn, scan_ceiling=None):
     """分块扫，找到第一个 Mint 即停；区分 api_failure 与 no_history。"""
     chunk = SPEC["log_chunk_blocks"]
     end = bn + SPEC["l3_scan_blocks"]
+    if scan_ceiling is not None:
+        end = min(end, scan_ceiling)     # 前向模式不得请求当时链头之后的区块
     a, any_err = bn, False
     while a <= end:
         e = min(a + chunk - 1, end)
@@ -633,17 +902,40 @@ def l3_first_mint(pair, bn):
             tx, e1 = rpc("eth_getTransactionByHash", [lg["transactionHash"]])
             out["first_mint_tx_sender"] = ((tx or {}).get("from") or "").lower() or None
             rc, e2 = rpc("eth_getTransactionReceipt", [lg["transactionHash"]])
-            lp = None
-            if rc and not e2:
+            lp, lp_status = None, "ambiguous"
+            if e2 or not rc:
+                lp_status = "api_failure"
+            else:
+                # UniswapV2Pair.mint()：首次 Mint 先 _mint(address(0), MINIMUM_LIQUIDITY)，
+                # 再 _mint(to, liquidity)，最后才 emit Mint。所以：
+                #   - 第一条 Transfer(0x0 -> 0x0) 是最低流动性锁定，不是 LP 接收者
+                #   - 实际 LP 铸造是 to != 0x0 的那条，且在 Mint 事件之前
+                mint_ix = hex_int(lg.get("logIndex"))
+                minted, locked = [], 0
                 for l2 in rc.get("logs", []):
-                    if ((l2.get("address") or "").lower() == pair
-                            and l2.get("topics") and l2["topics"][0].lower() == TOPIC_TRANSFER
-                            and len(l2["topics"]) >= 3
-                            and topic_to_addr(l2["topics"][1]) == ZERO40):
-                        lp = topic_to_addr(l2["topics"][2])
-                        break
+                    if ((l2.get("address") or "").lower() != pair
+                            or not l2.get("topics")
+                            or l2["topics"][0].lower() != TOPIC_TRANSFER
+                            or len(l2["topics"]) < 3
+                            or topic_to_addr(l2["topics"][1]) != ZERO40):
+                        continue
+                    ix = hex_int(l2.get("logIndex"))
+                    if mint_ix is not None and ix is not None and ix > mint_ix:
+                        continue                      # 属于同一笔交易里更晚的另一次 Mint
+                    to_addr = topic_to_addr(l2["topics"][2])
+                    if to_addr == ZERO40:
+                        locked += 1                   # MINIMUM_LIQUIDITY 锁定
+                    else:
+                        minted.append(to_addr)
+                out["minimum_liquidity_locked"] = 1 if locked else 0
+                if len(minted) == 1:
+                    lp, lp_status = minted[0], "ok"
+                elif len(minted) > 1:
+                    lp, lp_status = minted[-1], "ambiguous"   # 多个接收者，需人工看
+                else:
+                    lp, lp_status = None, "ambiguous"
             out["lp_token_recipient"] = lp
-            return out, ("ok" if lp else "ambiguous")
+            return out, lp_status
         a = e + 1
     return {}, ("api_failure" if any_err else "no_history")
 
@@ -667,82 +959,142 @@ def l4_earliest_inbound(address, before_block):
     return None, None, ("history_truncated" if len(r) >= page else "no_history")
 
 
+def is_7702_delegated(address, at_block=None):
+    """
+    Pectra(EIP-7702) 之后，EOA 可以带代码：委托账户的 code 是 0xef0100 + 20 字节目标。
+    所以【有代码 ≠ 是合约】。返回 1 / 0 / None(查不到)。
+    这一列只记录、不参与任何判定 —— 带委托且高 nonce 的地址是批量发行者的候选画像，
+    等审计样本填完再看它与"重复发行"的相关性。
+    """
+    if not address:
+        return None
+    # 查候选所在块而不是 latest：latest 是"采集时状态"，会被误当成历史特征
+    tag = hex(at_block) if at_block else "latest"
+    code, err = rpc("eth_getCode", [address, tag])
+    if err or code is None:
+        return None
+    return 1 if str(code).lower().startswith("0xef0100") else 0
+
+
 def creator_prior_deploys(address, before_block):
     """
-    该地址在 before_block 之前的部署次数。
-    外部部署（to 为空）+ 工厂内部 CREATE/CREATE2（txlistinternal type=create）都数。
-    返回 (count, earliest_block, status)
+    该地址在 before_block 之前【已确认成功】的直接部署次数（to 为空的外部交易）。
+
+    ── 这条通道的结构性盲区（实测，2026-09-07）────────────────────────────────
+    txlistinternal(address=EOA) 找不回该 EOA 经工厂发起的 CREATE/CREATE2。
+    三个真实工厂部署正对照，按 address 查全部返回 0 条 create；同一笔交易按
+    txhash 查则每次都能命中。所以：
+      * 数到 >0 → 该地址确实部署过（正面证据成立）
+      * 数到 0  → 【不能】断言"没有部署过"，只能说"看不到"——惯用工厂的发行者
+                  在这条通道上恒为 0。因此本函数【永不返回 no_history】。
+    要真正覆盖工厂部署，得对该地址的每一笔交易逐个 txlistinternal(txhash=…)，
+    调用量与其交易数同阶，本轮不做。
+    ─────────────────────────────────────────────────────────────────────────
+    返回 (count, earliest_block, status)。status ∈
+      ok / history_truncated / api_failure / not_applicable
     """
     if not address:
         return None, None, "not_applicable"
-    total, earliest, truncated, any_ok = 0, None, False, False
-    page = 5000
     r, e = etherscan("account", "txlist", address=address, startblock=0,
-                     endblock=max(0, before_block - 1), page=1, offset=page, sort="asc")
+                     endblock=max(0, before_block - 1), page=1,
+                     offset=SPEC["deploy_page_size"], sort="asc")
     rows = as_rows(r) if e is None else None
-    if rows is not None:
-        any_ok = True
-        r = rows
-        d = [t for t in r if not (t.get("to") or "").strip()]
-        total += len(d)
-        if d:
-            earliest = min(int(t["blockNumber"]) for t in d)
-        truncated |= len(r) >= page
-    r2, e2 = etherscan("account", "txlistinternal", address=address, startblock=0,
-                       endblock=max(0, before_block - 1), page=1, offset=page, sort="asc")
-    rows2 = as_rows(r2) if e2 is None else None
-    if rows2 is not None:
-        any_ok = True
-        r2 = rows2
-        d2 = [t for t in r2 if (t.get("type") or "").lower().startswith("create")]
-        total += len(d2)
-        if d2:
-            m = min(int(t["blockNumber"]) for t in d2)
-            earliest = m if earliest is None else min(earliest, m)
-        truncated |= len(r2) >= page
-    if not any_ok:
+    if rows is None:
+        # 两路里只要有一路拿不到，就不能声称数清了 —— 不再用 any_ok 放行
         return None, None, "api_failure"
-    if truncated:
-        return total, earliest, "history_truncated"
-    return total, earliest, ("ok" if total else "no_history")
+    ok_rows = [t for t in rows if _tx_succeeded(t)]
+    deploys = [t for t in ok_rows if not (t.get("to") or "").strip()]
+    total = len(deploys)
+    earliest = min((int(t["blockNumber"]) for t in deploys), default=None)
+    if len(rows) >= SPEC["deploy_page_size"]:
+        return total, earliest, "history_truncated"      # 分页打满
+    if total > 0:
+        return total, earliest, "ok"                     # 正面证据成立
+    # 数到 0：直接部署确实没有，但工厂部署这条通道看不见 → 只能记"看不到"
+    return 0, None, "history_truncated"
+
+
+def _tx_succeeded(t):
+    """Etherscan 的 txlist 会把失败交易也返回。失败的创建交易不产生合约。"""
+    if str(t.get("isError", "0")) == "1":
+        return False
+    st = t.get("txreceipt_status")
+    if st is not None and str(st) not in ("", "1"):
+        return False
+    return True
 
 
 # =============================================================================
 # 归因一个候选
 # =============================================================================
 def attribute(con, pair, tx_hash, new_token, bn, ev_ts, hist_from, mode,
-              hist_fully_sampled, hist_sampled_floor=None):
+              hist_fully_sampled, hist_sampled_floor=None, scan_ceiling=None):
     t0 = time.time()
     deadline = (ev_ts + SPEC["decision_window_seconds"]) if ev_ts else None
 
+    lag = {}
+    def mark(k):
+        lag[k] = round(time.time() - ev_ts, 1) if ev_ts else None
+
     s_from, s_to, l1 = l1_tx_sender(tx_hash)
+    mark("l1")
     if new_token:
-        a_cr, a_tx, l2a = l2a_creator(new_token)
-        b_cr, b_tx, l2b, kind = l2b_creator(new_token, hist_from, bn)
+        a_cr, a_tx, a_bn, a_fac, l2a = l2a_creator(new_token)
+        b_cr, b_tx, b_bn, l2b, b_kind = l2b_creator(new_token, hist_from, bn)
     else:
-        a_cr = a_tx = b_cr = b_tx = None
+        a_cr = a_tx = a_bn = a_fac = b_cr = b_tx = b_bn = None
         l2a = l2b = "ambiguous"
-        kind = "unknown"
+        b_kind = "unknown"
+    # deploy_kind 优先用 Etherscan 的文档字段 contractFactory；没有 L2a 时才退回启发式。
+    # 实测 22/22 两者一致，但文档字段是契约、启发式是巧合。
+    if l2a == "ok":
+        kind = "factory" if a_fac else "direct"
+    else:
+        kind = b_kind
 
     # 只有状态为 ok 的归因才可作为确定值向下游传递。
     # 被标 ambiguous 的地址仍保留在 l2a_creator / l2b_creator 里供人工看，
-    # 但不进 token_creator，也不拿去查历史 —— 否则一个已知歧义的地址查出来的
+    # 但不进 creation_tx_sender，也不拿去查历史 —— 否则一个已知歧义的地址查出来的
     # 历史会被计成"已判完"。
-    creator = (a_cr if l2a == "ok" else None) or (b_cr if l2b == "ok" else None)
+    # ---- 两路交叉校验：先比交易，再比地址 ----
+    # 只有两路都判 ok 才可比。txHash 不同 = 两路在说不同的创建，那才是真歧义
+    # （L2b 便宜路径 1 取的 logs[0] 可能是同块内稍后的调用，不是创建交易）。
+    if l2a == "ok" and l2b == "ok" and a_tx and b_tx:
+        if str(a_tx).lower() != str(b_tx).lower():
+            l2_agreement = "conflict_tx"
+        elif a_cr and b_cr and a_cr != b_cr:
+            l2_agreement = "conflict_sender"
+        else:
+            l2_agreement = "agree"
+    else:
+        l2_agreement = "not_comparable"
+    l2_agree = 1 if l2_agreement == "agree" else (
+        0 if l2_agreement.startswith("conflict") else None)
+
+    # 冲突时不写确定归因 —— 不能因为 L2a 在前就默认它对
+    if l2_agreement.startswith("conflict"):
+        creator = None
+    else:
+        creator = (a_cr if l2a == "ok" else None) or (b_cr if l2b == "ok" else None)
     # 兜底链里必须先判 ambiguous：new_token 为 None（判不出哪侧是新币）时两条链路
     # 都是 ambiguous 且都没有值，若直接落到 no_history，就会被 decisive_statuses
     # 计成"已判完"，报告【3b】虚高。
-    creator_status = ("ok" if creator else
+    creator_status = ("conflict" if l2_agreement.startswith("conflict") else
+                      "ok" if creator else
                       ("ambiguous" if ((a_cr or b_cr) or "ambiguous" in (l2a, l2b)) else
                        ("api_failure" if "api_failure" in (l2a, l2b) else
                         ("history_truncated" if "history_truncated" in (l2a, l2b)
                          else "no_history"))))
-    l3d, l3 = l3_first_mint(pair, bn)
+    mark("l2")
+    l3d, l3 = l3_first_mint(pair, bn, scan_ceiling)
+    mark("l3")
     # creator 拿不到时退回建池发送者 —— 那是另一个主体，必须记下来，
     # 否则审计 CSV 里无法判断这条入账线索说的是谁。
     l4_target = creator or s_from
     l4_subject = "creator" if creator else ("pair_created_tx_sender" if s_from else None)
     l4a, l4b, l4 = l4_earliest_inbound(l4_target, bn)
+    mark("l4")
+    creator_7702 = is_7702_delegated(creator, bn)
 
     # 通道甲（自足）：同一建池发送者的更早出现
     prior_s, earliest_s = 0, None
@@ -758,6 +1110,7 @@ def attribute(con, pair, tx_hash, new_token, bn, ev_ts, hist_from, mode,
 
     # 通道丙（外部）：创建者的历史部署
     prior_d, earliest_d, d_status = creator_prior_deploys(creator, bn)
+    mark("hist")
 
     # ---- 历史可见性状态：按通道判，不让某一通道的抽样上限污染确定答案 ----
     if d_status in ("ok", "no_history"):
@@ -767,8 +1120,11 @@ def attribute(con, pair, tx_hash, new_token, bn, ev_ts, hist_from, mode,
     else:                                          # api_failure / not_applicable
         # 这一列答的是"该 creator 的历史"。creator 没取到时，自足通道（答的是建池
         # 发送者）不能替一个未知主体宣称 ok / no_history —— 那是把假阳性掺进【2b】。
-        if prior_s > 0 and creator:
-            hist_status = "ok"                     # 自足通道已确认有前科
+        if prior_s > 0 and creator and s_from and s_from == creator:
+            # 自足通道数的是【建池发送者】的历史。只有它和创建者是同一个地址时，
+            # 这条记录才是在说创建者。即便同一个地址，它证明的也只是"该地址建过池"，
+            # 不是"该地址部署过合约"—— 两者都记进 sender_prior_pairs 供人工看。
+            hist_status = "ok"
         elif d_status == "api_failure":
             # 外部通道拿不到（没有 key / 无权限 / 接口报错）。这是数据源限制，
             # 必须排在抽样上限之前判 —— 否则"没有 key"会被写成"看不到更早"。
@@ -791,26 +1147,39 @@ def attribute(con, pair, tx_hash, new_token, bn, ev_ts, hist_from, mode,
         "pair": pair, "spec_hash": spec_hash(), "mode": mode, "fetched_at": now_iso(),
         "event_time": ev_ts, "decision_deadline": deadline,
         "pair_created_tx_sender": s_from, "pair_created_tx_to": s_to, "l1_status": l1,
-        "token_creator": creator, "token_creation_tx": a_tx or b_tx,
-        # 描述 token_creator 的来源，因此只认状态为 ok 的那条链路；
-        # 否则会出现 token_creator 为空、l2_source 却说 rpc_binary_search 的自相矛盾行。
+        "creation_tx_sender": creator,
+        "creation_tx": (a_tx if l2a == "ok" else None) or (b_tx if l2b == "ok" else None),
+        "creation_block": (a_bn if l2a == "ok" else None) or (b_bn if l2b == "ok" else None),
+        "deployment_factory": a_fac,
+        # 描述 creation_tx_sender 的来源，因此只认状态为 ok 的那条链路。
         "l2_source": ("etherscan" if (a_cr and l2a == "ok")
                       else ("rpc_binary_search" if (b_cr and l2b == "ok") else "none")),
-        "l2a_creator": a_cr, "l2a_status": l2a, "l2b_creator": b_cr, "l2b_status": l2b,
+        "l2a_creator": a_cr, "l2a_status": l2a,
+        "l2a_creation_tx": a_tx, "l2a_creation_block": a_bn,
+        "l2b_creator": b_cr, "l2b_status": l2b,
+        "l2b_creation_tx": b_tx, "l2b_creation_block": b_bn,
         "deploy_kind": kind, "creator_status": creator_status,
-        # 只在两条链路都判定为 ok 时才比较；否则不一致来自口径差而非真实分歧
-        "l2_agree": (None if not (l2a == "ok" and l2b == "ok" and a_cr and b_cr)
-                     else (1 if a_cr == b_cr else 0)),
+        "creator_is_7702_delegated": creator_7702,
+        "l2_agree": l2_agree, "l2_agreement": l2_agreement,
         "first_mint_tx_sender": l3d.get("first_mint_tx_sender"),
         "first_mint_event_sender": l3d.get("first_mint_event_sender"),
         "lp_token_recipient": l3d.get("lp_token_recipient"),
         "first_mint_block": l3d.get("first_mint_block"), "l3_status": l3,
+        "minimum_liquidity_locked": l3d.get("minimum_liquidity_locked"),
         "earliest_observed_inbound": l4a, "earliest_inbound_block": l4b, "l4_status": l4,
         "l4_subject": l4_subject,
         "creator_prior_pairs_in_sample": None,                 # 第二遍统一重算，避免顺序偏置
         "sender_prior_pairs": prior_s, "creator_prior_deploys": prior_d,
         "creator_prior_activity_known": hist_status,
         "earliest_prior_block": min(cands_e) if cands_e else None,
+        # 每条链路各自的"事件→返回"时刻。联合时限只看规则必需字段（L1/L2/历史），
+        # 不能让 L3/L4 拖延把早已返回的 L1/L2 一起判成 timeout。
+        "lag_l1_seconds": lag.get("l1"), "lag_l2_seconds": lag.get("l2"),
+        "lag_l3_seconds": lag.get("l3"), "lag_l4_seconds": lag.get("l4"),
+        "lag_hist_seconds": lag.get("hist"),
+        "lag_required_seconds": max([v for k, v in lag.items()
+                                     if k in ("l1", "l2", "hist") and v is not None],
+                                    default=None),
         "processing_seconds": round(finished - t0, 3),
         "resolution_lag_seconds": (round(finished - ev_ts, 1) if ev_ts else None),
     }
@@ -823,20 +1192,77 @@ def backfill():
     cfg, con = chain_cfg(), db()
     random.seed(SPEC["random_seed"])
     f_b, t_b = SPEC["candidate_from_block"], SPEC["candidate_to_block"]
-    if not f_b or not t_b:
+    if not (1 <= f_b <= t_b) or SPEC["history_lookback_blocks"] < 0:
         raise SystemExit("先跑 probe，再设 RTA_FROM_BLOCK / RTA_TO_BLOCK")
     hist_from = max(1, f_b - SPEC["history_lookback_blocks"])
 
-    ok, note = l2b_self_test()
+    ok, note = (None, "对账模式不执行归因能力探测") if SPEC.get("reconcile_only") else l2b_self_test()
+    src, src_note = choose_pair_logs_source()
     print(f"链={SPEC['chain']}  factory={cfg['factory']}  spec_hash={spec_hash()}")
+    print(f"PairCreated 采集来源：{src} —— {src_note}")
     print(f"候选 {f_b}-{t_b}；历史回看自 {hist_from}")
     print(f"L2b 可用性：{ok} —— {note}")
 
+    mode = "reconcile" if SPEC.get("reconcile_only") else "backfill"
+    if mode == "backfill" and con.execute(
+            "SELECT 1 FROM candidates WHERE chain<>? OR lower(factory)<>lower(?) OR block_number<? OR block_number>? LIMIT 1",
+            (SPEC["chain"], cfg["factory"], hist_from, t_b)).fetchone():
+        raise SystemExit("输出库包含其他范围的数据；请为本次冻结窗口设置独立 RTA_OUT")
+    begin_run(con, mode, f_b, t_b)
+    total_blocks = (f_b - hist_from) + (t_b - f_b + 1)
+    if src == "rpc":
+        calls = -(-total_blocks // max(1, SPEC["log_chunk_blocks"]))
+        print(f"  按 RPC 跨度 {SPEC['log_chunk_blocks']} 取 {total_blocks:,} 个区块，"
+              f"约 {calls:,} 次 eth_getLogs")
+        if calls > 5000:
+            print(f"  ⚠ 这个量级不现实。设 RTA_PAIR_LOGS=etherscan，"
+                  f"或缩小 RTA_LOOKBACK / 候选区间，或换跨度更大的端点。")
+
     print("\n[1/5] 历史区间 PairCreated（只建历史，不作候选）…")
-    hist = [l for l in fetch_pair_created(hist_from, f_b - 1) if "_gap" not in l]
+    hist, g1 = fetch_pair_created(hist_from, f_b - 1) if hist_from < f_b else ([], [])
     print("[2/5] 候选区间 PairCreated…")
-    cand = [l for l in fetch_pair_created(f_b, t_b) if "_gap" not in l]
-    print(f"  历史 {len(hist)}；候选 {len(cand)}")
+    cand, g2 = fetch_pair_created(f_b, t_b)
+    record_gaps(con, g1, "history")
+    record_gaps(con, g2, "candidate")
+    print(f"  历史 {len(hist)}；候选 {len(cand)}；缺口 历史{len(g1)}/候选{len(g2)} 段")
+
+    # ---- 完整性对账：历史与候选【分别】对账，结果落库供 report 读取 ----
+    all_ok = True
+    for role, logs_, a_, b_ in (("history", hist, hist_from, f_b - 1),
+                                ("candidate", cand, f_b, t_b)):
+        if SPEC.get("reconcile_only") and role == "history":
+            continue
+        rec = reconcile_pair_logs(logs_, a_, b_)
+        gaps_ = g1 if role == "history" else g2
+        if gaps_:
+            rec.update(ok=False, note=rec["note"] + "; 存在采集缺口")
+        record_integrity(con, mode, role, a_, b_, rec)
+        if rec["ok"]:
+            con.execute("UPDATE log_gaps SET resolved=1 WHERE chain=? AND factory=? AND role=? "
+                        "AND from_block>=? AND to_block<=?",
+                        (SPEC["chain"], cfg["factory"], role, a_, b_))
+            con.commit()
+        print(f"  {role:<9} 对账：去重 {rec['n_logs_deduped']} vs 预期 {rec['n_expected']}；"
+              f"计数{'✔' if rec['count_match'] else '✘'} "
+              f"连续{'✔' if rec['contiguous'] else '✘'} "
+              f"边界{'✔' if rec['boundary_match'] else '✘'}"
+              f"{'  → ' + rec['note'] if rec['note'] else ''}")
+        all_ok &= rec["ok"]
+    if not all_ok:
+        print("  ⚠ 对账未通过：本次母体不完整。数据仍会写库作为诊断证据，")
+        print("  ⚠ 但 report 只会产出 INCOMPLETE 调试报告，不出正式结论。")
+    freeze_spec({"batch": ACTIVE_BATCH, "collection_mode": mode,
+                 "candidate_range": [f_b,t_b], "history_range": [hist_from,f_b-1],
+                 "reconcile_candidate_range": rec})
+    with open(os.path.join(OUTDIR, f"collection_{ACTIVE_BATCH}.json"), "w") as evidence:
+        json.dump({"batch": ACTIVE_BATCH, "mode": mode, "history_logs": hist,
+                   "candidate_logs": cand, "history_gaps": g1, "candidate_gaps": g2,
+                   "integrity": [json.loads(r[0]) for r in con.execute(
+                       "SELECT detail FROM batch_integrity WHERE batch=?", (ACTIVE_BATCH,))]}, evidence)
+    if SPEC.get("reconcile_only"):
+        finish_run(con, all_ok)
+        print("\n[对账模式] 只做完整性核验，不继续归因。")
+        return 0 if all_ok else 1
 
     # 时间戳只对候选区间取（历史比较用 block_number，不需要时间戳）
     ts = {}
@@ -855,6 +1281,8 @@ def backfill():
         rows.append((pair, SPEC["chain"], cfg["factory"], t0, t1, bn,
                      hex_int(lg["logIndex"]), lg["transactionHash"],
                      ts.get(bn) if inr else None, inr, nt, had))
+    if con.execute("SELECT 1 FROM attribution WHERE mode='forward' LIMIT 1").fetchone():
+        raise SystemExit("库中已有前向归因；历史回填请使用独立 RTA_OUT，避免覆盖样本角色")
     con.executemany("INSERT OR REPLACE INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", rows)
     con.commit()
 
@@ -887,13 +1315,26 @@ def backfill():
         "WHERE in_candidate_range=1 ORDER BY block_number, log_index").fetchall()
     if len(cands) > SPEC["max_candidates"]:
         cands = sorted(random.sample(cands, SPEC["max_candidates"]), key=lambda r: r[3])
-    done = {r[0] for r in con.execute("SELECT pair FROM attribution WHERE mode='backfill'")}
+    # 续跑只跳过【同一 spec_hash】下已归因的候选。口径变了就是另一次实验，
+    # 旧行必须重算，否则报告会把两种口径的行混在一个分母里。
+    done = {r[0] for r in con.execute(
+        "SELECT pair FROM attribution WHERE mode='backfill' AND spec_hash=?",
+        (spec_hash(),))}
+    stale = con.execute(
+        "SELECT COUNT(*) FROM attribution WHERE mode='backfill' AND spec_hash<>?",
+        (spec_hash(),)).fetchone()[0]
+    if stale:
+        print(f"  注意：库里有 {stale} 行是别的 spec_hash 采的，本次不会复用，"
+              f"报告会分组并告警")
+    freeze_spec({"candidate_range": [f_b, t_b], "history_from": hist_from,
+                 "reconcile_candidate_range": rec})
     floor = con.execute("SELECT MIN(block_number) FROM hist_sender").fetchone()[0]
     print(f"[4/5] 归因 {len(cands)} 个候选…（自足通道实际抽到的最早区块 = {floor}，"
           f"回看窗口起点 = {hist_from}）")
     c0 = RPC_CALLS[0]
     for i, (pair, txh, nt, bn, ev) in enumerate(cands, 1):
         if pair in done:
+            con.execute("UPDATE attribution SET batch=? WHERE pair=?", (ACTIVE_BATCH, pair))
             continue
         upsert_attr(con, attribute(con, pair, txh, nt, bn, ev, hist_from,
                                    "backfill", fully, floor))
@@ -907,17 +1348,21 @@ def backfill():
     print("[5/5] 第二遍重算 creator_prior_pairs（消除处理顺序偏置）…")
     for (pair,) in con.execute("SELECT pair FROM attribution WHERE mode='backfill'").fetchall():
         r = con.execute(
-            "SELECT a.token_creator, c.block_number FROM attribution a "
+            "SELECT a.creation_tx_sender, c.block_number FROM attribution a "
             "JOIN candidates c ON c.pair=a.pair WHERE a.pair=?", (pair,)).fetchone()
         cr, bn = r
         cnt = 0
         if cr:
             cnt = con.execute(
                 "SELECT COUNT(*) FROM attribution a JOIN candidates c ON c.pair=a.pair "
-                "WHERE a.token_creator=? AND c.block_number<?", (cr, bn)).fetchone()[0]
+                "WHERE a.creation_tx_sender=? AND c.block_number<?", (cr, bn)).fetchone()[0]
         con.execute("UPDATE attribution SET creator_prior_pairs_in_sample=? WHERE pair=?", (cnt, pair))
     con.commit()
+    finish_run(con, all_ok)
+    if not all_ok:
+        report()
     print(f"完成。总 RPC 调用 {RPC_CALLS[0]}。数据库 {DB_PATH}")
+    return 0 if all_ok else 1
 
 
 # =============================================================================
@@ -926,8 +1371,12 @@ def backfill():
 def forward(minutes):
     cfg, con = chain_cfg(), db()
     l2b_self_test()
+    choose_pair_logs_source()
+    freeze_spec()
     head, _ = rpc("eth_blockNumber", [])
     cur = hex_int(head)
+    start_block = cur + 1          # 本次前向观察的范围下界，缺口归属按它判
+    begin_run(con, "forward", start_block, cur)
     end = time.time() + minutes * 60
     print(f"前向观察 {minutes} 分钟，起始 {cur}；截止 = 事件时间 + "
           f"{SPEC['decision_window_seconds']}s")
@@ -937,10 +1386,42 @@ def forward(minutes):
         if not h or h <= cur:
             time.sleep(IDLE_SLEEP)
             continue
-        logs = [l for l in fetch_pair_created(cur + 1, h) if "_gap" not in l]
+        # 只补【本次前向观察范围内】的缺口。历史回看与候选区间的缺口归 backfill 补——
+        # 否则补回来的历史事件会被当成前向样本写进库，还会覆盖已有的历史归因。
+        pending = con.execute(
+            "SELECT from_block,to_block FROM log_gaps WHERE resolved=0 "
+            "AND role='forward' AND chain=? AND factory=? AND batch=? AND from_block>=? AND to_block<=?",
+            (SPEC["chain"], cfg["factory"], ACTIVE_BATCH, start_block, h)).fetchall()
+        logs = []
+        for (ga, gb) in pending:
+            lg2, g2 = fetch_pair_created(ga, gb)
+            # 补回来的也要过对账，不能凭"接口没报错"就结案
+            retry_rec = reconcile_pair_logs(lg2, ga, gb)
+            if not g2 and retry_rec["ok"]:
+                record_integrity(con, "forward", "forward", ga, gb, retry_rec)
+                con.execute("UPDATE log_gaps SET resolved=1 WHERE role='forward' "
+                            "AND chain=? AND factory=? AND batch=? AND from_block=? AND to_block=?",
+                            (SPEC["chain"], cfg["factory"], ACTIVE_BATCH, ga, gb))
+                logs += lg2
+        new_logs, gaps = fetch_pair_created(cur + 1, h)
+        rec = reconcile_pair_logs(new_logs, cur + 1, h)
+        if gaps:
+            rec.update(ok=False, note=rec["note"] + "; 存在采集缺口")
+        record_integrity(con, "forward", "forward", cur + 1, h, rec)
+        # Retry the whole failed slice, including silent truncation.
+        if not rec["ok"]:
+            record_gaps(con, [{"from": cur+1, "to": h, "err": rec["note"],
+                               "source": PAIR_LOGS_SOURCE}], "forward")
+        con.commit()
+        logs += new_logs
         cur = h
+        con.execute("UPDATE collection_runs SET to_block=? WHERE batch=?", (h, ACTIVE_BATCH))
         for lg in logs:
             t0, t1, pair = parse_pair_created(lg)
+            if not start_block <= hex_int(lg["blockNumber"]) <= h:
+                continue
+            if con.execute("SELECT 1 FROM candidates WHERE pair=?", (pair,)).fetchone():
+                continue  # Never replace historical roles or the first observed attribution.
             bn = hex_int(lg["blockNumber"])
             blk, _ = rpc("eth_getBlockByNumber", [hex(bn), False])
             ev = hex_int(blk["timestamp"]) if blk else None
@@ -950,30 +1431,46 @@ def forward(minutes):
                          hex_int(lg["logIndex"]), lg["transactionHash"], ev, 1, nt, None))
             row = attribute(con, pair, lg["transactionHash"], nt, bn, ev,
                             max(1, bn - SPEC["forward_lookback_blocks"]),
-                            "forward", True)
-            late = (row["decision_deadline"] is not None
-                    and time.time() > row["decision_deadline"])
-            if late:
-                for k in ("l1_status", "l2a_status", "l2b_status", "l3_status",
-                          "l4_status", "creator_prior_activity_known"):
-                    if row[k] in SPEC["decisive_statuses"]:
-                        row[k] = "timeout"
+                            "forward", True, scan_ceiling=h)
+            # 按字段各自的返回时刻判超时：L3/L4 拖延不得把早已返回的 L1/L2 拖成 timeout
+            win = SPEC["decision_window_seconds"]
+            for k, lagk in (("l1_status", "lag_l1_seconds"),
+                            ("l2a_status", "lag_l2_seconds"),
+                            ("l2b_status", "lag_l2_seconds"),
+                            ("l3_status", "lag_l3_seconds"),
+                            ("l4_status", "lag_l4_seconds"),
+                            ("creator_prior_activity_known", "lag_hist_seconds")):
+                lv = row.get(lagk)
+                if lv is not None and lv > win and row[k] in SPEC["decisive_statuses"]:
+                    row[k] = "timeout"
+            # 联合时限只看规则必需字段
+            late = (row.get("lag_required_seconds") is not None
+                    and row["lag_required_seconds"] > win)
             upsert_attr(con, row)
             con.commit()
             print(f"  {pair[:10]}… 处理 {row['processing_seconds']:5.1f}s  "
                   f"事件→完成 {row['resolution_lag_seconds']}s  "
                   f"{'超过截止' if late else '在截止内'}")
         time.sleep(POLL_SLEEP)
+    checks = con.execute("SELECT ok FROM batch_integrity WHERE batch=?", (ACTIVE_BATCH,)).fetchall()
+    intact = bool(checks) and all(r[0] for r in checks)
+    finish_run(con, intact)
+    if not intact:
+        report()
     print("前向观察结束。")
+    return 0 if intact else 1
 
 
 # =============================================================================
 # report
 # =============================================================================
 def report():
+    """只读：不写 spec_frozen，规格以采集时每行存的 spec_hash 为准。"""
     con = db()
     ensure_out()
     cols = [d[0] for d in con.execute("SELECT * FROM attribution LIMIT 0").description]
+
+    incomplete_modes = []
 
     def pct(a, b):
         return f"{100.0*a/b:.1f}%" if b else "n/a"
@@ -981,11 +1478,16 @@ def report():
     for mode in ("backfill", "forward"):
         rs = [dict(zip(cols, r)) for r in
               con.execute("SELECT * FROM attribution WHERE mode=?", (mode,)).fetchall()]
-        if not rs:
+        intact, irows = integrity_of(con, mode)
+        if not rs and not con.execute("SELECT 1 FROM collection_runs WHERE mode=?", (mode,)).fetchone():
             continue
+        saved = con.execute("SELECT spec_json FROM collection_runs WHERE mode=? ORDER BY rowid DESC LIMIT 1", (mode,)).fetchone()
+        report_spec = json.loads(saved[0]) if saved else SPEC
+        if len({r["spec_hash"] for r in rs}) > 1:
+            intact = False
         n = len(rs)
-        lookback = (SPEC["history_lookback_blocks"] if mode == "backfill"
-                    else SPEC["forward_lookback_blocks"])
+        lookback = (report_spec["history_lookback_blocks"] if mode == "backfill"
+                    else report_spec["forward_lookback_blocks"])
         # 写成真分支而不是多行条件表达式：Python 3.8 的行号归属会把条件表达式的
         # 每一行都标成"已执行"，行覆盖因此测不出这个告警到底有没有触发。
         lookback_warn = ""
@@ -993,13 +1495,28 @@ def report():
             lookback_warn = ("   ⚠ 两个模式的回看窗口不同，L2b 的 history_truncated "
                              "门槛不同，两份报告的 L2b 覆盖率不可直接比较")
         hashes = sorted({r["spec_hash"] for r in rs})
-        L = [f"\n{'='*78}",
-             f"模式：{mode}    候选数 N = {n}",
+        L = [f"\n{'='*78}"]
+        if intact is False:
+            L += ["!" * 78,
+                  "!!  母体不完整 —— 这份是 INCOMPLETE 调试报告，不是验收结果  !!",
+                  "!!  下面每一个比例的【分母都不是全量】，不得用于任何结论      !!",
+                  "!" * 78]
+            for role, a_, b_, okv, detail in irows:
+                d = json.loads(detail)
+                L.append(f"  {role:<9} {a_}-{b_}  对账{'通过' if okv else '未通过'}"
+                         f"：去重 {d.get('n_logs_deduped')} vs 预期 {d.get('n_expected')}"
+                         f"  {d.get('note') or ''}")
+            L.append("!" * 78)
+        elif intact is None:
+            L += ["~" * 78,
+                  "~~  本批数据没有对账记录（旧库或未经 backfill 写入）——完整性未知  ~~",
+                  "~" * 78]
+        L += [f"模式：{mode}    候选数 N = {n}",
              f"数据采集时的 spec_hash：{', '.join(hashes)}"
              + ("   ⚠ 多个哈希混用，下面的合计跨越了不同规格" if len(hashes) > 1 else ""),
              f"当前进程 spec_hash：{spec_hash()}"
              + ("   ⚠ 与采集时不同" if spec_hash() not in hashes else ""),
-             f"链 = {SPEC['chain']}   决策窗口 = {SPEC['decision_window_seconds']}s",
+             f"链 = {report_spec['chain']}   决策窗口 = {report_spec['decision_window_seconds']}s",
              f"本模式回看窗口 = {lookback} 区块" + lookback_warn,
              "=" * 78]
 
@@ -1009,7 +1526,7 @@ def report():
                          ("L2b 纯RPC创建归因", "l2b_status"),
                          ("L3 首次Mint与LP接收", "l3_status"),
                          ("L4 最早观察到的入账", "l4_status")]:
-            dec = sum(1 for r in rs if r[c] in SPEC["decisive_statuses"])
+            dec = sum(1 for r in rs if r[c] in report_spec["decisive_statuses"])
             L.append(f"  {label:<22} 已判完 = {dec:>4}/{n} ({pct(dec, n)})")
             d = {}
             for r in rs:
@@ -1018,13 +1535,13 @@ def report():
                      "  ".join(f"{k}={v}" for k, v in sorted(d.items(), key=lambda x: -x[1])))
 
         L.append("\n【2】联合覆盖率 —— 唯一的结论行")
-        L.append(f"  规则需要：{', '.join(SPEC['required_fields_for_rule'])}")
-        L.append(f"  '已判完'计入可用的状态：{SPEC['decisive_statuses']}"
-                 "  （确认没有前科是答案，不是缺失）")
+        L.append(f"  规则需要：{', '.join(report_spec['required_fields_for_rule'])}")
+        L.append(f"  '已判完'计入可用的状态：{report_spec['decisive_statuses']}"
+                 "  （历史部署零条仍为未知，不代表没有历史）")
         joint = sum(1 for r in rs if (
             r["l1_status"] == "ok" and r["pair_created_tx_sender"]
-            and (r["l2a_status"] == "ok" or r["l2b_status"] == "ok") and r["token_creator"]
-            and r["creator_prior_activity_known"] in SPEC["decisive_statuses"]))
+            and (r["l2a_status"] == "ok" or r["l2b_status"] == "ok") and r["creation_tx_sender"]
+            and r["creator_prior_activity_known"] in report_spec["decisive_statuses"]))
         L.append(f"  联合可用 = {joint}/{n}  ({pct(joint, n)})")
 
         L.append("\n【2b】历史可见性状态分布")
@@ -1032,19 +1549,27 @@ def report():
         for r in rs:
             d[r["creator_prior_activity_known"]] = d.get(r["creator_prior_activity_known"], 0) + 1
         for k, v in sorted(d.items(), key=lambda x: -x[1]):
-            tag = "（已判完）" if k in SPEC["decisive_statuses"] else "（不可用）"
+            tag = "（已判完）" if k in report_spec["decisive_statuses"] else "（不可用）"
             L.append(f"  {k:<20}{tag} {v:>4}/{n} ({pct(v, n)})")
 
         L.append("\n【3】两条创建归因链路的交叉校验（按部署形态分层）")
-        L.append("  只比较两条链路都判 ok 的行；工厂部署下 L2b 给的是交易发起人、")
-        L.append("  与 L2a 的 contractCreator 口径不同，混在一起算会得到必然的不一致。")
+        L.append("  只比较两条链路都判 ok 的行；工厂路径 L2b 仍为 ambiguous，不能据此确定归因。")
         for kind in ("direct", "factory", "unknown"):
             sub = [r for r in rs if r["deploy_kind"] == kind]
             both = [r for r in sub if r["l2_agree"] is not None]
             ag = sum(1 for r in both if r["l2_agree"] == 1)
             L.append(f"  {kind:<8} 候选 {len(sub):>4}；可比 {len(both):>4}；"
                      f"一致 {ag} ({pct(ag, len(both))})")
-        L.append("\n【3b】token_creator 的确定性（ambiguous 的地址不进下游）")
+        L.append("\n【3c】两路一致性的细分（先比创建交易，再比地址）")
+        d = {}
+        for r in rs:
+            d[r["l2_agreement"]] = d.get(r["l2_agreement"], 0) + 1
+        for k, v in sorted(d.items(), key=lambda x: -x[1]):
+            L.append(f"  {str(k):<20} {v:>4}/{n} ({pct(v, n)})")
+        L.append("  conflict_tx = 两路指向不同的创建交易，这才是真歧义；"
+                 "此时不写 creation_tx_sender。")
+
+        L.append("\n【3b】creation_tx_sender 的确定性（ambiguous / conflict 不进下游）")
         d = {}
         for r in rs:
             d[r["creator_status"]] = d.get(r["creator_status"], 0) + 1
@@ -1054,7 +1579,12 @@ def report():
         if mode == "forward":
             L.append("\n【4】时间（两个不同的量，不要混读）")
             for key, name in [("processing_seconds", "单候选处理耗时"),
-                              ("resolution_lag_seconds", "事件时间→四条链路全部返回")]:
+                              ("lag_required_seconds", "事件→规则必需字段齐备（联合时限看这个）"),
+                              ("lag_l1_seconds", "事件→L1 返回"),
+                              ("lag_l2_seconds", "事件→L2 返回"),
+                              ("lag_l3_seconds", "事件→L3 返回"),
+                              ("lag_l4_seconds", "事件→L4 返回"),
+                              ("resolution_lag_seconds", "事件→全部链路返回")]:
                 v = sorted(x[key] for x in rs if x[key] is not None)
                 if v:
                     L.append(f"  {name}：中位 {v[len(v)//2]:.1f}s  "
@@ -1082,14 +1612,23 @@ def report():
         L.append("  l2b_usable —— 那是数据源限制，不是链上没有信息。")
 
         print("\n".join(L))
-        with open(os.path.join(OUTDIR, f"coverage_report_{mode}.md"), "w",
-                  encoding="utf-8") as f:
+        # 母体不完整时只写 INCOMPLETE 文件，绝不产出同名的正式报告
+        suffix = "" if intact else (".INCOMPLETE" if intact is False else ".UNVERIFIED")
+        fn = os.path.join(OUTDIR, f"coverage_report_{mode}{suffix}.md")
+        with open(fn, "w", encoding="utf-8") as f:
             f.write("\n".join(L))
+        normal = os.path.join(OUTDIR, f"coverage_report_{mode}.md")
+        if suffix and os.path.exists(normal):
+            os.remove(normal)      # 避免上一次的正式报告被误当成本次结果
+        if suffix:
+            print(f"\n→ 因母体{'不完整' if intact is False else '完整性未知'}，"
+                  f"只写了 {fn}，未产出正式报告。")
+            incomplete_modes.append(mode)
 
     random.seed(SPEC["random_seed"])
     rows = con.execute(
         "SELECT a.pair, c.tx_hash, c.new_token, a.deploy_kind, a.creator_status,"
-        " a.token_creator,"
+        " a.creation_tx_sender, a.deployment_factory, a.creator_is_7702_delegated,"
         " a.pair_created_tx_sender, a.pair_created_tx_to,"
         " a.l2a_creator, a.l2b_creator, a.l2_agree, a.first_mint_tx_sender,"
         " a.first_mint_event_sender, a.lp_token_recipient,"
@@ -1110,7 +1649,7 @@ def report():
         if len(s) < SPEC["audit_sample_size"] and rest:
             s += random.sample(rest, min(SPEC["audit_sample_size"] - len(s), len(rest)))
         hdr = ("pair,pair_created_tx,new_token,deploy_kind,creator_status,"
-               "token_creator,"
+               "creation_tx_sender,deployment_factory,creator_is_7702_delegated,"
                "pair_created_tx_sender,pair_created_tx_to,"
                "l2a_creator,l2b_creator,l2_agree,first_mint_tx_sender,first_mint_event_sender,"
                "lp_token_recipient,earliest_observed_inbound,l4_subject,"
@@ -1124,6 +1663,11 @@ def report():
                 f.write(",".join("" if v is None else str(v) for v in r) + ",,\n")
         print(f"\n→ {p}（最后两列请手工填）")
         print("  重点看：关联是不是只是共用了 router、工厂或交易所热钱包。")
+    if incomplete_modes:
+        print(f"\n⚠ 以下模式的母体未通过完整性核验：{', '.join(incomplete_modes)}")
+        print("⚠ 上面的数字只能用于排障，不能作为本周交付。先补齐缺口再重跑。")
+        return 1
+    return 0
 
 
 # =============================================================================
@@ -1145,12 +1689,14 @@ def _mk_mocks(cfg):
     ad = lambda i: "0x" + f"{i:040x}"                               # noqa: E731
     P = cfg["pairs"]
     LOGS = {}
+    # allPairs 是追加式的：按区块排序依次编号，序号写进 data 第二个字
+    PAIR_IX = {p[2]: i + 1 for i, p in enumerate(sorted(P, key=lambda x: x[0]))}
     for blk, tok, pr, cr, sd, tx in P:
         LOGS.setdefault(blk, []).append({
             "address": chain_cfg()["factory"], "blockNumber": hex(blk), "logIndex": "0x0",
             "transactionHash": tx,
             "topics": [TOPIC_PAIR_CREATED, h32(int(WETH, 16)), h32(int(tok, 16))],
-            "data": "0x" + f"{int(pr,16):064x}" + f"{1:064x}"})
+            "data": "0x" + f"{int(pr,16):064x}" + f"{PAIR_IX[pr]:064x}"})
     BYTX = {p[5]: p for p in P}
     BYTOK = {p[1]: p for p in P}
     BYPAIR = {p[2]: p for p in P}
@@ -1170,6 +1716,10 @@ def _mk_mocks(cfg):
             f = params[0]
             a, b = int(f["fromBlock"], 16), int(f["toBlock"], 16)
             t = (f.get("topics") or [None])[0]
+            cap = cfg.get("getlogs_max_span")
+            if cap is not None and (b - a) > cap:
+                return None, (f"rpc_error -32600 Under the Free tier plan, you can make "
+                              f"eth_getLogs requests with up to a {cap} block range.")
             if t == TOPIC_PAIR_CREATED:
                 return [x for blk in range(a, b + 1) for x in LOGS.get(blk, [])], None
             if t == TOPIC_MINT:
@@ -1206,7 +1756,18 @@ def _mk_mocks(cfg):
         if method == "eth_getTransactionReceipt":
             for p in P:
                 if params[0] == h32(0xBB00 + p[0]):
-                    return {"logs": [{"address": p[2],
+                    if cfg.get("min_liq_lock"):
+                        # 真实 V2 首次 Mint 的日志顺序：先 _mint(0x0, MINIMUM_LIQUIDITY)，
+                        # 再 _mint(to, liquidity)，最后 emit Mint
+                        return {"logs": [
+                            {"address": p[2], "logIndex": "0x0",
+                             "topics": [TOPIC_TRANSFER, h32(0), h32(0)]},
+                            {"address": p[2], "logIndex": "0x1",
+                             "topics": [TOPIC_TRANSFER, h32(0), h32(int(p[3], 16))]},
+                            {"address": p[2], "logIndex": "0x2",
+                             "topics": [TOPIC_MINT, h32(int(p[3], 16))]},
+                        ]}, None
+                    return {"logs": [{"address": p[2], "logIndex": "0x1",
                                       "topics": [TOPIC_TRANSFER, h32(0),
                                                  h32(int(p[3], 16))]}]}, None
             return {"contractAddress": None, "logs": []}, None
@@ -1221,6 +1782,12 @@ def _mk_mocks(cfg):
             return None, "unsupported"
         if method == "eth_getCode":
             a = params[0].lower()
+            # 7702 委托与区块无关（cfg["delegated"] 列出哪些地址带委托）
+            if a in {x.lower() for x in cfg.get("delegated", [])}:
+                return "0xef0100" + "11" * 20, None
+            if params[1] == "latest":
+                return ("0x60" if a in BYTOK or a == chain_cfg()["factory"].lower()
+                        else "0x"), None
             bn = int(params[1], 16)
             if not cfg.get("archive_ok", True):
                 return "0x60", None          # 非归档节点的典型表现：历史块也返回最新状态
@@ -1230,7 +1797,13 @@ def _mk_mocks(cfg):
                 return ("0x60" if bn >= 100 else "0x"), None
             return "0x60", None
         if method == "eth_call":
-            return h32(120), None
+            if params[0].get("data") == "0x574f2ba3":
+                tag = params[1] if len(params) > 1 else "latest"
+                if tag == "latest":
+                    return h32(len(P)), None
+                bn = int(tag, 16)
+                return h32(sum(1 for x in P if x[0] <= bn)), None
+            return h32(len(P)), None
         return None, "unhandled"
 
     def mscan(module, action, **kw):
@@ -1239,18 +1812,45 @@ def _mk_mocks(cfg):
             return None, "status0: NOTOK | Missing/Invalid API Key"
         if m == "badshape":
             return "Max rate limit reached", None      # result 是字符串，不是 list
+        if action == "getLogs":
+            # Etherscan logs 模块：字段与 RPC 同构（blockNumber/logIndex 都是十六进制串）
+            a2, b2 = int(kw.get("fromBlock", 0)), int(kw.get("toBlock", 0))
+            out = [x for blk in range(a2, b2 + 1) for x in LOGS.get(blk, [])]
+            cap = cfg.get("scan_logs_page", SPEC["pair_logs_page_size"])
+            return out[:cap], None
         if action == "getcontractcreation":
             t = kw.get("contractaddresses", "").lower()
-            return (([{"contractCreator": BYTOK[t][3], "txHash": h32(0xDD01)}], None)
-                    if t in BYTOK else ([], None))
+            if t not in BYTOK:
+                return [], None
+            p = BYTOK[t]
+            # 默认与 L2b 便宜路径 1 指向同一笔创建交易；l2a_tx_conflict 制造真歧义
+            txh = h32(0xDD01) if cfg.get("l2a_tx_conflict") else h32(0xEE00 + p[0])
+            row = {"contractCreator": p[3], "txHash": txh, "blockNumber": str(p[0])}
+            if cfg.get("deploy_kind") == "factory":
+                row["contractFactory"] = ad(0xFAC)
+            return [row], None
         if action == "txlist":
             a = kw.get("address", "")
+            if cfg.get("deploy_page_full"):
+                # 直接部署通道分页打满 → 不能声称数清了
+                return [{"to": "", "from": a, "value": "0", "blockNumber": "160",
+                         "isError": "0"} for _ in range(SPEC["deploy_page_size"])], None
+            if cfg.get("failed_deploy_only"):
+                # 唯一那笔创建交易是失败的 → 不产生合约，不得计入
+                return [{"to": "", "from": a, "value": "0", "blockNumber": "100",
+                         "isError": "1", "txreceipt_status": "0"}], None
+            if cfg.get("no_direct_deploy"):
+                # 只有普通转账、没有直接部署 → 工厂部署看不见，只能记 history_truncated
+                return [{"to": ad(0x111), "from": a, "value": "1", "blockNumber": "5",
+                         "isError": "0"}], None
             if cfg.get("l4_page_full"):
                 # 分页打满、且一笔入账都没有 → 应判 history_truncated
                 return [{"to": ad(0x111), "from": a, "value": "0",
                          "blockNumber": "5"} for _ in range(200)], None
-            return [{"to": a, "from": ad(0x999), "value": "1", "blockNumber": "5"},
-                    {"to": "", "from": a, "value": "0", "blockNumber": "150"}], None
+            return [{"to": a, "from": ad(0x999), "value": "1", "blockNumber": "5",
+                     "isError": "0"},
+                    {"to": "", "from": a, "value": "0", "blockNumber": "150",
+                     "isError": "0"}], None
         if action == "txlistinternal":
             if cfg.get("deploy_page_full"):
                 return [{"type": "create", "blockNumber": "160"}] * 5000, None
@@ -1269,7 +1869,7 @@ def _std_pairs(n=120, start=200, step=10):
 
 def selftest():
     global rpc, etherscan, ETHERSCAN_KEY, OUTDIR, DB_PATH, POLL_SLEEP, IDLE_SLEEP
-    global L2B_USABLE, L2B_NOTE
+    global L2B_USABLE, L2B_NOTE, PAIR_LOGS_SOURCE
     import shutil, tempfile, io                                      # noqa: E401
     POLL_SLEEP = IDLE_SLEEP = 0.0
     rpc_limiter.min_gap = scan_limiter.min_gap = 0.0
@@ -1331,7 +1931,7 @@ def selftest():
     L2B_USABLE, L2B_NOTE = None, ""
     ok, note = l2b_self_test()
     check("l2b_self_test 判定不可用", ok is False, note)
-    cr, tx, st, kind = l2b_creator(ad(0x1000), 1, 1000)
+    cr, tx, cbk, st, kind = l2b_creator(ad(0x1000), 1, 1000)
     check("L2b 返回 api_failure", st == "api_failure", f"实得 {st}")
 
     # =====================================================================
@@ -1356,7 +1956,7 @@ def selftest():
     rpc, etherscan = _mk_mocks({"pairs": _std_pairs(5), "etherscan_mode": "badshape",
                                 "l2b_path": "logs", "blocknum_sched": [1400]})
     try:
-        c, e, st = l2a_creator(ad(0x1000))
+        c, e, cbk_, fac_, st = l2a_creator(ad(0x1000))
         n_, eb_, ds = creator_prior_deploys(ad(0xC0), 500)
         i_, ib_, l4 = l4_earliest_inbound(ad(0xC0), 500)
         check("l2a 形状异常 → api_failure", st == "api_failure", st)
@@ -1374,22 +1974,22 @@ def selftest():
     check("L4 → history_truncated", st == "history_truncated", st)
 
     # =====================================================================
-    print("\n【场景 6】工厂部署：L2b 应判 ambiguous，且该地址不得进 token_creator")
+    print("\n【场景 6】工厂部署：L2b 判 ambiguous；有 L2a 时以 L2a 为准")
     # =====================================================================
     P6 = _std_pairs(3)
     rpc, etherscan = _mk_mocks({"pairs": P6, "l2b_path": "logs",
                                 "deploy_kind": "factory", "etherscan_mode": "fail",
                                 "blocknum_sched": [1400]})
     L2B_USABLE = True
-    cr, tx, st, kind = l2b_creator(P6[0][1], 1, P6[0][0] + 10)
+    cr, tx, cbk, st, kind = l2b_creator(P6[0][1], 1, P6[0][0] + 10)
     check("L2b 状态 = ambiguous", st == "ambiguous", st)
     check("deploy_kind = factory", kind == "factory", kind)
     check("值仍保留供人工看", cr is not None, str(cr))
     con6 = tmpcon()
     row6 = attribute(con6, P6[0][2], P6[0][5], P6[0][1], P6[0][0] + 10, 1700000000,
                      hist_from=1, mode="backfill", hist_fully_sampled=True)
-    check("token_creator 不采用 ambiguous 值", row6["token_creator"] is None,
-          str(row6["token_creator"]))
+    check("creation_tx_sender 不采用 ambiguous 值", row6["creation_tx_sender"] is None,
+          str(row6["creation_tx_sender"]))
     check("creator_status = ambiguous", row6["creator_status"] == "ambiguous",
           row6["creator_status"])
     check("l2_agree 不参与比较（None）", row6["l2_agree"] is None, str(row6["l2_agree"]))
@@ -1401,14 +2001,14 @@ def selftest():
     rpc, etherscan = _mk_mocks({"pairs": P7, "l2b_path": "receipts",
                                 "blocknum_sched": [1400]})
     L2B_USABLE = True
-    cr, tx, st, kind = l2b_creator(P7[0][1], 1, P7[0][0] + 10)
+    cr, tx, cbk, st, kind = l2b_creator(P7[0][1], 1, P7[0][0] + 10)
     check("便宜路径 2 命中 → ok", st == "ok", st)
 
     _orig_cap = SPEC["l2b_receipt_scan_cap"]
     SPEC["l2b_receipt_scan_cap"] = 5
     rpc, etherscan = _mk_mocks({"pairs": P7, "l2b_path": "degraded",
                                 "blocknum_sched": [1400]})
-    cr, tx, st, kind = l2b_creator(P7[0][1], 1, P7[0][0] + 10)
+    cr, tx, cbk, st, kind = l2b_creator(P7[0][1], 1, P7[0][0] + 10)
     check("退化路径撞上限 → history_truncated（不是 no_history）",
           st == "history_truncated", st)
     SPEC["l2b_receipt_scan_cap"] = _orig_cap
@@ -1445,21 +2045,37 @@ def selftest():
           row9["creator_prior_activity_known"])
 
     # =====================================================================
-    print("\n【场景 10】外部通道不可用、但自足通道已确认有前科 → hist_status = ok")
+    print("\n【场景 10】自足通道只有在建池发送者==创建者本人时才可用")
     # =====================================================================
+    # (a) 发送者 A 有前科，但创建者是 B —— 不能拿 A 的历史替 B 背书
     rpc, etherscan = _mk_mocks({"pairs": _std_pairs(5), "etherscan_mode": "fail",
                                 "l2b_path": "logs", "blocknum_sched": [1400]})
     L2B_USABLE = True
     con10 = tmpcon()
-    # 该建池发送者在更早区块出现过（历史区已抓到）
     con10.execute("INSERT INTO hist_sender VALUES (?,?,?)", ("0xold", 150, ad(0xE0)))
     con10.commit()
     row10 = attribute(con10, ad(0x2000), h32(0xAA00), ad(0x1000), 400, 1700000000,
                       hist_from=1, mode="backfill", hist_fully_sampled=False)
-    check("自足通道有前科 → hist_status = ok",
-          row10["creator_prior_activity_known"] == "ok"
-          and row10["sender_prior_pairs"] == 1,
-          f"{row10['creator_prior_activity_known']}, prior_s={row10['sender_prior_pairs']}")
+    check("发送者≠创建者 → 不得记 ok",
+          row10["creator_prior_activity_known"] != "ok",
+          f"sender={row10['pair_created_tx_sender']} creator={row10['creation_tx_sender']} "
+          f"prior_s={row10['sender_prior_pairs']} → {row10['creator_prior_activity_known']}")
+    check("但 sender_prior_pairs 仍如实保留供人工看",
+          row10["sender_prior_pairs"] == 1, str(row10["sender_prior_pairs"]))
+    # (b) 发送者就是创建者本人，且该地址有更早的建池记录 → ok
+    SAME = ad(0xC0)
+    P10 = [(200, ad(0x1000), ad(0x2000), SAME, SAME, h32(0xAA00))]
+    rpc, etherscan = _mk_mocks({"pairs": P10, "etherscan_mode": "fail",
+                                "l2b_path": "logs", "blocknum_sched": [1400]})
+    con10b = tmpcon()
+    con10b.execute("INSERT INTO hist_sender VALUES (?,?,?)", ("0xold", 150, SAME))
+    con10b.commit()
+    row10b = attribute(con10b, ad(0x2000), h32(0xAA00), ad(0x1000), 400, 1700000000,
+                       hist_from=1, mode="backfill", hist_fully_sampled=False)
+    check("发送者==创建者且有前科 → ok",
+          row10b["creator_prior_activity_known"] == "ok",
+          f"sender={row10b['pair_created_tx_sender']} creator={row10b['creation_tx_sender']} "
+          f"→ {row10b['creator_prior_activity_known']}")
 
     # =====================================================================
     print("\n【场景 11】判不出哪侧是新币 → creator_status 必须是 ambiguous，不是 no_history")
@@ -1474,9 +2090,9 @@ def selftest():
     check("ambiguous 不计入已判完",
           row11["creator_status"] not in SPEC["decisive_statuses"],
           f"decisive={SPEC['decisive_statuses']}")
-    check("token_creator 为空时 l4 主体标为 pair_created_tx_sender",
+    check("creation_tx_sender 为空时 l4 主体标为 pair_created_tx_sender",
           row11["l4_subject"] == "pair_created_tx_sender", str(row11["l4_subject"]))
-    check("l2_source 与空 token_creator 不矛盾",
+    check("l2_source 与空 creation_tx_sender 不矛盾",
           row11["l2_source"] == "none", str(row11["l2_source"]))
 
     # =====================================================================
@@ -1540,9 +2156,10 @@ def selftest():
     con13c.commit()
     row13c = attribute(con13c, ad(0x2000), h32(0xAA00), ad(0x1000), 400, 1700000000,
                        hist_from=1, mode="backfill", hist_fully_sampled=False)
-    check("creator 已知 + 发送者有前科 → 仍是 ok（口径未变）",
-          row13c["creator_prior_activity_known"] == "ok",
-          row13c["creator_prior_activity_known"])
+    check("creator 已知但≠发送者 → 不得用发送者历史背书",
+          row13c["creator_prior_activity_known"] != "ok",
+          f"sender={row13c['pair_created_tx_sender']} creator={row13c['creation_tx_sender']} "
+          f"→ {row13c['creator_prior_activity_known']}")
 
     # =====================================================================
     print("\n【场景 14】回看窗口分叉告警：行覆盖测不出分支输出，必须断言字面量")
@@ -1570,6 +2187,254 @@ def selftest():
     SPEC["history_lookback_blocks"], SPEC["forward_lookback_blocks"] = _hl, _fl
 
     # =====================================================================
+    print("\n【场景 16】eth_getLogs 跨度上限必须实测，不能信默认值")
+    # =====================================================================
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(5), "getlogs_max_span": 10,
+                                "blocknum_sched": [1400]})
+    sp, note = rpc_getlogs_max_span()
+    check("实测出受限端点的真实上限 = 10", sp == 10, f"实得 {sp}；{note}")
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(5), "blocknum_sched": [1400]})
+    sp2, note2 = rpc_getlogs_max_span()
+    check("不受限端点返回最大探测跨度", sp2 == 2000, f"实得 {sp2}")
+    # 连最小跨度都不行 → 必须返回 0 并带上原始错误，不能假装可用
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(5), "getlogs_max_span": 5,
+                                "blocknum_sched": [1400]})
+    sp3, note3 = rpc_getlogs_max_span()
+    check("全跨度失败 → 返回 0", sp3 == 0, f"实得 {sp3}")
+    check("并保留端点原始错误供诊断", "block range" in note3, note3[:70])
+
+    # =====================================================================
+    print("\n【场景 15】EIP-7702：有代码 ≠ 是合约")
+    # =====================================================================
+    P15 = _std_pairs(3)
+    creator15 = P15[0][3]
+    rpc, etherscan = _mk_mocks({"pairs": P15, "l2b_path": "logs",
+                                "delegated": [creator15], "blocknum_sched": [1400]})
+    check("0xef0100 开头 → 判为 7702 委托的 EOA（1）",
+          is_7702_delegated(creator15) == 1, str(is_7702_delegated(creator15)))
+    check("普通合约代码 → 不是 7702（0）",
+          is_7702_delegated(chain_cfg()["factory"]) == 0,
+          str(is_7702_delegated(chain_cfg()["factory"])))
+    check("地址为空 → None（不适用）", is_7702_delegated(None) is None)
+    L2B_USABLE = True
+    con15 = tmpcon()
+    row15 = attribute(con15, P15[0][2], P15[0][5], P15[0][1], P15[0][0] + 10,
+                      1700000000, hist_from=1, mode="backfill", hist_fully_sampled=True)
+    check("该列进入归因行", row15["creator_is_7702_delegated"] == 1,
+          str(row15["creator_is_7702_delegated"]))
+
+    # =====================================================================
+    print("\n【场景 20】集成反例：来源选择顺序 / 对账约束产物 / 缺口归属")
+    # =====================================================================
+    import contextlib as _ctx
+
+    # (a) backfill 的真实调用顺序下，auto + 有 key + 跨度 10 必须选 etherscan
+    _sv = dict(SPEC)
+    SPEC.update({"pair_logs_source": "auto", "log_chunk_blocks": 2000,
+                 "candidate_from_block": 1000, "candidate_to_block": 1100,
+                 "history_lookback_blocks": 0, "max_candidates": 50,
+                 "reconcile_only": True})
+    OUTDIR = tempfile.mkdtemp(); DB_PATH = os.path.join(OUTDIR, "t.sqlite")
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(120), "getlogs_max_span": 10,
+                                "blocknum_sched": [1400]})
+    L2B_USABLE = None
+    with _ctx.redirect_stdout(io.StringIO()):
+        backfill()
+    check("auto + 跨度10 + 有 key → 走 etherscan（不是先降标准再宣布够用）",
+          PAIR_LOGS_SOURCE == "etherscan", f"实得 {PAIR_LOGS_SOURCE}")
+    check("批量标准不被 log_chunk_blocks 的自动下调污染",
+          SPEC["min_bulk_log_span"] == _sv["min_bulk_log_span"],
+          str(SPEC["min_bulk_log_span"]))
+
+    # (b) 端到端：删一条日志 → 不得产出正式报告
+    SPEC.update({"pair_logs_source": "rpc", "log_chunk_blocks": 100,
+                 "history_lookback_blocks": 900, "reconcile_only": False})
+    OUTDIR = tempfile.mkdtemp(); DB_PATH = os.path.join(OUTDIR, "t.sqlite")
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(120), "blocknum_sched": [1400]})
+    L2B_USABLE = None
+    _orig_fetch = globals()["fetch_pair_created"]
+
+    def _holed(a, b):
+        lg, g = _orig_fetch(a, b)
+        return (lg[:-1] if a >= 1000 else lg), g
+    globals()["fetch_pair_created"] = _holed
+    try:
+        with _ctx.redirect_stdout(io.StringIO()):
+            backfill()
+    finally:
+        globals()["fetch_pair_created"] = _orig_fetch
+    stale = os.path.join(OUTDIR, "coverage_report_backfill.md")
+    with open(stale, "w", encoding="utf-8") as _f:
+        _f.write("上一次的正式报告")
+    buf = io.StringIO()
+    with _ctx.redirect_stdout(buf):
+        rc20 = report()
+    txt20 = buf.getvalue()
+    check("对账失败 → report 返回非零", rc20 == 1, str(rc20))
+    check("删掉上一次的正式报告，不让它被误当成本次结果",
+          not os.path.exists(stale))
+    check("改为产出 .INCOMPLETE.md",
+          os.path.exists(os.path.join(OUTDIR, "coverage_report_backfill.INCOMPLETE.md")))
+    check("报告正文明确标注母体不完整", "母体不完整" in txt20)
+    check("历史与候选分别对账并落库",
+          {r[0] for r in sqlite3.connect(DB_PATH).execute(
+              "SELECT role FROM run_integrity WHERE mode='backfill'")}
+          == {"history", "candidate"})
+
+    # (c) 前向不得动历史缺口
+    con20 = sqlite3.connect(DB_PATH)
+    hp = con20.execute("SELECT pair, block_number FROM candidates "
+                       "WHERE in_candidate_range=0 ORDER BY block_number LIMIT 1").fetchone()
+    con20.execute("INSERT OR REPLACE INTO log_gaps (chain,factory,role,batch,"
+                  "from_block,to_block,source,err,seen_at,resolved) VALUES (?,?,?,?,?,?,?,?,?,0)",
+                  (SPEC["chain"], chain_cfg()["factory"], "history", "b",
+                   hp[1] - 5, hp[1] + 5, "rpc", "boom", now_iso()))
+    con20.commit(); con20.close()
+    P20 = _std_pairs(120) + [(1405, ad(0x9001), ad(0x9002), ad(0xC0), ad(0xE0),
+                              h32(0xAB01))]
+    con20 = sqlite3.connect(DB_PATH)
+    con20.execute("INSERT OR REPLACE INTO log_gaps (chain,factory,role,batch,"
+                  "from_block,to_block,source,err,seen_at,resolved) VALUES (?,?,?,?,?,?,?,?,?,0)",
+                  (SPEC["chain"], chain_cfg()["factory"], "forward", "b",
+                   1404, 1406, "rpc", "boom", now_iso()))
+    con20.commit(); con20.close()
+    rpc, etherscan = _mk_mocks({"pairs": P20, "blocknum_sched": [1400] * 12 + [1403]})
+    with _ctx.redirect_stdout(io.StringIO()):
+        forward(0.02)
+    con20 = sqlite3.connect(DB_PATH)
+    fwd_left = con20.execute("SELECT COUNT(*) FROM log_gaps WHERE role='forward' "
+                             "AND resolved=0").fetchone()[0]
+    check("其他批次且高于链头的缺口不得补回", fwd_left == 1, f"剩 {fwd_left} 行")
+    con20.close()
+    con20 = sqlite3.connect(DB_PATH)
+    rng = con20.execute("SELECT in_candidate_range FROM candidates WHERE pair=?",
+                        (hp[0],)).fetchone()[0]
+    md = con20.execute("SELECT mode FROM attribution WHERE pair=?", (hp[0],)).fetchone()
+    check("历史池未被前向改写 in_candidate_range", rng == 0, str(rng))
+    check("历史池未被写成 forward 归因", md is None or md[0] != "forward",
+          str(md[0]) if md else "未归因")
+    unresolved = con20.execute("SELECT COUNT(*) FROM log_gaps WHERE role='history' "
+                               "AND resolved=0").fetchone()[0]
+    check("历史缺口仍留给 backfill 补", unresolved == 1, f"{unresolved} 行")
+    # Same-batch silent truncation must be retried and reconciled, without reclassifying history.
+    OUTDIR = tempfile.mkdtemp(); DB_PATH = os.path.join(OUTDIR, "t.sqlite")
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(2, start=1401, step=1),
+                                "blocknum_sched": [1400]*12 + [1403, 1404, 1405]})
+    attempts = []
+    def retry_fetch(a, b):
+        lg, gaps = _orig_fetch(a, b)
+        attempts.append((a,b))
+        return (lg[:-1] if len(attempts) == 1 else lg), gaps
+    globals()["fetch_pair_created"] = retry_fetch
+    try:
+        with _ctx.redirect_stdout(io.StringIO()):
+            retry_rc = forward(.01)
+    finally:
+        globals()["fetch_pair_created"] = _orig_fetch
+    retry_con = db()
+    check("本批前向静默缺失经完整对账补齐", retry_rc == 0 and attempts.count((1401,1403)) == 2)
+    check("补齐后销账且仅保留两个前向样本",
+          retry_con.execute("SELECT COUNT(*) FROM log_gaps WHERE resolved=0").fetchone()[0] == 0
+          and retry_con.execute("SELECT COUNT(*) FROM attribution").fetchone()[0] == 2)
+    SPEC.clear(); SPEC.update(_sv)
+
+    # =====================================================================
+    print("\n【场景 19】RPC 跨度不足时自动改用 Etherscan 日志源")
+    # =====================================================================
+    _saved_src = SPEC["pair_logs_source"]
+    SPEC["pair_logs_source"] = "auto"
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(5), "getlogs_max_span": 10,
+                                "blocknum_sched": [1400]})
+    src19, note19 = choose_pair_logs_source()
+    check("RPC 跨度不足 + 有 key → 改用 etherscan", src19 == "etherscan", f"{src19}；{note19}")
+    lg19, gp19 = fetch_pair_created(190, 250)
+    check("Etherscan 日志源取得到候选", len(lg19) == 5, f"{len(lg19)} 条")
+    check("并能过对账", reconcile_pair_logs(lg19, 190, 250)["ok"])
+    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(5), "blocknum_sched": [1400]})
+    src19b, _ = choose_pair_logs_source()
+    check("RPC 跨度足够 → 仍用 rpc", src19b == "rpc", src19b)
+    SPEC["pair_logs_source"] = _saved_src
+    PAIR_LOGS_SOURCE = "rpc"
+
+    # =====================================================================
+    print("\n【场景 18】日志完整性对账：缺一条就必须判不通过")
+    # =====================================================================
+    P18 = _std_pairs(5, start=200, step=10)      # 池序号 1..5，区块 200..240
+    rpc, etherscan = _mk_mocks({"pairs": P18, "blocknum_sched": [1400]})
+    full, _g = fetch_pair_created(190, 250)
+    rc_ok = reconcile_pair_logs(full, 190, 250)
+    check("完整日志 → 对账通过", rc_ok["ok"],
+          f"计数{rc_ok['count_match']} 连续{rc_ok['contiguous']} 边界{rc_ok['boundary_match']}")
+    rc_bad = reconcile_pair_logs(full[:-1], 190, 250)     # 人为丢掉一条
+    check("丢掉一条 → 计数不符", rc_bad["count_match"] is False,
+          f"去重 {rc_bad['n_logs_deduped']} vs 预期 {rc_bad['n_expected']}")
+    check("并判定不通过", rc_bad["ok"] is False, str(rc_bad["ok"]))
+    rc_hole = reconcile_pair_logs(full[:2] + full[3:], 190, 250)   # 中间挖一个洞
+    check("中间缺号 → 序号不连续", rc_hole["contiguous"] is False, str(rc_hole["contiguous"]))
+    # 缺口必须落库，不能被过滤掉
+    c18 = tmpcon()
+    record_gaps(c18, [{"from": 100, "to": 200, "err": "boom", "source": "rpc"}],
+                "history")
+    ng = c18.execute("SELECT COUNT(*) FROM log_gaps WHERE resolved=0").fetchone()[0]
+    check("日志缺口持久化到 log_gaps", ng == 1, f"{ng} 行")
+    role = c18.execute("SELECT role,chain,factory FROM log_gaps").fetchone()
+    check("缺口带归属（角色/链/Factory）",
+          role[0] == "history" and role[1] and role[2], str(role))
+
+    # =====================================================================
+    print("\n【场景 17】本轮反例：两路 txHash 冲突 / 失败创建 / 通道结构盲区 / LP 锁定")
+    # =====================================================================
+    P17 = _std_pairs(3)
+    # (a) 两路指向不同的创建交易 → 真歧义，不得写确定归因
+    rpc, etherscan = _mk_mocks({"pairs": P17, "l2b_path": "logs",
+                                "l2a_tx_conflict": True, "blocknum_sched": [1400]})
+    L2B_USABLE = True
+    c17 = tmpcon()
+    r17 = attribute(c17, P17[0][2], P17[0][5], P17[0][1], P17[0][0] + 10, 1700000000,
+                    hist_from=1, mode="backfill", hist_fully_sampled=True)
+    check("txHash 不同 → l2_agreement=conflict_tx",
+          r17["l2_agreement"] == "conflict_tx", str(r17["l2_agreement"]))
+    check("地址相同也不算一致（先比交易）", r17["l2_agree"] == 0, str(r17["l2_agree"]))
+    check("冲突时不写 creation_tx_sender", r17["creation_tx_sender"] is None,
+          str(r17["creation_tx_sender"]))
+    check("creator_status = conflict", r17["creator_status"] == "conflict",
+          r17["creator_status"])
+    check("两路创建块/交易分别留存",
+          r17["l2a_creation_tx"] and r17["l2b_creation_tx"]
+          and r17["l2a_creation_tx"] != r17["l2b_creation_tx"],
+          f"a={str(r17['l2a_creation_tx'])[:12]} b={str(r17['l2b_creation_tx'])[:12]}")
+    # (b) 两路同一笔交易 → agree
+    rpc, etherscan = _mk_mocks({"pairs": P17, "l2b_path": "logs", "blocknum_sched": [1400]})
+    r17b = attribute(tmpcon(), P17[0][2], P17[0][5], P17[0][1], P17[0][0] + 10,
+                     1700000000, hist_from=1, mode="backfill", hist_fully_sampled=True)
+    check("同一笔创建交易 → agree", r17b["l2_agreement"] == "agree", str(r17b["l2_agreement"]))
+    # (c) 失败的创建交易不得计入
+    rpc, etherscan = _mk_mocks({"pairs": P17, "failed_deploy_only": True,
+                                "blocknum_sched": [1400]})
+    cnt, eb, st = creator_prior_deploys(ad(0xC0), 500)
+    check("isError=1 的创建交易不计为部署", cnt == 0, f"实得 {cnt}")
+    # (d) 通道结构盲区：数到 0 不得说 no_history
+    rpc, etherscan = _mk_mocks({"pairs": P17, "no_direct_deploy": True,
+                                "blocknum_sched": [1400]})
+    cnt2, eb2, st2 = creator_prior_deploys(ad(0xC0), 500)
+    check("直接部署为 0 → history_truncated，不是 no_history",
+          st2 == "history_truncated", str(st2))
+    check("该状态不计入已判完", st2 not in SPEC["decisive_statuses"], str(st2))
+    # (e) 分页打满 → 截断
+    rpc, etherscan = _mk_mocks({"pairs": P17, "deploy_page_full": True,
+                                "blocknum_sched": [1400]})
+    check("分页打满 → history_truncated",
+          creator_prior_deploys(ad(0xC0), 500)[2] == "history_truncated")
+    # (f) L3：MINIMUM_LIQUIDITY 锁定不得当成 LP 接收者
+    rpc, etherscan = _mk_mocks({"pairs": P17, "min_liq_lock": True,
+                                "blocknum_sched": [1400]})
+    d17, st17 = l3_first_mint(P17[0][2], P17[0][0])
+    check("LP 接收者不是零地址", d17.get("lp_token_recipient") not in (None, ZERO40),
+          str(d17.get("lp_token_recipient")))
+    check("最低流动性锁定被单独识别", d17.get("minimum_liquidity_locked") == 1,
+          str(d17.get("minimum_liquidity_locked")))
+
+    # =====================================================================
     print(f"\n{'='*70}\n通过 {len(passed)} / 失败 {len(failed)}")
     if failed:
         print("失败项：" + "、".join(failed))
@@ -1579,16 +2444,22 @@ def selftest():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["selftest", "probe", "backfill", "forward", "report"])
+    ap.add_argument("step", choices=["selftest", "probe", "reconcile",
+                                     "backfill", "forward", "report"])
     ap.add_argument("--minutes", type=float, default=60)
     a = ap.parse_args()
     if a.step != "selftest":
         ensure_out()
-        with open(os.path.join(OUTDIR, "spec_frozen.json"), "w", encoding="utf-8") as f:
-            json.dump({"spec": SPEC, "spec_hash": spec_hash(), "frozen_at": now_iso()},
-                      f, ensure_ascii=False, indent=2)
-    {"selftest": selftest, "probe": probe, "backfill": backfill,
-     "forward": lambda: forward(a.minutes), "report": report}[a.step]()
+    # spec_frozen 由真正采数的步骤在能力探测之后自己写；report 只读不写
+    def _reconcile_only():
+        # 只做小区间完整性核验：不抓历史、不归因、不出报告
+        SPEC["reconcile_only"] = True
+        SPEC["history_lookback_blocks"] = 0
+        return backfill()
+    rc = {"selftest": selftest, "probe": probe, "reconcile": _reconcile_only,
+          "backfill": backfill, "forward": lambda: forward(a.minutes),
+          "report": report}[a.step]()
+    sys.exit(rc if isinstance(rc, int) else 0)
 
 
 if __name__ == "__main__":

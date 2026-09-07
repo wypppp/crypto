@@ -1,0 +1,272 @@
+
+【场景 1】端到端：backfill + forward + report
+链=ethereum  factory=0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f  spec_hash=bd87486af653323d
+PairCreated 采集来源：rpc —— RPC 跨度 2000 >= 批量标准 500（实测可用跨度 2000（试过 (2000,)））
+候选 1000-1200；历史回看自 100
+L2b 可用性：True —— factory 创建区块定位为 100；双向断言通过（cb-1 空=True, cb 非空=True）
+  按 RPC 跨度 100 取 1,101 个区块，约 12 次 eth_getLogs
+
+[1/5] 历史区间 PairCreated（只建历史，不作候选）…
+  .. 100-199  累计 0  .. 200-299  累计 10  .. 300-399  累计 20  .. 400-499  累计 30  .. 500-599  累计 40  .. 600-699  累计 50  .. 700-799  累计 60  .. 800-899  累计 70  .. 900-999  累计 80
+[2/5] 候选区间 PairCreated…
+  .. 1000-1099  累计 10  .. 1100-1199  累计 20  .. 1200-1200  累计 21
+  历史 80；候选 21；缺口 历史0/候选0 段
+  history   对账：去重 80 vs 预期 80；计数✔ 连续✔ 边界✔
+  candidate 对账：去重 21 vs 预期 21；计数✔ 连续✔ 边界✔
+[3/5] 历史建池发送者：抓 80，历史总数 80，上限 3000/次
+  .. 50/80  自足通道覆盖 80/80 → 全覆盖
+[4/5] 归因 21 个候选…（自足通道实际抽到的最早区块 = 200，回看窗口起点 = 100）
+  .. 10/21  RPC 190 (均 19.0/候选)  .. 20/21  RPC 387 (均 19.4/候选)
+[5/5] 第二遍重算 creator_prior_pairs（消除处理顺序偏置）…
+完成。总 RPC 调用 541。数据库 ./rt_a_selftest/rt_a.sqlite
+前向观察 0.05 分钟，起始 1400；截止 = 事件时间 + 300s
+  .. 1401-1403  累计 2
+  0x00000000… 处理   0.0s  事件→完成 88748661.3s  超过截止
+  0x00000000… 处理   0.0s  事件→完成 88748649.3s  超过截止
+前向观察结束。
+
+==============================================================================
+模式：backfill    候选数 N = 21
+数据采集时的 spec_hash：bd87486af653323d
+当前进程 spec_hash：bd87486af653323d
+链 = ethereum   决策窗口 = 300s
+本模式回看窗口 = 900 区块
+==============================================================================
+
+【1】四条链路各自状态分布（分母 = N）
+  L1 建池交易发送者             已判完 =   21/21 (100.0%)
+                          ok=21
+  L2a 浏览器创建归因            已判完 =   21/21 (100.0%)
+                          ok=21
+  L2b 纯RPC创建归因           已判完 =   21/21 (100.0%)
+                          ok=21
+  L3 首次Mint与LP接收         已判完 =   21/21 (100.0%)
+                          ok=21
+  L4 最早观察到的入账            已判完 =   21/21 (100.0%)
+                          ok=21
+
+【2】联合覆盖率 —— 唯一的结论行
+  规则需要：pair_created_tx_sender, creation_tx_sender, creator_prior_activity_known
+  '已判完'计入可用的状态：['ok', 'no_history']  （历史部署零条仍为未知，不代表没有历史）
+  联合可用 = 21/21  (100.0%)
+
+【2b】历史可见性状态分布
+  ok                  （已判完）   21/21 (100.0%)
+
+【3】两条创建归因链路的交叉校验（按部署形态分层）
+  只比较两条链路都判 ok 的行；工厂路径 L2b 仍为 ambiguous，不能据此确定归因。
+  direct   候选   21；可比   21；一致 21 (100.0%)
+  factory  候选    0；可比    0；一致 0 (n/a)
+  unknown  候选    0；可比    0；一致 0 (n/a)
+
+【3c】两路一致性的细分（先比创建交易，再比地址）
+  agree                  21/21 (100.0%)
+  conflict_tx = 两路指向不同的创建交易，这才是真歧义；此时不写 creation_tx_sender。
+
+【3b】creation_tx_sender 的确定性（ambiguous / conflict 不进下游）
+  ok                     21/21 (100.0%)
+
+【5】新池 ≠ 新币（只统计 backfill 候选）
+  该代币此前已有池：0/21 (0.0%)
+  无法判定哪侧是新币：0/21 (0.0%)
+
+【本周能否定什么 / 不能否定什么】
+  能否定：在这个冻结的母体、数据源、回看范围与决策截止内，
+          【这一版归因规则】覆盖不足或来不及返回。
+  不能否定：信息不存在；RT-A 有没有 edge；换数据源后是否可行。
+  若 L2b 整条为 api_failure，请回看 capability_report.json 的
+  l2b_usable —— 那是数据源限制，不是链上没有信息。
+
+==============================================================================
+模式：forward    候选数 N = 2
+数据采集时的 spec_hash：bd87486af653323d
+当前进程 spec_hash：bd87486af653323d
+链 = ethereum   决策窗口 = 300s
+本模式回看窗口 = 900 区块
+==============================================================================
+
+【1】四条链路各自状态分布（分母 = N）
+  L1 建池交易发送者             已判完 =    0/2 (0.0%)
+                          timeout=2
+  L2a 浏览器创建归因            已判完 =    0/2 (0.0%)
+                          timeout=2
+  L2b 纯RPC创建归因           已判完 =    0/2 (0.0%)
+                          timeout=2
+  L3 首次Mint与LP接收         已判完 =    0/2 (0.0%)
+                          timeout=2
+  L4 最早观察到的入账            已判完 =    0/2 (0.0%)
+                          timeout=2
+
+【2】联合覆盖率 —— 唯一的结论行
+  规则需要：pair_created_tx_sender, creation_tx_sender, creator_prior_activity_known
+  '已判完'计入可用的状态：['ok', 'no_history']  （历史部署零条仍为未知，不代表没有历史）
+  联合可用 = 0/2  (0.0%)
+
+【2b】历史可见性状态分布
+  timeout             （不可用）    2/2 (100.0%)
+
+【3】两条创建归因链路的交叉校验（按部署形态分层）
+  只比较两条链路都判 ok 的行；工厂路径 L2b 仍为 ambiguous，不能据此确定归因。
+  direct   候选    2；可比    2；一致 2 (100.0%)
+  factory  候选    0；可比    0；一致 0 (n/a)
+  unknown  候选    0；可比    0；一致 0 (n/a)
+
+【3c】两路一致性的细分（先比创建交易，再比地址）
+  agree                   2/2 (100.0%)
+  conflict_tx = 两路指向不同的创建交易，这才是真歧义；此时不写 creation_tx_sender。
+
+【3b】creation_tx_sender 的确定性（ambiguous / conflict 不进下游）
+  ok                      2/2 (100.0%)
+
+【4】时间（两个不同的量，不要混读）
+  单候选处理耗时：中位 0.0s  p90 0.0s  最大 0.0s
+  事件→规则必需字段齐备（联合时限看这个）：中位 88748661.3s  p90 88748661.3s  最大 88748661.3s
+  事件→L1 返回：中位 88748661.3s  p90 88748661.3s  最大 88748661.3s
+  事件→L2 返回：中位 88748661.3s  p90 88748661.3s  最大 88748661.3s
+  事件→L3 返回：中位 88748661.3s  p90 88748661.3s  最大 88748661.3s
+  事件→L4 返回：中位 88748661.3s  p90 88748661.3s  最大 88748661.3s
+  事件→全部链路返回：中位 88748661.3s  p90 88748661.3s  最大 88748661.3s
+  超过决策截止 2/2 (100.0%)
+  注意：若处理耗时本身就接近截止，这里量到的是脚本速度，不是数据源速度。
+
+【本周能否定什么 / 不能否定什么】
+  能否定：在这个冻结的母体、数据源、回看范围与决策截止内，
+          【这一版归因规则】覆盖不足或来不及返回。
+  不能否定：信息不存在；RT-A 有没有 edge；换数据源后是否可行。
+  若 L2b 整条为 api_failure，请回看 capability_report.json 的
+  l2b_usable —— 那是数据源限制，不是链上没有信息。
+
+→ ./rt_a_selftest/audit_sample.csv（最后两列请手工填）
+  重点看：关联是不是只是共用了 router、工厂或交易所热钱包。
+  [PASS] backfill 有数据  — 21 行
+  [PASS] forward 有数据（v1 崩溃点）  — 2 行，期望 2
+  [PASS] 直接部署被判为 direct  — {'direct': 21}
+
+【场景 2】非归档节点：L2b 整条应为 api_failure，不得记 no_history
+  [PASS] l2b_self_test 判定不可用  — block=1 就返回了非空代码 —— 节点很可能对历史块返回最新状态（非归档）
+  [PASS] L2b 返回 api_failure  — 实得 api_failure
+[warn] keccak 后端不可用，改用已校验常量（topic0 仍然正确，只是不再运行时计算）。
+[warn] 恢复运行时计算需要【两个】包，缺一不可：
+[warn]     pip install eth-utils "eth-hash[pycryptodome]"
+[warn] 只装 eth-hash 不够 —— 本脚本 import 的是 eth_utils.keccak。
+[migrate] attribution 补列 3 个：l4_subject, deploy_kind, creator_status
+[migrate] 旧行在这些列上为 NULL。若这个库里混有旧版本的数据，报告的 spec_hash 一行会告警——那两批数据不是一次实验。
+
+【场景 3】无 Etherscan key + 历史未全采样
+        → creator_prior_activity_known 必须是 api_failure，不是 history_truncated
+  [PASS] hist_status = api_failure（不是 history_truncated）  — 实得 api_failure
+  [PASS] L2a 记 api_failure  — api_failure
+
+【场景 4】Etherscan 返回字符串（限流）→ 记 api_failure，不得抛异常
+  [PASS] l2a 形状异常 → api_failure  — api_failure
+  [PASS] 历史部署形状异常 → api_failure  — api_failure
+  [PASS] l4 形状异常 → api_failure  — api_failure
+
+【场景 5】L4 分页打满且无入账 → history_truncated，不是 no_history
+  [PASS] L4 → history_truncated  — history_truncated
+
+【场景 6】工厂部署：L2b 判 ambiguous；有 L2a 时以 L2a 为准
+  [PASS] L2b 状态 = ambiguous  — ambiguous
+  [PASS] deploy_kind = factory  — factory
+  [PASS] 值仍保留供人工看  — 0x00000000000000000000000000000000000000c0
+  [PASS] creation_tx_sender 不采用 ambiguous 值  — None
+  [PASS] creator_status = ambiguous  — ambiguous
+  [PASS] l2_agree 不参与比较（None）  — None
+
+【场景 7】L2b 便宜路径 2（getBlockReceipts）与退化路径（扫描上限）
+  [PASS] 便宜路径 2 命中 → ok  — ok
+  [PASS] 退化路径撞上限 → history_truncated（不是 no_history）  — history_truncated
+
+【场景 8】自足通道抽样底线高于回看窗口起点 → history_truncated
+  [PASS] 抽样底线 300 > 回看起点 1 → history_truncated  — history_truncated
+
+【场景 9】创建者历史部署分页打满 → history_truncated，不是 ok/no_history
+  [PASS] 历史部署 → history_truncated  — history_truncated
+  [PASS] 外部通道截断 → hist_status 也是 history_truncated  — history_truncated
+
+【场景 10】自足通道只有在建池发送者==创建者本人时才可用
+  [PASS] 发送者≠创建者 → 不得记 ok  — sender=0x00000000000000000000000000000000000000e0 creator=0x00000000000000000000000000000000000000c0 prior_s=1 → api_failure
+  [PASS] 但 sender_prior_pairs 仍如实保留供人工看  — 1
+  [PASS] 发送者==创建者且有前科 → ok  — sender=0x00000000000000000000000000000000000000c0 creator=0x00000000000000000000000000000000000000c0 → ok
+
+【场景 11】判不出哪侧是新币 → creator_status 必须是 ambiguous，不是 no_history
+  [PASS] creator_status = ambiguous（不是 no_history）  — ambiguous
+  [PASS] ambiguous 不计入已判完  — decisive=['ok', 'no_history']
+  [PASS] creation_tx_sender 为空时 l4 主体标为 pair_created_tx_sender  — pair_created_tx_sender
+  [PASS] l2_source 与空 creation_tx_sender 不矛盾  — none
+
+【场景 12】旧版本建的库：连接时必须补列，不得等写入才崩
+  [PASS] 迁移补齐全部新列  — 无缺列
+  [PASS] 迁移后写入成功（v2 库上这里会抛 no column named deploy_kind）
+
+【场景 13】creator 未取到时，自足通道不得替它宣称 ok / no_history
+  [PASS] creator 未知 + 发送者有前科 → 不是 ok  — 实得 ambiguous, prior_s=1
+  [PASS] creator 未知 + 全采样无前科 → 不是 no_history  — 实得 ambiguous
+  [PASS] 该状态不计入已判完  — ambiguous
+  [PASS] creator 已知但≠发送者 → 不得用发送者历史背书  — sender=0x00000000000000000000000000000000000000e0 creator=0x00000000000000000000000000000000000000c0 → api_failure
+
+【场景 14】回看窗口分叉告警：行覆盖测不出分支输出，必须断言字面量
+  [PASS] 两窗口相同 → 不出现告警  — 未出现
+  [PASS] 两窗口分叉 → 出现告警  — 已出现
+  [PASS] 告警同时出现在两份报告里  — 出现 2 次，期望 2（backfill + forward 各一）
+
+【场景 16】eth_getLogs 跨度上限必须实测，不能信默认值
+  [PASS] 实测出受限端点的真实上限 = 10  — 实得 10；实测可用跨度 10（试过 (2000, 1000, 200, 50, 10)）
+  [PASS] 不受限端点返回最大探测跨度  — 实得 2000
+  [PASS] 全跨度失败 → 返回 0  — 实得 0
+  [PASS] 并保留端点原始错误供诊断  — 全部跨度失败，最后错误: rpc_error -32600 Under the Free tier plan, you can make e
+
+【场景 15】EIP-7702：有代码 ≠ 是合约
+  [PASS] 0xef0100 开头 → 判为 7702 委托的 EOA（1）  — 1
+  [PASS] 普通合约代码 → 不是 7702（0）  — 0
+  [PASS] 地址为空 → None（不适用）
+  [PASS] 该列进入归因行  — 1
+
+【场景 20】集成反例：来源选择顺序 / 对账约束产物 / 缺口归属
+  [PASS] auto + 跨度10 + 有 key → 走 etherscan（不是先降标准再宣布够用）  — 实得 etherscan
+  [PASS] 批量标准不被 log_chunk_blocks 的自动下调污染  — 500
+  [PASS] 对账失败 → report 返回非零  — 1
+  [PASS] 删掉上一次的正式报告，不让它被误当成本次结果
+  [PASS] 改为产出 .INCOMPLETE.md
+  [PASS] 报告正文明确标注母体不完整
+  [PASS] 历史与候选分别对账并落库
+  [PASS] 其他批次且高于链头的缺口不得补回  — 剩 1 行
+  [PASS] 历史池未被前向改写 in_candidate_range  — 0
+  [PASS] 历史池未被写成 forward 归因  — 未归因
+  [PASS] 历史缺口仍留给 backfill 补  — 1 行
+  [PASS] 本批前向静默缺失经完整对账补齐
+  [PASS] 补齐后销账且仅保留两个前向样本
+
+【场景 19】RPC 跨度不足时自动改用 Etherscan 日志源
+  [PASS] RPC 跨度不足 + 有 key → 改用 etherscan  — etherscan；RPC 跨度 10 < 批量标准 500（实测可用跨度 10（试过 (2000, 1000, 200, 50, 10)）） → 改用 Etherscan logs 模块
+  Etherscan logs 190-250：5 条，缺口 0 段
+  [PASS] Etherscan 日志源取得到候选  — 5 条
+  [PASS] 并能过对账
+  [PASS] RPC 跨度足够 → 仍用 rpc  — rpc
+
+【场景 18】日志完整性对账：缺一条就必须判不通过
+  .. 190-250  累计 5
+  [PASS] 完整日志 → 对账通过  — 计数True 连续True 边界True
+  [PASS] 丢掉一条 → 计数不符  — 去重 4 vs 预期 5
+  [PASS] 并判定不通过  — False
+  [PASS] 中间缺号 → 序号不连续  — False
+  [PASS] 日志缺口持久化到 log_gaps  — 1 行
+  [PASS] 缺口带归属（角色/链/Factory）  — ('history', 'ethereum', '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f')
+
+【场景 17】本轮反例：两路 txHash 冲突 / 失败创建 / 通道结构盲区 / LP 锁定
+  [PASS] txHash 不同 → l2_agreement=conflict_tx  — conflict_tx
+  [PASS] 地址相同也不算一致（先比交易）  — 0
+  [PASS] 冲突时不写 creation_tx_sender  — None
+  [PASS] creator_status = conflict  — conflict
+  [PASS] 两路创建块/交易分别留存  — a=0x0000000000 b=0x0000000000
+  [PASS] 同一笔创建交易 → agree  — agree
+  [PASS] isError=1 的创建交易不计为部署  — 实得 0
+  [PASS] 直接部署为 0 → history_truncated，不是 no_history  — history_truncated
+  [PASS] 该状态不计入已判完  — history_truncated
+  [PASS] 分页打满 → history_truncated
+  [PASS] LP 接收者不是零地址  — 0x00000000000000000000000000000000000000c0
+  [PASS] 最低流动性锁定被单独识别  — 1
+
+======================================================================
+通过 81 / 失败 0
+SELFTEST PASS

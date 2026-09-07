@@ -1,0 +1,2165 @@
+{
+  "status": "EVIDENCE_OVERLAY_NOT_A_NEW_UNIVERSE",
+  "baseline_manifest": {
+    "scope": "Read-only metadata baseline; existing outputs preserve their original config versions",
+    "inputs": {
+      "L_config.json": "91dc0a15e57d3626c449ce46630cb9d63f243d96b13c8279f34c354ab2dac50f",
+      "L_u_master.json": "74153236eea6fd5bf8fcbc868e038ba648e8d8eeece80073e4364727dc7b1bfc",
+      "L_mother_events.json": "48b4739603840c0e0d495cfb30381e973917ad0b7a15a83edf34849452c1c9ee",
+      "L_t0_exact_v2.json": "9409fb31b8e04708446b5c56b18478e9a0cb6b575b79c9cdc8a1ed5386af73a2",
+      "u_trade_candidates.json": "8c6e0c53c5df6b50a2c07630f18510fcda0581b593df2aaec5a2ceb8117ab460",
+      "agg_earliest_day.json": "604a6338d60dcd192cb6cfc514fd99aa28a5c8db5aa4f1dd9942632b469903d5",
+      "ann_body/185740.json": "4bccb0152ae77bb46b7fa72a79503c142be52c5012de0856459f929280e851d3",
+      "ann_body/81389.json": "775968885748553d59aaa7f580331bafd2494f871360dcfb8b90b65655d82982",
+      "ann_body/161233.json": "da7682d770689d2ac478e571f586963c14f10b04be062c310163bf5659666a33",
+      "L_00_bootstrap.py": "3dbfdb0aa378dd4d293de6132a58235eae2fc5ac878b37c13f80b45a569d2d6c",
+      "L_03_classify.py": "1f1d4333bcb970acf978b8bf19638f0f996df023860224f3d5fe227d309941d2",
+      "ann_raw.json": "c6e0111f82865880a1806c08862ebd914bb2b9e82358ff1f36cff999d097bdbf",
+      "crawl_report.json": "54eaa904ae1f605dc2619417219ad51cd996de2b1014c7d48d5eeeca8f35c93e",
+      "ann_body_manifest.json": "aeaf1879311dfe3157e90dfedd00248638f60beab36d31a6208d5524d69f8cdc",
+      "spot_exchangeinfo.json": "a19dfd8154af4374cb8b02f15cf479f45f3d52ab1d2a711b188406b47dba9895"
+    },
+    "identity_sources_sha256": "1b518fda5160b9b91f9fa3a60b91f1b98002fca71b7d8efe54cff685c8becb37"
+  },
+  "script_sha256": "a6a534b5542ff725bed365ed8864893f60b5beebebcdfd61885b9dd1a6e3178a",
+  "n_rows": 42,
+  "evidence_counts": {
+    "LEGACY_IDENTITY_DOCUMENTED": 38,
+    "MISSED_LISTING_CONFIRMED": 1,
+    "STAKING_WRAPPER_DOCUMENTED": 2,
+    "VENUE_EVIDENCE_PENDING": 1
+  },
+  "new_market_downloads": 0,
+  "eligibility_changes": 0,
+  "rows": [
+    {
+      "base_asset": "A",
+      "T0_day": "2025-05-28",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "EOS",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-AE/support/announcement/detail/f5a19fab8c5d4078a1235a17f542dfc5"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 EOS → A。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "ABTC",
+          "base": "A",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-28"
+        },
+        {
+          "symbol": "AETH",
+          "base": "A",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-28"
+        },
+        {
+          "symbol": "AFDUSD",
+          "base": "A",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-28"
+        },
+        {
+          "symbol": "ATRY",
+          "base": "A",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-28"
+        },
+        {
+          "symbol": "AUSDC",
+          "base": "A",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-28"
+        },
+        {
+          "symbol": "AUSDT",
+          "base": "A",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-28"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "A2Z",
+      "T0_day": "2025-07-30",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "LOKA",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/8584e37a223f44559a2c90785d5dc839"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 LOKA → A2Z。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "A2ZUSDC",
+          "base": "A2Z",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-08-26"
+        },
+        {
+          "symbol": "A2ZUSDT",
+          "base": "A2Z",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-07-30"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "ACE",
+      "T0_day": "2023-12-18",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": null,
+      "article_ids": [
+        185740
+      ],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/2cb7b8a617b548e5b765bcb0f3beb680"
+      ],
+      "notes": "当前正式 1134 行、206 条取数清单及固定 37 条核验样本均未改写；没有新下载 ACE 行情。",
+      "evidence_class": "MISSED_LISTING_CONFIRMED",
+      "finding": "本地 Launchpool 公告明确列出 ACE 2023-12-18 06:00 UTC 与五个交易对；C1 模板漏掉 tentatively set to list。",
+      "next_requirement": "将隔离修复纳入新版本并重跑裁定、时间链与联合表，再冻结新增取数清单。",
+      "local_pairs": [
+        {
+          "symbol": "ACEBNB",
+          "base": "ACE",
+          "quote": "BNB",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-18"
+        },
+        {
+          "symbol": "ACEBTC",
+          "base": "ACE",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-18"
+        },
+        {
+          "symbol": "ACEFDUSD",
+          "base": "ACE",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-18"
+        },
+        {
+          "symbol": "ACETRY",
+          "base": "ACE",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-18"
+        },
+        {
+          "symbol": "ACEUSDT",
+          "base": "ACE",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-18"
+        }
+      ],
+      "local_article_sha256": {
+        "185740": "4bccb0152ae77bb46b7fa72a79503c142be52c5012de0856459f929280e851d3"
+      }
+    },
+    {
+      "base_asset": "AWE",
+      "T0_day": "2025-05-21",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "STPT",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/ad0f6c6b7d6640eea285538c96e2cd42"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 STPT → AWE。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "AWEBTC",
+          "base": "AWE",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-21"
+        },
+        {
+          "symbol": "AWEUSDT",
+          "base": "AWE",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-05-21"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "BDOT",
+      "T0_day": "2022-01-28",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": null,
+      "article_ids": [
+        81389
+      ],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/c2e9a43244424e26a4f086ba798660d9"
+      ],
+      "notes": "身份事实不能替代资产类别资格规则。",
+      "evidence_class": "STAKING_WRAPPER_DOCUMENTED",
+      "finding": "BDOT 为已质押 DOT 的代币化凭证。",
+      "next_requirement": "为包装/质押凭证明确上市资格；保留 SAME_DAY_OPEN_ONLY 证据与未裁定状态。",
+      "local_pairs": [
+        {
+          "symbol": "BDOTDOT",
+          "base": "BDOT",
+          "quote": "DOT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-28"
+        }
+      ],
+      "local_article_sha256": {
+        "81389": "775968885748553d59aaa7f580331bafd2494f871360dcfb8b90b65655d82982"
+      }
+    },
+    {
+      "base_asset": "BEAMX",
+      "T0_day": "2023-11-14",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "MC",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/c8705b752c7c47fc814a373a0f1856ee"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 MC → BEAMX。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "BEAMXTRY",
+          "base": "BEAMX",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-11-16"
+        },
+        {
+          "symbol": "BEAMXUSDC",
+          "base": "BEAMX",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-25"
+        },
+        {
+          "symbol": "BEAMXUSDT",
+          "base": "BEAMX",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-11-14"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "BTTC",
+      "T0_day": "2022-01-25",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "BTT",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/2722e6da4f5141dd9b2fb07b5b1f3f75"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 BTT → BTTC。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "BTTCBUSD",
+          "base": "BTTC",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-04-29"
+        },
+        {
+          "symbol": "BTTCTRY",
+          "base": "BTTC",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-25"
+        },
+        {
+          "symbol": "BTTCUSDC",
+          "base": "BTTC",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-25"
+        },
+        {
+          "symbol": "BTTCUSDT",
+          "base": "BTTC",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-25"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "COMBO",
+      "T0_day": "2023-06-02",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "COCOS",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/45852dc155b641bc9e1c23bc41d8ded6"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 COCOS → COMBO。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "COMBOBNB",
+          "base": "COMBO",
+          "quote": "BNB",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-06-02"
+        },
+        {
+          "symbol": "COMBOTRY",
+          "base": "COMBO",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-06-02"
+        },
+        {
+          "symbol": "COMBOUSDT",
+          "base": "COMBO",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-06-02"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "D",
+      "T0_day": "2025-01-09",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "DAR",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/square/post/17759237581553"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 DAR → D。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "DTRY",
+          "base": "D",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-09"
+        },
+        {
+          "symbol": "DUSDT",
+          "base": "D",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-09"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "EPIC",
+      "T0_day": "2025-03-13",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "ERN",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/53d4f5fd4d9a49ec917d712b1d1fb58e"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 ERN → EPIC。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "EPICUSDC",
+          "base": "EPIC",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-18"
+        },
+        {
+          "symbol": "EPICUSDT",
+          "base": "EPIC",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-13"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "EPX",
+      "T0_day": "2022-05-23",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "EPS",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/4e21b7d402a840928c652e1f74812547"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 EPS → EPX。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "EPXBUSD",
+          "base": "EPX",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-23"
+        },
+        {
+          "symbol": "EPXUSDT",
+          "base": "EPX",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-23"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "FORM",
+      "T0_day": "2025-03-19",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "BNX",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/7d5accdcf8f446f3ba3d79f8747a28e2"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 BNX → FORM。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "FORMTRY",
+          "base": "FORM",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-19"
+        },
+        {
+          "symbol": "FORMUSDC",
+          "base": "FORM",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-19"
+        },
+        {
+          "symbol": "FORMUSDT",
+          "base": "FORM",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-19"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "FRAX",
+      "T0_day": "2026-01-15",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "FXS",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/fr/support/announcement/detail/a17352ba70414c96882cd881591dd36d"
+      ],
+      "notes": "此处为 FXS→FRAX；必须区分历史同名稳定币。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 FXS → FRAX。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "FRAXUSDT",
+          "base": "FRAX",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-01-15"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "G",
+      "T0_day": "2024-07-19",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "GAL",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-BH/support/announcement/detail/6df074e0264648448c260b1430240e2f"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 GAL → G。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "GTRY",
+          "base": "G",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-19"
+        },
+        {
+          "symbol": "GUSDT",
+          "base": "G",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-19"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "GFT",
+      "T0_day": "2023-02-08",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "GTO",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/square/post/204800"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 GTO → GFT。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "GFTBUSD",
+          "base": "GFT",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-02-08"
+        },
+        {
+          "symbol": "GFTUSDT",
+          "base": "GFT",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-09-22"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "GRAM",
+      "T0_day": "2026-07-02",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "TON",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/8177254072cf4da3b9d8fcaacceb0a2c"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 TON → GRAM。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "GRAMFDUSD",
+          "base": "GRAM",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-07-02"
+        },
+        {
+          "symbol": "GRAMIDR",
+          "base": "GRAM",
+          "quote": "IDR",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-07-02"
+        },
+        {
+          "symbol": "GRAMTRY",
+          "base": "GRAM",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-07-02"
+        },
+        {
+          "symbol": "GRAMU",
+          "base": "GRAM",
+          "quote": "U",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-07-02"
+        },
+        {
+          "symbol": "GRAMUSD1",
+          "base": "GRAM",
+          "quote": "USD1",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-07-02"
+        },
+        {
+          "symbol": "GRAMUSDC",
+          "base": "GRAM",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-07-02"
+        },
+        {
+          "symbol": "GRAMUSDT",
+          "base": "GRAM",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-07-02"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "HEI",
+      "T0_day": "2025-02-13",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "LIT",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/az-AZ/support/announcement/detail/f65ece87c4a7406eba416b9b1f514cec"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 LIT → HEI。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "HEIBTC",
+          "base": "HEI",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-02-13"
+        },
+        {
+          "symbol": "HEITRY",
+          "base": "HEI",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-11-26"
+        },
+        {
+          "symbol": "HEIUSDC",
+          "base": "HEI",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-02-18"
+        },
+        {
+          "symbol": "HEIUSDT",
+          "base": "HEI",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-02-13"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "HIFI",
+      "T0_day": "2023-01-12",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "MFT",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/0e5b302a17014b7aa0af476731588e8b"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 MFT → HIFI。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "HIFIETH",
+          "base": "HIFI",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-01-12"
+        },
+        {
+          "symbol": "HIFIUSDT",
+          "base": "HIFI",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-01-12"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "KAIA",
+      "T0_day": "2024-10-31",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "KLAY",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/f75f933759ee49d0af1dfbce7e32144c"
+      ],
+      "notes": "来源证明 KLAY→KAIA；不把该关系当成对全部合并参与方的完整描述。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 KLAY → KAIA。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "KAIAUSDC",
+          "base": "KAIA",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-12-04"
+        },
+        {
+          "symbol": "KAIAUSDT",
+          "base": "KAIA",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-10-31"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "LEVER",
+      "T0_day": "2022-07-13",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "RAMP",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/zh-TC/support/announcement/detail/38c31026a58d465086b015a89b06c19b"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 RAMP → LEVER。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "LEVERBUSD",
+          "base": "LEVER",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-07-13"
+        },
+        {
+          "symbol": "LEVERTRY",
+          "base": "LEVER",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-10-12"
+        },
+        {
+          "symbol": "LEVERUSDT",
+          "base": "LEVER",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-07-13"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "LUMIA",
+      "T0_day": "2024-10-18",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "ORN",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/066ba1773ce4480492b983f8d4764c91"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 ORN → LUMIA。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "LUMIATRY",
+          "base": "LUMIA",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-11-20"
+        },
+        {
+          "symbol": "LUMIAUSDT",
+          "base": "LUMIA",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-10-18"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "LUNC",
+      "T0_day": "2022-05-30",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "LUNA(old)",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/c52fa3c686be4b2b9d5df50de15847ec"
+      ],
+      "notes": "旧 LUNA→LUNC；不与后来的新 LUNA 按字符串合并。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 LUNA(old) → LUNC。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "LUNCBUSD",
+          "base": "LUNC",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-30"
+        },
+        {
+          "symbol": "LUNCTRY",
+          "base": "LUNC",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-05"
+        },
+        {
+          "symbol": "LUNCUSDC",
+          "base": "LUNC",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-12-24"
+        },
+        {
+          "symbol": "LUNCUSDT",
+          "base": "LUNC",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-09-09"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "MANTRA",
+      "T0_day": "2026-03-04",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "OM",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-TR/support/announcement/detail/a65e70f8431a40e8b5ce809bbb61ed59"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 OM → MANTRA。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "MANTRATRY",
+          "base": "MANTRA",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-03-04"
+        },
+        {
+          "symbol": "MANTRAUSDC",
+          "base": "MANTRA",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-03-04"
+        },
+        {
+          "symbol": "MANTRAUSDT",
+          "base": "MANTRA",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2026-03-04"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "MULTI",
+      "T0_day": "2022-04-06",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "ANY",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/cd39354caeee4361badf9a57e92cd5da"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 ANY → MULTI。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "MULTIBTC",
+          "base": "MULTI",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-04-06"
+        },
+        {
+          "symbol": "MULTIBUSD",
+          "base": "MULTI",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-04-06"
+        },
+        {
+          "symbol": "MULTIUSDT",
+          "base": "MULTI",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-04-06"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "NBT",
+      "T0_day": "2022-03-11",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T6_公告目录完全无提及",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": null,
+      "article_ids": [],
+      "source_urls": [
+        "https://support.tokocrypto.com/hc/en-us/articles/4693749255309-NBT-is-going-to-be-Listed-on-Tokocrypto",
+        "https://support.tokocrypto.com/hc/en-us/articles/4722887851405-Join-TKO-x-NBT-Trading-Competition-to-win-more-than-IDR-1-Billion"
+      ],
+      "notes": "此一致性提出场所疑点；既不能证明本地污染，也不能证明 Binance 从未上市 NBT。",
+      "evidence_class": "VENUE_EVIDENCE_PENDING",
+      "finding": "Tokocrypto 官方列出 NanoByte NBT/BIDR 与 NBT/USDT 于 2022-03-11 13:00 UTC+7 开盘；与本地两对及日期一致。",
+      "next_requirement": "核实本地归档对应的交易场所与 Binance Global 历史交易资格。",
+      "local_pairs": [
+        {
+          "symbol": "NBTBIDR",
+          "base": "NBT",
+          "quote": "BIDR",
+          "src": "fallback",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-03-11"
+        },
+        {
+          "symbol": "NBTUSDT",
+          "base": "NBT",
+          "quote": "USDT",
+          "src": "fallback",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-03-11"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "NOM",
+      "T0_day": "2025-10-01",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "OMNI",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/academy/articles/what-is-the-omni-network"
+      ],
+      "notes": "Binance Academy 回顾性身份说明；不是历史时点可交易信号。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 OMNI → NOM。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "NOMFDUSD",
+          "base": "NOM",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-10-01"
+        },
+        {
+          "symbol": "NOMTRY",
+          "base": "NOM",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-10-01"
+        },
+        {
+          "symbol": "NOMUSDC",
+          "base": "NOM",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-10-01"
+        },
+        {
+          "symbol": "NOMUSDT",
+          "base": "NOM",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-10-01"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "OOKI",
+      "T0_day": "2021-12-24",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "BZRX",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/57f017dd5d474f06bc82d029bc412cba"
+      ],
+      "notes": "换币入口停用通知证明 BZRX→OOKI 关联；本条未独立确认换币完成日与首开时间。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 BZRX → OOKI。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "OOKIBNB",
+          "base": "OOKI",
+          "quote": "BNB",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-07"
+        },
+        {
+          "symbol": "OOKIBUSD",
+          "base": "OOKI",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2021-12-24"
+        },
+        {
+          "symbol": "OOKIETH",
+          "base": "OOKI",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-14"
+        },
+        {
+          "symbol": "OOKIUSDT",
+          "base": "OOKI",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2021-12-24"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "PDA",
+      "T0_day": "2024-03-01",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T6_公告目录完全无提及",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "PLA",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-AU/support/announcement/detail/f0fafa66fedf4e058aaacb57c206c597"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 PLA → PDA。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "PDABTC",
+          "base": "PDA",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-03-01"
+        },
+        {
+          "symbol": "PDAUSDT",
+          "base": "PDA",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-03-01"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "POL",
+      "T0_day": "2024-09-13",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "MATIC",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-NG/square/post/12771540527345"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 MATIC → POL。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "POLBNB",
+          "base": "POL",
+          "quote": "BNB",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLBRL",
+          "base": "POL",
+          "quote": "BRL",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLBTC",
+          "base": "POL",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLETH",
+          "base": "POL",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLEUR",
+          "base": "POL",
+          "quote": "EUR",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLFDUSD",
+          "base": "POL",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLIDR",
+          "base": "POL",
+          "quote": "IDR",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-11-29"
+        },
+        {
+          "symbol": "POLJPY",
+          "base": "POL",
+          "quote": "JPY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLTRY",
+          "base": "POL",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLUSDC",
+          "base": "POL",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        },
+        {
+          "symbol": "POLUSDT",
+          "base": "POL",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-09-13"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "POLYX",
+      "T0_day": "2022-10-17",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "POLY",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/9f6c57e9fa924eeab275f410332df567"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 POLY → POLYX。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "POLYXBTC",
+          "base": "POLYX",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-10-17"
+        },
+        {
+          "symbol": "POLYXBUSD",
+          "base": "POLYX",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-10-17"
+        },
+        {
+          "symbol": "POLYXTRY",
+          "base": "POLYX",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-04-17"
+        },
+        {
+          "symbol": "POLYXUSDT",
+          "base": "POLYX",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-10-17"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "REI",
+      "T0_day": "2022-05-04",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "GXS",
+      "article_ids": [],
+      "source_urls": [
+        "https://t.me/s/binance_cn?before=3779"
+      ],
+      "notes": "来源为币安官方中文公告频道；记录 GXS→REI 关联，不使用跳转后已失效的支持页作为证据。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 GXS → REI。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "REIBNB",
+          "base": "REI",
+          "quote": "BNB",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-04"
+        },
+        {
+          "symbol": "REIBUSD",
+          "base": "REI",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-27"
+        },
+        {
+          "symbol": "REIETH",
+          "base": "REI",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-04"
+        },
+        {
+          "symbol": "REIUSDT",
+          "base": "REI",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-04"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "RENDER",
+      "T0_day": "2024-07-26",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "RNDR",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-IN/support/announcement/detail/7aa2bb48ab194bb9aebbc3f72b5819ed"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 RNDR → RENDER。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "RENDERBRL",
+          "base": "RENDER",
+          "quote": "BRL",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-26"
+        },
+        {
+          "symbol": "RENDERBTC",
+          "base": "RENDER",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-26"
+        },
+        {
+          "symbol": "RENDEREUR",
+          "base": "RENDER",
+          "quote": "EUR",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-26"
+        },
+        {
+          "symbol": "RENDERFDUSD",
+          "base": "RENDER",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-26"
+        },
+        {
+          "symbol": "RENDERIDR",
+          "base": "RENDER",
+          "quote": "IDR",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-11-29"
+        },
+        {
+          "symbol": "RENDERTRY",
+          "base": "RENDER",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-26"
+        },
+        {
+          "symbol": "RENDERUSDC",
+          "base": "RENDER",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-26"
+        },
+        {
+          "symbol": "RENDERUSDT",
+          "base": "RENDER",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-07-26"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "S",
+      "T0_day": "2025-01-16",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "FTM",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-IN/support/announcement/detail/aec6fcbc84b749eeab6690e6bcac2f3d"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 FTM → S。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "SBNB",
+          "base": "S",
+          "quote": "BNB",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        },
+        {
+          "symbol": "SBTC",
+          "base": "S",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        },
+        {
+          "symbol": "SETH",
+          "base": "S",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        },
+        {
+          "symbol": "SEUR",
+          "base": "S",
+          "quote": "EUR",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        },
+        {
+          "symbol": "SFDUSD",
+          "base": "S",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        },
+        {
+          "symbol": "STRY",
+          "base": "S",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        },
+        {
+          "symbol": "SUSDC",
+          "base": "S",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        },
+        {
+          "symbol": "SUSDT",
+          "base": "S",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-01-16"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "SLF",
+      "T0_day": "2024-08-30",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "FRONT",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/pt-BR/support/announcement/detail/65f69bc68ca64182b6df3d958f14f38e?hl=pt-BR"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 FRONT → SLF。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "SLFBTC",
+          "base": "SLF",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-08-30"
+        },
+        {
+          "symbol": "SLFTRY",
+          "base": "SLF",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-08-30"
+        },
+        {
+          "symbol": "SLFUSDC",
+          "base": "SLF",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-08-30"
+        },
+        {
+          "symbol": "SLFUSDT",
+          "base": "SLF",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2024-08-30"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "SSV",
+      "T0_day": "2021-10-22",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "CDT",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/96e8866829784919a739c1855d21ef76"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 CDT → SSV。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "SSVBTC",
+          "base": "SSV",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2021-10-22"
+        },
+        {
+          "symbol": "SSVBUSD",
+          "base": "SSV",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-08-19"
+        },
+        {
+          "symbol": "SSVETH",
+          "base": "SSV",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2021-10-22"
+        },
+        {
+          "symbol": "SSVTUSD",
+          "base": "SSV",
+          "quote": "TUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-03-29"
+        },
+        {
+          "symbol": "SSVUSDC",
+          "base": "SSV",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-08-26"
+        },
+        {
+          "symbol": "SSVUSDT",
+          "base": "SSV",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-02-24"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "T",
+      "T0_day": "2022-02-25",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "NU+KEEP",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/es/support/announcement/detail/249dfc101d104246b892d0604a623314"
+      ],
+      "notes": "NU 与 KEEP 合并为 T；不可当作单一旧币 1:1 改名。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 NU+KEEP → T。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "TBUSD",
+          "base": "T",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-02-25"
+        },
+        {
+          "symbol": "TUSDC",
+          "base": "T",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-11"
+        },
+        {
+          "symbol": "TUSDT",
+          "base": "T",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-02-25"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "USDP",
+      "T0_day": "2021-09-10",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T2_报价资产作为base",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "PAX",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/627ea984daa44ee4a5ac27fe658cc180"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 PAX → USDP。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "USDPBUSD",
+          "base": "USDP",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2021-09-10"
+        },
+        {
+          "symbol": "USDPUSDT",
+          "base": "USDP",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2021-09-10"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "USTC",
+      "T0_day": "2022-05-30",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "UST",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/c52fa3c686be4b2b9d5df50de15847ec"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 UST → USTC。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "USTCBUSD",
+          "base": "USTC",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-05-30"
+        },
+        {
+          "symbol": "USTCFDUSD",
+          "base": "USTC",
+          "quote": "FDUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-11-30"
+        },
+        {
+          "symbol": "USTCTRY",
+          "base": "USTC",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-11-30"
+        },
+        {
+          "symbol": "USTCUSDT",
+          "base": "USTC",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-03-10"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "VANRY",
+      "T0_day": "2023-12-01",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "TVK",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/4701f3d28a244d1f824aa05f009ddc40"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 TVK → VANRY。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "VANRYBTC",
+          "base": "VANRY",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-01"
+        },
+        {
+          "symbol": "VANRYTRY",
+          "base": "VANRY",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-21"
+        },
+        {
+          "symbol": "VANRYUSDC",
+          "base": "VANRY",
+          "quote": "USDC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2025-03-20"
+        },
+        {
+          "symbol": "VANRYUSDT",
+          "base": "VANRY",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-12-01"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "VIC",
+      "T0_day": "2023-11-24",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "TOMO",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/0491a610ab2d4ab3af6d15dce961c5ae"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 TOMO → VIC。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "VICBTC",
+          "base": "VIC",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-11-24"
+        },
+        {
+          "symbol": "VICTRY",
+          "base": "VIC",
+          "quote": "TRY",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-11-24"
+        },
+        {
+          "symbol": "VICUSDT",
+          "base": "VIC",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-11-24"
+        }
+      ],
+      "local_article_sha256": {}
+    },
+    {
+      "base_asset": "WBETH",
+      "T0_day": "2023-05-12",
+      "embargo": "EMBARGOED",
+      "baseline_attribution": "T3_有公告但裁定非上市类",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": null,
+      "article_ids": [
+        161233
+      ],
+      "source_urls": [
+        "https://www.binance.com/en/support/announcement/detail/c968644475a74284a292ecd3af39e6ff"
+      ],
+      "notes": "身份事实不能替代资产类别资格规则。",
+      "evidence_class": "STAKING_WRAPPER_DOCUMENTED",
+      "finding": "WBETH 为含质押收益的流动性质押凭证；同篇 CVC 不适用相同裁定。",
+      "next_requirement": "为包装/质押凭证明确上市资格；保留 SAME_DAY_OPEN_ONLY 证据与未裁定状态。",
+      "local_pairs": [
+        {
+          "symbol": "WBETHETH",
+          "base": "WBETH",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-05-12"
+        },
+        {
+          "symbol": "WBETHUSDT",
+          "base": "WBETH",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2023-07-19"
+        }
+      ],
+      "local_article_sha256": {
+        "161233": "da7682d770689d2ac478e571f586963c14f10b04be062c310163bf5659666a33"
+      }
+    },
+    {
+      "base_asset": "XNO",
+      "T0_day": "2022-01-28",
+      "embargo": "FETCHABLE",
+      "baseline_attribution": "T5_仅有服务新增公告",
+      "baseline_eligibility": "PENDING_EVIDENCE",
+      "eligibility_action": "RETAIN_PENDING_NO_EXCLUSION",
+      "retrieved_on": "2026-09-07",
+      "evidence_use": "IDENTITY_AND_CATALOG_AUDIT_ONLY_NOT_TRADING_SIGNAL",
+      "legacy_symbols": "NANO",
+      "article_ids": [],
+      "source_urls": [
+        "https://www.binance.com/en-TR/support/announcement/detail/3dc8f6de281f4781a246a1658a21cb80"
+      ],
+      "notes": "本条仅确认身份关联；未宣称所有换币执行细节均已核验。",
+      "evidence_class": "LEGACY_IDENTITY_DOCUMENTED",
+      "finding": "一手来源明确关联 NANO → XNO。",
+      "next_requirement": "补齐相关换币事件、合约/比例/生效时间；分别裁定首次经济资产上市与 U_trade 收益口径。",
+      "local_pairs": [
+        {
+          "symbol": "XNOBTC",
+          "base": "XNO",
+          "quote": "BTC",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-28"
+        },
+        {
+          "symbol": "XNOBUSD",
+          "base": "XNO",
+          "quote": "BUSD",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-28"
+        },
+        {
+          "symbol": "XNOETH",
+          "base": "XNO",
+          "quote": "ETH",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-28"
+        },
+        {
+          "symbol": "XNOUSDT",
+          "base": "XNO",
+          "quote": "USDT",
+          "src": "official",
+          "leverage_class": "NORMAL",
+          "earliest_trade_day": "2022-01-28"
+        }
+      ],
+      "local_article_sha256": {}
+    }
+  ]
+}

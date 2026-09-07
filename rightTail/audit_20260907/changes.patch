@@ -1,0 +1,1150 @@
+--- before/rt_a_attribution.py
++++ after/rt_a_attribution.py
+@@ -1,59 +1,8 @@
+ #!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+-"""
+-RT-A 第一周：身份归因可行性门（只读取数，不涉及价格、不涉及收益、不下单）  v2
+-
+-本脚本只回答一个问题：
+-    在候选出现的那一刻，RT-A 所需的身份与历史信息，能不能及时、可靠地取得？
+-
+-它【不】回答：RT-A 有没有 edge、筛选有没有用、能不能赚钱。
+-
+-------------------------------------------------------------------------------
+-v2 相对 v1 的修改（v1 的对应缺陷会让报出的低覆盖率由脚本自身决定，而不是由数据源决定）
+-
+-[崩溃] forward 的 INSERT 占位符 28 个、表 29 列 —— 第一个候选就抛。
+-       结构性修复：所有写入改成【具名列 + 字典绑定】，列数漂移在语法上不再可能。
+-
+-[口径] no_history 曾被算进"不可用"。"确认这个创建者没有前科"是一个已判完的答案，
+-       不是缺失。联合覆盖率现在接受 ok 与 no_history；真正的不可用只有
+-       history_truncated / api_failure / timeout / ambiguous。
+-
+-[口径] HIST_SAMPLED_FULLY 在以太坊上几乎恒为 False，于是所有零关联候选一律被记
+-       history_truncated，把上一条再放大一次。现在按通道判：外部通道（创建者历史
+-       部署）给出确定答案时就是确定答案，自足通道的抽样上限只影响自足通道本身。
+-
+-[口径] probe 对历史 eth_getCode 只检查"不报错"。非归档节点的典型失败是不报错地
+-       返回错误内容。现在对 factory 自己跑一次双向断言（创建区块-1 必须为 0x，
+-       创建区块必须非空）；不满足则把 L2b 整条标为 data_source_unavailable，
+-       而不是逐候选记成 no_history / history_truncated。
+-
+-[性能] l2b 曾对创建区块的每一笔交易各取一次回执（150-200 次 RPC/候选）。现在改成
+-       eth_getLogs(address=token, 单区块) → 命中则 1-2 次调用；未命中再试
+-       eth_getBlockReceipts（1 次）；都不行才退化到逐笔回执并带上限与提前退出。
+-
+-[数据] L3 曾用 bn+50000 单次 getLogs，超出多数供应商 10k 上限。现在分块 + 首个
+-       Mint 即停 + 区分 api_failure 与 no_history。
+-[数据] L4 只取前 20 笔却在找不到入账时返回 no_history。现在分页打满即记
+-       history_truncated。
+-[数据] creator 历史部署曾只数 to 为空的外部交易，漏掉工厂内 CREATE/CREATE2
+-       （新币的主流方式）。现在同时数 txlistinternal 里 type=create 的记录。
+-[数据] 通道乙 JOIN 正在写入的表，存在处理顺序偏置。改为主循环结束后的第二遍统一重算。
+-[数据] forward 曾把 token_had_prior_pair 硬写 0，污染报告【5】。现在写 NULL，
+-       且报告【5】只统计 backfill 行。
+-[性能] block_timestamps 曾对 2.5M 区块内的全部历史事件逐块取时间戳，而历史比较用的
+-       是 block_number。现在只对候选区间取时间戳。
+-[审计] report 曾打当前 spec_hash 而不是采数时那次。现在每行存 spec_hash，报告按
+-       哈希分组并在混用时明确告警。
+-[计时] 曾把"单候选处理耗时"报成"从事件到全部链路返回"。现在两个量分开存、分开报。
+-
+-------------------------------------------------------------------------------
+-依赖：  pip install requests "eth-utils" "eth-hash[pycryptodome]"
+-运行：
+-    python rt_a_attribution.py selftest              # 离线自测，不需要网络
+-    python rt_a_attribution.py probe
+-    python rt_a_attribution.py backfill
+-    python rt_a_attribution.py forward --minutes 120
+-    python rt_a_attribution.py report
++"""RT-A v4.1：身份与历史活动取数可行性实验（只读、不测收益）。
++creation_tx_sender 仅为创建交易外层 from；历史活动不等于恶意。
++采集批次、区间完整性与归因绑定；reconcile 只核验指定小区间。
+ """
+ 
+ import argparse
+@@ -64,6 +13,7 @@
+ import sqlite3
+ import sys
+ import time
++import uuid
+ from datetime import datetime, timezone
+ 
+ import requests
+@@ -100,7 +50,7 @@
+ # 冻结规格
+ # =============================================================================
+ SPEC = {
+-    "spec_version": "rt-a-feasibility-v3.1",
++    "spec_version": "rt-a-feasibility-v4.1",
+     "purpose": "身份归因可行性门；不测收益",
+     "chain": os.environ.get("RTA_CHAIN", "ethereum"),
+     "chains": {
+@@ -283,7 +233,7 @@
+ # 数据库 —— 所有写入用具名列，杜绝列数漂移
+ # =============================================================================
+ ATTR_COLS = [
+-    "pair", "spec_hash", "mode", "fetched_at", "event_time", "decision_deadline",
++    "pair", "spec_hash", "batch", "mode", "fetched_at", "event_time", "decision_deadline",
+     "pair_created_tx_sender", "pair_created_tx_to", "l1_status",
+     # A 冻结口径 creation-tx-sender-v1：这一列是【已定位创建交易的外层 from】，
+     # 不是"发行者"、不是"实控人"。旧名 token_creator 已废弃。
+@@ -321,12 +271,20 @@
+   chain TEXT, factory TEXT, role TEXT, batch TEXT,
+   from_block INTEGER, to_block INTEGER, source TEXT, err TEXT, seen_at TEXT,
+   resolved INTEGER DEFAULT 0,
+-  PRIMARY KEY (chain, factory, role, from_block, to_block)
++  PRIMARY KEY (chain, factory, role, batch, from_block, to_block)
+ );
+ CREATE TABLE IF NOT EXISTS run_integrity (
+   spec_hash TEXT, mode TEXT, role TEXT, from_block INTEGER, to_block INTEGER,
+   ok INTEGER, detail TEXT, checked_at TEXT,
+   PRIMARY KEY (spec_hash, mode, role)
++);
++CREATE TABLE IF NOT EXISTS collection_runs (
++  batch TEXT PRIMARY KEY, spec_hash TEXT, mode TEXT, chain TEXT, factory TEXT,
++  from_block INTEGER, to_block INTEGER, status TEXT, spec_json TEXT, started_at TEXT
++);
++CREATE TABLE IF NOT EXISTS batch_integrity (
++  batch TEXT, role TEXT, from_block INTEGER, to_block INTEGER,
++  ok INTEGER, detail TEXT, PRIMARY KEY(batch,role,from_block,to_block)
+ );
+ CREATE TABLE IF NOT EXISTS capability (
+   probed_at TEXT, chain TEXT, source TEXT, ok INTEGER, detail TEXT
+@@ -351,6 +309,18 @@
+             if c not in have_g:
+                 con.execute(f"ALTER TABLE log_gaps ADD COLUMN {c}")
+                 added.append("log_gaps." + c)
++    # ALTER ADD COLUMN cannot change an old primary key. Rebuild, preserving unknown ownership.
++    pk = [r[1] for r in sorted(con.execute("PRAGMA table_info(log_gaps)"), key=lambda r: r[5]) if r[5]]
++    if pk != ["chain", "factory", "role", "batch", "from_block", "to_block"]:
++        con.execute("ALTER TABLE log_gaps RENAME TO log_gaps_legacy")
++        con.execute("CREATE TABLE log_gaps (chain TEXT,factory TEXT,role TEXT,batch TEXT,"
++                    "from_block INTEGER,to_block INTEGER,source TEXT,err TEXT,seen_at TEXT,"
++                    "resolved INTEGER DEFAULT 0, PRIMARY KEY(chain,factory,role,batch,from_block,to_block))")
++        con.execute("INSERT INTO log_gaps SELECT COALESCE(chain,'unknown'),COALESCE(factory,'unknown'),"
++                    "COALESCE(role,'unknown'),COALESCE(batch,'legacy'),from_block,to_block,source,err,seen_at,resolved "
++                    "FROM log_gaps_legacy")
++        con.execute("DROP TABLE log_gaps_legacy")
++        con.commit()
+     if added:
+         con.commit()
+         print(f"[migrate] attribution 补列 {len(added)} 个：{', '.join(added)}\n"
+@@ -386,6 +356,8 @@
+ 
+ 
+ def upsert_attr(con, row):
++    row = dict(row)
++    row.setdefault("batch", ACTIVE_BATCH)
+     row = {k: row.get(k) for k in ATTR_COLS}
+     cols = ", ".join(ATTR_COLS)
+     binds = ", ".join(":" + c for c in ATTR_COLS)
+@@ -548,11 +520,7 @@
+                      page=1, offset=page)
+     rows = as_rows(r) if e is None else None
+     if rows is None:
+-        if _depth < 12 and b > a:
+-            m = (a + b) // 2
+-            l1, g1 = etherscan_pair_logs(a, m, _depth + 1)
+-            l2, g2 = etherscan_pair_logs(m + 1, b, _depth + 1)
+-            return l1 + l2, g1 + g2
++        # Auth/rate/provider failures are not evidence of oversized responses.
+         return [], [{"from": a, "to": b, "err": str(e)[:200], "source": "etherscan"}]
+     if len(rows) >= page:
+         if _depth >= 12 or b <= a:
+@@ -593,16 +561,30 @@
+     out = {"range": [a, b], "n_logs_deduped": None, "n_expected": None,
+            "count_match": None, "contiguous": None, "boundary_match": None,
+            "ok": False, "note": ""}
+-    uniq = {(l["transactionHash"], l["logIndex"]): l for l in logs}
++    try:
++        valid = all(a <= hex_int(l["blockNumber"]) <= b
++                    and l.get("address", "").lower() == chain_cfg()["factory"].lower()
++                    and l["topics"][0].lower() == TOPIC_PAIR_CREATED
++                    and not l.get("removed", False) and len(l["data"]) == 130 for l in logs)
++        uniq = {(l["transactionHash"].lower(), hex_int(l["logIndex"])): l for l in logs}
++    except (KeyError, ValueError, TypeError, IndexError):
++        valid, uniq = False, {}
++    if not valid:
++        out.update(n_logs_deduped=len(uniq), note="日志格式/链上范围/Factory/topic 校验失败")
++        return out
+     out["n_logs_deduped"] = len(uniq)
+     lo_n, e1 = all_pairs_length_at(max(0, a - 1))
+     hi_n, e2 = all_pairs_length_at(b)
+     if lo_n is None or hi_n is None:
+         out["note"] = f"allPairsLength 取不到（{e1 or ''} {e2 or ''}）；无法对账"
+         return out
++    out["all_pairs_length_before"] = lo_n
++    out["all_pairs_length_end"] = hi_n
+     out["n_expected"] = hi_n - lo_n
+     out["count_match"] = (out["n_expected"] == len(uniq))
+     idxs = sorted(i for i in (pair_index_of(l) for l in uniq.values()) if i is not None)
++    out["index_first"] = min(idxs, default=None)
++    out["index_last"] = max(idxs, default=None)
+     if out["n_expected"] == 0 and not uniq:
+         # 空区间是合法的：链上这段确实没建过池。连续性/边界无从谈起，不算失败。
+         out["contiguous"] = out["boundary_match"] = True
+@@ -639,6 +621,8 @@
+         last_err = str(e)[:160]
+     return 0, f"全部跨度失败，最后错误: {last_err}"
+ 
++
++ACTIVE_BATCH = None
+ 
+ PAIR_LOGS_SOURCE = None      # 由 choose_pair_logs_source() 定；进 capability 记录
+ 
+@@ -716,13 +700,16 @@
+         "INSERT OR REPLACE INTO log_gaps "
+         "(chain,factory,role,batch,from_block,to_block,source,err,seen_at,resolved) "
+         "VALUES (?,?,?,?,?,?,?,?,?,0)",
+-        [(SPEC["chain"], cfg["factory"], role, spec_hash(),
++        [(SPEC["chain"], cfg["factory"], role, ACTIVE_BATCH or "unowned",
+           g["from"], g["to"], g.get("source", ""), g.get("err", ""), now_iso())
+          for g in gaps])
+     con.commit()
+ 
+ 
+ def record_integrity(con, mode, role, a, b, rec):
++    if ACTIVE_BATCH:
++        con.execute("INSERT OR REPLACE INTO batch_integrity VALUES(?,?,?,?,?,?)",
++                    (ACTIVE_BATCH, role, a, b, int(rec["ok"]), json.dumps(rec, ensure_ascii=False)))
+     con.execute(
+         "INSERT OR REPLACE INTO run_integrity "
+         "(spec_hash,mode,role,from_block,to_block,ok,detail,checked_at) "
+@@ -732,12 +719,50 @@
+     con.commit()
+ 
+ 
++def begin_run(con, mode, a, b):
++    global ACTIVE_BATCH
++    ACTIVE_BATCH = uuid.uuid4().hex
++    cfg = chain_cfg()
++    con.execute("INSERT INTO collection_runs VALUES(?,?,?,?,?,?,?,?,?,?)",
++                (ACTIVE_BATCH, spec_hash(), mode, SPEC["chain"], cfg["factory"],
++                 a, b, "pending", json.dumps(SPEC), now_iso()))
++    con.commit()
++    return ACTIVE_BATCH
++
++
++def finish_run(con, ok):
++    con.execute("UPDATE collection_runs SET status=? WHERE batch=?",
++                ("complete" if ok else "incomplete", ACTIVE_BATCH))
++    con.commit()
++
++
+ def integrity_of(con, mode):
+-    """返回 (all_ok, rows)。report 用它决定能不能出正式结论。"""
+-    rows = con.execute(
+-        "SELECT role,from_block,to_block,ok,detail FROM run_integrity "
+-        "WHERE mode=? ORDER BY role", (mode,)).fetchall()
+-    return (all(r[3] == 1 for r in rows) if rows else None), rows
++    """Every reported attribution must be backed by its own complete collection batch."""
++    runs = con.execute("SELECT batch,spec_hash,status FROM collection_runs WHERE mode=? ORDER BY rowid", (mode,)).fetchall()
++    attrs = con.execute("SELECT DISTINCT batch,spec_hash FROM attribution WHERE mode=?", (mode,)).fetchall()
++    known = {r[0]: r for r in runs}
++    batches = {r[0] for r in attrs}
++    if mode == "forward":
++        batches.update(r[0] for r in runs)
++    if runs:
++        batches.add(runs[-1][0])  # Failed/empty latest attempt must also block stale output.
++    if not batches:
++        return None, []
++    rows = []
++    valid = bool(runs)
++    for batch in batches:
++        run = known.get(batch)
++        if not run:
++            valid = False
++            continue
++        rs = con.execute("SELECT role,from_block,to_block,ok,detail FROM batch_integrity WHERE batch=?", (batch,)).fetchall()
++        roles = {r[0] for r in rs}
++        valid &= (run[2] == "complete" and bool(rs) and all(r[3] == 1 for r in rs)
++                  and (mode != "backfill" or roles == {"history", "candidate"}))
++        rows.extend(rs)
++    valid &= all(batch in known and sh == known[batch][1] for batch, sh in attrs)
++    return bool(valid), rows
++
+ 
+ 
+ def parse_pair_created(lg):
+@@ -1167,17 +1192,23 @@
+     cfg, con = chain_cfg(), db()
+     random.seed(SPEC["random_seed"])
+     f_b, t_b = SPEC["candidate_from_block"], SPEC["candidate_to_block"]
+-    if not f_b or not t_b:
++    if not (1 <= f_b <= t_b) or SPEC["history_lookback_blocks"] < 0:
+         raise SystemExit("先跑 probe，再设 RTA_FROM_BLOCK / RTA_TO_BLOCK")
+     hist_from = max(1, f_b - SPEC["history_lookback_blocks"])
+ 
+-    ok, note = l2b_self_test()
++    ok, note = (None, "对账模式不执行归因能力探测") if SPEC.get("reconcile_only") else l2b_self_test()
+     src, src_note = choose_pair_logs_source()
+     print(f"链={SPEC['chain']}  factory={cfg['factory']}  spec_hash={spec_hash()}")
+     print(f"PairCreated 采集来源：{src} —— {src_note}")
+     print(f"候选 {f_b}-{t_b}；历史回看自 {hist_from}")
+     print(f"L2b 可用性：{ok} —— {note}")
+ 
++    mode = "reconcile" if SPEC.get("reconcile_only") else "backfill"
++    if mode == "backfill" and con.execute(
++            "SELECT 1 FROM candidates WHERE chain<>? OR lower(factory)<>lower(?) OR block_number<? OR block_number>? LIMIT 1",
++            (SPEC["chain"], cfg["factory"], hist_from, t_b)).fetchone():
++        raise SystemExit("输出库包含其他范围的数据；请为本次冻结窗口设置独立 RTA_OUT")
++    begin_run(con, mode, f_b, t_b)
+     total_blocks = (f_b - hist_from) + (t_b - f_b + 1)
+     if src == "rpc":
+         calls = -(-total_blocks // max(1, SPEC["log_chunk_blocks"]))
+@@ -1188,7 +1219,7 @@
+                   f"或缩小 RTA_LOOKBACK / 候选区间，或换跨度更大的端点。")
+ 
+     print("\n[1/5] 历史区间 PairCreated（只建历史，不作候选）…")
+-    hist, g1 = fetch_pair_created(hist_from, f_b - 1)
++    hist, g1 = fetch_pair_created(hist_from, f_b - 1) if hist_from < f_b else ([], [])
+     print("[2/5] 候选区间 PairCreated…")
+     cand, g2 = fetch_pair_created(f_b, t_b)
+     record_gaps(con, g1, "history")
+@@ -1199,8 +1230,18 @@
+     all_ok = True
+     for role, logs_, a_, b_ in (("history", hist, hist_from, f_b - 1),
+                                 ("candidate", cand, f_b, t_b)):
++        if SPEC.get("reconcile_only") and role == "history":
++            continue
+         rec = reconcile_pair_logs(logs_, a_, b_)
+-        record_integrity(con, "backfill", role, a_, b_, rec)
++        gaps_ = g1 if role == "history" else g2
++        if gaps_:
++            rec.update(ok=False, note=rec["note"] + "; 存在采集缺口")
++        record_integrity(con, mode, role, a_, b_, rec)
++        if rec["ok"]:
++            con.execute("UPDATE log_gaps SET resolved=1 WHERE chain=? AND factory=? AND role=? "
++                        "AND from_block>=? AND to_block<=?",
++                        (SPEC["chain"], cfg["factory"], role, a_, b_))
++            con.commit()
+         print(f"  {role:<9} 对账：去重 {rec['n_logs_deduped']} vs 预期 {rec['n_expected']}；"
+               f"计数{'✔' if rec['count_match'] else '✘'} "
+               f"连续{'✔' if rec['contiguous'] else '✘'} "
+@@ -1210,7 +1251,16 @@
+     if not all_ok:
+         print("  ⚠ 对账未通过：本次母体不完整。数据仍会写库作为诊断证据，")
+         print("  ⚠ 但 report 只会产出 INCOMPLETE 调试报告，不出正式结论。")
++    freeze_spec({"batch": ACTIVE_BATCH, "collection_mode": mode,
++                 "candidate_range": [f_b,t_b], "history_range": [hist_from,f_b-1],
++                 "reconcile_candidate_range": rec})
++    with open(os.path.join(OUTDIR, f"collection_{ACTIVE_BATCH}.json"), "w") as evidence:
++        json.dump({"batch": ACTIVE_BATCH, "mode": mode, "history_logs": hist,
++                   "candidate_logs": cand, "history_gaps": g1, "candidate_gaps": g2,
++                   "integrity": [json.loads(r[0]) for r in con.execute(
++                       "SELECT detail FROM batch_integrity WHERE batch=?", (ACTIVE_BATCH,))]}, evidence)
+     if SPEC.get("reconcile_only"):
++        finish_run(con, all_ok)
+         print("\n[对账模式] 只做完整性核验，不继续归因。")
+         return 0 if all_ok else 1
+ 
+@@ -1231,6 +1281,8 @@
+         rows.append((pair, SPEC["chain"], cfg["factory"], t0, t1, bn,
+                      hex_int(lg["logIndex"]), lg["transactionHash"],
+                      ts.get(bn) if inr else None, inr, nt, had))
++    if con.execute("SELECT 1 FROM attribution WHERE mode='forward' LIMIT 1").fetchone():
++        raise SystemExit("库中已有前向归因；历史回填请使用独立 RTA_OUT，避免覆盖样本角色")
+     con.executemany("INSERT OR REPLACE INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+     con.commit()
+ 
+@@ -1282,6 +1334,7 @@
+     c0 = RPC_CALLS[0]
+     for i, (pair, txh, nt, bn, ev) in enumerate(cands, 1):
+         if pair in done:
++            con.execute("UPDATE attribution SET batch=? WHERE pair=?", (ACTIVE_BATCH, pair))
+             continue
+         upsert_attr(con, attribute(con, pair, txh, nt, bn, ev, hist_from,
+                                    "backfill", fully, floor))
+@@ -1305,7 +1358,11 @@
+                 "WHERE a.creation_tx_sender=? AND c.block_number<?", (cr, bn)).fetchone()[0]
+         con.execute("UPDATE attribution SET creator_prior_pairs_in_sample=? WHERE pair=?", (cnt, pair))
+     con.commit()
++    finish_run(con, all_ok)
++    if not all_ok:
++        report()
+     print(f"完成。总 RPC 调用 {RPC_CALLS[0]}。数据库 {DB_PATH}")
++    return 0 if all_ok else 1
+ 
+ 
+ # =============================================================================
+@@ -1319,6 +1376,7 @@
+     head, _ = rpc("eth_blockNumber", [])
+     cur = hex_int(head)
+     start_block = cur + 1          # 本次前向观察的范围下界，缺口归属按它判
++    begin_run(con, "forward", start_block, cur)
+     end = time.time() + minutes * 60
+     print(f"前向观察 {minutes} 分钟，起始 {cur}；截止 = 事件时间 + "
+           f"{SPEC['decision_window_seconds']}s")
+@@ -1332,24 +1390,38 @@
+         # 否则补回来的历史事件会被当成前向样本写进库，还会覆盖已有的历史归因。
+         pending = con.execute(
+             "SELECT from_block,to_block FROM log_gaps WHERE resolved=0 "
+-            "AND role='forward' AND chain=? AND factory=? AND from_block>=?",
+-            (SPEC["chain"], cfg["factory"], start_block)).fetchall()
++            "AND role='forward' AND chain=? AND factory=? AND batch=? AND from_block>=? AND to_block<=?",
++            (SPEC["chain"], cfg["factory"], ACTIVE_BATCH, start_block, h)).fetchall()
+         logs = []
+         for (ga, gb) in pending:
+             lg2, g2 = fetch_pair_created(ga, gb)
+             # 补回来的也要过对账，不能凭"接口没报错"就结案
+-            if not g2 and reconcile_pair_logs(lg2, ga, gb)["ok"]:
++            retry_rec = reconcile_pair_logs(lg2, ga, gb)
++            if not g2 and retry_rec["ok"]:
++                record_integrity(con, "forward", "forward", ga, gb, retry_rec)
+                 con.execute("UPDATE log_gaps SET resolved=1 WHERE role='forward' "
+-                            "AND chain=? AND factory=? AND from_block=? AND to_block=?",
+-                            (SPEC["chain"], cfg["factory"], ga, gb))
++                            "AND chain=? AND factory=? AND batch=? AND from_block=? AND to_block=?",
++                            (SPEC["chain"], cfg["factory"], ACTIVE_BATCH, ga, gb))
+                 logs += lg2
+         new_logs, gaps = fetch_pair_created(cur + 1, h)
+-        record_gaps(con, gaps, "forward")
++        rec = reconcile_pair_logs(new_logs, cur + 1, h)
++        if gaps:
++            rec.update(ok=False, note=rec["note"] + "; 存在采集缺口")
++        record_integrity(con, "forward", "forward", cur + 1, h, rec)
++        # Retry the whole failed slice, including silent truncation.
++        if not rec["ok"]:
++            record_gaps(con, [{"from": cur+1, "to": h, "err": rec["note"],
++                               "source": PAIR_LOGS_SOURCE}], "forward")
+         con.commit()
+         logs += new_logs
+         cur = h
++        con.execute("UPDATE collection_runs SET to_block=? WHERE batch=?", (h, ACTIVE_BATCH))
+         for lg in logs:
+             t0, t1, pair = parse_pair_created(lg)
++            if not start_block <= hex_int(lg["blockNumber"]) <= h:
++                continue
++            if con.execute("SELECT 1 FROM candidates WHERE pair=?", (pair,)).fetchone():
++                continue  # Never replace historical roles or the first observed attribution.
+             bn = hex_int(lg["blockNumber"])
+             blk, _ = rpc("eth_getBlockByNumber", [hex(bn), False])
+             ev = hex_int(blk["timestamp"]) if blk else None
+@@ -1380,7 +1452,13 @@
+                   f"事件→完成 {row['resolution_lag_seconds']}s  "
+                   f"{'超过截止' if late else '在截止内'}")
+         time.sleep(POLL_SLEEP)
++    checks = con.execute("SELECT ok FROM batch_integrity WHERE batch=?", (ACTIVE_BATCH,)).fetchall()
++    intact = bool(checks) and all(r[0] for r in checks)
++    finish_run(con, intact)
++    if not intact:
++        report()
+     print("前向观察结束。")
++    return 0 if intact else 1
+ 
+ 
+ # =============================================================================
+@@ -1400,12 +1478,16 @@
+     for mode in ("backfill", "forward"):
+         rs = [dict(zip(cols, r)) for r in
+               con.execute("SELECT * FROM attribution WHERE mode=?", (mode,)).fetchall()]
+-        if not rs:
++        intact, irows = integrity_of(con, mode)
++        if not rs and not con.execute("SELECT 1 FROM collection_runs WHERE mode=?", (mode,)).fetchone():
+             continue
++        saved = con.execute("SELECT spec_json FROM collection_runs WHERE mode=? ORDER BY rowid DESC LIMIT 1", (mode,)).fetchone()
++        report_spec = json.loads(saved[0]) if saved else SPEC
++        if len({r["spec_hash"] for r in rs}) > 1:
++            intact = False
+         n = len(rs)
+-        intact, irows = integrity_of(con, mode)
+-        lookback = (SPEC["history_lookback_blocks"] if mode == "backfill"
+-                    else SPEC["forward_lookback_blocks"])
++        lookback = (report_spec["history_lookback_blocks"] if mode == "backfill"
++                    else report_spec["forward_lookback_blocks"])
+         # 写成真分支而不是多行条件表达式：Python 3.8 的行号归属会把条件表达式的
+         # 每一行都标成"已执行"，行覆盖因此测不出这个告警到底有没有触发。
+         lookback_warn = ""
+@@ -1434,7 +1516,7 @@
+              + ("   ⚠ 多个哈希混用，下面的合计跨越了不同规格" if len(hashes) > 1 else ""),
+              f"当前进程 spec_hash：{spec_hash()}"
+              + ("   ⚠ 与采集时不同" if spec_hash() not in hashes else ""),
+-             f"链 = {SPEC['chain']}   决策窗口 = {SPEC['decision_window_seconds']}s",
++             f"链 = {report_spec['chain']}   决策窗口 = {report_spec['decision_window_seconds']}s",
+              f"本模式回看窗口 = {lookback} 区块" + lookback_warn,
+              "=" * 78]
+ 
+@@ -1444,7 +1526,7 @@
+                          ("L2b 纯RPC创建归因", "l2b_status"),
+                          ("L3 首次Mint与LP接收", "l3_status"),
+                          ("L4 最早观察到的入账", "l4_status")]:
+-            dec = sum(1 for r in rs if r[c] in SPEC["decisive_statuses"])
++            dec = sum(1 for r in rs if r[c] in report_spec["decisive_statuses"])
+             L.append(f"  {label:<22} 已判完 = {dec:>4}/{n} ({pct(dec, n)})")
+             d = {}
+             for r in rs:
+@@ -1453,13 +1535,13 @@
+                      "  ".join(f"{k}={v}" for k, v in sorted(d.items(), key=lambda x: -x[1])))
+ 
+         L.append("\n【2】联合覆盖率 —— 唯一的结论行")
+-        L.append(f"  规则需要：{', '.join(SPEC['required_fields_for_rule'])}")
+-        L.append(f"  '已判完'计入可用的状态：{SPEC['decisive_statuses']}"
+-                 "  （确认没有前科是答案，不是缺失）")
++        L.append(f"  规则需要：{', '.join(report_spec['required_fields_for_rule'])}")
++        L.append(f"  '已判完'计入可用的状态：{report_spec['decisive_statuses']}"
++                 "  （历史部署零条仍为未知，不代表没有历史）")
+         joint = sum(1 for r in rs if (
+             r["l1_status"] == "ok" and r["pair_created_tx_sender"]
+             and (r["l2a_status"] == "ok" or r["l2b_status"] == "ok") and r["creation_tx_sender"]
+-            and r["creator_prior_activity_known"] in SPEC["decisive_statuses"]))
++            and r["creator_prior_activity_known"] in report_spec["decisive_statuses"]))
+         L.append(f"  联合可用 = {joint}/{n}  ({pct(joint, n)})")
+ 
+         L.append("\n【2b】历史可见性状态分布")
+@@ -1467,12 +1549,11 @@
+         for r in rs:
+             d[r["creator_prior_activity_known"]] = d.get(r["creator_prior_activity_known"], 0) + 1
+         for k, v in sorted(d.items(), key=lambda x: -x[1]):
+-            tag = "（已判完）" if k in SPEC["decisive_statuses"] else "（不可用）"
++            tag = "（已判完）" if k in report_spec["decisive_statuses"] else "（不可用）"
+             L.append(f"  {k:<20}{tag} {v:>4}/{n} ({pct(v, n)})")
+ 
+         L.append("\n【3】两条创建归因链路的交叉校验（按部署形态分层）")
+-        L.append("  只比较两条链路都判 ok 的行；工厂部署下 L2b 给的是交易发起人、")
+-        L.append("  与 L2a 的 contractCreator 口径不同，混在一起算会得到必然的不一致。")
++        L.append("  只比较两条链路都判 ok 的行；工厂路径 L2b 仍为 ambiguous，不能据此确定归因。")
+         for kind in ("direct", "factory", "unknown"):
+             sub = [r for r in rs if r["deploy_kind"] == kind]
+             both = [r for r in sub if r["l2_agree"] is not None]
+@@ -2223,7 +2304,7 @@
+     con20 = sqlite3.connect(DB_PATH)
+     fwd_left = con20.execute("SELECT COUNT(*) FROM log_gaps WHERE role='forward' "
+                              "AND resolved=0").fetchone()[0]
+-    check("前向自己的缺口被补回并过对账后销账", fwd_left == 0, f"剩 {fwd_left} 行")
++    check("其他批次且高于链头的缺口不得补回", fwd_left == 1, f"剩 {fwd_left} 行")
+     con20.close()
+     con20 = sqlite3.connect(DB_PATH)
+     rng = con20.execute("SELECT in_candidate_range FROM candidates WHERE pair=?",
+@@ -2235,6 +2316,26 @@
+     unresolved = con20.execute("SELECT COUNT(*) FROM log_gaps WHERE role='history' "
+                                "AND resolved=0").fetchone()[0]
+     check("历史缺口仍留给 backfill 补", unresolved == 1, f"{unresolved} 行")
++    # Same-batch silent truncation must be retried and reconciled, without reclassifying history.
++    OUTDIR = tempfile.mkdtemp(); DB_PATH = os.path.join(OUTDIR, "t.sqlite")
++    rpc, etherscan = _mk_mocks({"pairs": _std_pairs(2, start=1401, step=1),
++                                "blocknum_sched": [1400]*12 + [1403, 1404, 1405]})
++    attempts = []
++    def retry_fetch(a, b):
++        lg, gaps = _orig_fetch(a, b)
++        attempts.append((a,b))
++        return (lg[:-1] if len(attempts) == 1 else lg), gaps
++    globals()["fetch_pair_created"] = retry_fetch
++    try:
++        with _ctx.redirect_stdout(io.StringIO()):
++            retry_rc = forward(.01)
++    finally:
++        globals()["fetch_pair_created"] = _orig_fetch
++    retry_con = db()
++    check("本批前向静默缺失经完整对账补齐", retry_rc == 0 and attempts.count((1401,1403)) == 2)
++    check("补齐后销账且仅保留两个前向样本",
++          retry_con.execute("SELECT COUNT(*) FROM log_gaps WHERE resolved=0").fetchone()[0] == 0
++          and retry_con.execute("SELECT COUNT(*) FROM attribution").fetchone()[0] == 2)
+     SPEC.clear(); SPEC.update(_sv)
+ 
+     # =====================================================================
+--- before/covcheck.py
++++ after/covcheck.py
+@@ -30,7 +30,7 @@
+     return None
+ 
+ KEY = {
+-  "L2b 整条不可用 → api_failure": find('return None, None, None, "api_failure", "unknown"'),
++  "L2b 整条不可用 → api_failure": find_after("if L2B_USABLE is False:", 'return None, None, None, "api_failure", "unknown"'),
+   "L2b 便宜路径2 getBlockReceipts": find('brs, err = rpc("eth_getBlockReceipts"'),
+   "L2b 退化路径撞扫描上限": find('# 扫描上限，不是"没有"'),
+   "L2b 工厂部署 → ambiguous": find('"ok" if direct else "ambiguous", "direct" if direct else "factory")'),
+@@ -68,10 +68,10 @@
+   "报告 l2_agreement 细分": find('L.append("\\n【3c】两路一致性的细分'),
+   "来源选择用固定批量标准": find('    bar = SPEC["min_bulk_log_span"]'),
+   "空区间对账通过": find('        out["contiguous"] = out["boundary_match"] = True'),
+-  "历史/候选分别对账": find('        record_integrity(con, "backfill", role, a_, b_, rec)'),
+-  "缺口带归属落库": find('        [(SPEC["chain"], cfg["factory"], role, spec_hash(),'),
++  "历史/候选分别对账": find('        record_integrity(con, mode, role, a_, b_, rec)'),
++  "缺口带归属落库": find('        [(SPEC["chain"], cfg["factory"], role, ACTIVE_BATCH or "unowned",'),
+   "前向只补本次范围缺口": find('        pending = con.execute('),
+-  "补回日志需过对账": find('            if not g2 and reconcile_pair_logs(lg2, ga, gb)["ok"]:'),
++  "补回日志需过对账": find('            if not g2 and retry_rec["ok"]:'),
+   "报告读取完整性状态": find('        intact, irows = integrity_of(con, mode)'),
+   "不完整 → INCOMPLETE 横幅": find('                  "!!  母体不完整 —— 这份是 INCOMPLETE 调试报告，不是验收结果  !!",'),
+   "不完整 → 删掉旧正式报告": find('            os.remove(normal)      # 避免上一次的正式报告被误当成本次结果'),
+@@ -107,3 +107,6 @@
+     for sub, hits in AMBIGUOUS:
+         print(f"    {sub!r} -> 行 {hits}")
+ print(f"{len(KEY)-len(miss)}/{len(KEY)} 覆盖" + (f"；未覆盖：{miss}" if miss else ""))
++
++print(f"Imported source: {SRC}")
++sys.exit(1 if miss or AMBIGUOUS else 0)
+--- before/README.md
++++ after/README.md
+@@ -1,494 +1,115 @@
+-# RT-A 身份归因可行性门 — v4
++# RT-A 身份归因取数可行性实验 — v4.1
+ 
+-## 验证状态
++本阶段只回答：在候选出现时，身份与历史活动信息能否及时、可靠地取得。不测收益、不判交易优势、不开户、不入金、不下单，不升级付费套餐。
+ 
+-**这一版跑过了，输出如下。**
++母体是 Ethereum 主网 Uniswap V2 Factory `0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f` 的 `PairCreated`。当前验收与剩余事项见 [HANDOFF.md](HANDOFF.md)，原始命令输出和修改差异见 `audit_20260907/`。
+ 
+-```
+-通过 79 / 失败 0
+-SELFTEST PASS
++## 口径
+ 
+-46/46 覆盖
++- `creation_tx_sender`：已定位创建交易的外层 `from`，不等于发行者或实控人。身份规则标识 `creation-tx-sender-v1`。
++- 两路均确定时先比较创建交易 hash，再比较发送者。冲突不输出确定发送者；单路确定也不证明实控关系。
++- `deployment_factory`：Etherscan 返回的 `contractFactory` 原始值；`deploy_kind` 在该字段不可得时可退回启发式，不能替代创建交易证据。
++- `creator_prior_deploys`：已确认成功的直接部署正面证据。零条为 `history_truncated`，不能解释成无历史、首次发行或没有恶意历史。历史部署/建池本身不表示恶意。
++- 自足历史通道只在建池发送者与创建交易发送者相同且命中更早活动时可为该主体提供正面证据。`sender_prior_pairs` 与 `creator_prior_pairs_in_sample` 的范围不同，后者仅限归因样本内部。
++- `earliest_observed_inbound` 以 `l4_subject` 指明查询主体。它是观察到的入账线索，不能直接证明共同控制。
++- `creator_is_7702_delegated` 查询候选所在块；非空代码不能自动解释为普通合约。该列仅记录、不参与规则。
++- 首次 Mint 的最低流动性锁定单独记录，零地址不作为实际 LP 接收者。
++
++## 执行
++
++```bash
++pip install requests eth-utils 'eth-hash[pycryptodome]'
++# 在独立临时工作目录运行：selftest 会建立自己的 rt_a_selftest。
++cd "$(mktemp -d)"
++python /absolute/path/rightTail/rt_a_attribution.py selftest
++python /absolute/path/rightTail/covcheck.py
++python /absolute/path/rightTail/audit_integration.py --out "$(mktemp -d)"
+ ```
+ 
+-### v4 第二轮：三个集成反例
++`covcheck.py` 输出实际导入的源码路径；指定行缺失、未覆盖或普通锚点歧义时返回非零。行覆盖不证明分支输出正确，必须结合进程退出码和产物断言。
+ 
+-前一批修的是函数内部；这三个是**函数接起来之后**才暴露的，都已复现后修掉：
+-
+-| 集成反例 | 复现 | 修法 |
+-|---|---|---|
+-| `auto` 仍会选 10 区块的 RPC | backfill 先把 `log_chunk_blocks` 降到 10，`choose_pair_logs_source` 再比 `10 >= 10` 判"够用" | 新增**固定标准** `min_bulk_log_span`（默认 500）；来源选择与它比，且**先选来源再调 chunk** |
+-| 对账失败仍产出正常结论 | 删一条日志 → 对账 `False`，但照样写 20 行归因、照样出报告、结论行 `联合可用 = 20/20 (100.0%)`、**不提母体不完整** | 完整性落 `run_integrity` 表；report 读它，失败时只写 `.INCOMPLETE.md`、删掉旧的正式报告、**返回退出码 1** |
+-| 前向补缺口改写历史 | 历史池 `in_candidate_range` 0→1、`mode` 变 `forward`，还覆盖已有归因 | `log_gaps` 加 **chain / factory / role / batch**；前向只补 `role='forward'` 且属于本次范围的缺口，补回的还要**过对账**才销账 |
+-
+-另外两处一并修了：**空区间**（预期 0、日志 0）此前被连续性/边界检查判失败，现在正确通过；
+-新增独立的 **`reconcile` 步骤**（`python rt_a_attribution.py reconcile`），只做小区间完整性
+-核验，不抓历史、不归因、不出报告，退出码即结论。
+-
+-这三条都补了**端到端断言**（场景 20），不是只断言 `reconcile_pair_logs()["ok"] == False`。
+-
+-### 装依赖：keccak 需要【两个】包
++生产脚本读取环境变量，不自动加载 `.env`。现有 `.env` 的命名标签格式可由 `audit_live_reconcile.py` 读取；辅助脚本只允许显式指定的小区间，不输出密钥、不请求归因接口，并保存公开请求/响应证据。
+ 
+ ```bash
+-pip install requests eth-utils "eth-hash[pycryptodome]"
++export RTA_RPC_ETH='现有 Ethereum RPC URL'
++export ETHERSCAN_API_KEY='现有 key'
++export RTA_CHAIN=ethereum
++export RTA_PAIR_LOGS=etherscan
++export RTA_OUT='/独立输出目录'
++export RTA_FROM_BLOCK='已确定的小区间起点'
++export RTA_TO_BLOCK='已确定的小区间终点'
++python rt_a_attribution.py reconcile
+ ```
+ 
+-只装 `eth-hash[pycryptodome]` 不够——脚本 import 的是 `eth_utils.keccak`。缺任一个都会
+-退回已校验常量（topic0 仍然正确，只是不再运行时计算）。v3.2 起 warning 会把两个包都写出来，
+-早先那版只提示装 `eth-hash`，是错的药。
++`reconcile` 强制历史回看为 0，只抓候选区间日志、查询边界 `allPairsLength`；显式 Etherscan 来源时不运行 L2b 的历史二分探测。它不归因、不生成覆盖率报告，返回 0 表示对账通过、1 表示不通过。保留 `collection_<batch>.json`、冻结规格和数据库完整性记录。该入口不代表正式回填窗口已冻结。
+ 
+-### 行覆盖测不了分支输出
+-
+-`covcheck.py` 曾有一条"报告回看窗口分叉告警"，在 Python 3.8 上显示 ✔、在 3.10+ 上显示 ✘。
+-**3.10+ 是对的**：PEP 626 之前，多行条件表达式的每一行都会被标成"已执行"，不管走哪个分支；
+-而 selftest 里两个回看窗口相同，那个告警根本没触发。
+-
+-修法是两条一起：把告警从多行条件表达式改成**真 if 分支**（行覆盖这才测得准），
+-并新增**场景 14 断言字面量**——两窗口相同时报告里不得出现告警串，分叉时必须出现且出现两次
+-（backfill / forward 各一）。
+-
+-教训写在这里备忘：**行覆盖只能证明"这行跑过"，不能证明"这个分支的输出对"。
+-凡是有条件产出的文字，都得用断言比对字面量。**
+-
+-> 文件名去掉了下载带来的 ` (1)` 后缀 —— `covcheck.py` 的 `import rt_a_attribution`
+-> 本来就依赖这个名字，带后缀时它根本跑不起来。
+-
+-自测从"断言行数 > 0"改成**场景 + 状态断言**：10 个场景，每个构造一种具体的失败形态，断言得到的是**该形态应有的状态码**，而不是"跑完了"。上一版 21/21 全 `ok` 也能算 PASS，这一版不会。
+-
+-行覆盖也量了 —— 上一轮被指出"16 个关键分支只走到 3 个"，v3 做到 16/16，v3.1 把新增的
+-七处修复也纳进清单，现在 23/23。
++小区间通过后，使用真正冻结的正式候选起止块和历史回看范围，建立独立输出目录再执行 `backfill`。**缩小候选窗口不会缩小默认 2,500,000 块历史回看**。
+ 
+ ```bash
+-python rt_a_attribution.py selftest      # 离线，不需要网络和 key，几秒
+-python covcheck.py                       # 行覆盖检查（可选）
+-```
+-
+----
+-
+-## v3.1 修了什么
+-
+-上一轮 v3 的评审又指出十条，两条高、四条中、四条低。除"`deploy_kind` 是启发式"
+-（那是方法固有的，只能写清楚）之外全部修掉，每条都有断言或覆盖率守着。
+-
+-### 高
+-
+-**`spec_hash` 认不出 v2 → v3。** v2 和 v3 的 `SPEC` 完全相同、`spec_version` 都还写着
+-`v2`，hash 都是 `16190d572b009bf9` —— 而 v3 改了归因口径。改口径的东西在代码里，
+-不在 SPEC 里，于是"改了 SPEC 就是另一次实验"这条硬约束覆盖不到自己。
+-
+-修法：`spec_version` 提到 `v3.1`，并新增 `attribution_rule` 字段
+-（`"creator-from-ok-status-only-v3"`）。它不是开关，是**口径的记号**——
+-改了 `attribute()` 里 `creation_tx_sender` 的取值规则就要改它，否则两版数据会带着
+-同一个 hash 混进同一个库。现在 `16190d572b009bf9` → `54359e84b9865354`，可区分。
+-
+-**v3 跑在 v2 建的库上直接崩。** `DDL` 用的是 `CREATE TABLE IF NOT EXISTS`，表已存在
+-时新增的列不会被建出来，于是 `upsert_attr` 会在 backfill 跑到一半时抛
+-`no column named deploy_kind`。而 `rt_a_out/` 是默认路径、跨版本不变。
+-
+-修法：新增 `migrate()`，在 `db()` 连接时用 `PRAGMA table_info` 比对并
+-`ALTER TABLE ADD COLUMN` 补齐，同时在 stderr 说明旧行在新列上为 NULL。实测：
+-
+-```
+-[migrate] attribution 补列 4 个：l4_subject, deploy_kind, creator_status, creator_prior_pairs_in_sample
+-1) v2 库已建，attribution 列 = 32
+-2) v3 db() 后列 = 36
+-3) v3 写入成功（改之前这里抛 no column named deploy_kind）
+-```
+-
+-### 中
+-
+-
+-| 问题                                                                                                            | 修法                                                                                                                        |
+-| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+-| `creator_status` 在"判不出哪侧是新币"时记成 `no_history`，被 `decisive_statuses` 计成"已判完"，报告【3b】虚高   | 兜底链里**先判 `ambiguous`**。场景 11 断言                                                                                  |
+-| `forward` 的回看窗口硬编码 `500_000`，与 backfill 的 2.5M 不同，两份报告的 L2b 覆盖率不可比，且不进 `spec_hash` | 提为`SPEC["forward_lookback_blocks"]`，**默认取 `RTA_LOOKBACK` 同值**，两者可比；显式设 `RTA_FWD_LOOKBACK` 分叉时报告头告警 |
+-| `audit_sample.csv` 没有归因主体列 —— 而手工判据要判的正是它                                          | 补上（第 6 列）                                                                                                             |
+-| `earliest_observed_inbound` 没有主体列，`creator` 缺失时查的其实是建池发送者                                    | 新增`l4_subject` 列（`creator` / `pair_created_tx_sender`），CSV 第 16 列                                                   |
+-
+-### 低
+-
+-- `l2_source` 现在只认状态为 `ok` 的链路，不再出现"归因主体为空、
+-  `l2_source` 却说 `rpc_binary_search`"的自相矛盾行
+-- `fully` 改为按**库里实际抓到多少**判（`COUNT(hist_sender) >= total_hist`），
+-  而不是按单次上限判 —— 断点续跑把历史补齐后它现在能收敛到"全覆盖"
+-- 场景 7 把 `l2b_receipt_scan_cap` 还原成**原值**而不是硬编码 40，
+-  不再把用户设的 `RTA_RECEIPT_CAP` 改掉
+-
+----
+-
+-## v3 修了什么
+-
+-### 1. 自测时序（上一版自测本身是坏的）
+-
+-根因诊断正确：`forward()` 开头的 `l2b_self_test()` 会先消耗一次 `eth_blockNumber`，而 `head = next` 这种一次性推进**在结构上产生不出** `[1400, 1400, 1403]` 这样的序列。
+-
+-不再去数具体消耗几次（数错正是上一版失败的原因），改成 `[1400] * 12 + [1403]` 的**计数排程**，对调用次数不敏感。现在 forward 稳定拿到 2 行。
+-
+-你的判断也被确认了：**具名列 + 字典绑定这个结构性修复是有效的，forward 写库正常**，之前只是被坏掉的自测挡着。
+-
+-### 2. `hist_status` 分支顺序（直接决定结论行的输入）
+-
+-`elif not hist_fully_sampled` 排在 `api_failure` 之前，导致"没有 key"被写成"看不到更早"。**已把 `api_failure` 提前**。场景 3 专门断言这一点：
+-
+-```
+-【场景 3】无 Etherscan key + 历史未全采样
+-  [PASS] hist_status = api_failure（不是 history_truncated）
+-```
+-
+-### 3. 死分支（`earliest_s is not None` 恒假）
+-
+-诊断正确：`prior_s == 0` 时 `MIN(block_number)` 必为 NULL。
+-
+-改成用**自足通道实际抽到的最早区块**判断：`backfill` 计算 `MIN(block_number) FROM hist_sender` 并传进 `attribute()`，`hist_sampled_floor > hist_from` 才算截断。`backfill` 开跑时会打印这两个数：
+-
+-```
+-[4/5] 归因 21 个候选…（自足通道实际抽到的最早区块 = 200，回看窗口起点 = 100）
+-```
+-
+-### 4. `ambiguous` 的值不再当确定值用
+-
+-`creator = (a_cr if l2a == "ok" else None) or (b_cr if l2b == "ok" else None)`。
+-
+-被标 `ambiguous` 的地址仍保留在 `l2a_creator` / `l2b_creator` 里供人工看，但**不进 `creation_tx_sender`，也不拿去查历史**。新增 `creator_status` 列并在报告【3b】单列分布。
+-
+-### 5. `l2_agree` 的口径差
+-
+-新增 `deploy_kind` 列（`direct` / `factory` / `unknown`）。`l2_agree` **只在两条链路都判 `ok` 时才比较**；报告【3】按部署形态**分层**报一致率；`audit_sample.csv` 也**分层抽样**，不会被必然不一致的那类占满。
+-
+-### 6. Etherscan 返回形状
+-
+-新增 `as_rows()` 守卫。返回字符串（限流）时记 `api_failure`，不抛异常——这条是"所有失败记录成数据"的硬约束，之前破了。场景 4 断言三个调用点都不抛。
+-
+-### 7. 其余
+-
+-- `creator_prior_pairs` → **`creator_prior_pairs_in_sample`**，名字里带上"只统计样本内部"，避免在审计 CSV 里被误读成"该创建者历史建池数"
+-- forward 的 late→timeout 改写现在**同步** `creator_prior_activity_known`
+-
+----
+-
+-## 填 `audit_sample.csv` 之前：判据先定好
+-
+-这 20 行是唯一必须你亲手做的交付，判据不定就白填。
+-
+-CSV 的列已按 `creation-tx-sender-v1` 口径更新。填之前先看三列：
+-**`creation_tx_sender`**（已定位创建交易的外层 `from`）、**`deployment_factory`**
+-（Etherscan 的 `contractFactory` 原始值，非空即工厂部署）、**`l4_subject`**
+-（同一行的 `earliest_observed_inbound` 查的是谁）。
+-
+-**先看 `creator_status`**：只有 `ok` 才有 `creation_tx_sender` 可判。
+-`conflict` 表示两路指向不同的创建交易——那一行要判的是**哪一路错了**，不是归因对错。
+-
+-判据按 `deployment_factory` 分：
+-
+-**空（直接部署）** — 判 `creation_tx_sender` 是否确实是该代币的部署者
+-
+-| 填 | 条件 |
+-|---|---|
+-| 正确 | `l2a_creator` 与 `l2b_creator` 一致、且 `l2_agreement=agree`，浏览器上该地址确为部署者 |
+-| 错误 | 该地址明显是路由/聚合器/交易所热钱包 |
+-| 无法判断 | 有一侧缺失，或地址无法归类 |
+-
+-**非空（工厂内部署）** — 两路口径实测一致（29/29），但 L2b 仍只给 `ambiguous`，
+-所以这一行的 `creation_tx_sender` 来自 L2a。判的是：**它指向的是发起那笔创建交易的人，
+-还是工厂/部署器本身？** 后者填"错误"。
+-
+-**所有行都要额外判一列** —— `earliest_observed_inbound`（L4）。
+-先看 `l4_subject`：`creator` 是在说创建交易发起人，`pair_created_tx_sender`
+-说明 `creation_tx_sender` 没取到、这条线索说的是**建池交易的发送者**，两者不是一回事：
+-
+-| 填在备注 | 条件 |
+-|---|---|
+-| `真实资金关系` | 来源是一个普通 EOA，且不是已知交易所/桥 |
+-| `共用来源` | 来源是交易所热钱包、桥合约、路由 —— 这条关联**无效** |
+-| `无法判断` | 其余 |
+-
+-L4 那一列的"共用来源"比例，是判断"资金家族"这条线值不值得继续的关键。
+-
+-**判据的边界（必须先读）**：`creator_prior_deploys` 现在衡量的是
+-**"找到了历史部署正面证据的比例"**，不是"有没有历史"。数到 0 一律记
+-`history_truncated`（工厂部署这条通道看不见）。所以剩下的候选**不能**被解释成
+-首次发行者，**更不能**被解释成没有恶意历史——历史部署次数只能证明重复活动。
+-
+----
+-
+-## 装与跑
+-
+-```bash
+-pip install requests "eth-utils" "eth-hash[pycryptodome]"
+-python rt_a_attribution.py selftest        # ← 先跑这个
+-
+-export RTA_RPC_ETH="https://..."           # Alchemy / QuickNode / Infura 免费档
+-export ETHERSCAN_API_KEY="..."             # 以太坊 + 默认参数下【必填】，见下
+-
+-python rt_a_attribution.py probe
+-export RTA_FROM_BLOCK=...  RTA_TO_BLOCK=...
++# 以下变量必须按正式冻结规格填写，不能照抄 mock 的 1000–1200。
++export RTA_FROM_BLOCK='正式起点'
++export RTA_TO_BLOCK='正式终点'
++export RTA_LOOKBACK='正式历史回看块数'
++export RTA_OUT='/正式窗口独立输出目录'
+ python rt_a_attribution.py backfill
+-python rt_a_attribution.py forward --minutes 120   # 另开一个终端
++python rt_a_attribution.py report
++# 正式回填验收后才能开始前向只读观察
++python rt_a_attribution.py forward --minutes 120
+ python rt_a_attribution.py report
+ ```
+ 
+-### ⚠ Etherscan key 在以太坊 + 默认参数下是**必填**，不是可选
++本轮未发现正式冻结窗口。`rt_a_selftest/spec_frozen_*.json` 是 mock 数据，不能当作正式配置。`probe` 给出的范围也只是建议，不能自动视为用户冻结窗口。
+ 
+-早先版本把它写成"可选"。那是错的，而且是 v3 修 `hist_status` 分支顺序的直接后果——
+-`api_failure` 现在优先于抽样上限判定（这是对的，"没有 key"不该被写成"看不到更早"），
+-于是没有 key 时：
++## 来源选择与实际请求范围
+ 
++| 配置 | 默认 | 含义 |
++|---|---|---|
++| `RTA_PAIR_LOGS` | auto | auto / rpc / etherscan |
++| `RTA_MIN_BULK_SPAN` | 500 | auto 对 RPC 的固定批量跨度标准，不随 chunk 降低 |
++| `RTA_LOG_CHUNK` | 2000 | RPC 分块大小；与来源选择标准分开 |
++| `RTA_PAIR_LOGS_PAGE` | 1000 | Etherscan 满页时递归切分，单块仍满页则留缺口 |
++| `RTA_FROM_BLOCK` / `RTA_TO_BLOCK` | 0 | 必须显式配置候选区间 |
++| `RTA_LOOKBACK` | 2500000 | backfill 历史回看、L2b 二分范围 |
++| `RTA_FWD_LOOKBACK` | 同 LOOKBACK | forward L2b 回看范围 |
++| `RTA_MAX` | 400 | 候选最多归因数；超限使用冻结随机种子抽样 |
++| `RTA_HIST_SENDERS` | 3000 | 每次历史建池发送者补抓上限 |
++| `RTA_DEADLINE` | 300 | 前向决策截止秒数 |
++| `RTA_RECEIPT_CAP` | 40 | L2b 回执退化扫描上限 |
++| `RTA_L3_SCAN` | 20000 | L3 Mint 扫描块数；前向不超过观察链头 |
++| `RTA_SCAN_QPS` / `RTA_RPC_QPS` | 3 / 8 | 现有请求节奏，不意味着套餐保证 |
+ 
+-| 无 key，creator 取得到             | `creator_prior_activity_known` | 计入【2】 |
+-| ------------------------------------ | -------------------------------- | ----------- |
+-| 建池发送者无前科，历史**未**全采样 | `api_failure`                  | 否        |
+-| 建池发送者无前科，历史**已**全采样 | `api_failure`                  | 否        |
+-| 建池发送者有前科                   | `ok`                           | **是**    |
++PairCreated 历史请求范围是 `[max(1, from-lookback), from-1]`，候选范围是 `[from,to]`。完整归因还会调用候选时间戳、L2b 创建定位、Mint、交易回执、7702 状态；外部部署历史从块 0 查至候选前一块，L4 从块 0 查至候选块。这些范围不能用候选窗口大小替代。
+ 
+-**加大 `RTA_HIST_SENDERS` 或缩小 `RTA_LOOKBACK` 都救不了**：`api_failure` 排在采样检查
+-之前，只要 creator 取得到而 Etherscan 不可用，`no_history` 在这条支路上就不可达。
+-【2】联合覆盖率的上界因此被压到"自足通道命中前科"的那个子集，这一跑问不出东西。
++用户曾测得其 RPC 的日志跨度仅 10。auto 在有 Etherscan key 时会选择 Etherscan，测试核验完整 backfill 首次 fetch。显式 `RTA_PAIR_LOGS=etherscan` 可避免依赖 auto。来源与分页策略进入规格 hash，但更换来源不改变身份字段含义，不应因此修改 `attribution_rule`。Etherscan 授权/限流错误留缺口，不盲目递归放大请求。
+ 
+-**链**：已核对 Etherscan 官方支持表，Base Mainnet (8453) 是 **Paid Tier Only**，Ethereum Mainnet (1) 免费档可用。先在以太坊跑通。
++## 完整性与报告验收
+ 
+-**这意味着 Base 上的免费档跑不出【2】**——那不是"多等一会"能解决的，得要么买套餐，
+-要么把 `required_fields_for_rule` 改成不含 `creator_prior_activity_known` 的变体
+-（那是另一版规则，`attribution_rule` 要跟着改）。
++每次采集使用独立 UUID 批次；规格 hash 不是批次 ID。`collection_runs` 保存批次范围、状态和规格，`batch_integrity` 保存分区对账，归因行带 `batch`。`run_integrity` 保留兼容诊断汇总，**不是报告的放行依据**。
+ 
+-
+-| 变量                              | 默认             |                                                                              |
+-| ----------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
+-| `RTA_CHAIN`                       | ethereum         | ethereum / base                                                              |
+-| `RTA_FROM_BLOCK` / `RTA_TO_BLOCK` | 0                | 候选区间（必填）                                                             |
+-| `RTA_LOOKBACK`                    | 2500000          | 只用于建立历史的回看区块数                                                   |
+-| `RTA_FWD_LOOKBACK`                | 同`RTA_LOOKBACK` | forward 的回看窗口。设成不同值会让两份报告的 L2b 不可比，报告会告警          |
+-| `ETHERSCAN_API_KEY`               | —               | **以太坊 + 默认参数下必填**（见上）。缺它则【2】上界被压到自足通道命中的子集 |
+-| `RTA_DEADLINE`                    | 300              | 决策截止（秒）                                                               |
+-| `RTA_MAX`                         | 400              | 最多归因多少候选                                                             |
+-| `RTA_HIST_SENDERS`                | 3000             | 补抓多少历史建池发送者                                                       |
+-| `RTA_RECEIPT_CAP`                 | 40               | L2b 退化路径的回执扫描上限                                                   |
+-| `RTA_L3_SCAN`                     | 20000            | L3 向后扫多少区块找首个 Mint                                                 |
+-
+-跑 `backfill` 时第一屏会打印 **RPC 均次/候选**。自测里是 18.4；真链上应在 20–25 量级。**如果这个数上到几百，说明 L2b 掉进了退化路径，先停下来看 probe 里的 `eth_getBlockReceipts` 那一行。**
+-
+----
+-
+-## 四条链路（字段名忠于实际含义）
+-
+-
+-|         | 记录的是                                                                         | 明确不是                                                             |
+-| --------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+-| **L1**  | `pair_created_tx_sender` 外层交易发送者`pair_created_tx_to` 该交易直接调用的地址 | 不是"建池的人"。可能是 EOA / bot / 中间合约；`to` 可能是 router      |
+-| **L2a** | Etherscan`contractCreator`                                                       | 不是"实控人"                                                         |
+-| **L2b** | 纯 RPC 二分定位创建区块后的归因 + `deploy_kind` | 工厂部署时给的是**交易发起人**，标 `ambiguous`；有 L2a 时以 L2a 为准 |
+-| **L3**  | `first_mint_tx_sender` / `first_mint_event_sender` / `lp_token_recipient`        | 三者**刻意不合并**                                                   |
+-| **L4**  | `earliest_observed_inbound`                                                      | **不证明共同控制**                                                   |
+-
+----
+-
+-## 报告怎么读
+-
+-**唯一结论行是【2】联合覆盖率**。状态六类，不要合并：
+-
+-
+-|                     |                                                                           |
+-| --------------------- | --------------------------------------------------------------------------- |
+-| `ok` / `no_history` | **已判完**，计入可用                                                      |
+-| `history_truncated` | 看不到更早（回看边界 / 分页打满 / 抽样上限 / 扫描上限）——**不是"没有"** |
+-| `api_failure`       | 接口报错或无权限（没 key、Base 免费档、非归档节点）                       |
+-| `ambiguous`         | 归因歧义（工厂部署、共用路由、判不出哪侧是新币）                          |
+-| `timeout`           | 超过决策截止才返回                                                        |
+-
+-**能否定**：在冻结的母体、数据源、回看范围与决策截止内，**这一版归因规则**覆盖不足或来不及返回。
+-**不能否定**：信息不存在；RT-A 有没有 edge；换数据源后是否可行。低覆盖率也可能只意味着这条规则**只适用于一个子集**。
+-
+----
+-
+-## v4：本轮修的六个反例 + 两处口径冻结
+-
+-上一轮评审给出六个可复现的反例，**我逐个独立复现后才动手**，一个都不是误报：
+-
+-| 反例 | 复现结果 | 修法 |
+-|---|---|---|
+-| `l2_agree` 只比地址不比交易 | 两笔不同创建交易、同一发送者 → `l2_agree=1` | 先比 `txHash` 再比地址；新增 `l2_agreement`（`agree`/`conflict_tx`/`conflict_sender`/`not_comparable`），**冲突时不写 `creation_tx_sender`** |
+-| `creator_prior_deploys` 的 `any_ok` | 外部交易空 + 内部交易失败 → `(0, None, "no_history")` | 任一通道拿不到即 `api_failure`，不再放行 |
+-| 失败交易被计为部署 | `isError=1` 的创建交易 → `(1, 100, "ok")` | `_tx_succeeded()` 过滤 `isError` / `txreceipt_status` |
+-| 自足通道混用主体 | 发送者 A 有前科、创建者 B 接口失败 → B 记 `ok` 并进【2】 | 要求 `s_from == creator` 才可用；否则只留 `sender_prior_pairs` 供人工看 |
+-| L3 把零地址当 LP 接收者 | 最低流动性锁定排在实际铸造前 → 返回零地址且判 `ok` | 按日志序关联本次 Mint，跳过 `Transfer(0x0→0x0)`，新增 `minimum_liquidity_locked` 列 |
+-| 日志缺口被丢弃 | `backfill`/`forward` 都过滤 `_gap`，前向照常推进 `cur` | 缺口入 `log_gaps` 表并在前向自动重试；未补齐不得标为完整母体 |
+-
+-### 还有一个反例是评审要求补核、结果最重的
+-
+-**`txlistinternal(address=EOA)` 完全找不回该 EOA 经工厂发起的创建。** 三个真实工厂部署正对照：
++对每个区间 `[a,b]`：
+ 
+ ```
+-token 0xa8ad134fc2  按 address=eoa: create 0 条，命中【否】 | 按 txhash: 命中 是
+-token 0xe11808ea53  按 address=eoa: create 0 条，命中【否】 | 按 txhash: 命中 是
+-token 0xf140c23544  按 address=eoa: create 0 条，命中【否】 | 按 txhash: 命中 是
++预期事件数 = allPairsLength(b) - allPairsLength(a-1)
+ ```
+ 
+-v3 加 `txlistinternal` 的唯一目的就是补工厂内 CREATE2，它一条都没补上；而接口成功返回空
+-又被当成 `no_history`（已判完）。**惯用工厂发币的连环发行者在这一列上看起来是干净的。**
++去重条数、池序号连续性、首尾边界、日志形状/Factory/topic/范围和缺口状态都要成立。预期 0 且日志 0 正确通过。backfill 历史与候选分别核验；完整性失败仍保留日志与诊断归因，但返回 1，自动输出 `.INCOMPLETE.md` 并移除旧正式报告。零归因失败也必须如此处理。
+ 
+-修法：`creator_prior_deploys` **永不返回 `no_history`**。数到 >0 是成立的正面证据（`ok`）；
+-数到 0 只能记 `history_truncated`——直接部署确实没有，工厂部署这条通道看不见。
+-要真正覆盖需对该地址每笔交易逐个 `txlistinternal(txhash=…)`，调用量与其交易数同阶，本轮不做。
++`report` 检查每条归因对应的批次及规格，并纳入最新失败/空批次；前向累计观察包含所有批次的完整性。缺批次、未完成、混合规格均不得输出正常结论。无证据的旧库只能产生诊断报告。报告解释字段使用采集时保存的规格；当前进程设置不改写采集时规格。N 是实际归因样本数，未必是整个候选母体，完整日志不意味着所有候选都被归因。
+ 
+-### 口径冻结
++`log_gaps` 主键包含 chain / factory / role / batch / 起止块。旧表会重建主键，未知归属旧记录保留为 unknown/legacy，不自动猜测归属。前向只补本次批次且位于本次起点至已观察链头范围内的缺口，补回日志必须通过对账；不会改写历史归因或历史样本角色。前向每个新区间也对账，静默少日志同样留缺口。
+ 
+-**身份规则** `attribution_rule = "creation-tx-sender-v1"`：
++历史/候选缺口通过再次运行同一冻结窗口的 backfill 恢复，只有已核验覆盖的区间才销账。其他批次的前向遗留缺口不自动归入新观察；相应旧观察仍不完整，需另行设计显式恢复，不能拿新批次结果覆盖失败事实。不同链/范围应使用独立库；已有前向归因的库禁止重跑 backfill 改角色。
+ 
+-| 字段 | 含义 |
+-|---|---|
+-| `creation_tx_sender` | 已定位创建交易的外层 `from`。**不是**发行者、不是实控人 |
+-| `deployment_factory` | Etherscan 返回的 `contractFactory` 原始值 |
+-| 实际发行者／共同控制关系 | 另行审计，不能由上述地址直接确认 |
++## 人工审计判据
+ 
+-旧列名 `token_creator` 已**废弃并重命名**（不是兼容别名），避免它继续暗示"发行者"。
++查看 `audit_sample.csv` 的创建交易和两路证据：判断 `creation_tx_sender` 是否等于**已确认创建交易的外层 from**。不要凭地址是 router、工厂或热钱包就判“错误”；如果它确为该交易外层发送者，字段可正确，但不能推出其为发行者。浏览器地址标签不能替代交易/回执证据。
+ 
+-**采集来源**与身份规则分开记，两者都进 `spec_hash`：`pair_logs_source`（auto/rpc/etherscan）、
+-`pair_logs_page_size`。换来源不改变研究母体的定义（链/Factory/事件/区间/候选规则都没动），
+-改变的是采集来源与遗漏风险。
++工厂部署应额外确认目标合约确由该交易内部创建；证据不足填“无法判断”。`creator_status=conflict` 检查两路交易冲突来源，不先选一方。L4 单独判断实际入账证据与查询主体，公共服务来源不能证明共同控制。
+ 
+-### 日志完整性对账（评审给的等式）
++报告【2】仅描述规则必需字段的联合可用比例。`history_truncated`、`api_failure`、`ambiguous`、`conflict`、`timeout` 不能合并成“没有”。前向截止按必需字段各自返回时间判断；历史回填不能证明候选当时及时可得。
+ 
+-Uniswap V2 每次建池追加 `allPairs` 并把追加后的长度写进 `PairCreated` 最后一个字段，所以：
++## 既有真实记录的证据边界
+ 
+-$$N_{[a,b]} = \operatorname{allPairsLength}(b) - \operatorname{allPairsLength}(a-1)$$
++交接记录中的三个工厂部署正对照显示：`txlistinternal(address=EOA)` 找不到 create，按 txhash 能命中。该记录由用户提供，本轮无其原始响应，不声称独立复核。旧 README 的 29/29、22/22 等观察也不构成所有创建交易的普遍保证。
+ 
+-`reconcile_pair_logs()` 检查三件事：去重日志数是否等于 N、池序号是否连续、首尾是否与边界吻合。
+-真实数据实测（区间 25919774–25921774）：
+-
+-```
+-allPairsLength 差值 = 34    去重日志数 = 34    计数一致 ✔
+-池序号 521010..521043 连续 ✔    与边界吻合 ✔
+-```
+-
+-**任一项不成立，该区间就不得标为完整母体**，报告里的分母不能当全量。
+-分页策略用**对半切分递归**而不是翻页，返回条数打满就切，保证不静默截断。
+-
+-### 其余
+-
+-- `etherscan_qps` 默认 4 → **3**（免费档文档值）
+-- 前向按**字段各自的返回时刻**判超时（`lag_l1/l2/l3/l4/hist_seconds`），
+-  联合时限只看规则必需字段——L3/L4 拖延不再把早已返回的 L1/L2 拖成 `timeout`
+-- 前向的 L3 扫描上限不得越过**当时链头**
+-- `creator_is_7702_delegated` 改查**候选所在块**，不再用 `latest`（那是采集时状态）
+-- `spec_frozen_<hash>.json` 改在**能力探测与自动调参之后**写，`report` 只读不写
+-- 续跑只跳过**同一 `spec_hash`** 下已归因的候选；混入旧口径的行会被报告告警
+-- 默认输出目录改为 `./rt_a_out_v4`
+-- `covcheck.py` 增加**锚点歧义检测**——上一轮 `find` 取首个匹配，曾去检查了另一个函数的同名行
+-
+----
+-
+-## ⚠ 跑之前必读：Alchemy 免费档的 eth_getLogs 只给 10 个区块
+-
+-实测（2026-09-07，Alchemy 免费档以太坊主网）：
+-
+-```
+-Under the Free tier plan, you can make eth_getLogs requests with up to a 10 block range.
+-```
+-
+-**不是 10000，是 10。** 脚本默认 `RTA_LOG_CHUNK=2000`，折半重试的下限是 200，全都超——
+-按默认参数跑，每个 chunk 都会变成 `_gap`，backfill 拿不到任何候选，而且是**静默的空数据**。
+-
+-v3.3 起 `backfill` 开跑前会**实测**这个上限（`rpc_getlogs_max_span()`），自动降到实测值，
+-并把预计调用量摆出来：
+-
+-```
+-⚠ eth_getLogs 实测上限 10 区块 < 配置的 2000
+-⚠ 已自动降到 10。按此跨度，取完 2600000 个区块需要约 260,000 次调用
+-⚠ 这个量级不现实。要么缩小 RTA_LOOKBACK / 候选区间，要么换一个跨度更大的端点。
+-```
+-
+-**它只保证你不会拿到静默的空数据，不解决可行性。** 三条出路：
+-
+-1. **换 Etherscan 的 `logs` 模块取 PairCreated**（实测可用：`span=100000` 一次返回 1000 条，
+-   需翻页）。按实测密度（近 40000 区块内 667 条 PairCreated），2.5M 区块约 4.2 万条事件，
+-   按 5 万区块一段切分约 **50 次调用**——比 RPC 路径快几个量级。这会把候选母体的数据源
+-   从 RPC 换成 Etherscan，是 **spec 级变更**，`attribution_rule` 要跟着改。
+-2. 大幅缩小 `RTA_LOOKBACK` 与候选区间（比如回看 2 万块、候选 2 千块 → 2200 次调用）。
+-   代价是历史窗口小到几乎问不出"有没有前科"。
+-3. Alchemy 升 PAYG。
+-
+-**其余 RPC 能力实测都没问题**：
+-
+-```
+-归档 eth_getCode   factory 部署前一块 → 0x（空），部署当块 → 非空   ← 双向断言通过
+-                   250 万块前 → 非空                              ← 归档可用
+-eth_getBlockReceipts → OK，281 条回执                             ← L2b 便宜路径 2 可用
+-```
+-
+-L2b 的前提是满足的，瓶颈只在 `eth_getLogs`。
+-
+----
+-
+-## L2a 字段实测：`contractFactory` 与 `contractCreator` 的口径
+-
+-29 个真实样本（跨 2020 / 2021 / 2023 / 近期四个年代，其中近期 22 个连续取自
+-`PairCreated` 母体）：
+-
+-| | 结果 |
+-|---|---|
+-| `contractCreator == 创建交易的 from` | **29/29** |
+-| `contractFactory` 与 `to==null` 启发式判据一致 | **22/22** |
+-| 工厂部署占比（近 40000 区块的可判定新币） | **4/22 ≈ 18%** |
+-
+-对照组（USDC/WETH pair，已知工厂 CREATE2 产物）确认 `contractFactory` 会被填成工厂地址：
+-
+-```
+-响应字段: ['blockNumber','contractAddress','contractCreator',
+-          'contractFactory','creationBytecode','timestamp','txHash']
+-contractFactory = 0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f
+-```
+-
+-**结论**：工厂创建时 Etherscan 的 `contractCreator` 返回的是**发起那笔交易的 EOA**，
+-与 L2b 便宜路径 1 同一口径。此前担心的"两条链路口径差"不存在。
+-启发式判据在这批样本上没错，但 `contractFactory` 是文档契约而非巧合，且零额外调用。
+-
+-响应里还白给 `blockNumber` / `timestamp` / `creationBytecode`。
+-
+----
+-
+-## 自足通道的作用范围（结构性事实，不是 bug）
+-
+-把 `creator_prior_activity_known` 的分支按可达性穷举后：
+-
+-
+-| 分支                            | 产出                | creator 已知?                      |
+-| --------------------------------- | --------------------- | ------------------------------------ |
+-| A 外部通道确定答案              | `ok` / `no_history` | 仅已知                             |
+-| B 外部通道截断                  | `history_truncated` | 仅已知                             |
+-| C 自足通道命中前科              | `ok`                | 仅已知（v3.1 起加了`and creator`） |
+-| D 外部通道不可用                | `api_failure`       | 仅已知                             |
+-| E 自足通道抽样底线 / F 未全采样 | `history_truncated` | **仅未知**                         |
+-| G 兜底                          | `creator_status`    | **仅未知**                         |
+-
+-**E / F 只在 creator 未知时可达，而【2】要求 `creation_tx_sender` 非空——所以
+-`hist_sampled_floor` 与 `hist_fully_sampled` 从不影响结论行**，只影响【2b】分布。
+-自足通道对【2】的唯一贡献是 C（外部通道不可用、但发送者已被确认有前科）。
+-
+-v3.1 修掉了这里的两处假阳性：C 和 G 原先在 creator 未知时也会给出 `ok` / `no_history`
+-（已判完），等于替一个不知道是谁的地址宣称"有/没有前科"。现在 C 要求 `creator` 非空，
+-G 改为回落到 `creator_status`。场景 13 断言这三点，并同时断言 creator 已知时
+-v3 的自足通道兜底口径不变。
+-
+-**残留一支**：两条 L2 链路都判 `no_history`（一致认定该地址没有创建记录）时，
+-`creator_status` 是 `no_history`，G 会把它传给 `hist_status`，仍计为已判完。
+-那是两条链路一致的确定发现、不是凭空宣称，且 `creation_tx_sender` 为空所以进不了【2】。
+-留着不特判。
+-
+----
+-
+-## 还没处理的
+-
+-- 第二遍重算的 `creator_prior_pairs_in_sample` 仍只统计 attribution 表（≤400 个候选）内部，不含历史区间。已改名标明，但**如果这个字段要真用于判断，需要对历史区间也做 L2 归因**——那是一笔大得多的调用量，等 backfill 出了数再决定值不值。
+-- **EIP-7702：`eth_getCode` 非空 ≠ 是合约。** 填审计 CSV 时这个直觉**写死禁止**：
+-
+-  | `eth_getCode` 返回 | 判定 |
+-  |---|---|
+-  | `0x` | **该块无代码**（不足以证明地址类型） |
+-  | 以 `0xef0100` 开头 | **仍是 EOA**，7702 委托；后 20 字节是委托目标 |
+-  | 其余非空 | 合约 |
+-
+-  实测样本：`contractCreator = 0xf94e5cdf…` 的 code 是 `0xef01000000…`、nonce 1907
+-  ——一个带委托、发过近两千笔交易的 EOA。这**大概率是正向特征而非要排除的误判**：
+-  批量发行者的画像。归因表新增 `creator_is_7702_delegated` 列（1/0/NULL），
+-  **只记录、不参与任何判定**，也进审计 CSV；等样本填完再看它与"重复发行"的相关性。
+-
+-- **`deploy_kind` 是启发式，不是事实。** 它的判据是"创建区块内该代币首条日志所属交易的`to` 是否为空"。若代币构造函数不发日志、而同区块内更晚的交易碰了它，`logs[0]` 就来自那笔交易，直接部署会被误判成 `factory`。方向是保守的（误判会落进 `ambiguous`、不进 `creation_tx_sender`），但**上面的手工判据是按 `deploy_kind` 分派的**，误判会把行送进错误的判据。填 CSV 时若某行的 `deploy_kind=factory` 但 `l2a_creator` 看起来就是个普通 EOA，在备注里记一句，这类的数量本身就是要看的东西。
++小区间 25919774–25921774 曾由用户测得 34 条日志、池序号 521010..521043；本轮独立复核结果及公开响应保存在验收目录，详见 HANDOFF。除此之外不扩大真实验收范围。

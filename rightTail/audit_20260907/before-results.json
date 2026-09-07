@@ -1,0 +1,9 @@
+{
+  "auto": 0,
+  "missing": 1,
+  "empty_missing": 1,
+  "foreign_integrity": 1,
+  "reconcile": 1,
+  "forward_scope": 1,
+  "gap_migration": 1
+}

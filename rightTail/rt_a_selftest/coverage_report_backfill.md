@@ -1,8 +1,8 @@
 
 ==============================================================================
 模式：backfill    候选数 N = 21
-数据采集时的 spec_hash：fa6bcb0b98f65667
-当前进程 spec_hash：eb855df8c3268f41   ⚠ 与采集时不同
+数据采集时的 spec_hash：343cc2cc47503dea
+当前进程 spec_hash：8be78862ff44aeb8   ⚠ 与采集时不同
 链 = ethereum   决策窗口 = 300s
 本模式回看窗口 = 900 区块   ⚠ 两个模式的回看窗口不同，L2b 的 history_truncated 门槛不同，两份报告的 L2b 覆盖率不可直接比较
 ==============================================================================
@@ -20,7 +20,7 @@
                           ok=21
 
 【2】联合覆盖率 —— 唯一的结论行
-  规则需要：pair_created_tx_sender, token_creator, creator_prior_activity_known
+  规则需要：pair_created_tx_sender, creation_tx_sender, creator_prior_activity_known
   '已判完'计入可用的状态：['ok', 'no_history']  （确认没有前科是答案，不是缺失）
   联合可用 = 21/21  (100.0%)
 
@@ -34,7 +34,11 @@
   factory  候选    0；可比    0；一致 0 (n/a)
   unknown  候选    0；可比    0；一致 0 (n/a)
 
-【3b】token_creator 的确定性（ambiguous 的地址不进下游）
+【3c】两路一致性的细分（先比创建交易，再比地址）
+  agree                  21/21 (100.0%)
+  conflict_tx = 两路指向不同的创建交易，这才是真歧义；此时不写 creation_tx_sender。
+
+【3b】creation_tx_sender 的确定性（ambiguous / conflict 不进下游）
   ok                     21/21 (100.0%)
 
 【5】新池 ≠ 新币（只统计 backfill 候选）
