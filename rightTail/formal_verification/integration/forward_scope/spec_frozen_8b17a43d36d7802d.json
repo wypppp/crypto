@@ -1,0 +1,60 @@
+{
+  "spec": {
+    "spec_version": "rt-a-feasibility-v4.1",
+    "purpose": "身份归因可行性门；不测收益",
+    "chain": "ethereum",
+    "chains": {
+      "ethereum": {
+        "chain_id": 1,
+        "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+        "rpc_env": "RTA_RPC_ETH",
+        "etherscan_free_tier": true
+      },
+      "base": {
+        "chain_id": 8453,
+        "factory": "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6",
+        "rpc_env": "RTA_RPC_BASE",
+        "etherscan_free_tier": false
+      }
+    },
+    "candidate_from_block": 1000,
+    "candidate_to_block": 1040,
+    "history_lookback_blocks": 900,
+    "decision_window_seconds": 300,
+    "max_candidates": 50,
+    "hist_sender_cap": 3000,
+    "audit_sample_size": 20,
+    "random_seed": 20260906,
+    "required_fields_for_rule": [
+      "pair_created_tx_sender",
+      "creation_tx_sender",
+      "creator_prior_activity_known"
+    ],
+    "decisive_statuses": [
+      "ok",
+      "no_history"
+    ],
+    "unavailable_statuses": [
+      "history_truncated",
+      "api_failure",
+      "timeout",
+      "ambiguous"
+    ],
+    "attribution_rule": "creation-tx-sender-v1",
+    "pair_logs_source": "rpc",
+    "pair_logs_page_size": 1000,
+    "logs_normalization": "etherscan-empty-index-zero-v1",
+    "etherscan_retry_policy": "transient-network-http-max3-v1",
+    "min_bulk_log_span": 500,
+    "forward_lookback_blocks": 900,
+    "rpc_qps": 8.0,
+    "etherscan_qps": 3.0,
+    "log_chunk_blocks": 100,
+    "l2b_receipt_scan_cap": 40,
+    "l3_scan_blocks": 20000,
+    "deploy_page_size": 5000
+  },
+  "spec_hash": "8b17a43d36d7802d",
+  "frozen_at": "2026-09-07T13:44:53.235260+00:00",
+  "pair_logs_source_resolved": "rpc"
+}

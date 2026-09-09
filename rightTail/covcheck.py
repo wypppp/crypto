@@ -75,7 +75,7 @@ KEY = {
   "报告读取完整性状态": find('        intact, irows = integrity_of(con, mode)'),
   "不完整 → INCOMPLETE 横幅": find('                  "!!  母体不完整 —— 这份是 INCOMPLETE 调试报告，不是验收结果  !!",'),
   "不完整 → 删掉旧正式报告": find('            os.remove(normal)      # 避免上一次的正式报告被误当成本次结果'),
-  "report 返回非零": find('        return 1'),
+  "report 返回非零": find_after("def report():", '        return 1'),
   "reconcile 只核验不归因": find('        print("\\n[对账模式] 只做完整性核验，不继续归因。")'),
 }
 seen = set()

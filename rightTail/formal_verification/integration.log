@@ -1,0 +1,16 @@
+strict_incomplete exit= 0 expected= 0
+etherscan_transient exit= 0 expected= 0
+transport_http exit= 0 expected= 0
+scan_zero_index exit= 0 expected= 0
+auto exit= 0 expected= 0
+missing exit= 0 expected= 0
+empty_missing exit= 0 expected= 0
+foreign_integrity exit= 0 expected= 0
+reconcile exit= 0 expected= 0
+forward_scope exit= 0 expected= 0
+gap_migration exit= 0 expected= 0
+forward_retry exit= 0 expected= 0
+history_retry exit= 0 expected= 0
+empty_success exit= 0 expected= 0
+cli_missing exit= 1 expected= 1
+cli_reconcile_missing exit= 1 expected= 1

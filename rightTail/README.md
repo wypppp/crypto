@@ -58,7 +58,7 @@ python rt_a_attribution.py forward --minutes 120
 python rt_a_attribution.py report
 ```
 
-本轮未发现正式冻结窗口。`rt_a_selftest/spec_frozen_*.json` 是 mock 数据，不能当作正式配置。`probe` 给出的范围也只是建议，不能自动视为用户冻结窗口。
+正式窗口现已选定为 `[25800000,25900000]`，历史回看2,500,000块，显式Etherscan，最多抽样400个PairCreated。启动记录及冻结规格位于 `formal_B_25800000_25900000_v5/`；执行状态见 HANDOFF。`rt_a_selftest/spec_frozen_*.json` 是 mock 数据，不能当作正式配置。`probe` 给出的范围也只是建议，不能自动视为用户冻结窗口。
 
 ## 来源选择与实际请求范围
 
@@ -113,3 +113,7 @@ PairCreated 历史请求范围是 `[max(1, from-lookback), from-1]`，候选范�
 交接记录中的三个工厂部署正对照显示：`txlistinternal(address=EOA)` 找不到 create，按 txhash 能命中。该记录由用户提供，本轮无其原始响应，不声称独立复核。旧 README 的 29/29、22/22 等观察也不构成所有创建交易的普遍保证。
 
 小区间 25919774–25921774 曾由用户测得 34 条日志、池序号 521010..521043；本轮独立复核结果及公开响应保存在验收目录，详见 HANDOFF。除此之外不扩大真实验收范围。
+
+正式窗口新增实测兼容：Etherscan偶尔把零日志索引编码为`0x`。已用匹配交易的RPC回执核实为`0x0`，仅在Etherscan来源规范化索引字段，原始响应保留，其他非法值仍拒绝。`logs_normalization`进入规格hash。L3日志跟随显式Etherscan来源；HTTP 4xx除429不重试，429与5xx保留现有重试策略。
+
+最新实测：正式400样本回填已通过，联合可用329/400（82.25%），前向结果单独记录于 [FORMAL_RESULTS.md](FORMAL_RESULTS.md)。恢复运行的内存上限、资源采样、实时/缓存请求区分与退出码见run_formal.py及各运行目录execution.json。

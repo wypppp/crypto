@@ -1,0 +1,269 @@
+{
+  "schema": "right-tail-preflight/2",
+  "script_version": "2.0",
+  "mode": "selftest",
+  "started_at": "2026-09-09T08:23:54.178205+00:00",
+  "results": [
+    {
+      "id": "S.constants",
+      "name": "Deployment and virtual address encoding",
+      "status": "PASS",
+      "detail": {
+        "addresses": 8,
+        "virtual_identities": 4
+      },
+      "required": true,
+      "elapsed_s": 2.9e-05
+    },
+    {
+      "id": "S.selector.574f2ba3",
+      "name": "allPairsLength()",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.0002
+    },
+    {
+      "id": "S.selector.1e3dd18b",
+      "name": "allPairs(uint256)",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000105
+    },
+    {
+      "id": "S.selector.0dfe1681",
+      "name": "token0()",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 9.8e-05
+    },
+    {
+      "id": "S.selector.d21220a7",
+      "name": "token1()",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000365
+    },
+    {
+      "id": "S.selector.18160ddd",
+      "name": "totalSupply()",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000232
+    },
+    {
+      "id": "S.selector.0902f1ac",
+      "name": "getReserves()",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.0002
+    },
+    {
+      "id": "S.selector.70a08231",
+      "name": "balanceOf(address)",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000199
+    },
+    {
+      "id": "S.selector.313ce567",
+      "name": "decimals()",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000178
+    },
+    {
+      "id": "S.selector.e6a43905",
+      "name": "getPair(address,address)",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000143
+    },
+    {
+      "id": "S.selector.dd62ed3e",
+      "name": "allowance(address,address)",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000181
+    },
+    {
+      "id": "S.selector.095ea7b3",
+      "name": "approve(address,uint256)",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.00014
+    },
+    {
+      "id": "S.topic.4c209b5f",
+      "name": "Mint(address,uint256,uint256)",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000143
+    },
+    {
+      "id": "S.topic.0d3648bd",
+      "name": "PairCreated(address,address,address,uint256)",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000142
+    },
+    {
+      "id": "S.keccak",
+      "name": "Independent Keccak vectors",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RuntimeError",
+        "message": "Missing keccak backend: install eth-hash[pycryptodome]"
+      },
+      "required": true,
+      "elapsed_s": 0.000145
+    },
+    {
+      "id": "S.abi",
+      "name": "Strict ABI/hex rejects empty and malformed data",
+      "status": "PASS",
+      "detail": {
+        "negative_cases": 9
+      },
+      "required": true,
+      "elapsed_s": 0.000665
+    },
+    {
+      "id": "S.rpc",
+      "name": "Null, errors and mismatched IDs cannot pass",
+      "status": "PASS",
+      "detail": null,
+      "required": true,
+      "elapsed_s": 4.5e-05
+    },
+    {
+      "id": "S.search",
+      "name": "First Mint and timestamp boundary cases",
+      "status": "PASS",
+      "detail": null,
+      "required": true,
+      "elapsed_s": 3.2e-05
+    },
+    {
+      "id": "S.gates",
+      "name": "Exit status, unknown classification, redaction and read-only guard",
+      "status": "PASS",
+      "detail": null,
+      "required": true,
+      "elapsed_s": 0.000697
+    },
+    {
+      "id": "S.evm",
+      "name": "Independent EVM: normal/tax/missing balance/missing allowance/restriction",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Install eth-tester and py-evm for independent local EVM controls"
+      },
+      "required": true,
+      "elapsed_s": 0.000238
+    },
+    {
+      "id": "S.workflow",
+      "name": "Artificial historical workflow and ignored-override rejection",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Install eth-tester and py-evm for the local workflow test"
+      },
+      "required": true,
+      "elapsed_s": 0.000139
+    }
+  ],
+  "baseline_ready": false,
+  "scope": "capability probe only; no market return or strategy conclusion",
+  "script_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "embedded_source_sha256": "9e937f5df930546d9d0c166d539149aaaafb07731b95decd36998e509298216c",
+  "embedded_runtime_sha256": {
+    "FixtureRouter": "1f3225a29dc9b8d06bc2a3a8c91f2f001da4b6c5b117cccf91563342a2f90133",
+    "FixtureToken": "156077bddce3a76dfb9b27fc61075d140735c5e5312a31c7a2e1e730d9fdaf9f",
+    "Probe": "c18d052f2e9d20a1f6a55740d989d602c84fed811124161d384979b16b7cb8b9"
+  },
+  "evidence_level": "offline_functions_and_local_evm; no external RPC run",
+  "finished_at": "2026-09-09T08:23:54.186055+00:00",
+  "counts": {
+    "PASS": 5,
+    "FAIL": 14,
+    "UNRUN": 2
+  },
+  "capability_gate": {
+    "passed": false,
+    "blocking_ids": [
+      "S.selector.574f2ba3",
+      "S.selector.1e3dd18b",
+      "S.selector.0dfe1681",
+      "S.selector.d21220a7",
+      "S.selector.18160ddd",
+      "S.selector.0902f1ac",
+      "S.selector.70a08231",
+      "S.selector.313ce567",
+      "S.selector.e6a43905",
+      "S.selector.dd62ed3e",
+      "S.selector.095ea7b3",
+      "S.topic.4c209b5f",
+      "S.topic.0d3648bd",
+      "S.keccak",
+      "S.evm",
+      "S.workflow"
+    ]
+  },
+  "baseline_remaining_gates": [
+    "frozen configuration and complete candidate denominator",
+    "candidate-specific holding-state/EOA semantics and missingness handling",
+    "cost convention, pilot quality and unchanged canonical block hashes"
+  ]
+}

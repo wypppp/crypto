@@ -1,0 +1,29 @@
+{
+  "exit": 0,
+  "exact_frozen_sample_match": true,
+  "n": 400,
+  "joint_available": 329,
+  "identity_available": 394,
+  "lp_recipient_ok": 392,
+  "history_sender_success": 3000,
+  "unresolved_gaps": 0,
+  "batch_integrity": [
+    {
+      "batch": "40b6bd5771e04503af5e6f78418bd40f",
+      "role": "history",
+      "from_block": 23300000,
+      "to_block": 25799999,
+      "ok": 1,
+      "detail": "{\"range\": [23300000, 25799999], \"n_logs_deduped\": 64429, \"n_expected\": 64429, \"count_match\": true, \"contiguous\": true, \"boundary_match\": true, \"ok\": true, \"note\": \"\", \"all_pairs_length_before\": 454791, \"all_pairs_length_end\": 519220, \"index_first\": 454792, \"index_last\": 519220}"
+    },
+    {
+      "batch": "40b6bd5771e04503af5e6f78418bd40f",
+      "role": "candidate",
+      "from_block": 25800000,
+      "to_block": 25900000,
+      "ok": 1,
+      "detail": "{\"range\": [25800000, 25900000], \"n_logs_deduped\": 1423, \"n_expected\": 1423, \"count_match\": true, \"contiguous\": true, \"boundary_match\": true, \"ok\": true, \"note\": \"\", \"all_pairs_length_before\": 519220, \"all_pairs_length_end\": 520643, \"index_first\": 519221, \"index_last\": 520643}"
+    }
+  ],
+  "source_sha256": "3c761f2f79e8f95be67612a2dd0aab3bd2aabce417a27ab9544585f673acf3b4"
+}

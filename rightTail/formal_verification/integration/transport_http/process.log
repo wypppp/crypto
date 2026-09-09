@@ -1,0 +1,7 @@
+REAL_RPC_HTTP 400 calls= 1
+REAL_RPC_HTTP 429 calls= 3
+REAL_RPC_HTTP 503 calls= 3
+[warn] keccak 后端不可用，改用已校验常量（topic0 仍然正确，只是不再运行时计算）。
+[warn] 恢复运行时计算需要【两个】包，缺一不可：
+[warn]     pip install eth-utils "eth-hash[pycryptodome]"
+[warn] 只装 eth-hash 不够 —— 本脚本 import 的是 eth_utils.keccak。

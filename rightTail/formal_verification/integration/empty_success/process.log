@@ -1,0 +1,80 @@
+链=ethereum  factory=0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f  spec_hash=8b17a43d36d7802d
+PairCreated 采集来源：rpc —— 由 SPEC 指定：rpc
+候选 1000-1040；历史回看自 100
+L2b 可用性：True —— factory 创建区块定位为 100；双向断言通过（cb-1 空=True, cb 非空=True）
+  按 RPC 跨度 100 取 941 个区块，约 10 次 eth_getLogs
+
+[1/5] 历史区间 PairCreated（只建历史，不作候选）…
+  .. 100-199  累计 0
+  .. 200-299  累计 0
+  .. 300-399  累计 0
+  .. 400-499  累计 0
+  .. 500-599  累计 0
+  .. 600-699  累计 0
+  .. 700-799  累计 0
+  .. 800-899  累计 0
+  .. 900-999  累计 0
+[2/5] 候选区间 PairCreated…
+  .. 1000-1040  累计 0
+  历史 0；候选 0；缺口 历史0/候选0 段
+  history   对账：去重 0 vs 预期 0；计数✔ 连续✔ 边界✔  → 空区间（链上该段无建池），对账通过
+  candidate 对账：去重 0 vs 预期 0；计数✔ 连续✔ 边界✔  → 空区间（链上该段无建池），对账通过
+[3/5] 历史建池发送者：抓 0，历史总数 0，上限 3000/次
+  自足通道覆盖 0/0 → 全覆盖
+[4/5] 归因 0 个候选…（自足通道实际抽到的最早区块 = None，回看窗口起点 = 100）
+
+[5/5] 第二遍重算 creator_prior_pairs（消除处理顺序偏置）…
+完成。总 RPC 调用 29。数据库 /home/ancillary/rightTail/formal_verification/integration/empty_success/rt_a.sqlite
+
+==============================================================================
+模式：backfill    候选数 N = 0
+数据采集时的 spec_hash：
+当前进程 spec_hash：8b17a43d36d7802d   ⚠ 与采集时不同
+链 = ethereum   决策窗口 = 300s
+本模式回看窗口 = 900 区块
+==============================================================================
+
+【1】四条链路各自状态分布（分母 = N）
+  L1 建池交易发送者             已判完 =    0/0 (n/a)
+                          
+  L2a 浏览器创建归因            已判完 =    0/0 (n/a)
+                          
+  L2b 纯RPC创建归因           已判完 =    0/0 (n/a)
+                          
+  L3 首次Mint与LP接收         已判完 =    0/0 (n/a)
+                          
+  L4 最早观察到的入账            已判完 =    0/0 (n/a)
+                          
+
+【2】联合覆盖率 —— 唯一的结论行
+  规则需要：pair_created_tx_sender, creation_tx_sender, creator_prior_activity_known
+  '已判完'计入可用的状态：['ok', 'no_history']  （历史部署零条仍为未知，不代表没有历史）
+  联合可用 = 0/0  (n/a)
+
+【2b】历史可见性状态分布
+
+【3】两条创建归因链路的交叉校验（按部署形态分层）
+  只比较两条链路都判 ok 的行；工厂路径 L2b 仍为 ambiguous，不能据此确定归因。
+  direct   候选    0；可比    0；一致 0 (n/a)
+  factory  候选    0；可比    0；一致 0 (n/a)
+  unknown  候选    0；可比    0；一致 0 (n/a)
+
+【3c】两路一致性的细分（先比创建交易，再比地址）
+  conflict_tx = 两路指向不同的创建交易，这才是真歧义；此时不写 creation_tx_sender。
+
+【3b】creation_tx_sender 的确定性（ambiguous / conflict 不进下游）
+
+【5】新池 ≠ 新币（只统计 backfill 候选）
+  该代币此前已有池：0/0 (n/a)
+  无法判定哪侧是新币：0/0 (n/a)
+
+【本周能否定什么 / 不能否定什么】
+  能否定：在这个冻结的母体、数据源、回看范围与决策截止内，
+          【这一版归因规则】覆盖不足或来不及返回。
+  不能否定：信息不存在；RT-A 有没有 edge；换数据源后是否可行。
+  若 L2b 整条为 api_failure，请回看 capability_report.json 的
+  l2b_usable —— 那是数据源限制，不是链上没有信息。
+[warn] keccak 后端不可用，改用已校验常量（topic0 仍然正确，只是不再运行时计算）。
+[warn] 恢复运行时计算需要【两个】包，缺一不可：
+[warn]     pip install eth-utils "eth-hash[pycryptodome]"
+[warn] 只装 eth-hash 不够 —— 本脚本 import 的是 eth_utils.keccak。

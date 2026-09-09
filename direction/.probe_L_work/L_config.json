@@ -1,7 +1,7 @@
 {
  "_meta": {
   "name": "PROBE_L",
-  "version": "1.8.37",
+  "version": "1.8.41",
   "frozen_utc": "2026-09-03",
   "note": "本文件是 Probe L 的唯一可执行来源。PROBE_L_frozen.md 只解释它,不被脚本解析。脚本必须:载入本文件、回显完整内容、回显本文件与代码的完整 SHA-256、遇未识别或缺失键即失败。",
   "changelog_v1.2": "v1.1 的两条假设落空:①CMS 列表接口只返回 title,无正文 ⟹ T_scheduled 取不到;②catalogId=48 是混合流(实测 2,244 条中含 558 永续/302 杠杆/128 Earn/835 其它),不是纯现货上市母体。v1.2 改用详情接口取正文,并把分类与提取规则显式冻结于此,先冻结后应用。",
@@ -53,7 +53,11 @@
   "changelog_v1.8.34": "全链在同一 config 下重跑,精确 T0 结果按新门禁重述:**完整验收 205 条、证据不完整 1 条(NOT,因 NOTBTC 归档证据缺失)**,不再声称 206/206。独立于筛选条件的『更早成交』检查:751 个已取证交易对中仅 RED/REDUSDT 当日最早成交早于阈值(盘前,已被正确排除)。lag 统计范围收窄为 VERIFIED_COMPLETE 205 条。",
   "changelog_v1.8.35": "补上完整性门禁的第三处漏洞:**缓存读取路径未做验证**。仅把缓存 checksum_verified 改为 false,记录即被 verified 过滤器静默滤除且从不进入 failed,事件仍标 VERIFIED_COMPLETE(公告 4 对、实际验证 3 对)。修复为两层独立防护:①缓存准入(与新下载同一套验证,校验 symbol/day/threshold/校验信息/行数/时间戳单位),不通过即记 CACHE_ADMISSION_FAILED,不静默丢弃也不静默重下;②结构性完整,要求已验证集合与公告清单**集合相等**,缺项记 NOT_IN_VERIFIED_SET。八个注入反例(A–H)全部触发 fail-closed 退出 1,含专门绕过第一层以验证第二层独立有效的 G。",
   "changelog_v1.8.36": "补上完整性门禁的第四处漏洞:**准入只校验元数据,不验证实际用于计算 T0 的成交行**,且新下载路径根本没调用准入函数。仅把 first_at_or_after.ts_us 改为阈值前 1 微秒,事件仍标 VERIFIED_COMPLETE、lag=-0.000001s、退出码 0。修复:①cache_ok → record_ok,**缓存与新下载调用同一函数**;②新增成交行验证(存在性、字段与类型、成交时间 >= 阈值 / >= 当日最早 / UTC 日期匹配、id 非负且有序、价量为正、成交标志合法);③写出前对产物本身做**独立**时间约束断言。反例扩至 I–Q 共 17 项,含专门绕过准入层以验证写出前断言单独有效的 O。",
-  "changelog_v1.8.37": "①修 record_ok 的数值检查:float('nan')<=0 与 float('inf')<=0 均为 False,原实现会放行 NaN 与正负无穷;改为**必须有限且为正**(TRADE_NOT_FINITE),六个注入值实测全部拒绝。②冻结 independent_verification 的样本选取规则与范围:全部 15 条滞后事件 + 全部 3 条盘前转换 + 按 sha256(baseAsset) 字典序取前 20 条准时样本,合计 37 条;选取规则**先固定后执行**,与测量结果无关。"
+  "changelog_v1.8.37": "①修 record_ok 的数值检查:float('nan')<=0 与 float('inf')<=0 均为 False,原实现会放行 NaN 与正负无穷;改为**必须有限且为正**(TRADE_NOT_FINITE),六个注入值实测全部拒绝。②冻结 independent_verification 的样本选取规则与范围:全部 15 条滞后事件 + 全部 3 条盘前转换 + 按 sha256(baseAsset) 字典序取前 20 条准时样本,合计 37 条;选取规则**先固定后执行**,与测量结果无关。",
+  "changelog_v1.8.38": "正式纳入 ACE:C_LAUNCH_THEN_LIST 的起始措辞由 `will then list` 扩为 `(?:will then list|tentatively set to list)`。185740 的结构与 with 分支完全一致,全语料含该措辞者**仅此 1 篇**。冻结其逐篇完整记录期望(ACE @ 2023-12-18 06:00,五个交易对)。C1 计数期望须按实测重设。**v1.8.36/v1.8.37 归档不因此改写** —— 已归档的 205 条完整测量与 37 条独立核验结果保持原样。 全链实测增减逐项闭合:C1 篇/事件 98/99→99/100、with 分支 42→43;A/C 首发 229→230;上市类记录 283→284、合并 269→270;MATCHED 269→270、TRADE_ONLY 477→476(ACE 由 T3 移出,T3 20→19);公告匹配子集 261→262,可取数 206→**207**(ACE 非留出),2023 年 28→29;资格表 98→97、待定 42→41。",
+  "changelog_v1.8.39": "①冻结 asset_eligibility_rule:把『是否构成新经济资产首次上市』与『是否参与 U_trade 收益统计』**分开裁定**;NO_CONTINUATION 须同时满足一手来源、比例/合并关系明确、非多对一合并且非同名复用,三者缺一维持 PENDING;多对一合并(NU+KEEP→T)、同名复用(LUNA/LUNC)、同名不同物(FXS→FRAX)、计划公告一律 PENDING。即便判 NO_CONTINUATION 也**不得从 U_trade 删行**。本轮 41 条全部维持 PENDING,未改判任何一条。②记录 catalog_scope_finding:实测 CMS 有 48/49/51 三个可达目录,**本地仅爬取 48**;因此 T6 的『目录完全无提及』是范围产物而非缺席证据,且 catalog 49(4403 篇)是否含现货首发上市公告尚未测量。",
+  "changelog_v1.8.40": "catalog 49 有界探测完成:抓取全部 4403 篇标题,窗口内 3041 篇,与 catalog 48 **零重叠**;含上市/开盘措辞的 39 篇全部为 P2P(10)、Convert/OTC(26)与既有资产新增报价对(3),**含首发上市强措辞者 0 篇**。结论:窗口内 catalog 49 不含现货首发上市公告,母表首发上市召回不因目录范围受损。限制:标题级扫描,未取正文;catalog 49 确含 48 所无的新增报价对公告 3 篇,但冻结 event_definition 明确首发上市不含新增报价对。T6 措辞由『未解释的证据缺口』改为『范围产物,非缺席证据』。",
+  "changelog_v1.8.41": "**撤回 v1.8.40 的 catalog 49 结论。** 在 catalog 48 上标定标题级判据:正文含首发上市强措辞 671 篇中,标题不含者 511 篇,漏检率 **76.2%**;其中 125 篇实际为上市类事件(`Introducing X on Binance Launchpool/HODLer Airdrops!` 形态,措辞全在正文)。以该判据在 catalog 49 得到的 0 命中不足以支撑『不含首发上市公告』。目录范围风险重新置为未闭合,已启动 3041 篇正文抓取后重扫。此为自查发现。"
  },
  "mother_universe": {
   "source": "binance_cms_announcement",
@@ -273,18 +277,20 @@
      }
     },
     "C_LAUNCH_THEN_LIST": {
-     "require": "will then list\\s+(?:[^()\\n]{1,60}?\\()?(?P<sym>[A-Za-z0-9]{1,15})\\)?(?:\\s+into the innovation zone)?\\s+at\\s+(?P<d>\\d{4}-\\d{2}-\\d{2})\\s*(?P<h>\\d{1,2}):(?P<mi>\\d{2})\\s*(?P<ap>AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?\\s*,?\\s*and open trading\\s+(?P<prep>with|against)\\s*(?:the\\s+)?",
+     "require": "(?:will then list|tentatively set to list)\\s+(?:[^()\\n]{1,60}?\\()?(?P<sym>[A-Za-z0-9]{1,15})\\)?(?:\\s+into the innovation zone)?\\s+at\\s+(?P<d>\\d{4}-\\d{2}-\\d{2})\\s*(?P<h>\\d{1,2}):(?P<mi>\\d{2})\\s*(?P<ap>AM|PM)?\\s*\\(?\\s*UTC\\s*\\)?\\s*,?\\s*and open trading\\s+(?P<prep>with|against)\\s*(?:the\\s+)?",
      "iteration": "**必须用 finditer 逐 clause 提取**,否则 220669 只会取到第一个资产(该篇含 1000CAT@09:00 与 PENGU@14:00)",
      "crossvalidate": {
       "with 分支": "代号须与同句 SYM/QUOTE 交易对的 base 一致",
       "against 分支": "**该分支无 SYM/QUOTE 交易对**(仅 `against USDT, USDC…`)⟹ 改为要求**裸代号匹配标题中的资产代号**"
      },
      "expected": {
-      "articles": 98,
-      "events": 99,
-      "unique_base_time": 99,
-      "decomposition": "103 含 will then list = 98 命中 + 3 pre-market(SCR/USUAL/RED)+ 2 无时间(SUI/MAV)"
-     }
+      "articles": 99,
+      "events": 100,
+      "unique_base_time": 100,
+      "decomposition": "104 含 `will then list` 或 `tentatively set to list` = 99 命中 + 3 pre-market(SCR/USUAL/RED)+ 2 无时间(SUI/MAV)",
+      "_v1838": "由 98/99/99 增至 99/100/100,增量恰为 185740(ACE)一篇一事件;分解式两侧同步 +1(103→104)"
+     },
+     "_v1838_wording": "185740(Fusionist ACE)写作 `Binance **tentatively set to list** ACE at 2023-12-18 06:00 (UTC) and open trading with ACE/BTC, …`,结构与 `will then list` 的 with 分支完全一致,仅起始措辞不同。全语料含该措辞的公告**仅此 1 篇**(1453 篇实测)。交叉校验与 finditer 逐 clause 提取均不变。"
     },
     "C_PROGRAM_LIST_OPEN": {
      "title_require": "Launchpool|Launchpad|Megadrop|HODLer",
@@ -1057,15 +1063,15 @@
    "why_not_base_only": "仅按 baseAsset 合并会误吞真正的**重新上市**"
   },
   "expected_counts": {
-   "C1_articles": 98,
-   "C1_events": 99,
-   "C1_with": 42,
+   "C1_articles": 99,
+   "C1_events": 100,
+   "C1_with": 43,
    "C1_against": 57,
    "C2_source_articles": 22,
    "C2_events": 11,
    "_note": "C1/C2 的旧估计 39/19 已作废,不得引用",
-   "C1_raw_articles": 98,
-   "C1_raw_events": 99,
+   "C1_raw_articles": 99,
+   "C1_raw_events": 100,
    "C2_raw_articles": 22,
    "C2_groups": 11,
    "MEME_group": {
@@ -1081,7 +1087,8 @@
     ],
     "T_scheduled": "2023-11-03T08:00:00Z"
    },
-   "A_note": "修后 A 预计接近原 77,但**77 不是强制目标**;以逐条去向说明为准"
+   "A_note": "修后 A 预计接近原 77,但**77 不是强制目标**;以逐条去向说明为准",
+   "_v1838": "C1 各计数因纳入 ACE 措辞分支 +1(篇数 98→99、事件 99→100、with 分支 42→43);against 分支 57 不变。**这是实测增量,不是放宽门槛** —— 增量逐条可解释为 185740 一篇一事件。"
   },
   "regression_stages": [
    "L03_CLASSIFY",
@@ -1796,7 +1803,24 @@
     ]
    },
    "_source": "逐篇原文核验后冻结的**完整记录期望**(base + T_scheduled + generator),非从输出反推。断言比较完整多重集。",
-   "_forbidden_times": "228182 的 09:00(Pre-Market 结束)与 10:00(充值开放)、220167 与 214841 的同类时间均**不得**成为 T_scheduled。"
+   "_forbidden_times": "228182 的 09:00(Pre-Market 结束)与 10:00(充值开放)、220167 与 214841 的同类时间均**不得**成为 T_scheduled。",
+   "185740": {
+    "generator": "C_LAUNCH_THEN_LIST",
+    "records": [
+     [
+      "ACE",
+      "2023-12-18T06:00:00Z"
+     ]
+    ],
+    "announced_pairs": [
+     "ACEBNB",
+     "ACEBTC",
+     "ACEFDUSD",
+     "ACETRY",
+     "ACEUSDT"
+    ],
+    "_source": "原文:`tentatively set to list ACE at 2023-12-18 06:00 (UTC) and open trading with ACE/BTC, ACE/USDT, ACE/BNB, ACE/FDUSD, and ACE/TRY trading pairs`;五个交易对归档最早日均为 2023-12-18。"
+   }
   },
   "time_chain_synthetic_scenarios": {
    "_why": "合成样本足以验收算法行为;『正确串联后因旧期望退出 1』不是成功验收,故为每个场景单独设定预期。真实语料覆盖不足另行注明。",
@@ -1837,7 +1861,7 @@
   },
   "ac_resolve_branch_coverage": {
    "FIRST_SPOT_LISTING": {
-    "expected_records": 229,
+    "expected_records": 230,
     "evidence": "归档最早成交日 == UTC-date(T_scheduled_final)"
    },
    "ANNOUNCEMENT_ONLY": {
@@ -1855,8 +1879,8 @@
    "_discipline": "**不以 generator 等同首次上市**:229 条判 FIRST_SPOT_LISTING 的依据是归档最早成交日与公告开盘日**逐条相等**,不是因为它们来自 A/C 生成器。分支计数为实测值,非预注册目标。"
   },
   "dedup_expectations": {
-   "listing_records": 283,
-   "merged_events": 269,
+   "listing_records": 284,
+   "merged_events": 270,
    "merged_away": 14,
    "non_listing_records": 851,
    "rule": "冻结 dedup_rule:相同 baseAsset + 相同 T_scheduled(链末最终时间)+ kind ∈ {FIRST_SPOT_LISTING, PREMARKET_TO_SPOT};其余禁止跨公告按 baseAsset 去重",
@@ -1985,8 +2009,8 @@
    "_zero_classes": "ANNOUNCEMENT_ONLY 与 AMBIGUOUS 均为 0:269 个公告事件的 baseAsset 全部在 U_trade 中,且开盘日与 T0 日**逐条相等**。两分支由反例验证,**无真实实例**。",
    "_trade_only_caveat": "TRADE_ONLY 477 条**不等于『477 次无公告上市』** —— 其中包含窗口外上市、代码迁移改名、以及公告爬取窗口(2021-09-01 起)之前的历史资产。归因未做,不得据此计频率。",
    "exclusive_classes": {
-    "MATCHED": 269,
-    "TRADE_ONLY": 477,
+    "MATCHED": 270,
+    "TRADE_ONLY": 476,
     "ANNOUNCEMENT_ONLY": 0,
     "AMBIGUOUS": 0
    },
@@ -2003,7 +2027,7 @@
   },
   "stage_positioning": "当前 U_master 定位为 **日粒度联合候选表**:来源清楚、逐条可对账,但 T0 仅到日粒度,且候选数不等于上市频率。价格侧测量前须先固定交易阶段处理并完成 TRADE_ONLY 归因。",
   "trade_only_attribution": {
-   "total": 477,
+   "total": 476,
    "categories": {
     "T1_窗口前": {
      "n": 379,
@@ -2017,29 +2041,28 @@
      "rule": "该 base 同时是报价资产"
     },
     "T3_有公告但裁定非上市类": {
-     "n": 20,
+     "n": 19,
      "rule": "公告存在且已进入对账,裁定为 NEW_QUOTE_PAIR_EXISTING_ASSET 或 PENDING_ADJUDICATION;**去向已明确**,非证据缺口",
      "assets": [
-      "SSV",
-      "OOKI",
-      "BTTC",
+      "A2Z",
       "BDOT",
-      "T",
-      "REI",
-      "LUNC",
-      "USTC",
-      "LEVER",
-      "POLYX",
-      "GFT",
-      "WBETH",
       "BEAMX",
-      "VANRY",
-      "ACE",
-      "LUMIA",
-      "KAIA",
-      "HEI",
+      "BTTC",
       "EPIC",
-      "A2Z"
+      "GFT",
+      "HEI",
+      "KAIA",
+      "LEVER",
+      "LUMIA",
+      "LUNC",
+      "OOKI",
+      "POLYX",
+      "REI",
+      "SSV",
+      "T",
+      "USTC",
+      "VANRY",
+      "WBETH"
      ]
     },
     "T4_bStocks代币化证券": {
@@ -2081,23 +2104,24 @@
       "NBT",
       "PDA"
      ],
-     "status": "**证据缺口,未解释** —— 既非窗口前,公告目录中也查不到任何提及"
+     "status": "**范围产物,非缺席证据** —— 仅表示已抓 catalog 48 内无提及;PDA 的换币公告确在他处。仍未定位其首发上市证据,故资格维持 PENDING。"
     }
    },
-   "_discipline": "归因为实测,类别互斥且求和 == 477。T4 为启发式、T6 为未解释缺口,两者均不得当作已解决。"
+   "_discipline": "归因为实测,类别互斥且求和 == 477。T4 为启发式、T6 为未解释缺口,两者均不得当作已解决。",
+   "_v1838": "ACE 由 T3 移出并进入公告匹配子集(MATCHED/FIRST_SPOT_LISTING),T3 20→19、TRADE_ONLY 477→476。"
   },
   "announcement_matched_measurement_subset": {
    "_renamed_from": "main_analysis_set —— 原名不成立",
    "why": "冻结 join_classes 明写 TRADE_ONLY『仍进 U_trade,**照常参与收益统计**』,statistics_scope 也规定收益只在 U_trade 上计算。仅凭『未匹配上市公告』排除它们,会让**公告解析能力再次决定研究母体**。归因完成 ≠ 排除依据成立。",
    "definition": "join_class == MATCHED 且 UTC-date(T_scheduled) 在窗口内",
-   "n": 261,
+   "n": 262,
    "kinds": {
-    "FIRST_SPOT_LISTING": 258,
+    "FIRST_SPOT_LISTING": 259,
     "PREMARKET_TO_SPOT": 3
    },
    "holdout_split": {
     "EMBARGOED": 55,
-    "FETCHABLE": 206
+    "FETCHABLE": 207
    },
    "status": "**公告匹配测量子集,不是完整研究母体**;窗口内 TRADE_ONLY 98 条的资格未闭合前,任何结果只能代表本子集",
    "excluded_lookback": {
@@ -2117,28 +2141,29 @@
    "by_year": {
     "2021": 37,
     "2022": 26,
-    "2023": 28,
+    "2023": 29,
     "2024": 56,
     "2025": 92,
     "2026": 22
    },
    "schedule_changed": 10,
    "_not_a_frequency": "261 是**来源清楚的测量子集样本量**,不是上市频率:①2026 年只到 08-31,②首发上市计数仍不完整(净偏差未定),③窗口内 TRADE_ONLY 98 条资格未闭合。**不得据此计频率或收益。**",
-   "_precision": "本轮测精确 T0 的范围是其中 **206 条非留出**;55 条留出只保留元数据,行情文件不下载。"
+   "_precision": "本轮测精确 T0 的范围是其中 **206 条非留出**;55 条留出只保留元数据,行情文件不下载。",
+   "_v1838": "纳入 ACE 后 261→262,可取数 206→**207**(ACE 非留出);2023 年由 28→29。"
   },
   "embargo_rule": {
    "rule": "sha256(baseAsset) 首字节 mod 5 == 0 ⟹ EMBARGOED(冻结 holdout.rule)",
    "enforcement": "EMBARGOED 资产**只保留元数据,不得进入下载队列**;文件系统级可核验",
    "measured": {
     "全体746资产": 152,
-    "公告匹配子集261": 55,
-    "窗口内TRADE_ONLY98": 22
+    "公告匹配子集262": 55,
+    "窗口内TRADE_ONLY97": 22
    },
    "fetch_list_only": "取数清单在测量前固定并落盘,测量脚本只读该清单"
   },
   "trade_only_eligibility": {
    "_why": "归因说明了『为什么没匹配上公告』,不等于『不合格』。须逐项区分**已证明不合格**与**证据待补**。",
-   "scope": "窗口内 TRADE_ONLY 98 条(T0_day ∈ 窗口)",
+   "scope": "窗口内 TRADE_ONLY 97 条(T0_day ∈ 窗口)",
    "EXCLUDED_PROVEN_criteria": "按 asset_class_tagging.frozen_rule 判为 BSTOCK 者 —— 代币化证券非本研究的加密资产上市事件",
    "PENDING_EVIDENCE_criteria": "T2 报价资产作为 base、T3 有公告但裁定非上市类、T5 仅有服务新增公告(疑似改名迁移)、T6 公告目录无提及:其 U_trade 首笔成交**可能**是真实首次上市,也可能是代码迁移的延续;按 b_leg.linkage_rule 禁止猜测,保留待定",
    "discipline": "待定项**不得**被当作已排除;资格闭合前,收益类结论只能标注为『公告匹配子集』口径"
@@ -2457,12 +2482,12 @@
    ]
   },
   "exact_t0_expectations": {
-   "verified_complete": 205,
+   "verified_complete": 206,
    "incomplete": 1,
    "incomplete_assets": [
     "NOT"
    ],
-   "_note": "实测值,非预注册目标。任一交易对新增取证失败都会改变该计数并 fail-closed。"
+   "_note": "实测值,非预注册目标。ACE 纳入后由 205 增至 206。"
   },
   "independent_verification": {
    "purpose": "对 T0 数值做**独立复算**:从官方原始文件重新取证,用另一份简洁实现,**不读取任何现有摘要缓存**(t0rows / aggdl / L_t0_exact_v2)。",
@@ -2531,6 +2556,75 @@
     "独立实现时间戳单位归一"
    ],
    "_note": "本核验只针对 T0 数值;NOT 的归档证据缺失、archive_coverage_caveat、TRADE_ONLY 42 条待定仍单列,不在本核验范围。"
+  },
+  "asset_eligibility_rule": {
+   "_principle": "**身份关联 ≠ 研究资格排除。** 对以下两个问题必须**分别裁定**,不得用其一代替其一。",
+   "q1_economic_first_listing": {
+    "question": "该 baseAsset 的首笔成交是否构成**新经济资产的首次上市事件**(冻结 event_definition)",
+    "verdicts": {
+     "YES": "无旧代号关联,且有一手上市证据",
+     "NO_CONTINUATION": "**已证实**为旧资产延续 —— 须同时具备:①一手官方来源明确给出 旧代号 → 新代号;②换币比例或合并关系明确;③非多对一合并、非同名复用。三者缺一即不得判此结论",
+     "PENDING": "证据不足,或存在下列复杂情形之一"
+    },
+    "complex_cases_must_stay_pending": [
+     "多对一合并(如 NU + KEEP → T):不是简单改名,须逐事件记录合约与执行时点",
+     "同名复用(旧 LUNA → LUNC,新 LUNA 另起):禁止按字符串合并",
+     "同名不同物(FXS → FRAX,与历史同名稳定币不同):禁止按字符串合并",
+     "来源为**计划公告**而非完成确认:不得宣称换币已完成或首开时间已验收"
+    ]
+   },
+   "q2_u_trade_participation": {
+    "question": "该 baseAsset 是否参与 U_trade 收益统计",
+    "frozen_answer": "**PARTICIPATES** —— 冻结 join_classes.TRADE_ONLY 明写『仍进 U_trade,照常参与收益统计』,statistics_scope 亦规定收益只在 U_trade 上计算",
+    "forbidden": "即便 q1 判 NO_CONTINUATION,**也不得从 U_trade 删行**;身份延续只影响『是否新增一次经济资产首发』,不影响收益口径"
+   },
+   "source_discipline": {
+    "retrieval_date_caveat": "身份证据按 2026-09-07 检索现状,**未证明历史时点可见版本**,不得作为策略当时可用的交易信号",
+    "catalog_scope": "本地已抓仅 catalog 48(New Cryptocurrency Listing)。`公告目录完全无提及` 只表示**该目录**无提及,**不是缺席证据** —— PDA 的 PLA→PDA 公告即在其他目录",
+    "venue": "跨场所线索(如 NBT 与 Tokocrypto 吻合)是场所核查线索,**不能**据此认定 Binance Global 已上市,也不能反证从未上市或归档污染"
+   },
+   "current_state": {
+    "n_pending": 41,
+    "note": "本轮未把任何待定项改判为排除;41 条全部维持 PENDING_EVIDENCE,q2 一律 PARTICIPATES"
+   }
+  },
+  "catalog_scope_finding": {
+   "measured": "CMS 文章列表接口实测可达目录:48 `New Cryptocurrency Listing`(2249 篇)、49 `Latest Binance News`(4403 篇)、51 `API Updates`(81 篇)",
+   "crawled": "**仅 catalog 48**。窗口内 1453 篇来自该目录。",
+   "implication": "①`公告目录完全无提及`(T6:NBT、PDA)是**范围产物,不是缺席证据**;②catalog 49 从未爬取,其中是否含现货首发上市公告**尚未测量** —— 若含,则母表存在系统性召回缺口。",
+   "probe_status": "**已完成**",
+   "catalog49_measured": {
+    "fetched": 4403,
+    "in_window": 3041,
+    "overlap_with_catalog48": 0,
+    "titles_with_listing_or_open_wording": 39,
+    "titles_with_strong_first_listing_wording": 0,
+    "breakdown_of_39": {
+     "P2P": 10,
+     "Convert/OTC": 26,
+     "其他(新增报价对)": 3
+    },
+    "other_three": {
+     "152211": "Adds Stablecoin Spot Trading Pairs",
+     "76883": "Adds MANA/BIDR & SAND/BIDR",
+     "69355": "Adds CVP/USDT, DENT/BUSD & FRONT/USDT",
+     "assets_status": "MANA 2017-11-24、SAND 2020-08-14、CVP 2020-11-16、DENT 2018-07-06、FRONT 2020-11-18 —— **均远早于窗口起点**,属既有资产新增报价对,非首发上市",
+     "not_in_catalog48": true
+    },
+    "conclusion": "**窗口内 catalog 49 不含现货首发上市公告**(标题级判据 0 命中)。母表的首发上市召回不因目录范围而受损。",
+    "limitation": "本次为**标题级**扫描,未取正文;不排除标题不含上市措辞而正文含之的情形。catalog 49 确含 catalog 48 所无的**新增报价对**公告(3 条),这只在需要统计新增报价对时才有影响 —— 冻结 event_definition 明确首发上市不含新增报价对。",
+    "evidence_file": "cat49_titles.json(4403 篇标题与发布时间)"
+   },
+   "t6_rewording": "T6『公告目录完全无提及』(NBT、PDA)应表述为**已抓 catalog 48 内无提及**;PDA 的 PLA→PDA 公告确在其他位置。此前记作『未解释的证据缺口』措辞偏强。",
+   "_v1841_RETRACTION": {
+    "retracted": "v1.8.40 的结论『窗口内 catalog 49 不含现货首发上市公告』**撤回** —— 它建立在标题级判据上,而该判据经标定不可靠。",
+    "calibration": "在 catalog 48 全部 1453 篇上标定:正文含首发上市强措辞者 671 篇,其中**标题不含者 511 篇** ⟹ 标题级扫描漏检率 **76.2%**;这 511 篇中有 **125 篇实际就是上市类事件**(A/C1/C2/PMF),典型形态为 `Introducing X on Binance Launchpool / HODLer Airdrops!`,上市措辞全在正文。",
+    "why_it_matters": "以 76% 漏检率的判据在 catalog 49 上得到 0 命中,**不能**支撑『不含首发上市公告』;catalog 49 中同类『Introducing…』形态若存在,标题扫描必然看不见。",
+    "action": "已启动 catalog 49 窗口内 3041 篇**正文**抓取(复用冻结 detail_endpoint 与 crawl.adaptive 退避),取回后用与 L03 相同的正文判据重扫。",
+    "status_until_then": "**母表首发上市召回的目录范围风险重新置为未闭合。**",
+    "_self_caught": "本项为自查发现,非外部审查指出。教训与前四次同源:用一个未标定的弱判据得到否定结论,并当作已闭合。"
+   },
+   "conclusion": "**已撤回,见 _v1841_RETRACTION**"
   }
  },
  "timestamps": {

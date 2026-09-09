@@ -11,6 +11,53 @@ def worker(source, case, out):
     spec = importlib.util.spec_from_file_location('R', source)
     R = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(R)
+    if case == 'etherscan_transient':
+        R.ETHERSCAN_KEY='TEST_SECRET'
+        R.scan_limiter.wait=lambda:None
+        R.time.sleep=lambda _:None
+        class Response:
+            status_code=200
+            def json(self):return {'status':'1','result':[]}
+        class Session:
+            calls=0
+            def get(self,*a,**kw):
+                self.calls+=1
+                if self.calls==1:raise R.requests.exceptions.ProxyError('apikey=TEST_SECRET')
+                return Response()
+        R._session=Session()
+        assert R.etherscan('logs','getLogs')==([],None) and R._session.calls==2
+        class FailedSession:
+            calls=0
+            def get(self,*a,**kw):
+                self.calls+=1
+                raise R.requests.exceptions.ProxyError('apikey=TEST_SECRET')
+        R._session=FailedSession()
+        rows,error=R.etherscan('logs','getLogs')
+        assert rows is None and R._session.calls==3 and 'TEST_SECRET' not in error
+        Response.status_code=403
+        R._session=Session();R._session.calls=1
+        assert R.etherscan('logs','getLogs')==(None,'http 403') and R._session.calls==2
+        print('Transient recovery=2 attempts; exhaustion=3; HTTP403=1; secrets redacted')
+        return 0
+    if case == 'transport_http':
+        R.rpc_url=lambda:'https://mock.invalid'
+        R.rpc_limiter.wait=lambda:None
+        R.time.sleep=lambda _:None
+        class Response:
+            status_code=400
+            text='rejected'
+            def json(self):return {'error':{'message':'range limit'}}
+        class Session:
+            def __init__(self):self.calls=0
+            def post(self,*a,**k):self.calls+=1;return Response()
+        for status,expected in [(400,1),(429,3),(503,3)]:
+            Response.status_code=status
+            R._session=Session()
+            result,error=R.rpc('eth_getLogs',[])
+            assert result is None and error.startswith('http '+str(status))
+            assert R._session.calls==expected,(status,R._session.calls)
+            print('REAL_RPC_HTTP',status,'calls=',R._session.calls)
+        return 0
     R.OUTDIR = str(out)
     R.DB_PATH = str(out / 'rt_a.sqlite')
     R.SPEC.update(candidate_from_block=1000, candidate_to_block=1040,
@@ -21,6 +68,36 @@ def worker(source, case, out):
     P = R._std_pairs(100)
     R.rpc, R.etherscan = R._mk_mocks({'pairs': P, 'blocknum_sched': [1400]*12+[1403]})
     original = R.fetch_pair_created
+    if case == 'scan_zero_index':
+        R.SPEC['pair_logs_source']='etherscan'
+        scan=R.etherscan
+        raw=[]
+        def etherscan(module,action,**kw):
+            rows,error=scan(module,action,**kw)
+            if action=='getLogs' and kw.get('topic0')==R.TOPIC_PAIR_CREATED:
+                rows=[dict(row,logIndex='0x',transactionIndex='0x') for row in rows]
+                raw.extend(rows)
+            return rows,error
+        R.etherscan=etherscan
+        assert R.backfill()==0
+        assert raw and all(row['logIndex']=='0x' for row in raw), 'raw response mutated'
+        con=R.db()
+        assert con.execute('SELECT DISTINCT log_index FROM candidates').fetchall()==[(0,)]
+        assert R.report()==0
+        assert R.normalize_etherscan_logs([{'logIndex':'bad'},{}])==[{'logIndex':'bad'},{}]
+        return 0
+    if case == 'strict_incomplete':
+        def fetch(a,b):
+            logs,gaps=original(a,b)
+            return (logs[:-1] if a<1000 else logs),gaps
+        R.fetch_pair_created=fetch
+        R.attribute=lambda *a,**kw: (_ for _ in ()).throw(AssertionError('attribution must not run'))
+        assert R.backfill(require_complete=True)==1
+        con=R.db()
+        assert con.execute('SELECT COUNT(*) FROM attribution').fetchone()[0]==0
+        assert (out/'coverage_report_backfill.INCOMPLETE.md').exists()
+        assert not (out/'coverage_report_backfill.md').exists()
+        return 0
     if case == 'auto':
         R.SPEC.update(pair_logs_source='auto', log_chunk_blocks=2000)
         R.rpc, R.etherscan = R._mk_mocks({'pairs': P, 'getlogs_max_span': 10, 'blocknum_sched': [1400]})
@@ -155,7 +232,7 @@ if __name__=='__main__':
     out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
     if a.case: sys.exit(worker(str(Path(a.source).resolve()),a.case,out))
     results={}
-    for case in ['auto','missing','empty_missing','foreign_integrity','reconcile','forward_scope','gap_migration','forward_retry','history_retry','empty_success','cli_missing','cli_reconcile_missing']:
+    for case in ['strict_incomplete','etherscan_transient','transport_http','scan_zero_index','auto','missing','empty_missing','foreign_integrity','reconcile','forward_scope','gap_migration','forward_retry','history_retry','empty_success','cli_missing','cli_reconcile_missing']:
         dest=out/case;dest.mkdir(exist_ok=True)
         r=subprocess.run([sys.executable,str(Path(__file__).resolve()),'--source',str(Path(a.source).resolve()),'--out',str(dest),'--case',case],capture_output=True,text=True,cwd=dest)
         (dest/'process.log').write_text(r.stdout+r.stderr)

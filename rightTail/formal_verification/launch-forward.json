@@ -1,0 +1,22 @@
+{
+  "pid": 4076,
+  "argv": [
+    "/home/claude/miniconda3/bin/python",
+    "-u",
+    "/home/ancillary/rightTail/run_formal.py",
+    "--from-block",
+    "25800000",
+    "--to-block",
+    "25900000",
+    "--lookback",
+    "2500000",
+    "--memory-mib",
+    "768",
+    "--observe-minutes",
+    "30",
+    "--seed-db",
+    "/home/ancillary/rightTail/formal_B_25800000_25900000_v5/backfill/rt_a.sqlite",
+    "--out",
+    "/home/ancillary/rightTail/forward_B_20260909_30m"
+  ]
+}

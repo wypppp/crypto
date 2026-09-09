@@ -1,0 +1,35 @@
+链=ethereum  factory=0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f  spec_hash=8b17a43d36d7802d
+PairCreated 采集来源：rpc —— 由 SPEC 指定：rpc
+候选 1000-1040；历史回看自 100
+L2b 可用性：True —— factory 创建区块定位为 100；双向断言通过（cb-1 空=True, cb 非空=True）
+  按 RPC 跨度 100 取 941 个区块，约 10 次 eth_getLogs
+
+[1/5] 历史区间 PairCreated（只建历史，不作候选）…
+  .. 100-199  累计 0
+  .. 200-299  累计 10
+  .. 300-399  累计 20
+  .. 400-499  累计 30
+  .. 500-599  累计 40
+  .. 600-699  累计 50
+  .. 700-799  累计 60
+  .. 800-899  累计 70
+  .. 900-999  累计 80
+[2/5] 候选区间 PairCreated…
+  .. 1000-1040  累计 5
+  历史 80；候选 5；缺口 历史0/候选0 段
+  history   对账：去重 80 vs 预期 80；计数✔ 连续✔ 边界✔
+  candidate 对账：去重 5 vs 预期 5；计数✔ 连续✔ 边界✔
+[3/5] 历史建池发送者：抓 80，历史总数 80，上限 3000/次
+  .. 50/80
+  自足通道覆盖 80/80 → 全覆盖
+[4/5] 归因 5 个候选…（自足通道实际抽到的最早区块 = 200，回看窗口起点 = 100）
+
+[5/5] 第二遍重算 creator_prior_pairs（消除处理顺序偏置）…
+完成。总 RPC 调用 214。数据库 /home/ancillary/rightTail/formal_verification/integration/forward_scope/rt_a.sqlite
+前向观察 0.001 分钟，起始 1400；截止 = 事件时间 + 300s
+  .. 1401-1403  累计 0
+前向观察结束。
+[warn] keccak 后端不可用，改用已校验常量（topic0 仍然正确，只是不再运行时计算）。
+[warn] 恢复运行时计算需要【两个】包，缺一不可：
+[warn]     pip install eth-utils "eth-hash[pycryptodome]"
+[warn] 只装 eth-hash 不够 —— 本脚本 import 的是 eth_utils.keccak。
