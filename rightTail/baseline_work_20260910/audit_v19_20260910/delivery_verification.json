@@ -1,0 +1,42 @@
+{
+  "pilot_measure.py": {
+    "sha256": "73252572b9ed58bc1e4c1810b914702c2260b7ab123921bf4b168b6b0ed384df",
+    "matches_delivery": true
+  },
+  "evidence.py": {
+    "sha256": "e3be07df7798b36690d111fac77f24a3e429e48a4a3fb48590e99cc8a145a3cd",
+    "matches_delivery": true
+  },
+  "audit_flow.py": {
+    "sha256": "7683d4992940b74a24286826182e4eb84cf01663da0850871c36075277981fdd",
+    "matches_delivery": true
+  },
+  "test_audit_followup.py": {
+    "sha256": "6aae4c5df62ac41926bfe966b19e8aac183c309e417fb57df7618543bace9344",
+    "matches_delivery": true
+  },
+  "test_parallel.py": {
+    "sha256": "eb490605fc4555a29530685e532f5b8ae495520be05a4362113574b983f7b721",
+    "matches_delivery": true
+  },
+  "MEASUREMENT_SPEC.md": {
+    "sha256": "b3539bdbc0efc1f86c3343668ddd7286aff941cc71734a6e961c49c5b79a8c6a",
+    "matches_delivery": true
+  },
+  "MEASUREMENT_SPEC.v1.9.md": {
+    "sha256": "bc5ed56995bc67b8db477c55ace65b0e3329abee296e119730bcc9a994756833",
+    "matches_delivery": true
+  },
+  "MEASUREMENT_SPEC.v1.8.md": {
+    "sha256": "121308b9902f74679f29bc185daf13949f989ee1d12ce16d81b595a80954df2a",
+    "matches_delivery": true
+  },
+  "MEASUREMENT_SPEC.v1.7.md": {
+    "sha256": "b839046b0022c9875aa34ca8082a4b85f8240c48b03a463c26ec4d76dc41069f",
+    "matches_delivery": true
+  },
+  "../baseline_20260909/verify_capabilities.py": {
+    "sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+    "matches_delivery": true
+  }
+}

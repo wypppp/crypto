@@ -1,0 +1,20 @@
+{
+  "exit": 0,
+  "range": [
+    25940110,
+    25940258
+  ],
+  "blocks": 149,
+  "intervals": 148,
+  "expected_events": 2,
+  "attributed": 2,
+  "joint_within_deadline": 2,
+  "lag_required_seconds": [
+    30.0,
+    31.1
+  ],
+  "unchanged_backfill_rows": true,
+  "unresolved_gaps": 0,
+  "cache_hits": 0,
+  "conclusion_scope": "This observation window only; no population-wide or trading conclusion."
+}

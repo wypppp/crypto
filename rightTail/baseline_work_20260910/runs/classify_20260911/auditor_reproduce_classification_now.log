@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "reproduce_classification.py", line 62, in <module>
+    assert c['state'] == expected
+AssertionError

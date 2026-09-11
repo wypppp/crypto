@@ -1,0 +1,11 @@
+基线：无故障注入
+Traceback (most recent call last):
+  File "test_e2e_blocking.py", line 123, in <module>
+    main()
+  File "test_e2e_blocking.py", line 63, in main
+    code, doc, out, _ = scenario()
+  File "test_e2e_blocking.py", line 57, in scenario
+    code = P.measure(args)
+  File "/home/ancillary/rightTail/baseline_work_20260910/pilot_measure.py", line 804, in measure
+    if args.parallel <= 1:
+AttributeError: 'Namespace' object has no attribute 'parallel'

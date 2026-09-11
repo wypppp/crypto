@@ -116,4 +116,4 @@ PairCreated 历史请求范围是 `[max(1, from-lookback), from-1]`，候选范�
 
 正式窗口新增实测兼容：Etherscan偶尔把零日志索引编码为`0x`。已用匹配交易的RPC回执核实为`0x0`，仅在Etherscan来源规范化索引字段，原始响应保留，其他非法值仍拒绝。`logs_normalization`进入规格hash。L3日志跟随显式Etherscan来源；HTTP 4xx除429不重试，429与5xx保留现有重试策略。
 
-最新实测：正式400样本回填已通过，联合可用329/400（82.25%），前向结果单独记录于 [FORMAL_RESULTS.md](FORMAL_RESULTS.md)。恢复运行的内存上限、资源采样、实时/缓存请求区分与退出码见run_formal.py及各运行目录execution.json。
+最新实测：正式400样本回填已通过，联合可用329/400（82.25%），30分钟前向观察2个事件均在300秒内取得必需信息（30.0/31.1秒），样本不足以推断总体及时覆盖率。完整结果见 [FORMAL_RESULTS.md](FORMAL_RESULTS.md)。恢复运行的内存上限、资源采样、实时/缓存请求区分与退出码见run_formal.py及各运行目录execution.json。

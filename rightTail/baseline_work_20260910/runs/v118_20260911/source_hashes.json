@@ -1,0 +1,21 @@
+{
+  "pilot_measure.py": "2832734db0686077f911ed53b0f274571fe637aee5adbf2107a52edbb8a3e18d",
+  "evidence.py": "1fe5c43c57420b1213c7f272619f844469bc95a8c39f196d236ef2e9f5f7420d",
+  "audit_flow.py": "105f80c1ce7a50508835f92f84c118eb8912432a6d359d69267956ac8efe157d",
+  "fake_chain.py": "01ac6c5dde106a659d1997d67d0871a0b5d29c65499ecce60a39f7d995b1ce52",
+  "MEASUREMENT_SPEC.v1.18.md": "19cc63391cc0dbc28f2fbf4fa3ab7ac838c9097f9800891a94d83a348045bf34",
+  "MEASUREMENT_SPEC.v1.17.md": "7cf15793c7626ce725c133ce748920998083bb46b32ef6913f17604a1ada3542",
+  "MEASUREMENT_SPEC.v1.16.md": "2a6c5dcf613d263f8ec9067b047805e0c675a6b6df159896414b0bde4b756606",
+  "MEASUREMENT_SPEC.md": "d43d82cad6c61f1f408c3f377ac83d68c5b10459ecd3bc70cba12add209acc36",
+  "test_audit_followup.py": "e8137c1ca5eb40be72adc5722a5d0ba1d5311566729cc41f35c83a5a3c066475",
+  "test_audit_fixes.py": "484f82fa2bc536921abe092eec1c58c2d28963ac236ddfcdb39a5dd4596d23c5",
+  "test_parallel.py": "d2f2b97e37fc66d9e0431f3c34f2a5df938fc69e4794977b5423725eddaabf8e",
+  "test_realchain_tools.py": "2a34c002d94cc80962b70c6ca63ff800c127a8eb5b22256cbd413eb65c61bd23",
+  "realchain_tools/compare_runs.py": "dd4cfaddd9d63b8fc23509bc65e1e3e35179be3022d46a7fb0bd4c4fba97fe9f",
+  "realchain_tools/run_compare.py": "8c7102ea55335426fdcb2206a9f198044d87602fad21c0ea696ddab49b059fec",
+  "realchain_tools/fake_launch.py": "382040db913d4aeb96cef4b7d84b2db1b2c0fc4f71212408a487e44636364aad",
+  "audit_v117_20260911/pilot_measure.audited.py": "d9dfb8f098a4d42792a9cf55dac6601a475ad1b8e7bf4a175a36ff695b7e2db9",
+  "audit_v117_20260911/compare_runs.audited.py": "c09b69093a9baa56fd9c5fa8de0bb0f3b60ee24757525bd31ee6a058dee3111a",
+  "audit_v117_20260911/run_compare.audited.py": "eb6c2c50f93fdc02a1710d656b65b0e330aa7dac862cc376ff20bbc7326a147d",
+  "../baseline_20260909/verify_capabilities.py": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52"
+}

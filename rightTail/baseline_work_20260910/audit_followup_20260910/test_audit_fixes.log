@@ -1,0 +1,52 @@
+1 线程失败不得判成功
+  [PASS] 退出码非零  — 1
+  [PASS] 集合不完整被标出  — [1, 2]
+  [PASS] worker 异常被记录  — [{'worker': 0, 'candidate': 1, 'error': 'init: RuntimeError: injected 
+  [PASS] validation_passed=False
+
+2 预算耗尽同样阻断
+  [PASS] 退出码非零  — 1
+  [PASS] 缺失候选被列出
+
+3 并行请求归属：区块请求必须属于本 worker
+  [PASS] 无候选归属的 worker 请求为 0  — 0 条
+  [PASS] 汇总 RPC 数与底层实际一致  — 报告 148 vs 实际 148
+
+4 pending_id 全局唯一
+  [PASS] 无重复标识  — 0 个重复
+
+5 续跑绑定覆盖运行期参数
+  [PASS] slot_limit 改变后拒绝复用  — 检查点绑定不符，拒绝复用：runtime_params({'slot_limit': 2, 'diagnostics': False, 'c
+
+6 正确的无 Mint 分支必须可完成
+  [PASS] 状态为 no_mint_by_cutoff  — ['no_mint_by_cutoff', 'no_mint_by_cutoff']
+  [PASS] validation_passed 为 True  — [True, True]
+  [PASS] 退出码 0  — 0
+
+7 检查点半行不得丢失已完成记录
+  [PASS] 重开后已完成记录仍在  — [1, 2] → [1, 2]
+  [PASS] 半行被隔离
+
+8 begin 无配对 end ⇒ 证据不完整
+  [PASS] complete=False  — False
+  [PASS] 列出未配对的 begin  — ["('2800098397dc46438c2ca925c1bc77ba', 987654, None)"]
+
+9 结果 JSON 也必须脱敏
+  [PASS] 假凭据不出现在结果 JSON
+  [PASS] 也不出现在证据 JSONL
+
+10 未执行的一腿不得抹掉已知买入成本
+  [PASS] 买入成本仍为已知整数  — [120000000000000, 132000000000000]
+
+11 畸形 Mint 事件必须拒收
+  [PASS] 两侧金额都为 0 被拒  — mint_amounts_both_zero
+  [PASS] data 非十六进制 被拒  — data_not_hex
+  [PASS] sender topic 高位非零 被拒  — sender_topic_not_address
+
+12 底层重试不得超出共享预算
+  [PASS] 单次额度不足 MAX_HTTP_ATTEMPTS 时直接拒绝  — shared call budget exhausted
+
+13 时间预算耗尽后不得放行
+  [PASS] 超时后拒绝  — shared time budget exhausted
+
+通过 25 / 失败 0

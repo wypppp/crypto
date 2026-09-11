@@ -1,0 +1,52 @@
+[
+  {
+    "mode": "stop_before_request",
+    "result": "0x1",
+    "grace_s": 0.15,
+    "observed_stop_latency_s": 0.387,
+    "body_fragments": 11,
+    "max_gap_s": 0.035266500000034284,
+    "http_sent": 1,
+    "rpc_records": [
+      {
+        "id": 1,
+        "method": "eth_chainId",
+        "params": [],
+        "observed_at": "2026-09-10T13:18:24.414621+00:00",
+        "attempt": 1,
+        "response": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "result": "0x1"
+        },
+        "status": "OK",
+        "elapsed_s": 0.35743
+      }
+    ]
+  },
+  {
+    "mode": "stop_during_request",
+    "result": "0x1",
+    "grace_s": 0.15,
+    "observed_stop_latency_s": 0.37,
+    "body_fragments": 11,
+    "max_gap_s": 0.03533882800002175,
+    "http_sent": 1,
+    "rpc_records": [
+      {
+        "id": 1,
+        "method": "eth_chainId",
+        "params": [],
+        "observed_at": "2026-09-10T13:18:24.813408+00:00",
+        "attempt": 1,
+        "response": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "result": "0x1"
+        },
+        "status": "OK",
+        "elapsed_s": 0.355699
+      }
+    ]
+  }
+]

@@ -1,0 +1,408 @@
+{
+  "started_at": "2026-09-10T00:42:53.467746+00:00",
+  "sample_file": "pilot/dev_sample.json",
+  "finalized_snapshot": {
+    "number": 25943342,
+    "hash": "0x5f9fa40c4e5314286cc6e1ee66fcbf27900a3197199e2bdc615d86fc28f7a18c",
+    "timestamp": 1788999383
+  },
+  "sample_sha256": "0e37d131a3da408a530ec5d73780088087eae4f4ad6bcfcca93e7400ed7e9cfa",
+  "package_script_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "spec": "MEASUREMENT_SPEC.md v1 (draft)",
+  "slot_limit": 32,
+  "diagnostics": true,
+  "total_elapsed_s": 600.3,
+  "rpc_calls": 370,
+  "results": [
+    {
+      "index": 477926,
+      "pair": "0xf01468992b2adb46445d80d4aca9f2d1d3f6dd78",
+      "token": "0xa0adaff8b1caba730b619dff69c021daea8d3153",
+      "created_block": 24171295,
+      "trigger": {
+        "first_mint_block": null,
+        "status": "no_mint_by_cutoff"
+      },
+      "entry": null,
+      "exit": null,
+      "model": null,
+      "data": null,
+      "state": "no_mint_by_cutoff",
+      "elapsed_s": 4.59,
+      "rpc_calls": 0
+    },
+    {
+      "index": 478595,
+      "pair": "0x614b89a5553bafddddf24dc9bee5822ebd799a86",
+      "token": "0x53129729c2fa7e076f697569176af908298bf46b",
+      "created_block": 24188628,
+      "trigger": {
+        "first_mint_block": 24188628,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24188629,
+        "entry_ts": 1767859235,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 3713168547887793494308710768,
+        "eth_debit": 50000000000000000,
+        "base_fee": 46125334,
+        "reason": "0x"
+      },
+      "exit": {
+        "exit_block": 24403612,
+        "exit_ts": 1770451235,
+        "base_fee": 98442006,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 3713168547887793494308710768,
+        "token_after": 0,
+        "cash_in": 21870350350051,
+        "reason": "0x"
+      },
+      "model": {
+        "slot_scan_calls": 34,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "adequate_proven_by_execution"
+      },
+      "data": null,
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 21870350350051,
+        "G_by_scenario": {
+          "swap120000_tip0": 27192281400000,
+          "swap120000_tip100000000": 61192281400000,
+          "swap120000_tip1000000000": 367192281400000,
+          "swap150000_tip0": 31529301600000,
+          "swap150000_tip100000000": 71529301600000,
+          "swap150000_tip1000000000": 431529301600000,
+          "swap200000_tip0": 38757668600000,
+          "swap200000_tip100000000": 88757668600000,
+          "swap200000_tip1000000000": 538757668600000
+        },
+        "main_scenario": "swap150000_tip100000000"
+      },
+      "elapsed_s": 100.07,
+      "rpc_calls": 60
+    },
+    {
+      "index": 479353,
+      "pair": "0xd803874babcb1fba49a0359adb445ab97471c8c6",
+      "token": "0x875ae8017eec90899ab87cb30d611cae8956b374",
+      "created_block": 24212104,
+      "trigger": {
+        "first_mint_block": 24212104,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24212105,
+        "entry_ts": 1768142159,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 99979883511431539824704505951,
+        "eth_debit": 50000000000000000,
+        "base_fee": 36549986,
+        "reason": "0x"
+      },
+      "exit": null,
+      "model": null,
+      "data": {
+        "rpc_failure": "Remote end closed connection without response"
+      },
+      "state": "data_missing",
+      "elapsed_s": 26.35,
+      "rpc_calls": 15
+    },
+    {
+      "index": 480842,
+      "pair": "0x7c67070bead03f21abe3b363db35523561131de4",
+      "token": "0x21716e723e2de689caaa7e185d5c5bad0fc94672",
+      "created_block": 24257452,
+      "trigger": {
+        "first_mint_block": 24257452,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24257453,
+        "entry_ts": 1768688891,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 4311319644643172324527857857,
+        "eth_debit": 50000000000000000,
+        "base_fee": 35851817,
+        "reason": "0x"
+      },
+      "exit": {
+        "exit_block": 24472368,
+        "exit_ts": 1771280891,
+        "base_fee": 37015561,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 4311319644643172324527857857,
+        "token_after": 0,
+        "cash_in": 11194254527540,
+        "reason": "0x"
+      },
+      "model": {
+        "slot_scan_calls": 34,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "adequate_proven_by_execution"
+      },
+      "data": null,
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 11194254527540,
+        "G_by_scenario": {
+          "swap120000_tip0": 12445641460000,
+          "swap120000_tip100000000": 46445641460000,
+          "swap120000_tip1000000000": 352445641460000,
+          "swap150000_tip0": 14631662800000,
+          "swap150000_tip100000000": 54631662800000,
+          "swap150000_tip1000000000": 414631662800000,
+          "swap200000_tip0": 18275031700000,
+          "swap200000_tip100000000": 68275031700000,
+          "swap200000_tip1000000000": 518275031700000
+        },
+        "main_scenario": "swap150000_tip100000000"
+      },
+      "elapsed_s": 93.04,
+      "rpc_calls": 58
+    },
+    {
+      "index": 482755,
+      "pair": "0x5430db15eb8714f56b45f758ad93ea0d7b1912e3",
+      "token": "0xcf5157fb2c94cc2c00f11582248935abba35fea4",
+      "created_block": 24321972,
+      "trigger": {
+        "first_mint_block": 24321972,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24321973,
+        "entry_ts": 1769466335,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 276633599018667839120092990891,
+        "eth_debit": 50000000000000000,
+        "base_fee": 52279459,
+        "reason": "0x"
+      },
+      "exit": {
+        "exit_block": 24536894,
+        "exit_ts": 1772058335,
+        "base_fee": 102743152,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 276633599018667839120092990891,
+        "token_after": 0,
+        "cash_in": 644875193331,
+        "reason": "0x"
+      },
+      "model": {
+        "slot_scan_calls": 34,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "adequate_proven_by_execution"
+      },
+      "data": null,
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 644875193331,
+        "G_by_scenario": {
+          "swap120000_tip0": 28877028520000,
+          "swap120000_tip100000000": 62877028520000,
+          "swap120000_tip1000000000": 368877028520000,
+          "swap150000_tip0": 33527706850000,
+          "swap150000_tip100000000": 73527706850000,
+          "swap150000_tip1000000000": 433527706850000,
+          "swap200000_tip0": 41278837400000,
+          "swap200000_tip100000000": 91278837400000,
+          "swap200000_tip1000000000": 541278837400000
+        },
+        "main_scenario": "swap150000_tip100000000"
+      },
+      "elapsed_s": 93.91,
+      "rpc_calls": 59
+    },
+    {
+      "index": 488019,
+      "pair": "0x4eb4053213e7274fbbdd6e8e7a186371674a893b",
+      "token": "0x1756554146b5b934aa93bd2ffaca2ef084159910",
+      "created_block": 24521973,
+      "trigger": {
+        "first_mint_block": 24521973,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24521974,
+        "entry_ts": 1771878479,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 17399173572007222,
+        "eth_debit": 50000000000000000,
+        "base_fee": 40330021,
+        "reason": "0x"
+      },
+      "exit": {
+        "exit_block": 24736951,
+        "exit_ts": 1774470479,
+        "base_fee": 133173069,
+        "stage": 20,
+        "classification": "execution_reverted_unknown",
+        "token_before": 17399173572007222,
+        "token_after": 17399173572007222,
+        "cash_in": 0,
+        "reason": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000"
+      },
+      "model": {
+        "slot_scan_calls": 34,
+        "slot_status": "ok",
+        "slot": 1,
+        "holding_state": "undetermined",
+        "diagnostics": {
+          "size_probe_stage": 20
+        }
+      },
+      "data": null,
+      "state": "execution_reverted_unknown",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 0,
+        "G_by_scenario": {
+          "swap120000_tip0": 34137677700000,
+          "swap120000_tip100000000": 68137677700000,
+          "swap120000_tip1000000000": 374137677700000,
+          "swap150000_tip0": 39342770400000,
+          "swap150000_tip100000000": 79342770400000,
+          "swap150000_tip1000000000": 439342770400000,
+          "swap200000_tip0": 48017924900000,
+          "swap200000_tip100000000": 98017924900000,
+          "swap200000_tip1000000000": 548017924900000
+        },
+        "main_scenario": "swap150000_tip100000000"
+      },
+      "elapsed_s": 95.81,
+      "rpc_calls": 60
+    },
+    {
+      "index": 491410,
+      "pair": "0x101e034b651aa46ff7d68e97f7a5a87c27c12ea7",
+      "token": "0xe46d35541198b1d56f5237a221699b18602ea990",
+      "created_block": 24667890,
+      "trigger": {
+        "first_mint_block": 24667890,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24667891,
+        "entry_ts": 1773637907,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 997094804508095305336306,
+        "eth_debit": 50000000000000000,
+        "base_fee": 85151808,
+        "reason": "0x"
+      },
+      "exit": {
+        "exit_block": 24883034,
+        "exit_ts": 1776229907,
+        "base_fee": 126583027,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 997094804508095305336306,
+        "token_after": 0,
+        "cash_in": 14874468531643,
+        "reason": "0x"
+      },
+      "model": {
+        "slot_scan_calls": 34,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "adequate_proven_by_execution"
+      },
+      "data": null,
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 14874468531643,
+        "G_by_scenario": {
+          "swap120000_tip0": 38066482900000,
+          "swap120000_tip100000000": 72066482900000,
+          "swap120000_tip1000000000": 378066482900000,
+          "swap150000_tip0": 44418527950000,
+          "swap150000_tip100000000": 84418527950000,
+          "swap150000_tip1000000000": 444418527950000,
+          "swap200000_tip0": 55005269700000,
+          "swap200000_tip100000000": 105005269700000,
+          "swap200000_tip1000000000": 555005269700000
+        },
+        "main_scenario": "swap150000_tip100000000"
+      },
+      "elapsed_s": 93.64,
+      "rpc_calls": 58
+    },
+    {
+      "index": 491473,
+      "pair": "0x0b1bf50699ac941990e461109fd14e171c1b41a4",
+      "token": "0xb39ba550610084d094c893086b9eb7616ebbd363",
+      "created_block": 24673145,
+      "trigger": {
+        "first_mint_block": 24673146,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24673147,
+        "entry_ts": 1773701363,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 18133455549106485,
+        "eth_debit": 50000000000000000,
+        "base_fee": 113519760,
+        "reason": "0x"
+      },
+      "exit": {
+        "exit_block": 24888309,
+        "exit_ts": 1776293363,
+        "base_fee": 41477244,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 18133455549106485,
+        "token_after": 0,
+        "cash_in": 854801562738,
+        "reason": "0x"
+      },
+      "model": {
+        "slot_scan_calls": 34,
+        "slot_status": "ok",
+        "slot": 3,
+        "holding_state": "adequate_proven_by_execution"
+      },
+      "data": null,
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 854801562738,
+        "G_by_scenario": {
+          "swap120000_tip0": 22747364880000,
+          "swap120000_tip100000000": 56747364880000,
+          "swap120000_tip1000000000": 362747364880000,
+          "swap150000_tip0": 27397275000000,
+          "swap150000_tip100000000": 67397275000000,
+          "swap150000_tip1000000000": 427397275000000,
+          "swap200000_tip0": 35147125200000,
+          "swap200000_tip100000000": 85147125200000,
+          "swap200000_tip1000000000": 535147125200000
+        },
+        "main_scenario": "swap150000_tip100000000"
+      },
+      "elapsed_s": 92.92,
+      "rpc_calls": 59
+    }
+  ]
+}

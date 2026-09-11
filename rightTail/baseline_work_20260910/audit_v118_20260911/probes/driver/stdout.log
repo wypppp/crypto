@@ -1,0 +1,5 @@
+{"tag": "serial", "parallel": 1, "exit": 2, "wall_s": 0.4}
+{"tag": "serial_resume1", "parallel": 1, "exit": 0, "wall_s": 2.4}
+{"tag": "parallel", "parallel": 2, "exit": 0, "wall_s": 2.7}
+{"passed": true, "failed": [], "required_absent": [], "n_checks": 40}
+{"run_dir": "../../../../tmp/rta-audit-v118-ysy28ini/probes/driver/runs/offline_20260911T082021Z-afca52", "this_call_exit": {"serial": 0, "parallel": 0}, "last_exit_per_side": {"serial": 0, "parallel": 0}, "compare_exit": 0, "driver_exit": 0}

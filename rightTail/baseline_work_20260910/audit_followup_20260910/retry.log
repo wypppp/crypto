@@ -1,0 +1,1 @@
+{"required_http_interval_seconds": 10.0, "http_start_seconds": [0.006003234000672819, 1.013116964000801], "result": "0x1", "gate": {"total_reserved": 2, "max_http_attempts": 2, "per_worker": {"0": {"rpc": 2}}, "elapsed_s": 1.04}}

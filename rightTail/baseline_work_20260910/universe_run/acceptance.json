@@ -1,0 +1,17 @@
+{
+  "exit": 0,
+  "scope": "universe only; no execution or economic inference",
+  "N_all": 16510,
+  "WETH": 16044,
+  "non_WETH": 466,
+  "unknown": 0,
+  "raw_responses_match_every_csv_row": true,
+  "registry_indices_checked": 10,
+  "boundary_hashes_stable": true,
+  "peak_rss_kib": 145224,
+  "http_attempts": {
+    "rpc": 55,
+    "etherscan": 47
+  },
+  "elapsed_seconds": 50.755
+}

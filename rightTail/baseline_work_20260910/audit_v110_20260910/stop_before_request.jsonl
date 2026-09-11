@@ -1,0 +1,3 @@
+{"seq": 1, "run_id": "2c1549c791d840979f1861b01ff1badd", "kind": "rpc_begin", "worker": null, "at": "2026-09-10T13:30:59Z", "mono_s": 0.001, "candidate": null, "stage": null, "op": "request", "detail": {"method": "eth_chainId"}, "pending_id": 1}
+{"seq": 2, "run_id": "2c1549c791d840979f1861b01ff1badd", "kind": "rpc", "worker": null, "at": "2026-09-10T13:30:59Z", "mono_s": 0.154, "candidate": null, "stage": null, "record": {"id": 1, "method": "eth_chainId", "params": [], "observed_at": "2026-09-10T13:30:59.138568+00:00", "attempt": 1, "elapsed_s": 0.14845}}
+{"seq": 3, "run_id": "2c1549c791d840979f1861b01ff1badd", "kind": "rpc_end", "worker": null, "at": "2026-09-10T13:30:59Z", "mono_s": 0.159, "candidate": null, "stage": null, "pending_id": 1, "records_drained": 1}

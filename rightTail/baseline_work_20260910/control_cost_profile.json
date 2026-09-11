@@ -1,0 +1,60 @@
+{
+  "source": "rightTail/baseline_20260909/runs/endpoint-verification.json",
+  "source_sha256": "4c511092780bbea0adff62c3a15b82874346c8eb48b7b64b455192e2c2c8bcd5",
+  "evidence": "reanalysis of saved real endpoint control; no fresh network requests or candidate pilot",
+  "partition_method": "request IDs checked against workflow and calldata; original requests lack phase IDs",
+  "phases": [
+    {
+      "id": "T3",
+      "request_ids_inclusive": [
+        60,
+        118
+      ],
+      "http_attempts": 59,
+      "methods": {
+        "eth_call": 27,
+        "eth_getCode": 7,
+        "eth_getBlockByNumber": 24,
+        "eth_getLogs": 1
+      },
+      "wall_seconds": 84.25203,
+      "request_elapsed_seconds": 64.55619300000002
+    },
+    {
+      "id": "T5.buy",
+      "request_ids_inclusive": [
+        161,
+        169
+      ],
+      "http_attempts": 9,
+      "methods": {
+        "eth_getCode": 5,
+        "eth_call": 4
+      },
+      "wall_seconds": 13.295294,
+      "request_elapsed_seconds": 10.291059
+    },
+    {
+      "id": "T5.sell",
+      "request_ids_inclusive": [
+        170,
+        205
+      ],
+      "http_attempts": 36,
+      "methods": {
+        "eth_call": 36
+      },
+      "wall_seconds": 84.312867,
+      "request_elapsed_seconds": 72.295286
+    }
+  ],
+  "simulation_request_seconds": {
+    "169": 1.052874,
+    "205": 1.049123
+  },
+  "total_attempts": 104,
+  "total_phase_seconds": 181.860191,
+  "hypothetical_300_serial_hours": 15.155015916666665,
+  "estimate_is_candidate_forecast": false,
+  "actual_candidate_profile_pending": true
+}

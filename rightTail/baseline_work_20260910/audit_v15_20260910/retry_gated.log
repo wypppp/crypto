@@ -1,0 +1,2 @@
+{"required_http_interval_seconds": 10.0, "http_start_seconds": [0.012928045998705784, 10.01809719099765], "observed_gap_seconds": 10.005, "retry_respected_global_interval": true, "result": "0x1", "gate": {"http_calls": 2, "max_calls": 2, "logical_requests": 1, "http_per_worker": {"0": {"rpc": 2}}, "logical_per_worker": {"0": {"rpc": 1}}, "interval_s": 10.0, "elapsed_s": 10.05}}
+OK: 重试经过全局限流，且计入实际 HTTP 次数

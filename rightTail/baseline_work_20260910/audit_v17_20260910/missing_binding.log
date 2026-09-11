@@ -1,0 +1,160 @@
+[
+  {
+    "removed": "script_sha256",
+    "exit": 1,
+    "n": 2,
+    "validation_passed": false,
+    "evidence_chain_problems": [
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "script_sha256"
+        ],
+        "candidate": 1
+      },
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "script_sha256"
+        ],
+        "candidate": 2
+      }
+    ]
+  },
+  {
+    "removed": "evidence_module_sha256",
+    "exit": 1,
+    "n": 2,
+    "validation_passed": false,
+    "evidence_chain_problems": [
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "evidence_module_sha256"
+        ],
+        "candidate": 1
+      },
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "evidence_module_sha256"
+        ],
+        "candidate": 2
+      }
+    ]
+  },
+  {
+    "removed": "spec_sha256",
+    "exit": 1,
+    "n": 2,
+    "validation_passed": false,
+    "evidence_chain_problems": [
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "spec_sha256"
+        ],
+        "candidate": 1
+      },
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "spec_sha256"
+        ],
+        "candidate": 2
+      }
+    ]
+  },
+  {
+    "removed": "sample_sha256",
+    "exit": 1,
+    "n": 2,
+    "validation_passed": false,
+    "evidence_chain_problems": [
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "sample_sha256"
+        ],
+        "candidate": 1
+      },
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "sample_sha256"
+        ],
+        "candidate": 2
+      }
+    ]
+  },
+  {
+    "removed": "universe_sha256_now",
+    "exit": 1,
+    "n": 2,
+    "validation_passed": false,
+    "evidence_chain_problems": [
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "universe_sha256"
+        ],
+        "candidate": 1
+      },
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "universe_sha256"
+        ],
+        "candidate": 2
+      }
+    ]
+  },
+  {
+    "removed": "finalized_snapshot",
+    "exit": 1,
+    "n": 2,
+    "validation_passed": false,
+    "evidence_chain_problems": [
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "finalized_number",
+          "finalized_hash"
+        ],
+        "candidate": 1
+      },
+      {
+        "reason": "evidence_binding_field_missing",
+        "path": "/tmp/rta-v16-s5wux7k6/first.jsonl",
+        "run_id": "0ccdd83c11894d92a9cac9cc64f4a0db",
+        "fields": [
+          "finalized_number",
+          "finalized_hash"
+        ],
+        "candidate": 2
+      }
+    ]
+  }
+]

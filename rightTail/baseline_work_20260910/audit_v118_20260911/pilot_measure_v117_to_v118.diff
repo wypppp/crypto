@@ -1,0 +1,426 @@
+--- v1.17
++++ v1.18
+@@ -356,6 +356,20 @@
+     return v
+ 
+ 
++def runtime_params_of(args):
++    """检查点绑定里的测量参数。测量程序与对照驱动**共用这一处**推导，
++    驱动据此给比较器显式的期望值，不各写一份。"""
++    return {"slot_limit": args.slot_limit,
++            "diagnostics": bool(opt(args, "diagnostics")),
++            "cutoff_block": CUTOFF_BLOCK,
++            "amount_wei": V.AMOUNT}
++
++
++def primitives_sha256():
++    """冻结包测量原语（verify_capabilities.py）的完整 hash。"""
++    return EV.sha256_file(V.__file__)
++
++
+ def validation_placeholder(stage):
+     """校验**开始前**先放一个"未完成"占位。
+ 
+@@ -368,34 +382,84 @@
+                              "detail": "validation started but did not complete"}]}
+ 
+ 
+-def validate_identity_closure(rpc, token, pair, b0):
++def _drop_not_completed(v):
++    v["unavailable"] = [u for u in v.get("unavailable", [])
++                        if u.get("error_kind") != "not_completed"]
++
++
++def _interrupt_kind(e):
++    if isinstance(e, EV.BudgetExhausted):
++        return "budget"
++    if isinstance(e, EV.Shutdown):
++        return "shutdown"
++    return getattr(e, "kind", None) or type(e).__name__
++
++
++def mark_interrupted(v, step, e=None, kind=None, detail=None):
++    """校验被**非接口**原因打断（预算 / 停机 / 解码 / 结构异常）。
++
++    已经取得的不符**原样保留**在 `failures` 里 —— 旧版的局部累积随异常一起丢掉，
++    收尾再写一个空占位，于是「已证不符 + 后来预算耗尽」只剩下「未知」（审查 v1.17 P1）。
++    这里只把「未完成」占位换成具体的中断原因，再折叠四态：有不符仍是 failed。
++    """
++    kind = kind or _interrupt_kind(e)
++    _drop_not_completed(v)
++    v.setdefault("unavailable", []).append(
++        {"step": step, "error_kind": kind,
++         "detail": (detail if detail is not None else str(e))[:160]})
++    v["interrupted_by"] = kind
++    return fold_validation(v)
++
++
++def validate_identity_closure(rpc, token, pair, b0, closure=None, failures=None):
+     """身份闭环（审查 F）：pair 的两侧必须就是 {WETH, token}，
+     且 factory.getPair(token0,token1) 必须回到同一个 pair。
+-    代码存在与 hash 记录是证据，不自动证明实现等价。"""
+-    fails = {}
++    代码存在与 hash 记录是证据，不自动证明实现等价。
++
++    `closure` / `failures` 由调用方持有、**就地写入**：每得出一项结论当场落进去。
++    旧版把两侧不符算在函数局部，随后 getPair 断连抛出，局部结论从未交回调用方
++    （审查 v1.17：两侧已证不符 + getPair 断连 ⇒ 只剩 unavailable、failures 为空）。"""
++    closure = {} if closure is None else closure
+     t0 = V.addr_from_word(rpc.call(pair, V.calldata("token0()"), b0))
++    closure["token0"] = t0
+     t1 = V.addr_from_word(rpc.call(pair, V.calldata("token1()"), b0))
+-    fails["token0"], fails["token1"] = t0, t1
++    closure["token1"] = t1
+     if {t0, t1} != {V.WETH, token.lower()}:
+-        fails["error"] = f"pair sides {t0},{t1} != WETH+{token.lower()}"
++        closure["error"] = f"pair sides {t0},{t1} != WETH+{token.lower()}"
++        if failures is not None:
++            failures.append(closure["error"])
+     got = V.addr_from_word(rpc.call(V.FACTORY,
+                                     V.calldata("getPair(address,address)", t0, t1), b0))
+-    fails["getPair"] = got
++    closure["getPair"] = got
+     if got != pair.lower():
+-        fails["error2"] = f"factory.getPair -> {got} != {pair.lower()}"
+-    return fails
+-
+-
+-def validate_candidate_state(rpc, log, candidate, token, pair, blocks):
++        closure["error2"] = f"factory.getPair -> {got} != {pair.lower()}"
++        if failures is not None:
++            failures.append(closure["error2"])
++    return closure
++
++
++def validate_candidate_state(rpc, log, candidate, token, pair, blocks, out=None):
+     """
+     候选级状态校验（规格 v1.1 §6）。任一项失败 ⇒ 阻断，不得升级到测量结论。
+ 
+     **通过不等于跨期持仓充分**：本函数只证明「注入前虚拟地址干净、协议身份正确、
+     所用区块可核验」；它与 H1 是两件事，不能相互替代。
++
++    `out` 是调用方持有的累积器（通常先放好「未完成」占位）。本函数**就地**写入：
++    被预算 / 停机 / 解码等打断时，已取得的不符留在调用方手里，不随异常丢失。
+     """
+-    out = {"blocks": {}, "identity": {}, "wallet_clean": {}, "failures": [],
+-           "unavailable": [],
+-           "note": "state validation only; NOT evidence of cross-period holding adequacy"}
++    out = validation_placeholder("state_validation") if out is None else out
++    for k, v in (("blocks", {}), ("identity", {}), ("wallet_clean", {}),
++                 ("failures", []), ("unavailable", [])):
++        out.setdefault(k, v)
++    out["note"] = "state validation only; NOT evidence of cross-period holding adequacy"
++
++    def _log():
++        log.write("state_validation", candidate=candidate, status=out["status"],
++                  passed=out["passed"], failures=out["failures"],
++                  unavailable=out["unavailable"], identity=out["identity"],
++                  wallet_clean=out["wallet_clean"],
++                  interrupted_by=out.get("interrupted_by"))
+     step = "start"
+     try:
+         # 1. 虚拟地址在每个用到的块上必须无代码；余额原值留档
+@@ -427,12 +491,9 @@
+         # 3. 身份闭环与工厂/路由一致性
+         step = "identity_calls"
+         try:
+-            closure = validate_identity_closure(rpc, token, pair, b0)
+-            out["identity_closure"] = closure
+-            if "error" in closure:
+-                out["failures"].append(closure["error"])
+-            if "error2" in closure:
+-                out["failures"].append(closure["error2"])
++            out["identity_closure"] = {}
++            validate_identity_closure(rpc, token, pair, b0,
++                                      closure=out["identity_closure"], failures=out["failures"])
+             if V.addr_from_word(rpc.call(pair, V.calldata("factory()"), b0)) != V.FACTORY:
+                 out["failures"].append("pair.factory() mismatch")
+             if V.addr_from_word(rpc.call(V.ROUTER, V.calldata("factory()"), b0)) != V.FACTORY:
+@@ -450,48 +511,73 @@
+         elif getattr(e, "kind", None) == "rpc" and step == "identity_calls":
+             out["failures"].append(f"identity_call_failed: {str(e)[:80]}")   # 回滚：链的答案
+         else:
+-            raise              # budget / forbidden_method / abi 等：保持各自原因，交上层
++            # budget / forbidden_method / abi 等：原因交上层；已证的不符留在 out 里
++            mark_interrupted(out, step, e)
++            _log()
++            raise
++    except Exception as e:                                             # noqa: BLE001
++        # 预算耗尽（BudgetExhausted）、停机（Shutdown）、解码异常：同上，先落下已知结论再上抛
++        mark_interrupted(out, step, e)
++        _log()
++        raise
++    _drop_not_completed(out)          # 走到这里 ⇒ 做完了，或在接口故障处有明确记录
+     fold_validation(out)
+-    log.write("state_validation", candidate=candidate, status=out["status"],
+-              passed=out["passed"], failures=out["failures"],
+-              unavailable=out["unavailable"], identity=out["identity"],
+-              wallet_clean=out["wallet_clean"])
++    _log()
+     return out
+ 
+ 
+-def verify_wallet_not_persisted(rpc, log, candidate, blocks, before):
++def verify_wallet_not_persisted(rpc, log, candidate, blocks, before, acc=None):
+     """注入后复读：虚拟地址的代码与余额不得被持久化。返回 (不符, 未完成)。
++
++    `acc` 为调用方持有的恢复核验记录：不符写入 `acc["persisted"]` 与 `acc["failures"]`、
++    未完成写入 `acc["unavailable"]`，**每得出一项当场写入**。被预算 / 停机打断时
++    已证的持久化不随异常丢失（审查 v1.17：代码已变 + 读余额预算耗尽 ⇒ persisted 丢失）。
+ 
+     **没有注入前原值就不做比较。** 旧版用 `before.get(key, {})` 取到空，再拿真实的
+     `0x` / `0x0` 去和 None 比，于是在受控链毫无状态变化的情况下报出 4 条
+     "persisted"（审查 v1.16：出场校验取代码遇到传输错误后，恢复检查误报持久化）。
+     缺原值 ⇒ 这一项**无法判断**，记 unavailable，不记不符。
+     """
+-    bad, unavailable = [], []
+-    for b in blocks:
+-        for who, name in ((V.WALLET, "WALLET"), (V.CALLER, "CALLER")):
+-            key = f"{name}@{b}"
+-            was = before.get(key) if isinstance(before.get(key), dict) else {}
+-            # 逐项（代码、余额）独立：缺哪项原值就只有那项不比；
+-            # 一项复读断连不连累另一项已经取得的比较结果。
+-            for field, method in (("code", "eth_getCode"), ("balance", "eth_getBalance")):
+-                if field not in was:
+-                    unavailable.append({"step": f"restore:{key}:{field}",
+-                                        "error_kind": "baseline_missing",
+-                                        "detail": "no pre-injection value recorded; cannot compare"})
+-                    continue
+-                try:
+-                    got = rpc.request(method, [who, hex(b)])
+-                except V.RpcFailure as e:
+-                    if not interface_failure(e):
+-                        raise
+-                    unavailable.append(_unavailable_item(f"restore:{key}:{field}", e))
+-                    continue
+-                if got != was[field]:
+-                    bad.append(f"{key}: {field} persisted")
+-    log.write("wallet_restore_check", candidate=candidate,
+-              passed=(False if bad else (None if unavailable else True)),
+-              failures=bad, unavailable=unavailable)
++    acc = {} if acc is None else acc
++    bad = acc.setdefault("persisted", [])
++    unavailable = acc.setdefault("unavailable", [])
++    fails = acc.setdefault("failures", [])
++
++    def _log(interrupted=None):
++        un = [u for u in unavailable if u.get("error_kind") != "not_completed"]
++        log.write("wallet_restore_check", candidate=candidate,
++                  passed=(False if bad else (None if (un or interrupted) else True)),
++                  failures=list(bad), unavailable=un, interrupted_by=interrupted)
++    step = "start"
++    try:
++        for b in blocks:
++            for who, name in ((V.WALLET, "WALLET"), (V.CALLER, "CALLER")):
++                key = f"{name}@{b}"
++                was = before.get(key) if isinstance(before.get(key), dict) else {}
++                # 逐项（代码、余额）独立：缺哪项原值就只有那项不比；
++                # 一项复读断连不连累另一项已经取得的比较结果。
++                for field, method in (("code", "eth_getCode"), ("balance", "eth_getBalance")):
++                    step = f"restore:{key}:{field}"
++                    if field not in was:
++                        unavailable.append({"step": step, "error_kind": "baseline_missing",
++                                            "detail": "no pre-injection value recorded; "
++                                                      "cannot compare"})
++                        continue
++                    try:
++                        got = rpc.request(method, [who, hex(b)])
++                    except V.RpcFailure as e:
++                        if not interface_failure(e):
++                            raise
++                        unavailable.append(_unavailable_item(step, e))
++                        continue
++                    if got != was[field]:
++                        bad.append(f"{key}: {field} persisted")
++                        fails.append(f"{key}: {field} persisted")
++    except Exception as e:                                             # noqa: BLE001
++        acc["interrupted_at"] = step
++        _log(interrupted=_interrupt_kind(e))
++        raise
++    _log()
+     return bad, unavailable
+ 
+ 
+@@ -603,7 +689,7 @@
+ #: 过去每加一个 CLI 选项就会让这些调用者 AttributeError 崩掉，
+ #: 而崩掉的入口"通过 0 / 失败 0"，看起来像没跑，不像失败。
+ OPTIONAL_DEFAULTS = {
+-    "parallel": 1, "checkpoint": None, "spec": "MEASUREMENT_SPEC.v1.17.md",
++    "parallel": 1, "checkpoint": None, "spec": "MEASUREMENT_SPEC.v1.18.md",
+     "diagnostics": True, "pin_finalized": None,
+     "max_rss_mb": None, "max_cpu_s": None, "max_wall_s": None,
+     "governor_poll_s": 0.25,
+@@ -925,18 +1011,16 @@
+         spec_path = Path(spec_name)
+         if not spec_path.is_absolute():
+             spec_path = Path(__file__).resolve().parent / spec_path
+-        resumed, _ = ckpt.verify_binding(
++        binding_now = dict(
+             sample_sha256=EV.sha256_file(args.sample),
+             spec_sha256=EV.sha256_file(spec_path) if spec_path.is_file() else None,
+             script_sha256=EV.sha256_file(__file__),
+             evidence_module_sha256=EV.sha256_file(EV.__file__),
+-            primitives_sha256=EV.sha256_file(V.__file__),      # 测量原语本身
++            primitives_sha256=primitives_sha256(),              # 测量原语本身
+             universe_sha256=EV.sha256_file(UNIVERSE),
+-            runtime_params={"slot_limit": args.slot_limit,
+-                            "diagnostics": bool(opt(args, "diagnostics")),
+-                            "cutoff_block": CUTOFF_BLOCK,
+-                            "amount_wei": V.AMOUNT},
++            runtime_params=runtime_params_of(args),
+             finalized_number=SNAPSHOT["number"], finalized_hash=SNAPSHOT["hash"])
++        resumed, _ = ckpt.verify_binding(**binding_now)
+         # ---- 续跑：只有"结果拿得出且 hash 对得上"的候选才允许跳过 ----
+         # 旧版只看 completed 标志：删掉旧结果 JSON 与证据后，续跑仍 exit=0、
+         # results=[]、set_complete=true —— 交付的是一份空汇总（审查反例 1）。
+@@ -991,6 +1075,10 @@
+                               "rps": args.rps, "max_calls": args.max_calls,
+                               "max_seconds": args.max_seconds, "cutoff_block": CUTOFF_BLOCK,
+                               "amount_wei": V.AMOUNT, "gas_scenarios": len(GAS_SCENARIOS)})
++        # 运行头只记 7 项绑定；原语 hash 与 runtime_params 此前只在检查点里，证据里没有，
++        # 比较器因而无从核对「这次运行」与「检查点」在这两项上是否一致（审查 v1.17 P1）。
++        # 把检查点绑定的**全部键**原样写进本运行的证据（v1.18 起）。
++        log.write("run_binding", **{k: binding_now.get(k) for k in EV.Checkpoint.BINDING_KEYS})
+         _bc = {}                 # block -> (payload, fetched_by_worker)
+         _bc_lock = threading.Lock()
+ 
+@@ -1131,10 +1219,10 @@
+                     base_e = int(_bf, 16) if _bf else None      # 缺失记未知，不记零
+                     fees["entry"] = base_e
+                     rpc.mark(stage="state_validation")
+-                    rec["state_validation"] = validation_placeholder("state_validation")
+-                    sv = validate_candidate_state(rpc, log, c["index"], c["token"],
+-                                                  c["pair"], [eb])
+-                    rec["state_validation"] = sv
++                    # 累积器先挂到候选记录上，校验函数就地写入：中途被打断，已证的不符也在这里
++                    sv = rec["state_validation"] = validation_placeholder("state_validation")
++                    validate_candidate_state(rpc, log, c["index"], c["token"],
++                                             c["pair"], [eb], out=sv)
+                     snap_e, un_e = _snapshot("entry", eb)
+                     rec["blocks"] = {"entry": snap_e} if snap_e else {}
+                     if snap_e and snap_e["failures"]:
+@@ -1187,10 +1275,10 @@
+                         if snap_x:
+                             rec["blocks"]["exit"] = snap_x
+                         rpc.mark(stage="state_validation_exit")
+-                        rec["state_validation_exit"] = validation_placeholder("state_validation_exit")
+-                        sv2 = validate_candidate_state(rpc, log, c["index"], c["token"],
+-                                                       c["pair"], [xb])
+-                        rec["state_validation_exit"] = sv2
++                        sv2 = rec["state_validation_exit"] = validation_placeholder(
++                            "state_validation_exit")
++                        validate_candidate_state(rpc, log, c["index"], c["token"],
++                                                 c["pair"], [xb], out=sv2)
+                         if snap_x and snap_x["failures"]:
+                             sv2["failures"] += snap_x["failures"]
+                         if un_x:
+@@ -1337,15 +1425,19 @@
+                 with gov.winddown() if used else contextlib.nullcontext():
+                   if used:
+                     rpc.mark(stage="restore_check")
++                    # 恢复核验记录**先建好**，逐项就地写入；异常收尾只在它上面追加中断原因，
++                    # 不再整个换成一条空记录（审查 v1.17：已证的持久化被异常收尾抹掉）。
++                    rc_ = rec["restore_check"] = validation_placeholder("restore_check")
++                    rc_.update(persisted=[], reorged_blocks=[])
+                     before = {}
+                     for k, v in (rec.get("state_validation") or {}).get("wallet_clean", {}).items():
+                         before[k] = v
+                     for k, v in (rec.get("state_validation_exit") or {}).get("wallet_clean", {}).items():
+                         before[k] = v
+-                    bad, unav = verify_wallet_not_persisted(
+-                        rpc, log, c["index"], [b["number"] for b in used], before)
++                    verify_wallet_not_persisted(
++                        rpc, log, c["index"], [b["number"] for b in used], before, acc=rc_)
++                    unav = rc_["unavailable"]
+                     # fresh=True：必须发新请求，不能拿缓存自比（审查 D）
+-                    moved = []
+                     for b_ in used:
+                         try:
+                             h_ = blk(b_["number"], fresh=True, rpc=rpc)["hash"]
+@@ -1355,11 +1447,11 @@
+                             unav.append(_unavailable_item(f"reread_block:{b_['number']}", e))
+                             continue
+                         if h_ != b_["hash"]:
+-                            moved.append(b_["number"])
+-                    rec["restore_check"] = fold_validation(
+-                        {"persisted": bad, "reorged_blocks": moved,
+-                         "failures": bad + [f"block {n_} reorged" for n_ in moved],
+-                         "unavailable": unav})
++                            rc_["reorged_blocks"].append(b_["number"])
++                            rc_["failures"].append(f"block {b_['number']} reorged")
++                    _drop_not_completed(rc_)
++                    fold_validation(rc_)
++                    unav = rc_["unavailable"]
+                     if rec["restore_check"]["status"] == "failed":
+                         rec["state"] = "state_validation_failed"
+                     elif rec["restore_check"]["status"] == "unavailable":
+@@ -1371,35 +1463,42 @@
+                         rec["data"] = dict(rec["data"] or {},
+                                            restore_unavailable=unav)
+             except EV.Shutdown as e:
+-                # 停机把收尾也打断了。**这不是状态校验失败**，别改写成那个 ——
+-                # 它是"没做完就停了"，状态保持 aborted_by_shutdown。
+-                rec["restore_check"] = {"status": "unavailable", "passed": None,
+-                                        "failures": [], "interrupted_by": "shutdown",
+-                                        "unavailable": [{"step": "restore_check",
+-                                                         "error_kind": "shutdown",
+-                                                         "detail": e.reason}],
+-                                        "detail": e.detail}
++                # 停机把收尾也打断了。没有已证不符时**这不是状态校验失败**，别改写成那个 ——
++                # 它是"没做完就停了"，状态保持 aborted_by_shutdown。已证的不符照样保留（见下）。
++                _rc = rec.get("restore_check") or validation_placeholder("restore_check")
++                rec["restore_check"] = mark_interrupted(
++                    _rc, _rc.get("interrupted_at") or "restore_check", kind="shutdown",
++                    detail=e.reason)
++                _rc["detail"] = e.detail
+                 if rec.get("state") != "state_validation_failed":
+                     rec["state"] = "aborted_by_shutdown"
+             except EV.BudgetExhausted as e:
+-                rec["restore_check"] = {"status": "unavailable", "passed": None,
+-                                        "failures": [],
+-                                        "unavailable": [{"step": "restore_check",
+-                                                         "error_kind": "budget",
+-                                                         "detail": str(e)[:120]}]}
++                _rc = rec.get("restore_check") or validation_placeholder("restore_check")
++                rec["restore_check"] = mark_interrupted(
++                    _rc, _rc.get("interrupted_at") or "restore_check", e)
+                 if rec.get("state") != "state_validation_failed":
+                     rec["state"] = "budget_exhausted"
+             except (V.RpcFailure, StopIteration, KeyError) as e:
+                 # 走到这里的已经**不是**接口故障（那些在上面记为 unavailable）：
+                 # 预算 / 解码 / 结构异常 —— 各记各的原因，都不是"状态不符"。
+                 kind = getattr(e, "kind", type(e).__name__)
+-                rec["restore_check"] = {"status": "unavailable", "passed": None,
+-                                        "failures": [],
+-                                        "unavailable": [{"step": "restore_check",
+-                                                         "error_kind": kind,
+-                                                         "detail": str(e)[:120]}]}
++                _rc = rec.get("restore_check") or validation_placeholder("restore_check")
++                rec["restore_check"] = mark_interrupted(
++                    _rc, _rc.get("interrupted_at") or "restore_check", e, kind=kind)
+                 if rec.get("state") != "state_validation_failed":
+                     rec["state"] = "budget_exhausted" if kind == "budget" else "decode_error"
++
++            # **已证实的不符优先于后来的中断原因，两者分别保留。**
++            # 校验 / 恢复核验里已经有完整可比的不符，随后又被预算、停机、解码或接口故障打断：
++            # 候选结论是 state_validation_failed，打断原因另记在 data.interrupted_after_mismatch，
++            # 原有的 data（预算说明、停机原因等）不动（审查 v1.17 P1）。
++            _proved = [k for k in ("state_validation", "state_validation_exit", "restore_check")
++                       if (rec.get(k) or {}).get("failures")]
++            if _proved and rec.get("state") != "state_validation_failed":
++                _prior = rec.get("state")
++                rec["state"] = "state_validation_failed"
++                rec["data"] = dict(rec.get("data") or {}, interrupted_after_mismatch={
++                    "prior_state": _prior, "mismatch_in": _proved})
+ 
+             # 没有可审查的状态语义依据之前，任何候选都不得进入经济统计。
+             # no_mint / right_censored 等分支本就不会走到入场校验；
+@@ -1697,7 +1796,7 @@
+                    help="并行路数。>1 时限流与调用预算由全局闸门共享，不各分一半")
+     m.add_argument("--checkpoint", default=None,
+                    help="断点续跑检查点（追加式）。绑定样本/规格/脚本/台账/finalized 块")
+-    m.add_argument("--spec", default="MEASUREMENT_SPEC.v1.17.md",
++    m.add_argument("--spec", default="MEASUREMENT_SPEC.v1.18.md",
+                    help="按脚本目录定位；缺失即阻断。证据记录该文件的 hash")
+     m.add_argument("--max-rss-mb", type=float, default=None,
+                    help="RSS 上限（MB）。按内核 VmHWM 实测峰值判定，越线有序停机")

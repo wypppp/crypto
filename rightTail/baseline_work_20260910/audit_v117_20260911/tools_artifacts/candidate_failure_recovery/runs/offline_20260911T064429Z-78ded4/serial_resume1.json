@@ -1,0 +1,631 @@
+{
+  "started_at": "2026-09-11T06:44:32.459984+00:00",
+  "finished_at": "2026-09-11T06:44:33.792777+00:00",
+  "resources": {
+    "limits": {
+      "hard_requested": true,
+      "hard_problems": [],
+      "soft_thresholds": {
+        "max_rss_kb": 2097152.0,
+        "max_cpu_s": null,
+        "max_wall_s": 3600.0,
+        "poll_s": 0.25,
+        "kind": "cooperative soft thresholds: set a stop flag; they do NOT prevent further allocation or execution"
+      },
+      "hard_backstop": {
+        "hard_rss_kb": 8388608.0,
+        "hard_cpu_s": 3600.0,
+        "applied": {
+          "RLIMIT_AS": {
+            "bytes": 8589934592,
+            "readback": 8589934592,
+            "verified": true,
+            "note": "限的是地址空间，不等于 RSS；作为兜底偏保守。越界为任意位置的 MemoryError"
+          },
+          "RLIMIT_CPU": {
+            "soft_s": 3600,
+            "hard_s": 3605,
+            "readback": [
+              3600,
+              3605
+            ],
+            "verified": true,
+            "note": "软限发 SIGXCPU（可捕获→有序停机），硬限 SIGKILL"
+          }
+        },
+        "kind": "kernel-enforced RLIMIT; independent of any in-process check"
+      },
+      "stop_grace": {
+        "grace_calls": 16,
+        "grace_seconds": 15.0,
+        "kind": "upper bound on work after a stop is requested"
+      }
+    },
+    "final": {
+      "rss_kb": 29996,
+      "rss_peak_kb": 29996,
+      "cpu_s": 0.47,
+      "wall_s": 1.323
+    },
+    "watchdog_observations": 5,
+    "stopped": false,
+    "stop_reason": null,
+    "stop_detail": {},
+    "stop_latency_s": null,
+    "requests_refused_or_graced_after_stop": 0,
+    "winddown_http_requests": 0,
+    "winddown_logical_requests": 0,
+    "absolute_deadline_closures": 0,
+    "escalations": 0,
+    "pending_inflight": 0,
+    "backstop_armed": false,
+    "deadline_basis": "absolute wall-clock deadline on the whole response (socket timeout alone is a per-read inactivity timeout, not a completion deadline)",
+    "peak_basis": "kernel VmHWM (measured high-water mark, not a sample)"
+  },
+  "parallel": 1,
+  "gate_stats": {
+    "http_sent": 0,
+    "http_reserved": 0,
+    "http_rejected_after_wait": 0,
+    "max_calls": 4000,
+    "logical_requests": 76,
+    "http_sent_per_worker": {},
+    "http_reserved_per_worker": {},
+    "logical_per_worker": {
+      "0": {
+        "rpc": 76
+      }
+    },
+    "interval_s": 0.0001,
+    "elapsed_s": 1.32,
+    "note": "http_reserved 是预算口径，占用后即使请求未发出也不退还；只有 http_sent 可当作实际网络调用量。"
+  },
+  "evidence_file": "../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/serial_resume1.evidence.jsonl",
+  "run_id": "8ba4229ba14a48dbac1ae5d91e4e4fce",
+  "chain_id": 1,
+  "sample_file": "/tmp/rta-v117-tools-audit/candidate_failure_recovery/sample.json",
+  "finalized_snapshot": {
+    "number": 25900000,
+    "hash": "0x00000000000000000000000000000000000000000000000000000000018b33e0",
+    "timestamp": 310800000
+  },
+  "sample_sha256": "4163dd18f819788e9ca343e84947a9f3c36c2fec7adfa14f5fb5a90b342e50c8",
+  "package_script_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "spec": {
+    "path": "MEASUREMENT_SPEC.v1.17.md",
+    "sha256": "7cf15793c7626ce725c133ce748920998083bb46b32ef6913f17604a1ada3542"
+  },
+  "slot_limit": 2,
+  "diagnostics": true,
+  "total_elapsed_s": 1.2,
+  "rpc_calls": 76,
+  "rpc_calls_by_tap": [
+    76
+  ],
+  "results": [
+    {
+      "index": 1,
+      "pair": "0xabababababababababababababababababababab",
+      "token": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "created_block": 24140000,
+      "trigger": {
+        "first_mint_block": 24140010,
+        "status": "ok",
+        "supply_at_cutoff": 1000000,
+        "detail": {
+          "range": [
+            24140000,
+            24781026
+          ],
+          "supply_at_cutoff": 1000000,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24140000,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 1000000,
+          "supply_basis": {
+            "24781026": "call",
+            "24140009": "call",
+            "24140010": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24140011,
+        "entry_ts": 289680132,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 1000000000000000000,
+        "eth_debit": 50000000000000000,
+        "base_fee": 1000000000,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24356011,
+        "exit_ts": 292272132,
+        "base_fee": 1000000000,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 1000000000000000000,
+        "token_after": 0,
+        "cash_in": 1000000000000000,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 5,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "simulated_completion_under_injection",
+        "holding_state_basis": "none_beyond_injection"
+      },
+      "data": null,
+      "state_validation": {
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "token": {
+            "address": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "pair": {
+            "address": "0xabababababababababababababababababababab",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24140011": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24140011": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "failures": [],
+        "unavailable": [],
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+          "getPair": "0xabababababababababababababababababababab"
+        },
+        "status": "passed",
+        "passed": true
+      },
+      "blocks": {
+        "entry": {
+          "number": 24140011,
+          "hash": "0x00000000000000000000000000000000000000000000000000000000017058eb",
+          "parent_hash": "0x00000000000000000000000000000000000000000000000000000000017058ea",
+          "timestamp": 289680132,
+          "prev_number": 24140010,
+          "prev_hash": "0x00000000000000000000000000000000000000000000000000000000017058ea",
+          "prev_timestamp": 289680120,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24356011,
+          "hash": "0x000000000000000000000000000000000000000000000000000000000173a4ab",
+          "parent_hash": "0x000000000000000000000000000000000000000000000000000000000173a4aa",
+          "timestamp": 292272132,
+          "prev_number": 24356010,
+          "prev_hash": "0x000000000000000000000000000000000000000000000000000000000173a4aa",
+          "prev_timestamp": 292272120,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 292272132
+        }
+      },
+      "state_validation_exit": {
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "token": {
+            "address": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "pair": {
+            "address": "0xabababababababababababababababababababab",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24356011": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24356011": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "failures": [],
+        "unavailable": [],
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+          "getPair": "0xabababababababababababababababababababab"
+        },
+        "status": "passed",
+        "passed": true
+      },
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 1000000000000000,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 1000000000,
+        "base_fee_exit": 1000000000,
+        "G_by_scenario": {
+          "swap120000_tip0": 340000000000000,
+          "swap120000_tip100000000": 374000000000000,
+          "swap120000_tip1000000000": 680000000000000,
+          "swap150000_tip0": 400000000000000,
+          "swap150000_tip100000000": 440000000000000,
+          "swap150000_tip1000000000": 800000000000000,
+          "swap200000_tip0": 500000000000000,
+          "swap200000_tip100000000": 550000000000000,
+          "swap200000_tip1000000000": 1000000000000000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "persisted": [],
+        "reorged_blocks": [],
+        "failures": [],
+        "unavailable": [],
+        "status": "passed",
+        "passed": true
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 1.18,
+      "rpc_calls": 74,
+      "etherscan_calls": 0
+    },
+    {
+      "index": 2,
+      "pair": "0xabababababababababababababababababababab",
+      "token": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "created_block": 24140000,
+      "trigger": {
+        "first_mint_block": 24140010,
+        "status": "ok",
+        "supply_at_cutoff": 1000000,
+        "detail": {
+          "range": [
+            24140000,
+            24781026
+          ],
+          "supply_at_cutoff": 1000000,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24140000,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 1000000,
+          "supply_basis": {
+            "24781026": "call",
+            "24140009": "call",
+            "24140010": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24140011,
+        "entry_ts": 289680132,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 1000000000000000000,
+        "eth_debit": 50000000000000000,
+        "base_fee": 1000000000,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24356011,
+        "exit_ts": 292272132,
+        "base_fee": 1000000000,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 1000000000000000000,
+        "token_after": 0,
+        "cash_in": 1000000000000000,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 5,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "simulated_completion_under_injection",
+        "holding_state_basis": "none_beyond_injection"
+      },
+      "data": null,
+      "state_validation": {
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "token": {
+            "address": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "pair": {
+            "address": "0xabababababababababababababababababababab",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24140011": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24140011": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "failures": [],
+        "unavailable": [],
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+          "getPair": "0xabababababababababababababababababababab"
+        },
+        "status": "passed",
+        "passed": true
+      },
+      "blocks": {
+        "entry": {
+          "number": 24140011,
+          "hash": "0x00000000000000000000000000000000000000000000000000000000017058eb",
+          "parent_hash": "0x00000000000000000000000000000000000000000000000000000000017058ea",
+          "timestamp": 289680132,
+          "prev_number": 24140010,
+          "prev_hash": "0x00000000000000000000000000000000000000000000000000000000017058ea",
+          "prev_timestamp": 289680120,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24356011,
+          "hash": "0x000000000000000000000000000000000000000000000000000000000173a4ab",
+          "parent_hash": "0x000000000000000000000000000000000000000000000000000000000173a4aa",
+          "timestamp": 292272132,
+          "prev_number": 24356010,
+          "prev_hash": "0x000000000000000000000000000000000000000000000000000000000173a4aa",
+          "prev_timestamp": 292272120,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 292272132
+        }
+      },
+      "state_validation_exit": {
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "token": {
+            "address": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          },
+          "pair": {
+            "address": "0xabababababababababababababababababababab",
+            "code_keccak256": "0x309c67890bde4c575dc23d2cc3b5c3a3d599e312e980e9b61b5bc8f3cd87c8bb"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24356011": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24356011": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "failures": [],
+        "unavailable": [],
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+          "getPair": "0xabababababababababababababababababababab"
+        },
+        "status": "passed",
+        "passed": true
+      },
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 1000000000000000,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 1000000000,
+        "base_fee_exit": 1000000000,
+        "G_by_scenario": {
+          "swap120000_tip0": 340000000000000,
+          "swap120000_tip100000000": 374000000000000,
+          "swap120000_tip1000000000": 680000000000000,
+          "swap150000_tip0": 400000000000000,
+          "swap150000_tip100000000": 440000000000000,
+          "swap150000_tip1000000000": 800000000000000,
+          "swap200000_tip0": 500000000000000,
+          "swap200000_tip100000000": 550000000000000,
+          "swap200000_tip1000000000": 1000000000000000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "persisted": [],
+        "reorged_blocks": [],
+        "failures": [],
+        "unavailable": [],
+        "status": "passed",
+        "passed": true
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 0.97,
+      "rpc_calls": 50,
+      "etherscan_calls": 0,
+      "carried_from_checkpoint": {
+        "attempt": 1,
+        "at": "2026-09-11T06:44:32Z",
+        "result_sha256": "8d0e60803e367dbd6bc5559c81174768a0da20b56f9dd6dbf53cb7522328bfb4",
+        "evidence_file": "/tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/serial.evidence.jsonl",
+        "evidence_run_id": "e3d13108d75a4e72b7f20cc60bf3efb5"
+      }
+    }
+  ],
+  "acceptance": {
+    "declared": 2,
+    "n": 2,
+    "missing_candidates": [],
+    "duplicate_results": [],
+    "unexpected_results": [],
+    "sample_field_mismatch": [],
+    "worker_errors": [],
+    "not_started": [],
+    "shutdown": {
+      "stopped": false
+    },
+    "set_complete": true,
+    "skipped_already_completed": [
+      2
+    ],
+    "carried_from_checkpoint": [
+      2
+    ],
+    "checkpoint_results_unusable": [],
+    "evidence_chain_problems": [],
+    "resumed": true,
+    "checkpoint": "../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/serial.checkpoint.jsonl",
+    "incomplete": [],
+    "complete": 2,
+    "evidence_records": 254,
+    "gate": {
+      "http_sent": 0,
+      "http_reserved": 0,
+      "http_rejected_after_wait": 0,
+      "max_calls": 4000,
+      "logical_requests": 76,
+      "http_sent_per_worker": {},
+      "http_reserved_per_worker": {},
+      "logical_per_worker": {
+        "0": {
+          "rpc": 76
+        }
+      },
+      "interval_s": 0.0001,
+      "elapsed_s": 1.32,
+      "note": "http_reserved 是预算口径，占用后即使请求未发出也不退还；只有 http_sent 可当作实际网络调用量。"
+    },
+    "validation_failed": [],
+    "validation_unavailable": [],
+    "validation_passed": true,
+    "process_completed": true,
+    "meaning": "process_completed 仅表示本次采集流程走完且每个候选落到已定义状态；它【不】代表测量语义已验证，也【不】代表正式实验验收通过。",
+    "measurement_semantics_verified": false,
+    "economic_results_eligible": false
+  }
+}

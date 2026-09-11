@@ -1,0 +1,12 @@
+{
+  "source": "rightTail/rt_a_attribution.py",
+  "exit": 0,
+  "candidate_range": [
+    25940110,
+    25940258
+  ],
+  "history_lookback_blocks": 0,
+  "request_count": 4,
+  "attribution": false,
+  "report": false
+}

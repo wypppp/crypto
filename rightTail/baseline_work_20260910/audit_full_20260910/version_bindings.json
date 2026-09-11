@@ -1,0 +1,58 @@
+[
+  {
+    "file": "v2_one.evidence.jsonl",
+    "records": 70,
+    "bound_spec": "MEASUREMENT_SPEC.v1.md",
+    "script_hash": "e7d87bd7760a524af77e94a94fd40e3fb32e95af14ab7668d5c036044df7ea65"
+  },
+  {
+    "file": "v2b_one.evidence.jsonl",
+    "records": 71,
+    "bound_spec": "MEASUREMENT_SPEC.v1.md",
+    "script_hash": "af014f237389ab49cb3480317a45fa6af5f75fe9d09b92bfdd179c3bf44ecb24"
+  },
+  {
+    "file": "v3_one.evidence.jsonl",
+    "records": 195,
+    "bound_spec": "MEASUREMENT_SPEC.v1.md",
+    "script_hash": "6f1a922baa72830313bceabc6e8d34f9264f9a9425a3e81ef70645266e0c33e7"
+  },
+  {
+    "file": "v4_one.evidence.jsonl",
+    "records": 195,
+    "bound_spec": "MEASUREMENT_SPEC.v1.1.md",
+    "script_hash": "133a06f0a35d86cd946348985efd03c4e512f0c4a1ac7b11921e6e20469b4593"
+  },
+  {
+    "file": "v5_one.evidence.jsonl",
+    "records": 301,
+    "bound_spec": "MEASUREMENT_SPEC.v1.1.md",
+    "script_hash": "c2165638a7903442ca53e71736b7dbefdc31b3b851b0192a3057d52b876b15ac"
+  },
+  {
+    "file": "v6_one.evidence.jsonl",
+    "records": 21,
+    "bound_spec": "MEASUREMENT_SPEC.v1.2.md",
+    "script_hash": "5f9d14f9175a620d300b4495a6b6c9eea942282af1bd79dc40d5b4873b6383e4"
+  },
+  {
+    "file": "v7_one.evidence.jsonl",
+    "records": 334,
+    "bound_spec": "MEASUREMENT_SPEC.v1.2.md",
+    "script_hash": "d3012075fb5dfdc6a63a72449fe1bbd441d16cee24cba1f2b0e454e97a7850d9",
+    "kinds": {
+      "resource": 4,
+      "rpc_begin": 107,
+      "rpc": 107,
+      "rpc_end": 107,
+      "run_header": 1,
+      "candidate_start": 1,
+      "etherscan": 1,
+      "first_mint_result": 1,
+      "state_validation": 2,
+      "wallet_restore_check": 1,
+      "candidate_end": 1,
+      "run_footer": 1
+    }
+  }
+]
