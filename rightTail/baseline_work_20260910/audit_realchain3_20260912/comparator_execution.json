@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "/home/claude/miniconda3/bin/python3",
+    "-B",
+    "/home/ancillary/rightTail/baseline_work_20260910/realchain_tools/compare_runs.py",
+    "--dir",
+    "/home/ancillary/rightTail/baseline_work_20260910/runs/v119_20260911T233131Z-546793",
+    "--serial",
+    "serial,serial_resume1,serial_resume2",
+    "--parallel",
+    "parallel,parallel_resume1",
+    "--sample",
+    "/home/ancillary/rightTail/baseline_work_20260910/pilot/dev_sample.json",
+    "--pin",
+    "25957369:0xf1589d1aadf7c4a8dafcb66b3efe91142fadfc3a05e1d8c41be51e51c260921e",
+    "--expect-script-sha",
+    "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+    "--expect-evidence-sha",
+    "fc6126be8a8a68c79ef79ea7060a87d8933da6f88d9b3dc5d0c5feebe038966a",
+    "--expect-spec-sha",
+    "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f",
+    "--expect-primitives-sha",
+    "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+    "--expect-runtime-params",
+    "{\"slot_limit\": 32, \"diagnostics\": true, \"cutoff_block\": 24781026, \"amount_wei\": 50000000000000000}",
+    "--out",
+    "/home/ancillary/rightTail/baseline_work_20260910/audit_realchain3_20260912/comparator.json"
+  ],
+  "exit": 0,
+  "stdout": "{\"passed\": true, \"failed\": [], \"required_absent\": [], \"n_checks\": 58}\n",
+  "stderr": ""
+}

@@ -1,0 +1,1 @@
+{"reason": "stop_escalation_forced_exit", "stuck_inflight": 1, "grace_seconds": 0.1, "escalate_after": 0.05, "stop_reason": null}

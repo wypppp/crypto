@@ -1,0 +1,7 @@
+{
+  "exit": 1,
+  "no_child_launched": true,
+  "reason": "run_compare: parallel 在该目录没有先前运行，无从续跑",
+  "completed_checkpoint_records": 6,
+  "old_evidence_unchanged": true
+}

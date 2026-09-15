@@ -1,0 +1,7 @@
+fake_launch: tag=serial_resume1 action=measure
+chain_id=1  finalized 快照 25900000  0x0000000000000000…
+  [1/2] idx=1 state=measured_exit 1.77s rpc=74
+  [2/2] idx=2 state=measured_exit 1.16s rpc=50
+
+-> ../../../../tmp/rta-v117-tools-audit/startup_failure_recovery/runs/offline_20260911T064438Z-2e0e8b/serial_resume1.json
+-> ../../../../tmp/rta-v117-tools-audit/startup_failure_recovery/runs/offline_20260911T064438Z-2e0e8b/serial_resume1.evidence.jsonl  (448 条证据)

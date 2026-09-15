@@ -1,0 +1,3 @@
+{"kind": "driver_start", "attempt_id": "20260912T091537Z-6910cd", "invocation_id": "9fc1ba03", "at": "2026-09-12T09:15:37Z", "sides": ["parallel"], "continue": false, "max_resumes": 0, "manifest_rows_before": 0}
+{"kind": "budget_stop", "attempt_id": "20260912T091537Z-6910cd", "invocation_id": "9fc1ba03", "at": "2026-09-12T09:15:37Z", "side": "parallel", "spent": {"rpc": 0, "etherscan": 0, "wall_s": 0}, "limits": {"rpc": 0, "etherscan": null, "wall_s": null}, "over": {"rpc": [0, 0]}}
+{"kind": "driver_end", "attempt_id": "20260912T091537Z-6910cd", "invocation_id": "9fc1ba03", "at": "2026-09-12T09:15:37Z", "this_call_exit": {"parallel": null}, "last_exit_per_side": {"parallel": null}, "compare_exit": null, "driver_exit": 1}

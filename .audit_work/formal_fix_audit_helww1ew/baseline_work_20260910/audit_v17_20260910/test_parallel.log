@@ -1,0 +1,36 @@
+串行基准
+  [PASS] 退出码 0  — 0
+  [PASS] 6 个候选  — 6
+  [PASS] parallel=1
+
+两路并行（同一冻结样本与状态块）
+  [PASS] 退出码 0  — 0
+  [PASS] parallel=2
+  [PASS] finalized 快照相同  — 快照必须一致
+
+逐字段比对（耗时与请求顺序允许不同）
+  [PASS] 候选集合相同
+  [PASS] 状态/金额/分类/身份全部一致  — []
+  [PASS] 联合可用性判定一致
+
+全局限流与预算共享（不是各分一半）
+  [PASS] 闸门有统计  — {'http_sent': 0, 'http_reserved': 0, 'http_rejected_after_wait': 0, 'max_calls': 99999, 'logical_req
+  [PASS] 两路都经过同一闸门  — {'0': {'rpc': 176}, '1': {'rpc': 173}}
+  [PASS] 闸门逻辑总数 = 各路之和  — 349 vs 349
+  [PASS] 实际发出与逻辑请求分开计  — sent=0 reserved=0 logical=349
+  [PASS] 串行分支也有闸门统计  — {'http_sent': 0, 'http_reserved': 0, 'http_rejected_after_wait': 0, 'max_calls':
+  [PASS] Etherscan 的真实 HTTP 经过闸门并计入实际发出次数  — sent 0→1, 传输命中 1
+  [PASS] Etherscan 同时计入逻辑请求  — 0 → 1
+  [PASS] 按 etherscan 类别单独统计  — [(7, 'etherscan')]
+  [PASS] 实际 HTTP 也归到发起的 worker  — [(7, 'etherscan')]
+
+请求 ID 隔离：每条证据带 worker 标签
+  [PASS] 证据完整  — []
+  [PASS] RPC 证据带 worker 标签且多于一个  — {None, 0, 1}
+  [PASS] 同一候选的调用不跨 worker  — {}
+
+并行下的断点续跑
+  [PASS] 第二次全部跳过  — [1, 2, 3, 4, 6, 5]
+  [PASS] resumed=True
+
+通过 23 / 失败 0

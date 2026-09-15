@@ -1,0 +1,3 @@
+{"name": "active_candidate_finishes_after_sigterm", "exit": 3, "state": "measured_exit", "checkpoint_completed": true, "rpc_after_signal": 16, "not_started": [{"index": 2, "reason": "signal"}]}
+{"name": "no_hard_memory_enforcement", "limit_kb": 1, "stopping": true, "allocated_after_stop_bytes": 8388608, "peak_kb": 37844}
+{"name": "precondition_return_leaks_governor", "exit": 2, "changed_signal_handlers": [15, 2], "watchdogs_alive": [true], "http_gate_still_installed": true}

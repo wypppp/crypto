@@ -1,0 +1,1989 @@
+{
+  "started_at": "2026-09-11T23:54:18.529416+00:00",
+  "finished_at": "2026-09-11T23:56:16.506825+00:00",
+  "resources": {
+    "limits": {
+      "hard_requested": true,
+      "hard_problems": [],
+      "soft_thresholds": {
+        "max_rss_kb": 2097152.0,
+        "max_cpu_s": null,
+        "max_wall_s": 3600.0,
+        "poll_s": 0.25,
+        "kind": "cooperative soft thresholds: set a stop flag; they do NOT prevent further allocation or execution"
+      },
+      "hard_backstop": {
+        "hard_rss_kb": 8388608.0,
+        "hard_cpu_s": 3600.0,
+        "applied": {
+          "RLIMIT_AS": {
+            "bytes": 8589934592,
+            "readback": 8589934592,
+            "verified": true,
+            "note": "限的是地址空间，不等于 RSS；作为兜底偏保守。越界为任意位置的 MemoryError"
+          },
+          "RLIMIT_CPU": {
+            "soft_s": 3600,
+            "hard_s": 3605,
+            "readback": [
+              3600,
+              3605
+            ],
+            "verified": true,
+            "note": "软限发 SIGXCPU（可捕获→有序停机），硬限 SIGKILL"
+          }
+        },
+        "kind": "kernel-enforced RLIMIT; independent of any in-process check"
+      },
+      "stop_grace": {
+        "grace_calls": 16,
+        "grace_seconds": 15.0,
+        "kind": "upper bound on work after a stop is requested"
+      }
+    },
+    "final": {
+      "rss_kb": 61160,
+      "rss_peak_kb": 85224,
+      "cpu_s": 11.28,
+      "wall_s": 117.972
+    },
+    "watchdog_observations": 468,
+    "stopped": false,
+    "stop_reason": null,
+    "stop_detail": {},
+    "stop_latency_s": null,
+    "requests_refused_or_graced_after_stop": 0,
+    "winddown_http_requests": 0,
+    "winddown_logical_requests": 0,
+    "absolute_deadline_closures": 0,
+    "escalations": 0,
+    "pending_inflight": 0,
+    "backstop_armed": false,
+    "deadline_basis": "absolute wall-clock deadline on the whole response (socket timeout alone is a per-read inactivity timeout, not a completion deadline)",
+    "peak_basis": "kernel VmHWM (measured high-water mark, not a sample)"
+  },
+  "parallel": 2,
+  "gate_stats": {
+    "http_sent": 213,
+    "http_reserved": 213,
+    "http_rejected_after_wait": 0,
+    "max_calls": 4000,
+    "logical_requests": 213,
+    "http_sent_per_worker": {
+      "0": {
+        "rpc": 107,
+        "etherscan": 1
+      },
+      "1": {
+        "rpc": 104,
+        "etherscan": 1
+      }
+    },
+    "http_reserved_per_worker": {
+      "0": {
+        "rpc": 107,
+        "etherscan": 1
+      },
+      "1": {
+        "rpc": 104,
+        "etherscan": 1
+      }
+    },
+    "logical_per_worker": {
+      "0": {
+        "rpc": 107,
+        "etherscan": 1
+      },
+      "1": {
+        "rpc": 104,
+        "etherscan": 1
+      }
+    },
+    "interval_s": 0.3333333333333333,
+    "elapsed_s": 117.97,
+    "note": "http_reserved 是预算口径，占用后即使请求未发出也不退还；只有 http_sent 可当作实际网络调用量。"
+  },
+  "evidence_file": "runs/v119_20260911T233131Z-546793/parallel_resume1.evidence.jsonl",
+  "run_id": "41f793cb8de94d45a7031cb6e66fae8d",
+  "chain_id": 1,
+  "sample_file": "pilot/dev_sample.json",
+  "finalized_snapshot": {
+    "number": 25957369,
+    "hash": "0xf1589d1aadf7c4a8dafcb66b3efe91142fadfc3a05e1d8c41be51e51c260921e",
+    "timestamp": 1789168343
+  },
+  "sample_sha256": "0e37d131a3da408a530ec5d73780088087eae4f4ad6bcfcca93e7400ed7e9cfa",
+  "package_script_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "spec": {
+    "path": "MEASUREMENT_SPEC.v1.19.md",
+    "sha256": "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f"
+  },
+  "slot_limit": 32,
+  "diagnostics": true,
+  "total_elapsed_s": 114.5,
+  "rpc_calls": 211,
+  "rpc_calls_by_tap": [
+    2,
+    105,
+    104
+  ],
+  "results": [
+    {
+      "index": 477926,
+      "pair": "0xf01468992b2adb46445d80d4aca9f2d1d3f6dd78",
+      "token": "0xa0adaff8b1caba730b619dff69c021daea8d3153",
+      "created_block": 24171295,
+      "trigger": {
+        "first_mint_block": null,
+        "status": "no_mint_by_cutoff",
+        "supply_at_cutoff": 0,
+        "detail": {
+          "range": [
+            24171295,
+            24781026
+          ],
+          "supply_at_cutoff": 0,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24171295,
+              24781026
+            ]
+          ],
+          "supply_before": null,
+          "supply_at_block": null,
+          "supply_basis": {
+            "24781026": "call"
+          }
+        }
+      },
+      "entry": null,
+      "exit": null,
+      "model": null,
+      "data": {
+        "first_mint": "no_mint_by_cutoff",
+        "detail": {
+          "range": [
+            24171295,
+            24781026
+          ],
+          "supply_at_cutoff": 0,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24171295,
+              24781026
+            ]
+          ],
+          "supply_before": null,
+          "supply_at_block": null,
+          "supply_basis": {
+            "24781026": "call"
+          }
+        }
+      },
+      "state": "no_mint_by_cutoff",
+      "validation_status": "not_applicable",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 1.95,
+      "rpc_calls": 1,
+      "etherscan_calls": 1,
+      "carried_from_checkpoint": {
+        "attempt": 1,
+        "at": "2026-09-11T23:48:07Z",
+        "result_sha256": "16e8f7fcd1fc72ac85d2bdfcb911f4513ac338b8aeeab022a7be1c20d881d007",
+        "evidence_file": "/home/ancillary/rightTail/baseline_work_20260910/runs/v119_20260911T233131Z-546793/parallel.evidence.jsonl",
+        "evidence_run_id": "a51aee1e55d8485190f4f973ad4f65ad"
+      }
+    },
+    {
+      "index": 478595,
+      "pair": "0x614b89a5553bafddddf24dc9bee5822ebd799a86",
+      "token": "0x53129729c2fa7e076f697569176af908298bf46b",
+      "created_block": 24188628,
+      "trigger": {
+        "first_mint_block": 24188628,
+        "status": "ok",
+        "supply_at_cutoff": 64926147498017752575,
+        "detail": {
+          "range": [
+            24188628,
+            24781026
+          ],
+          "supply_at_cutoff": 64926147498017752575,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24188628,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 279642629082191258102577,
+          "supply_basis": {
+            "24781026": "call",
+            "24188627": "no_code_at_block",
+            "24188628": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24188629,
+        "entry_ts": 1767859235,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 3713168547887793494308710768,
+        "eth_debit": 50000000000000000,
+        "base_fee": 46125334,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24403612,
+        "exit_ts": 1770451235,
+        "base_fee": 98442006,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 3713168547887793494308710768,
+        "token_after": 0,
+        "cash_in": 21870350350051,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 35,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "simulated_completion_under_injection",
+        "holding_state_basis": "none_beyond_injection"
+      },
+      "data": null,
+      "state_validation": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x53129729c2fa7e076f697569176af908298bf46b",
+            "code_keccak256": "0x8ba2b2cf80caca9f0d113d7f3115ea25e9c434aac377d2dc35bea27d79bab19c"
+          },
+          "pair": {
+            "address": "0x614b89a5553bafddddf24dc9bee5822ebd799a86",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24188629": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24188629": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x53129729c2fa7e076f697569176af908298bf46b",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x614b89a5553bafddddf24dc9bee5822ebd799a86"
+        }
+      },
+      "blocks": {
+        "entry": {
+          "number": 24188629,
+          "hash": "0x3e87f8f0df6a1646abe0a9484e3c2e7ccfae490740dfb1aa67ad804dd1db4bc1",
+          "parent_hash": "0x8c74bc9ad53cc59435cd6917a1418fa0b26f8ca18d39059ba7a71b08e3b5e78a",
+          "timestamp": 1767859235,
+          "prev_number": 24188628,
+          "prev_hash": "0x8c74bc9ad53cc59435cd6917a1418fa0b26f8ca18d39059ba7a71b08e3b5e78a",
+          "prev_timestamp": 1767859223,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24403612,
+          "hash": "0x49c3aa6ad2773007ae3b919c1f52af81148ce9ea03691f239dc9ad68814b4e8b",
+          "parent_hash": "0x7701d712b46efec1e5ab4e51dfd3d9a0f919c383c58f39d8b3c8ac14faef64b5",
+          "timestamp": 1770451235,
+          "prev_number": 24403611,
+          "prev_hash": "0x7701d712b46efec1e5ab4e51dfd3d9a0f919c383c58f39d8b3c8ac14faef64b5",
+          "prev_timestamp": 1770451223,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 1770451235
+        }
+      },
+      "state_validation_exit": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x53129729c2fa7e076f697569176af908298bf46b",
+            "code_keccak256": "0x8ba2b2cf80caca9f0d113d7f3115ea25e9c434aac377d2dc35bea27d79bab19c"
+          },
+          "pair": {
+            "address": "0x614b89a5553bafddddf24dc9bee5822ebd799a86",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24403612": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24403612": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x53129729c2fa7e076f697569176af908298bf46b",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x614b89a5553bafddddf24dc9bee5822ebd799a86"
+        }
+      },
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 21870350350051,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 46125334,
+        "base_fee_exit": 98442006,
+        "G_by_scenario": {
+          "swap120000_tip0": 27192281400000,
+          "swap120000_tip100000000": 61192281400000,
+          "swap120000_tip1000000000": 367192281400000,
+          "swap150000_tip0": 31529301600000,
+          "swap150000_tip100000000": 71529301600000,
+          "swap150000_tip1000000000": 431529301600000,
+          "swap200000_tip0": 38757668600000,
+          "swap200000_tip100000000": 88757668600000,
+          "swap200000_tip1000000000": 538757668600000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "persisted": [],
+        "reorged_blocks": []
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 108.04,
+      "rpc_calls": 105,
+      "etherscan_calls": 1,
+      "carried_from_checkpoint": {
+        "attempt": 1,
+        "at": "2026-09-11T23:49:53Z",
+        "result_sha256": "ad4520bb004724a28a418672679032b1662917e47e09d6001037b63e1953a7db",
+        "evidence_file": "/home/ancillary/rightTail/baseline_work_20260910/runs/v119_20260911T233131Z-546793/parallel.evidence.jsonl",
+        "evidence_run_id": "a51aee1e55d8485190f4f973ad4f65ad"
+      }
+    },
+    {
+      "index": 479353,
+      "pair": "0xd803874babcb1fba49a0359adb445ab97471c8c6",
+      "token": "0x875ae8017eec90899ab87cb30d611cae8956b374",
+      "created_block": 24212104,
+      "trigger": {
+        "first_mint_block": 24212104,
+        "status": "ok",
+        "supply_at_cutoff": 1000000000000000000000,
+        "detail": {
+          "range": [
+            24212104,
+            24781026
+          ],
+          "supply_at_cutoff": 1000000000000000000000,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24212104,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 1000000000000000000000,
+          "supply_basis": {
+            "24781026": "call",
+            "24212103": "no_code_at_block",
+            "24212104": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24212105,
+        "entry_ts": 1768142159,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 99979883511431539824704505951,
+        "eth_debit": 50000000000000000,
+        "base_fee": 36549986,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24427009,
+        "exit_ts": 1770734159,
+        "base_fee": 117411806,
+        "stage": 20,
+        "classification": "execution_reverted_unknown",
+        "token_before": 99979883511431539824704505951,
+        "token_after": 99979883511431539824704505951,
+        "cash_in": 0,
+        "reason": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 35,
+        "slot_status": "ok",
+        "slot": 7,
+        "holding_state": "undetermined",
+        "holding_state_basis": "none_beyond_injection",
+        "diagnostics": {
+          "size_probe": {
+            "stage": 20,
+            "note": "minimum-unit revert does NOT exclude a size-related mechanism (rounding to zero or coexisting limits remain possible)"
+          },
+          "identity_probe": {
+            "identity": "CALLER",
+            "stage": 20,
+            "classification": "execution_reverted_unknown",
+            "reason": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000",
+            "token_before": 99979883511431539824704505951,
+            "token_after": 99979883511431539824704505951,
+            "note": "record only; both virtual identities lack real purchase history, so agreement does NOT exclude missing-history as a common cause"
+          }
+        },
+        "diagnostics_note": "diagnostic calls are NOT transaction attempts"
+      },
+      "data": null,
+      "state_validation": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x875ae8017eec90899ab87cb30d611cae8956b374",
+            "code_keccak256": "0x4782685f46b235ca8e3c69335a5c8e4b73bed6749e357224d3f23f027a1aa57b"
+          },
+          "pair": {
+            "address": "0xd803874babcb1fba49a0359adb445ab97471c8c6",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24212105": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24212105": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x875ae8017eec90899ab87cb30d611cae8956b374",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0xd803874babcb1fba49a0359adb445ab97471c8c6"
+        }
+      },
+      "blocks": {
+        "entry": {
+          "number": 24212105,
+          "hash": "0x651f6af6aa7191bd69af693ec9cf730f972da605ef0824fc18054e4186ef5fe9",
+          "parent_hash": "0x1338dba95c392fb0cde2f156fdf3ef18304bd22a629dc13d145279ff0e90de8e",
+          "timestamp": 1768142159,
+          "prev_number": 24212104,
+          "prev_hash": "0x1338dba95c392fb0cde2f156fdf3ef18304bd22a629dc13d145279ff0e90de8e",
+          "prev_timestamp": 1768142147,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24427009,
+          "hash": "0xbba00c13368326c1c05214ce1c61d19560bff3e72c812166c5c4e3d654959855",
+          "parent_hash": "0x8e656a195108e79f94541bb90daf19832cd84c141a446bacd9a7bae254b320fc",
+          "timestamp": 1770734159,
+          "prev_number": 24427008,
+          "prev_hash": "0x8e656a195108e79f94541bb90daf19832cd84c141a446bacd9a7bae254b320fc",
+          "prev_timestamp": 1770734147,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 1770734159
+        }
+      },
+      "state_validation_exit": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x875ae8017eec90899ab87cb30d611cae8956b374",
+            "code_keccak256": "0x4782685f46b235ca8e3c69335a5c8e4b73bed6749e357224d3f23f027a1aa57b"
+          },
+          "pair": {
+            "address": "0xd803874babcb1fba49a0359adb445ab97471c8c6",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24427009": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24427009": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x875ae8017eec90899ab87cb30d611cae8956b374",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0xd803874babcb1fba49a0359adb445ab97471c8c6"
+        }
+      },
+      "state": "execution_reverted_unknown",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": null,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 36549986,
+        "base_fee_exit": 117411806,
+        "G_by_scenario": {
+          "swap120000_tip0": 30216595640000,
+          "swap120000_tip100000000": 64216595640000,
+          "swap120000_tip1000000000": 370216595640000,
+          "swap150000_tip0": 34835449400000,
+          "swap150000_tip100000000": 74835449400000,
+          "swap150000_tip1000000000": 434835449400000,
+          "swap200000_tip0": 42533539000000,
+          "swap200000_tip100000000": 92533539000000,
+          "swap200000_tip1000000000": 542533539000000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "persisted": [],
+        "reorged_blocks": []
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 108.34,
+      "rpc_calls": 106,
+      "etherscan_calls": 1,
+      "carried_from_checkpoint": {
+        "attempt": 1,
+        "at": "2026-09-11T23:49:55Z",
+        "result_sha256": "60413c3ebc9e26cca13b9c091beb94e1629ab0f3054d344fde0f5f7750d79bde",
+        "evidence_file": "/home/ancillary/rightTail/baseline_work_20260910/runs/v119_20260911T233131Z-546793/parallel.evidence.jsonl",
+        "evidence_run_id": "a51aee1e55d8485190f4f973ad4f65ad"
+      }
+    },
+    {
+      "index": 480842,
+      "pair": "0x7c67070bead03f21abe3b363db35523561131de4",
+      "token": "0x21716e723e2de689caaa7e185d5c5bad0fc94672",
+      "created_block": 24257452,
+      "trigger": {
+        "first_mint_block": 24257452,
+        "status": "ok",
+        "supply_at_cutoff": 52935775853115728067,
+        "detail": {
+          "range": [
+            24257452,
+            24781026
+          ],
+          "supply_at_cutoff": 52935775853115728067,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24257452,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 242487113059642821093842,
+          "supply_basis": {
+            "24781026": "call",
+            "24257451": "no_code_at_block",
+            "24257452": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24257453,
+        "entry_ts": 1768688891,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 4311319644643172324527857857,
+        "eth_debit": 50000000000000000,
+        "base_fee": 35851817,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24472368,
+        "exit_ts": 1771280891,
+        "base_fee": 37015561,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 4311319644643172324527857857,
+        "token_after": 0,
+        "cash_in": 11194254527540,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 35,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "simulated_completion_under_injection",
+        "holding_state_basis": "none_beyond_injection"
+      },
+      "data": null,
+      "state_validation": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x21716e723e2de689caaa7e185d5c5bad0fc94672",
+            "code_keccak256": "0x603d926e35ef88342860fec3fd424ce5d670bebbaab6ce2f757a7ac52840c13c"
+          },
+          "pair": {
+            "address": "0x7c67070bead03f21abe3b363db35523561131de4",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24257453": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24257453": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x21716e723e2de689caaa7e185d5c5bad0fc94672",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x7c67070bead03f21abe3b363db35523561131de4"
+        }
+      },
+      "blocks": {
+        "entry": {
+          "number": 24257453,
+          "hash": "0x75675a410ca3b9954290200736b34767d3b131d2d807a60398cf6d1237e8124f",
+          "parent_hash": "0x9c505ecde68bce3b50b8ac5d19daca810e798c5a6c33fef0f458f7807f06877a",
+          "timestamp": 1768688891,
+          "prev_number": 24257452,
+          "prev_hash": "0x9c505ecde68bce3b50b8ac5d19daca810e798c5a6c33fef0f458f7807f06877a",
+          "prev_timestamp": 1768688879,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24472368,
+          "hash": "0xcce27d6e1d9669f3668f947dfd4ec4c5dd528fb40999843e50ec8a668aeb92be",
+          "parent_hash": "0x8c771d36fae462c4a01b26148eb643f2294ed9e2a341c222a91841bd80ab472b",
+          "timestamp": 1771280891,
+          "prev_number": 24472367,
+          "prev_hash": "0x8c771d36fae462c4a01b26148eb643f2294ed9e2a341c222a91841bd80ab472b",
+          "prev_timestamp": 1771280879,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 1771280891
+        }
+      },
+      "state_validation_exit": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x21716e723e2de689caaa7e185d5c5bad0fc94672",
+            "code_keccak256": "0x603d926e35ef88342860fec3fd424ce5d670bebbaab6ce2f757a7ac52840c13c"
+          },
+          "pair": {
+            "address": "0x7c67070bead03f21abe3b363db35523561131de4",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24472368": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24472368": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x21716e723e2de689caaa7e185d5c5bad0fc94672",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x7c67070bead03f21abe3b363db35523561131de4"
+        }
+      },
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 11194254527540,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 35851817,
+        "base_fee_exit": 37015561,
+        "G_by_scenario": {
+          "swap120000_tip0": 12445641460000,
+          "swap120000_tip100000000": 46445641460000,
+          "swap120000_tip1000000000": 352445641460000,
+          "swap150000_tip0": 14631662800000,
+          "swap150000_tip100000000": 54631662800000,
+          "swap150000_tip1000000000": 414631662800000,
+          "swap200000_tip0": 18275031700000,
+          "swap200000_tip100000000": 68275031700000,
+          "swap200000_tip1000000000": 518275031700000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "persisted": [],
+        "reorged_blocks": []
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 110.35,
+      "rpc_calls": 104,
+      "etherscan_calls": 1
+    },
+    {
+      "index": 482755,
+      "pair": "0x5430db15eb8714f56b45f758ad93ea0d7b1912e3",
+      "token": "0xcf5157fb2c94cc2c00f11582248935abba35fea4",
+      "created_block": 24321972,
+      "trigger": {
+        "first_mint_block": 24321972,
+        "status": "ok",
+        "supply_at_cutoff": 453230456448587700423,
+        "detail": {
+          "range": [
+            24321972,
+            24781026
+          ],
+          "supply_at_cutoff": 453230456448587700423,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24321972,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 1943193248238579075163367,
+          "supply_basis": {
+            "24781026": "call",
+            "24321971": "no_code_at_block",
+            "24321972": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24321973,
+        "entry_ts": 1769466335,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 276633599018667839120092990891,
+        "eth_debit": 50000000000000000,
+        "base_fee": 52279459,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24536894,
+        "exit_ts": 1772058335,
+        "base_fee": 102743152,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 276633599018667839120092990891,
+        "token_after": 0,
+        "cash_in": 644875193331,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 35,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "simulated_completion_under_injection",
+        "holding_state_basis": "none_beyond_injection"
+      },
+      "data": null,
+      "state_validation": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0xcf5157fb2c94cc2c00f11582248935abba35fea4",
+            "code_keccak256": "0xd5af9e3adaf4a78175ed2eeac97acba330de2d0e27a2356c3068fd93809b1f78"
+          },
+          "pair": {
+            "address": "0x5430db15eb8714f56b45f758ad93ea0d7b1912e3",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24321973": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24321973": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xcf5157fb2c94cc2c00f11582248935abba35fea4",
+          "getPair": "0x5430db15eb8714f56b45f758ad93ea0d7b1912e3"
+        }
+      },
+      "blocks": {
+        "entry": {
+          "number": 24321973,
+          "hash": "0xac7db33b9d895745ade848c3cde60a794f3805c504a4f27779a94f6004c1830a",
+          "parent_hash": "0xd88b3b4574e9c8b832ac166071e07cf6c7d08cf1b1e25d2b7bff08cc9ca4ff06",
+          "timestamp": 1769466335,
+          "prev_number": 24321972,
+          "prev_hash": "0xd88b3b4574e9c8b832ac166071e07cf6c7d08cf1b1e25d2b7bff08cc9ca4ff06",
+          "prev_timestamp": 1769466323,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24536894,
+          "hash": "0xeb458f5bb6ebe30469dfd6e46c7b126464677fc734f66151b052bbcfd8bed353",
+          "parent_hash": "0xfe278cada7a07101a47057d24b3b579d4f685f45e9c5e42c5c7e7efd1e5feaf5",
+          "timestamp": 1772058335,
+          "prev_number": 24536893,
+          "prev_hash": "0xfe278cada7a07101a47057d24b3b579d4f685f45e9c5e42c5c7e7efd1e5feaf5",
+          "prev_timestamp": 1772058323,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 1772058335
+        }
+      },
+      "state_validation_exit": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0xcf5157fb2c94cc2c00f11582248935abba35fea4",
+            "code_keccak256": "0xd5af9e3adaf4a78175ed2eeac97acba330de2d0e27a2356c3068fd93809b1f78"
+          },
+          "pair": {
+            "address": "0x5430db15eb8714f56b45f758ad93ea0d7b1912e3",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24536894": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24536894": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xcf5157fb2c94cc2c00f11582248935abba35fea4",
+          "getPair": "0x5430db15eb8714f56b45f758ad93ea0d7b1912e3"
+        }
+      },
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 644875193331,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 52279459,
+        "base_fee_exit": 102743152,
+        "G_by_scenario": {
+          "swap120000_tip0": 28877028520000,
+          "swap120000_tip100000000": 62877028520000,
+          "swap120000_tip1000000000": 368877028520000,
+          "swap150000_tip0": 33527706850000,
+          "swap150000_tip100000000": 73527706850000,
+          "swap150000_tip1000000000": 433527706850000,
+          "swap200000_tip0": 41278837400000,
+          "swap200000_tip100000000": 91278837400000,
+          "swap200000_tip1000000000": 541278837400000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "persisted": [],
+        "reorged_blocks": []
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 109.84,
+      "rpc_calls": 104,
+      "etherscan_calls": 1,
+      "carried_from_checkpoint": {
+        "attempt": 1,
+        "at": "2026-09-11T23:51:45Z",
+        "result_sha256": "a841a93507141dbf5236ad2ca00e251d4314c9f570fec8a956a2f398dffad004",
+        "evidence_file": "/home/ancillary/rightTail/baseline_work_20260910/runs/v119_20260911T233131Z-546793/parallel.evidence.jsonl",
+        "evidence_run_id": "a51aee1e55d8485190f4f973ad4f65ad"
+      }
+    },
+    {
+      "index": 488019,
+      "pair": "0x4eb4053213e7274fbbdd6e8e7a186371674a893b",
+      "token": "0x1756554146b5b934aa93bd2ffaca2ef084159910",
+      "created_block": 24521973,
+      "trigger": {
+        "first_mint_block": 24521973,
+        "status": "ok",
+        "supply_at_cutoff": 1000000000000000000,
+        "detail": {
+          "range": [
+            24521973,
+            24781026
+          ],
+          "supply_at_cutoff": 1000000000000000000,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24521973,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 1000000000000000000,
+          "supply_basis": {
+            "24781026": "call",
+            "24521972": "no_code_at_block",
+            "24521973": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24521974,
+        "entry_ts": 1771878479,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 17399173572007222,
+        "eth_debit": 50000000000000000,
+        "base_fee": 40330021,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24736951,
+        "exit_ts": 1774470479,
+        "base_fee": 133173069,
+        "stage": 20,
+        "classification": "execution_reverted_unknown",
+        "token_before": 17399173572007222,
+        "token_after": 17399173572007222,
+        "cash_in": 0,
+        "reason": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 35,
+        "slot_status": "ok",
+        "slot": 1,
+        "holding_state": "undetermined",
+        "holding_state_basis": "none_beyond_injection",
+        "diagnostics": {
+          "size_probe": {
+            "stage": 20,
+            "note": "minimum-unit revert does NOT exclude a size-related mechanism (rounding to zero or coexisting limits remain possible)"
+          },
+          "identity_probe": {
+            "identity": "CALLER",
+            "stage": 20,
+            "classification": "execution_reverted_unknown",
+            "reason": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000",
+            "token_before": 17399173572007222,
+            "token_after": 17399173572007222,
+            "note": "record only; both virtual identities lack real purchase history, so agreement does NOT exclude missing-history as a common cause"
+          }
+        },
+        "diagnostics_note": "diagnostic calls are NOT transaction attempts"
+      },
+      "data": null,
+      "state_validation": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x1756554146b5b934aa93bd2ffaca2ef084159910",
+            "code_keccak256": "0xe8e606e4eaf8db75738254ad8f96a6554e9fa9522ad210a6fa4c683359fd48ab"
+          },
+          "pair": {
+            "address": "0x4eb4053213e7274fbbdd6e8e7a186371674a893b",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24521974": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24521974": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x1756554146b5b934aa93bd2ffaca2ef084159910",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x4eb4053213e7274fbbdd6e8e7a186371674a893b"
+        }
+      },
+      "blocks": {
+        "entry": {
+          "number": 24521974,
+          "hash": "0x13414b57593e1f0f53faa82f90de7bde40e437dc1ee2f828fbfc706a6e2235ec",
+          "parent_hash": "0x9bd0131d7912c3a6dd9db95457afc462a65dd1e3bcb6a0f73fb4c9229a8f821b",
+          "timestamp": 1771878479,
+          "prev_number": 24521973,
+          "prev_hash": "0x9bd0131d7912c3a6dd9db95457afc462a65dd1e3bcb6a0f73fb4c9229a8f821b",
+          "prev_timestamp": 1771878467,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24736951,
+          "hash": "0x5b73cd2b04a14457bf6a508d09cc3801eaa7690023da0589ed540814a9453c2a",
+          "parent_hash": "0xbd2cf6197421b907c0aba9277a39e04677cd0d8b7645d23108a43cf33827052e",
+          "timestamp": 1774470479,
+          "prev_number": 24736950,
+          "prev_hash": "0xbd2cf6197421b907c0aba9277a39e04677cd0d8b7645d23108a43cf33827052e",
+          "prev_timestamp": 1774470467,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 1774470479
+        }
+      },
+      "state_validation_exit": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0x1756554146b5b934aa93bd2ffaca2ef084159910",
+            "code_keccak256": "0xe8e606e4eaf8db75738254ad8f96a6554e9fa9522ad210a6fa4c683359fd48ab"
+          },
+          "pair": {
+            "address": "0x4eb4053213e7274fbbdd6e8e7a186371674a893b",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24736951": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24736951": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0x1756554146b5b934aa93bd2ffaca2ef084159910",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x4eb4053213e7274fbbdd6e8e7a186371674a893b"
+        }
+      },
+      "state": "execution_reverted_unknown",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": null,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 40330021,
+        "base_fee_exit": 133173069,
+        "G_by_scenario": {
+          "swap120000_tip0": 34137677700000,
+          "swap120000_tip100000000": 68137677700000,
+          "swap120000_tip1000000000": 374137677700000,
+          "swap150000_tip0": 39342770400000,
+          "swap150000_tip100000000": 79342770400000,
+          "swap150000_tip1000000000": 439342770400000,
+          "swap200000_tip0": 48017924900000,
+          "swap200000_tip100000000": 98017924900000,
+          "swap200000_tip1000000000": 548017924900000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "persisted": [],
+        "reorged_blocks": []
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 113.91,
+      "rpc_calls": 106,
+      "etherscan_calls": 1,
+      "carried_from_checkpoint": {
+        "attempt": 1,
+        "at": "2026-09-11T23:52:29Z",
+        "result_sha256": "57a2393968c58c188234374c329e52f0e581e933441239908d8f49ad5e90970b",
+        "evidence_file": "/home/ancillary/rightTail/baseline_work_20260910/runs/v119_20260911T233131Z-546793/parallel.evidence.jsonl",
+        "evidence_run_id": "a51aee1e55d8485190f4f973ad4f65ad"
+      }
+    },
+    {
+      "index": 491410,
+      "pair": "0x101e034b651aa46ff7d68e97f7a5a87c27c12ea7",
+      "token": "0xe46d35541198b1d56f5237a221699b18602ea990",
+      "created_block": 24667890,
+      "trigger": {
+        "first_mint_block": 24667890,
+        "status": "ok",
+        "supply_at_cutoff": 765876264101059907,
+        "detail": {
+          "range": [
+            24667890,
+            24781026
+          ],
+          "supply_at_cutoff": 765876264101059907,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24667890,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 4582575694955840006588,
+          "supply_basis": {
+            "24781026": "call",
+            "24667889": "no_code_at_block",
+            "24667890": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24667891,
+        "entry_ts": 1773637907,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 997094804508095305336306,
+        "eth_debit": 50000000000000000,
+        "base_fee": 85151808,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24883034,
+        "exit_ts": 1776229907,
+        "base_fee": 126583027,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 997094804508095305336306,
+        "token_after": 0,
+        "cash_in": 14874468531643,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 35,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "simulated_completion_under_injection",
+        "holding_state_basis": "none_beyond_injection"
+      },
+      "data": null,
+      "state_validation": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0xe46d35541198b1d56f5237a221699b18602ea990",
+            "code_keccak256": "0x56c7a0adc9e752da268d1073c983fb25bd94ad6629a63091e982d379d6c44145"
+          },
+          "pair": {
+            "address": "0x101e034b651aa46ff7d68e97f7a5a87c27c12ea7",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24667891": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24667891": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xe46d35541198b1d56f5237a221699b18602ea990",
+          "getPair": "0x101e034b651aa46ff7d68e97f7a5a87c27c12ea7"
+        }
+      },
+      "blocks": {
+        "entry": {
+          "number": 24667891,
+          "hash": "0xb46ae48e2542729e0fa3d1d0a04bc0c0e1dd7dd50507b8f23f23294f835ec957",
+          "parent_hash": "0x13554c3303e27af0b5f9565e9d1df73e68690ead6b7a27b43634d902c59f8b54",
+          "timestamp": 1773637907,
+          "prev_number": 24667890,
+          "prev_hash": "0x13554c3303e27af0b5f9565e9d1df73e68690ead6b7a27b43634d902c59f8b54",
+          "prev_timestamp": 1773637895,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24883034,
+          "hash": "0x45902d832bb751470998337ef037de89964162249a4d3e9f164ba2e87f139a80",
+          "parent_hash": "0x56ce8d84df7cfd366c2966bbb353775ad360ed01d7bd30e7c1a4cf9f1ef85383",
+          "timestamp": 1776229907,
+          "prev_number": 24883033,
+          "prev_hash": "0x56ce8d84df7cfd366c2966bbb353775ad360ed01d7bd30e7c1a4cf9f1ef85383",
+          "prev_timestamp": 1776229895,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 1776229907
+        }
+      },
+      "state_validation_exit": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0xe46d35541198b1d56f5237a221699b18602ea990",
+            "code_keccak256": "0x56c7a0adc9e752da268d1073c983fb25bd94ad6629a63091e982d379d6c44145"
+          },
+          "pair": {
+            "address": "0x101e034b651aa46ff7d68e97f7a5a87c27c12ea7",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24883034": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24883034": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "token1": "0xe46d35541198b1d56f5237a221699b18602ea990",
+          "getPair": "0x101e034b651aa46ff7d68e97f7a5a87c27c12ea7"
+        }
+      },
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 14874468531643,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 85151808,
+        "base_fee_exit": 126583027,
+        "G_by_scenario": {
+          "swap120000_tip0": 38066482900000,
+          "swap120000_tip100000000": 72066482900000,
+          "swap120000_tip1000000000": 378066482900000,
+          "swap150000_tip0": 44418527950000,
+          "swap150000_tip100000000": 84418527950000,
+          "swap150000_tip1000000000": 444418527950000,
+          "swap200000_tip0": 55005269700000,
+          "swap200000_tip100000000": 105005269700000,
+          "swap200000_tip1000000000": 555005269700000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "persisted": [],
+        "reorged_blocks": []
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 114.47,
+      "rpc_calls": 105,
+      "etherscan_calls": 1
+    },
+    {
+      "index": 491473,
+      "pair": "0x0b1bf50699ac941990e461109fd14e171c1b41a4",
+      "token": "0xb39ba550610084d094c893086b9eb7616ebbd363",
+      "created_block": 24673145,
+      "trigger": {
+        "first_mint_block": 24673146,
+        "status": "ok",
+        "supply_at_cutoff": 134245371035352,
+        "detail": {
+          "range": [
+            24673145,
+            24781026
+          ],
+          "supply_at_cutoff": 134245371035352,
+          "rejected": [],
+          "pages": 1,
+          "truncated": false,
+          "queried": [
+            [
+              24673145,
+              24781026
+            ]
+          ],
+          "supply_before": 0,
+          "supply_at_block": 632455532033675866,
+          "supply_basis": {
+            "24781026": "call",
+            "24673145": "call",
+            "24673146": "call"
+          }
+        }
+      },
+      "entry": {
+        "entry_block": 24673147,
+        "entry_ts": 1773701363,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 18133455549106485,
+        "eth_debit": 50000000000000000,
+        "base_fee": 113519760,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        }
+      },
+      "exit": {
+        "exit_block": 24888309,
+        "exit_ts": 1776293363,
+        "base_fee": 41477244,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 18133455549106485,
+        "token_after": 0,
+        "cash_in": 854801562738,
+        "reason": "0x",
+        "attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        }
+      },
+      "model": {
+        "slot_scan_calls": 35,
+        "slot_status": "ok",
+        "slot": 3,
+        "holding_state": "simulated_completion_under_injection",
+        "holding_state_basis": "none_beyond_injection"
+      },
+      "data": null,
+      "state_validation": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0xb39ba550610084d094c893086b9eb7616ebbd363",
+            "code_keccak256": "0x13ca14e988c6aa3fd09e9b8c49e7168c2703832925cb99b2108d626d69ddc811"
+          },
+          "pair": {
+            "address": "0x0b1bf50699ac941990e461109fd14e171c1b41a4",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24673147": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24673147": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xb39ba550610084d094c893086b9eb7616ebbd363",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x0b1bf50699ac941990e461109fd14e171c1b41a4"
+        }
+      },
+      "blocks": {
+        "entry": {
+          "number": 24673147,
+          "hash": "0x3c72515fe3e1356d44f4df18edbb920a47525954ca2115436ec1b8f8f3bd6b7f",
+          "parent_hash": "0x6194c8b165f8891ab98177e23d65c4d7cffbc80e09e5857c22b48cb3a7c8a2fd",
+          "timestamp": 1773701363,
+          "prev_number": 24673146,
+          "prev_hash": "0x6194c8b165f8891ab98177e23d65c4d7cffbc80e09e5857c22b48cb3a7c8a2fd",
+          "prev_timestamp": 1773701351,
+          "failures": [],
+          "parent_links": true
+        },
+        "exit": {
+          "number": 24888309,
+          "hash": "0xc80877676f75dd1bff751d42b8a103bc91a3e5c4b240dbd6ff3d1a33d559ccf0",
+          "parent_hash": "0x68a778e47026dc56aace6d0a1c731e40563a9850f8408fe67d8804b522c5a755",
+          "timestamp": 1776293363,
+          "prev_number": 24888308,
+          "prev_hash": "0x68a778e47026dc56aace6d0a1c731e40563a9850f8408fe67d8804b522c5a755",
+          "prev_timestamp": 1776293351,
+          "failures": [],
+          "parent_links": true,
+          "bracket_target": 1776293363
+        }
+      },
+      "state_validation_exit": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "blocks": {},
+        "identity": {
+          "factory": {
+            "address": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+            "code_keccak256": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0"
+          },
+          "router": {
+            "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+            "code_keccak256": "0xa324bc7db3d091b6f1a2d526e48a9c7039e03b3cc35f7d44b15ac7a1544c11d2"
+          },
+          "weth": {
+            "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "code_keccak256": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+          },
+          "token": {
+            "address": "0xb39ba550610084d094c893086b9eb7616ebbd363",
+            "code_keccak256": "0x13ca14e988c6aa3fd09e9b8c49e7168c2703832925cb99b2108d626d69ddc811"
+          },
+          "pair": {
+            "address": "0x0b1bf50699ac941990e461109fd14e171c1b41a4",
+            "code_keccak256": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+          }
+        },
+        "wallet_clean": {
+          "WALLET@24888309": {
+            "code": "0x",
+            "balance": "0x0"
+          },
+          "CALLER@24888309": {
+            "code": "0x",
+            "balance": "0x0"
+          }
+        },
+        "note": "state validation only; NOT evidence of cross-period holding adequacy",
+        "identity_closure": {
+          "token0": "0xb39ba550610084d094c893086b9eb7616ebbd363",
+          "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "getPair": "0x0b1bf50699ac941990e461109fd14e171c1b41a4"
+        }
+      },
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 854801562738,
+        "entry_attempts": {
+          "swap": 1,
+          "approve": 0,
+          "basis": "buy always attempts swap; no approve"
+        },
+        "exit_attempts": {
+          "swap": 1,
+          "approve": 2,
+          "basis": "reached swap"
+        },
+        "base_fee_entry": 113519760,
+        "base_fee_exit": 41477244,
+        "G_by_scenario": {
+          "swap120000_tip0": 22747364880000,
+          "swap120000_tip100000000": 56747364880000,
+          "swap120000_tip1000000000": 362747364880000,
+          "swap150000_tip0": 27397275000000,
+          "swap150000_tip100000000": 67397275000000,
+          "swap150000_tip1000000000": 427397275000000,
+          "swap200000_tip0": 35147125200000,
+          "swap200000_tip100000000": 85147125200000,
+          "swap200000_tip1000000000": 535147125200000
+        },
+        "main_scenario": "swap150000_tip100000000",
+        "excluded": "HTTP retries and size/identity probes are NOT transaction attempts"
+      },
+      "restore_check": {
+        "status": "passed",
+        "passed": true,
+        "failures": [],
+        "unavailable": [],
+        "persisted": [],
+        "reorged_blocks": []
+      },
+      "validation_status": "passed",
+      "validation_passed": true,
+      "economic_eligible": false,
+      "economic_eligible_reason": "holding-state adequacy unproven; see PILOT_ERRATA_20260910.md E1",
+      "elapsed_s": 103.52,
+      "rpc_calls": 102,
+      "etherscan_calls": 1,
+      "carried_from_checkpoint": {
+        "attempt": 1,
+        "at": "2026-09-11T23:54:13Z",
+        "result_sha256": "f487a40dd36a1c75ece43f95d55c0614cbb91ee2582db1058b71a521a5503ee8",
+        "evidence_file": "/home/ancillary/rightTail/baseline_work_20260910/runs/v119_20260911T233131Z-546793/parallel.evidence.jsonl",
+        "evidence_run_id": "a51aee1e55d8485190f4f973ad4f65ad"
+      }
+    }
+  ],
+  "acceptance": {
+    "declared": 8,
+    "n": 8,
+    "missing_candidates": [],
+    "duplicate_results": [],
+    "unexpected_results": [],
+    "sample_field_mismatch": [],
+    "worker_errors": [],
+    "not_started": [],
+    "shutdown": {
+      "stopped": false
+    },
+    "set_complete": true,
+    "skipped_already_completed": [
+      477926,
+      478595,
+      479353,
+      482755,
+      488019,
+      491473
+    ],
+    "carried_from_checkpoint": [
+      477926,
+      478595,
+      479353,
+      482755,
+      488019,
+      491473
+    ],
+    "checkpoint_results_unusable": [],
+    "evidence_chain_problems": [],
+    "evidence_chain_action": "none",
+    "resumed": true,
+    "checkpoint": "runs/v119_20260911T233131Z-546793/parallel.checkpoint.jsonl",
+    "incomplete": [],
+    "complete": 8,
+    "evidence_records": 685,
+    "gate": {
+      "http_sent": 213,
+      "http_reserved": 213,
+      "http_rejected_after_wait": 0,
+      "max_calls": 4000,
+      "logical_requests": 213,
+      "http_sent_per_worker": {
+        "0": {
+          "rpc": 107,
+          "etherscan": 1
+        },
+        "1": {
+          "rpc": 104,
+          "etherscan": 1
+        }
+      },
+      "http_reserved_per_worker": {
+        "0": {
+          "rpc": 107,
+          "etherscan": 1
+        },
+        "1": {
+          "rpc": 104,
+          "etherscan": 1
+        }
+      },
+      "logical_per_worker": {
+        "0": {
+          "rpc": 107,
+          "etherscan": 1
+        },
+        "1": {
+          "rpc": 104,
+          "etherscan": 1
+        }
+      },
+      "interval_s": 0.3333333333333333,
+      "elapsed_s": 117.97,
+      "note": "http_reserved 是预算口径，占用后即使请求未发出也不退还；只有 http_sent 可当作实际网络调用量。"
+    },
+    "validation_failed": [],
+    "validation_unavailable": [],
+    "validation_passed": true,
+    "process_completed": true,
+    "meaning": "process_completed 仅表示本次采集流程走完且每个候选落到已定义状态；它【不】代表测量语义已验证，也【不】代表正式实验验收通过。",
+    "measurement_semantics_verified": false,
+    "economic_results_eligible": false
+  }
+}

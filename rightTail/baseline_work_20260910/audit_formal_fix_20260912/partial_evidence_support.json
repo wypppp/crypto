@@ -1,0 +1,148 @@
+{
+  "completed_checkpoint_results": [
+    {
+      "candidate": 484611,
+      "problems": [
+        {
+          "reason": "evidence_incomplete",
+          "path": "/home/ancillary/rightTail/baseline_work_20260910/runs/formal_sub02_20260912T011723Z-17018c/parallel.evidence.jsonl",
+          "diag": {
+            "bad_lines": [],
+            "mid_file_corruption": false,
+            "empty": false,
+            "unmatched_rpc_begin": [
+              "('be7785b9658d4e889d6ef81a569b81a5', 699, 0)"
+            ],
+            "orphan_rpc_end": [],
+            "duplicate_pending_id": [],
+            "runs_without_footer": [
+              "be7785b9658d4e889d6ef81a569b81a5"
+            ],
+            "runs_without_header": []
+          }
+        }
+      ]
+    },
+    {
+      "candidate": 485028,
+      "problems": [
+        {
+          "reason": "evidence_incomplete",
+          "path": "/home/ancillary/rightTail/baseline_work_20260910/runs/formal_sub02_20260912T011723Z-17018c/parallel.evidence.jsonl",
+          "diag": {
+            "bad_lines": [],
+            "mid_file_corruption": false,
+            "empty": false,
+            "unmatched_rpc_begin": [
+              "('be7785b9658d4e889d6ef81a569b81a5', 699, 0)"
+            ],
+            "orphan_rpc_end": [],
+            "duplicate_pending_id": [],
+            "runs_without_footer": [
+              "be7785b9658d4e889d6ef81a569b81a5"
+            ],
+            "runs_without_header": []
+          }
+        }
+      ]
+    },
+    {
+      "candidate": 485942,
+      "problems": [
+        {
+          "reason": "evidence_incomplete",
+          "path": "/home/ancillary/rightTail/baseline_work_20260910/runs/formal_sub02_20260912T011723Z-17018c/parallel.evidence.jsonl",
+          "diag": {
+            "bad_lines": [],
+            "mid_file_corruption": false,
+            "empty": false,
+            "unmatched_rpc_begin": [
+              "('be7785b9658d4e889d6ef81a569b81a5', 699, 0)"
+            ],
+            "orphan_rpc_end": [],
+            "duplicate_pending_id": [],
+            "runs_without_footer": [
+              "be7785b9658d4e889d6ef81a569b81a5"
+            ],
+            "runs_without_header": []
+          }
+        }
+      ]
+    },
+    {
+      "candidate": 486632,
+      "problems": [
+        {
+          "reason": "evidence_incomplete",
+          "path": "/home/ancillary/rightTail/baseline_work_20260910/runs/formal_sub02_20260912T011723Z-17018c/parallel.evidence.jsonl",
+          "diag": {
+            "bad_lines": [],
+            "mid_file_corruption": false,
+            "empty": false,
+            "unmatched_rpc_begin": [
+              "('be7785b9658d4e889d6ef81a569b81a5', 699, 0)"
+            ],
+            "orphan_rpc_end": [],
+            "duplicate_pending_id": [],
+            "runs_without_footer": [
+              "be7785b9658d4e889d6ef81a569b81a5"
+            ],
+            "runs_without_header": []
+          }
+        }
+      ]
+    },
+    {
+      "candidate": 487245,
+      "problems": [
+        {
+          "reason": "evidence_incomplete",
+          "path": "/home/ancillary/rightTail/baseline_work_20260910/runs/formal_sub02_20260912T011723Z-17018c/parallel.evidence.jsonl",
+          "diag": {
+            "bad_lines": [],
+            "mid_file_corruption": false,
+            "empty": false,
+            "unmatched_rpc_begin": [
+              "('be7785b9658d4e889d6ef81a569b81a5', 699, 0)"
+            ],
+            "orphan_rpc_end": [],
+            "duplicate_pending_id": [],
+            "runs_without_footer": [
+              "be7785b9658d4e889d6ef81a569b81a5"
+            ],
+            "runs_without_header": []
+          }
+        }
+      ]
+    },
+    {
+      "candidate": 487304,
+      "problems": [
+        {
+          "reason": "evidence_incomplete",
+          "path": "/home/ancillary/rightTail/baseline_work_20260910/runs/formal_sub02_20260912T011723Z-17018c/parallel.evidence.jsonl",
+          "diag": {
+            "bad_lines": [],
+            "mid_file_corruption": false,
+            "empty": false,
+            "unmatched_rpc_begin": [
+              "('be7785b9658d4e889d6ef81a569b81a5', 699, 0)"
+            ],
+            "orphan_rpc_end": [],
+            "duplicate_pending_id": [],
+            "runs_without_footer": [
+              "be7785b9658d4e889d6ef81a569b81a5"
+            ],
+            "runs_without_header": []
+          }
+        }
+      ]
+    }
+  ],
+  "evidence_complete": false,
+  "evidence_time_field_note": "mono_s is implemented with time.time() - t0, not monotonic; observed timestamp span is not a verified process-elapsed/active-time bound",
+  "first_at": "2026-09-12T03:10:33Z",
+  "last_at": "2026-09-12T07:58:05Z",
+  "first_mono_s": 0.001,
+  "last_mono_s": 17252.055
+}

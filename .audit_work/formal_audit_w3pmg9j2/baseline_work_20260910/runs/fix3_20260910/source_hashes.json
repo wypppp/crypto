@@ -1,0 +1,11 @@
+{
+  "pilot_measure.py": "5aa7df20040bad916eba0a6330b50de75cb8c092aef16311707456171ece56ac",
+  "evidence.py": "6602381f2f4aa0ac29d119db430f0cdc713fe4fff02e8b7b9f9a57d47dddef0b",
+  "audit_flow.py": "5073a90e1e8535557a7e6f1cf9f4aa17ebec041c0297cd62ca206969aa3859be",
+  "test_audit_followup.py": "ea321fb4c3417b64e0c38a1d469b9a192ebbfcc0b207e2be2e1713e053c0573c",
+  "test_parallel.py": "8957fd5b6797b5d46bcf802b6032b9f6a76c2ef75c930d79c58bafaa5da6048b",
+  "MEASUREMENT_SPEC.md": "8db26ea5f80df498bc3a469fcfa10c7c5e0a9b2b1081153518c53e11f7d57b36",
+  "MEASUREMENT_SPEC.v1.7.md": "b839046b0022c9875aa34ca8082a4b85f8240c48b03a463c26ec4d76dc41069f",
+  "MEASUREMENT_SPEC.v1.6.md": "30853652fa452509d48d2477e9dc93d6366d018d285f5cbeb677e2c8362d7df8",
+  "_prefix_snapshot_evidence": "60827b660e8fe051a493f6368f59926dddda888bf78aba457bd6d4696c5d9f25"
+}

@@ -1,0 +1,14 @@
+{
+  "pilot_measure.py": "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+  "evidence.py": "fc6126be8a8a68c79ef79ea7060a87d8933da6f88d9b3dc5d0c5feebe038966a",
+  "MEASUREMENT_SPEC.v1.19.md": "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f",
+  "test_realchain_tools.py": "d725d3094de900fcc2ddc913250d642d82c096b97a8b9dd0b88727ab85bf11ab",
+  "test_ledger.py": "877d1021ce6e0cf46928f686f110b3d8edb99638510bb247416a47e267b0afee",
+  "realchain_tools/compare_runs.py": "cb3b71213e4eaed251b8ed4e2af7760c18b37910d3248a9fbc43b2e15a2cbf62",
+  "realchain_tools/run_compare.py": "42b9f08e9f43a948e82fd000c7f6caca7282e0efac07b97ebffcd781fa5e1346",
+  "realchain_tools/fake_launch.py": "382040db913d4aeb96cef4b7d84b2db1b2c0fc4f71212408a487e44636364aad",
+  "runs/formal_20260912/update_state.py": "b9983c81dc82fd9b53c5d7a41c4a2da54652e61f660f598ece29fdc47467afe9",
+  "runs/formal_20260912/campaign.json": "4561a72608570b964ab21268931a96b598bc8eabe0fbde6155327f21f0c314a1",
+  "runs/freeze_plan_20260912/BUDGET_300_v2.md": "a45e1e3b82b59058a4e882952f870ae31c8655451828df36129ed5b61815f8ce",
+  "runs/freeze_plan_20260912/budget_model_v2.py": "c43ada38b3d4cb6b05bbfe28cea9cd21152782f12405ee52d49901b2b4b4984d"
+}

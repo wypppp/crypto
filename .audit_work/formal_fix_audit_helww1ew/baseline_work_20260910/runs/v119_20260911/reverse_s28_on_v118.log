@@ -1,0 +1,30 @@
+
+28 续跑与比较器共用同一套完整绑定核验
+  [PASS] 无改动正对照：首跑退出 0、改动后原证据结构仍完整  — rc=0 ev=True
+  [FAIL] 无改动正对照：续跑退出 0、跳过 [1,2]、证据链无问题、处置 none  — rc=0 skipped=[1, 2] probs=[]
+  [PASS] 无改动正对照：比较器同样通过（退出 0）  — rc=0 []
+  [PASS] run_binding.runtime_params.slot_limit 2→999：首跑退出 0、改动后原证据结构仍完整  — rc=0 ev=True
+  [FAIL] run_binding.runtime_params.slot_limit 2→999：续跑退出 1（旧版退出 0）  — rc=0
+  [FAIL] run_binding.runtime_params.slot_limit 2→999：证据链问题逐候选点名 evidence_run_binding_mismatch  — []
+  [FAIL] run_binding.runtime_params.slot_limit 2→999：验收不通过、处置写明带出但阻断且需新检查点  — True None
+  [PASS] run_binding.runtime_params.slot_limit 2→999：结果与失败历史照常保留（两条带出结果、检查点原有记录一行不少）  — n=2
+  [FAIL] run_binding.runtime_params.slot_limit 2→999：比较器同样拒绝，且点名 run_binding_matches:first 与结果回溯  — rc=1 ['run_binding_matches:first']
+  [FAIL] run_binding.runtime_params.slot_limit 2→999：两个入口给出的绑定问题原因相同（同一套规则）  — resume=[] comparator=[]
+  [PASS] run_binding.primitives_sha256 改成全 0：首跑退出 0、改动后原证据结构仍完整  — rc=0 ev=True
+  [FAIL] run_binding.primitives_sha256 改成全 0：续跑退出 1（旧版退出 0）  — rc=0
+  [FAIL] run_binding.primitives_sha256 改成全 0：证据链问题逐候选点名 evidence_run_binding_mismatch  — []
+  [FAIL] run_binding.primitives_sha256 改成全 0：验收不通过、处置写明带出但阻断且需新检查点  — True None
+  [PASS] run_binding.primitives_sha256 改成全 0：结果与失败历史照常保留（两条带出结果、检查点原有记录一行不少）  — n=2
+  [FAIL] run_binding.primitives_sha256 改成全 0：比较器同样拒绝，且点名 run_binding_matches:first 与结果回溯  — rc=1 ['run_binding_matches:first']
+  [FAIL] run_binding.primitives_sha256 改成全 0：两个入口给出的绑定问题原因相同（同一套规则）  — resume=[] comparator=[]
+  [PASS] run_binding 缺席（kind 改名，seq 保持连续）：首跑退出 0、改动后原证据结构仍完整  — rc=0 ev=True
+  [FAIL] run_binding 缺席（kind 改名，seq 保持连续）：续跑退出 1（旧版退出 0）  — rc=0
+  [FAIL] run_binding 缺席（kind 改名，seq 保持连续）：证据链问题逐候选点名 evidence_run_binding_missing  — []
+  [FAIL] run_binding 缺席（kind 改名，seq 保持连续）：验收不通过、处置写明带出但阻断且需新检查点  — True None
+  [PASS] run_binding 缺席（kind 改名，seq 保持连续）：结果与失败历史照常保留（两条带出结果、检查点原有记录一行不少）  — n=2
+  [FAIL] run_binding 缺席（kind 改名，seq 保持连续）：比较器同样拒绝，且点名 run_binding_matches:first 与结果回溯  — rc=1 ['run_binding_matches:first']
+  [FAIL] run_binding 缺席（kind 改名，seq 保持连续）：两个入口给出的绑定问题原因相同（同一套规则）  — resume=[] comparator=[]
+  [FAIL] 旧版规则常量 = v1.16/v1.17 审核快照脚本与对应规格的真实 hash（防手抄错）  — {}
+  [FAIL] evidence.verify_run_binding 存在（共用规则）  — absent
+
+通过 8 / 失败 18

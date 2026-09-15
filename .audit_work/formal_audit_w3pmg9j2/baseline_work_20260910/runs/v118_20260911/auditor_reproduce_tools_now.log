@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "audit_v117_20260911/reproduce_tools.py", line 141, in <module>
+    if __name__=='__main__': main()
+  File "audit_v117_20260911/reproduce_tools.py", line 123, in main
+    results={n:comparator(root,n) for n in ['baseline','primitives_changed','runtime_changed','bindings_deleted','known_field_control']}
+  File "audit_v117_20260911/reproduce_tools.py", line 123, in <dictcomp>
+    results={n:comparator(root,n) for n in ['baseline','primitives_changed','runtime_changed','bindings_deleted','known_field_control']}
+  File "audit_v117_20260911/reproduce_tools.py", line 51, in comparator
+    p=run(cmd,d);rep=json.loads((d/'report.json').read_text())
+  File "/home/claude/miniconda3/lib/python3.8/pathlib.py", line 1236, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/home/claude/miniconda3/lib/python3.8/pathlib.py", line 1222, in open
+    return io.open(self, mode, buffering, encoding, errors, newline,
+  File "/home/claude/miniconda3/lib/python3.8/pathlib.py", line 1078, in _opener
+    return self._accessor.open(self, flags, mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-1000/-home-ancillary/cbc24b24-4d8e-41a2-94ab-1a5a5c8e751a/scratchpad/rr2/baseline/report.json'

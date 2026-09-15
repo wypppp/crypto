@@ -1,0 +1,7 @@
+fake_launch: tag=parallel action=measure
+chain_id=1  finalized 快照 25900000  0x0000000000000000…
+  [2/2] idx=2 state=measured_exit 2.9s rpc=104
+  [1/2] idx=1 state=measured_exit 2.94s rpc=101
+
+-> audit_formal_fix_20260912/fake_runs/rpc_cap_one_20260912T091529Z-2fd4de/parallel.json
+-> audit_formal_fix_20260912/fake_runs/rpc_cap_one_20260912T091529Z-2fd4de/parallel.evidence.jsonl  (671 条证据)

@@ -1,0 +1,95 @@
+{
+  "same_snapshot": true,
+  "candidates": [
+    {
+      "index": 477926,
+      "same_fields": true,
+      "states": [
+        "no_mint_by_cutoff",
+        "no_mint_by_cutoff"
+      ]
+    },
+    {
+      "index": 478595,
+      "same_fields": true,
+      "states": [
+        "measured_exit",
+        "measured_exit"
+      ]
+    },
+    {
+      "index": 479353,
+      "same_fields": true,
+      "states": [
+        "execution_reverted_unknown",
+        "execution_reverted_unknown"
+      ]
+    },
+    {
+      "index": 480842,
+      "same_fields": true,
+      "states": [
+        "measured_exit",
+        "measured_exit"
+      ]
+    },
+    {
+      "index": 482755,
+      "same_fields": true,
+      "states": [
+        "measured_exit",
+        "measured_exit"
+      ]
+    },
+    {
+      "index": 488019,
+      "same_fields": true,
+      "states": [
+        "execution_reverted_unknown",
+        "execution_reverted_unknown"
+      ]
+    },
+    {
+      "index": 491410,
+      "same_fields": true,
+      "states": [
+        "measured_exit",
+        "measured_exit"
+      ]
+    },
+    {
+      "index": 491473,
+      "same_fields": false,
+      "states": [
+        "state_validation_failed",
+        "data_missing"
+      ]
+    }
+  ],
+  "startup_runs": [
+    {
+      "tag": "parallel",
+      "actual_exit": 1,
+      "abort_count": 0,
+      "complete": false,
+      "rpc_errors": [
+        {
+          "kind": "transport",
+          "message": "<urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+        }
+      ]
+    },
+    {
+      "tag": "resume_serial",
+      "actual_exit": 1,
+      "abort_count": 0,
+      "complete": false,
+      "rpc_errors": [
+        {
+          "kind": "transport",
+          "message": "<urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+        }
+      ]
+    }
+  ]
+}

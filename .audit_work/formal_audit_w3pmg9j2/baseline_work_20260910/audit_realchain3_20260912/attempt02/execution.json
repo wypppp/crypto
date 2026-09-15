@@ -1,0 +1,9 @@
+{
+  "argv": [
+    "/home/claude/miniconda3/bin/python3",
+    "-B",
+    "/home/ancillary/rightTail/baseline_work_20260910/audit_realchain3_20260912/verify_delivery.py"
+  ],
+  "cwd": "/home/ancillary/rightTail/baseline_work_20260910",
+  "exit": 1
+}

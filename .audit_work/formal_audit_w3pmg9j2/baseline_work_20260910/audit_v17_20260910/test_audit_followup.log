@@ -1,0 +1,128 @@
+1 P0 续跑：结果缺失不得判成功，已完成候选必须交付得出来
+  [PASS] 首次跑通  — rc=0 n=2
+  [PASS] 续跑仍交付全部候选  — [1, 2]
+  [PASS] 带出来的结果有出处标记  — 2 条
+  [PASS] 带出来的结果与首跑逐字段一致
+  [PASS] 正常续跑退出 0  — 0
+  [PASS] carried 记入验收  — [1, 2]
+  [PASS] 删掉旧结果后续跑退出非零  — 1
+  [PASS] 交付不再是空的  — 2
+  [PASS] 证据链缺失被点名  — [{'reason': 'evidence_file_missing', 'path': '/tmp/rta-followup-fix-daa9nyti/first.jsonl', 'candidate': 1}, {'reason': '
+  [PASS] 证据链问题写明是文件缺失  — [{'reason': 'evidence_file_missing', 'path': '/tmp/rta-followup-fix-daa9nyti/fir
+  [PASS] validation_passed=False
+
+2 P0 检查点中段损坏必须阻断（尾部半行才是中断的正常后果）
+  [PASS] 中段损坏被拒绝复用  — 检查点中段损坏：/tmp/rta-followup-fix-daa9nyti/shared.ck 第 [2] 行无法解析 —— 拒绝复用。请核对文件来源，或改用新的检查点重新测量。
+  [PASS] 尾部半行被隔离而非阻断
+  [PASS] 隔离后已完成记录仍可读  — {1, 2}
+  [PASS] 已完成的尝试里内联存有结果  — 检查点未持久化结果，无从校验
+  [PASS] 被篡改的结果不算可交付  — [{'candidate': 1, 'reason': 'result_hash_mismatch', 'attempt': 1, 'checkpoint': '2f78f5dbf4291760e0f31d34a06d5
+  [PASS] 其余候选不受牵连  — [2]
+
+3 P0 全局预算：启动请求与串行分支都在预算内
+  [PASS] 实际请求不超过上限  — 上限 2，实际 2
+  [PASS] 超预算时退出非零  — 1
+  [PASS] 串行分支同样受同一预算  — 上限 2，实际 2
+  [PASS] 串行也产出闸门统计
+  [PASS] 实际发出/预留/逻辑三个口径分开报  — ['elapsed_s', 'http_rejected_after_wait', 'http_reserved', 'http_reserved_per_worker', 'http_sent', 'http_sent_per_worker', 'interval_s', 'logical_per_worker', 'logical_requests', 'max_calls', 'note']
+  [PASS] 受控链下实际发出为 0（不拿预留或逻辑数冒充实际）  — sent=0 reserved=0 logical=126
+
+4 P1 买入成本：槽位查询抛异常也不得丢失已知买入腿
+  [PASS] 退出非零  — 1
+  [PASS] 买入腿仍在
+  [PASS] 成本表存在
+  [PASS] 买入 gas 非零  — {'swap120000_tip0': 120000000000000, 'swap120000_tip100000000': 132000
+  [PASS] 回款保持未知
+  [PASS] 退出腿标为未尝试
+  [PASS] 成本标注为部分
+
+5 P1 样本唯一性：一候选恰好一条结果
+  [PASS] 重复候选编号被拒绝测量  — no-output
+  [PASS] 拒绝时不产出结果文件
+  [PASS] 声明数量与条目数不符被拒  — no-output
+
+6/7 P1 证据完整性：空文件与孤立记录不得判为完整
+  [PASS] 空文件不算完整
+  [PASS] 空文件被点名  — True
+  [PASS] 孤立 rpc_end 不算完整
+  [PASS] 孤立 end 被点名  — ["('r', 1, None)"]
+  [PASS] 缺运行头被点名  — ['r']
+  [PASS] 重复 pending_id 不算完整
+  [PASS] 重复 pending_id 被点名  — ["('r', 1, None)", "('r', 1, None)"]
+  [PASS] 正常运行仍判完整  — {'empty': False, 'orphan_rpc_end': [], 'duplicate_pending_id': [], 'runs_without_header': []}
+  [PASS] 支持排除进行中的运行（否则同文件续跑必误判）  — {'bad_lines': [], 'tail_truncation_only': True, 'ignored_runs': ['fd2e66443a514437b2087419
+
+8 P1 Mint 元数据规范性
+  [PASS] 规范事件仍然通过  — None
+  [PASS] transactionHash='0x' 被拒且理由明确  — tx_hash_shape:2
+  [PASS] transactionHash 非十六进制 被拒且理由明确  — tx_hash_shape:66
+  [PASS] blockHash='WRONG' 被拒且理由明确  — block_hash_shape:WRONG
+  [PASS] logIndex='garbage' 被拒且理由明确  — log_index_unparsable:garbage
+  [PASS] logIndex 为负 被拒且理由明确  — log_index_unparsable:-1
+  [PASS] sender topic 非十六进制 被拒且理由明确  — sender_topic_not_hex
+  [PASS] 审查方原反例事件被拒  — tx_hash_shape:2
+
+9 汇总里的规格标识必须是实际绑定的那一份
+  [PASS] 规格不再写死 v1 (draft)  — {'path': 'MEASUREMENT_SPEC.v1.7.md', 'sha256': 'b839046b0022c9875aa34ca8082a4b85f8240c48b03a463c26ec4d76dc41069f'}
+  [PASS] 规格带路径与 sha256  — {'path': 'MEASUREMENT_SPEC.v1.7.md', 'sha256': 'b839046b0022c9875aa34ca8082a4b85f8240c48b03a463c26ec4d76dc41069f'}
+
+10 Etherscan 计数按候选归集（并行下不得串味）
+  [PASS] 按候选归集而非全局差值  — {11: 3, 22: 1}
+  [PASS] 全局计数仍是总和  — {'etherscan': 4}
+  [PASS] 与证据逐条统计一致  — {11: 3, 22: 1}
+
+11 区块缓存命中留有证据（缓存口径可查）
+  [PASS] 缓存命中确实产生了记录  — 15 条
+  [PASS] 命中记录写明取用双方  — 15 条
+  [PASS] 命中记录带块号与块 hash  — 15 条
+
+12 同快照对照的机制：--pin-finalized
+  [PASS] 串行确实改用了指定快照（而非默认 finalized）  — {'number': 25899500, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b31ec', 'timestamp': 310794000}
+  [PASS] 并行绑到同一个指定快照  — {'number': 25899500, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b31ec', 'timestamp': 310794000}
+  [PASS] 与不指定时的默认快照确实不同  — {'number': 25899500, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b31ec', 'timestamp': 310794000} vs {'number': 25900000, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b33e0', 'timestamp': 310800000}
+  [PASS] 两次是各自独立的检查点（不是靠跳过凑齐）  — [] / []
+  [PASS] 两边都真的测了全部候选
+  [PASS] 指定块的 hash 不符即拒绝（重组保护）  — no-output
+  [PASS] 格式非法即拒绝  — no-output
+
+13 P0 续跑证据必须绑定到具体运行、候选与结果 hash
+  [PASS] 正常续跑仍然通过  — rc=0 []
+  [PASS] 正常续跑仍交付全部候选  — 2
+  [PASS] 换成另一运行的完整证据被拒  — 1
+  [PASS] 理由是 run_id 不在该文件里  — ['evidence_run_id_absent']
+  [PASS] validation_passed=False
+  [PASS] 候选结果不在证据里被拒  — 1
+  [PASS] 理由是缺该候选的 candidate_result  — ['candidate_result_absent_in_evidence', 'evidence_incomplete']
+  [PASS] 证据里的结果被改过即拒  — 1
+  [PASS] 理由是结果 hash 不符  — ['candidate_result_hash_mismatch']
+  [PASS] 运行头绑定不符即拒  — 1
+  [PASS] 理由是绑定不符  — ['evidence_binding_mismatch']
+  [PASS] 不变量：检查点结果 hash == 证据里 candidate_result 的 hash  — 2f636649a934120c… vs 2f636649a934120c…
+  [PASS] 不变量：检查点里不含未脱敏的凭据串  — 检查点 13245 字节
+  [PASS] 运行头缺 script_sha256 即拒  — rc=1 ['evidence_binding_field_missing']
+  [PASS] 运行头缺 evidence_module_sha256 即拒  — rc=1 ['evidence_binding_field_missing']
+  [PASS] 运行头缺 spec_sha256 即拒  — rc=1 ['evidence_binding_field_missing']
+  [PASS] 运行头缺 sample_sha256 即拒  — rc=1 ['evidence_binding_field_missing']
+  [PASS] 运行头缺 universe_sha256_now 即拒  — rc=1 ['evidence_binding_field_missing']
+  [PASS] 运行头缺 finalized_snapshot 即拒  — rc=1 ['evidence_binding_field_missing']
+
+14 P1 实际 HTTP 次数不得把未发出的请求算进去
+  [PASS] 第二次确实被拒
+  [PASS] 传输层只被调用一次  — 1
+  [PASS] http_sent 等于传输实际次数  — sent=1 传输=1
+  [PASS] 未发出的那次记在 rejected_after_wait  — 1
+  [PASS] 预留仍为 2（并发安全，不退还）  — 2
+  [PASS] 恒等式 reserved == sent + rejected  — {'http_sent': 1, 'http_reserved': 2, 'http_rejected_after_wait': 1, 'max_calls': 10, 'logical_requests': 0, 'http_sent_per_worker': {'None': {'unattri
+  [PASS] stats 不再有含混的 http_calls 字段  — ['elapsed_s', 'http_rejected_after_wait', 'http_reserved', 'http_reserved_per_worker', 'http_sent', 'http_sent_per_worker', 'interval_s', 'logical_per_worker', 'logical_requests', 'max_calls', 'note']
+  [PASS] 正常情况下 sent == reserved == 实际传输次数  — {'http_sent': 3, 'http_reserved': 3, 'http_rejected_after_wait': 0, 'max_calls': 10, 'logical_requests': 0, 'http_sent_per_worker': {'None': {'unattri
+
+15 P1 诊断失败不得抹掉已到达的卖出阶段
+  [PASS] 卖出到达的阶段仍在  — 20
+  [PASS] 卖出 swap 记为 1（不是未尝试）  — {'swap': 1, 'approve': 2, 'basis': 'reached swap'}
+  [PASS] 卖出 approve 记为 2  — {'swap': 1, 'approve': 2, 'basis': 'reached swap'}
+  [PASS] basis 不再写成未尝试  — reached swap
+  [PASS] 诊断成功与诊断失败的卖出计次一致  — {'swap': 1, 'approve': 2, 'basis': 'reached swap'} vs {'swap': 1, 'approve': 2, 'basis': 'reached swap'}
+  [PASS] 诊断调用本身不计为交易尝试（诊断成功时也只有 1 次 swap）  — {'swap': 1, 'approve': 2, 'basis': 'reached swap'}
+  [PASS] 成本包含卖出腿（大于只算买入腿）  — 440000000000000
+
+通过 99 / 失败 0

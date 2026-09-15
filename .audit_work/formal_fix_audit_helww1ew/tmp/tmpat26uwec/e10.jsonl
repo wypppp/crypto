@@ -1,0 +1,1 @@
+{"seq": 1, "run_id": "fa709001e9d74589ae43495101b850ca", "kind": "abort", "worker": null, "at": "2026-09-12T09:11:28Z", "mono_s": 0.0, "reason": "spec_missing", "spec": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910/NO_SUCH_SPEC.md"}

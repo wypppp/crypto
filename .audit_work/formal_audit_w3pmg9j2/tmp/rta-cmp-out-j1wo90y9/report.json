@@ -1,0 +1,461 @@
+{
+  "mode": "pair",
+  "inputs": {
+    "dir": "/home/ancillary/.audit_work/formal_audit_w3pmg9j2/tmp/rta-cmp-lrbywu_v",
+    "manifest": "/home/ancillary/.audit_work/formal_audit_w3pmg9j2/tmp/rta-cmp-lrbywu_v/runs.jsonl",
+    "serial": [
+      "serial",
+      "serial_resume1"
+    ],
+    "parallel": [
+      "parallel"
+    ],
+    "sample": "/home/ancillary/.audit_work/formal_audit_w3pmg9j2/tmp/rta-drv-nufp7lf1/sample.json",
+    "pin": "25900000:0x00000000000000000000000000000000000000000000000000000000018b33e0",
+    "expect": {
+      "script_sha256": "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+      "evidence_module_sha256": "fc6126be8a8a68c79ef79ea7060a87d8933da6f88d9b3dc5d0c5feebe038966a",
+      "spec_sha256": "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f",
+      "primitives_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+      "runtime_params": {
+        "slot_limit": 32,
+        "diagnostics": true,
+        "cutoff_block": 24781026,
+        "amount_wei": 50000000000000000
+      }
+    }
+  },
+  "runs": {
+    "serial": {
+      "side": "serial",
+      "out": "serial.json",
+      "evidence": "serial.evidence.jsonl",
+      "exit": 2,
+      "wall_s": 0.3,
+      "role": "run"
+    },
+    "serial_resume1": {
+      "side": "serial",
+      "out": "serial_resume1.json",
+      "evidence": "serial_resume1.evidence.jsonl",
+      "exit": 0,
+      "wall_s": 2.7,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    },
+    "parallel": {
+      "side": "parallel",
+      "out": "parallel.json",
+      "evidence": "parallel.evidence.jsonl",
+      "exit": 0,
+      "wall_s": 3.0,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    }
+  },
+  "mismatches": [],
+  "allowed_diffs": [
+    {
+      "candidate": 1,
+      "field": "elapsed_s",
+      "serial": 1.23,
+      "parallel": 2.62
+    },
+    {
+      "candidate": 2,
+      "field": "elapsed_s",
+      "serial": 1.1,
+      "parallel": 2.56
+    },
+    {
+      "candidate": 2,
+      "field": "rpc_calls",
+      "serial": 80,
+      "parallel": 101
+    }
+  ],
+  "candidates": [
+    {
+      "index": 1,
+      "state": "measured_exit",
+      "source": [
+        "serial_resume1",
+        "parallel"
+      ],
+      "rpc": [
+        104,
+        104
+      ],
+      "cache_hits": [
+        7,
+        7
+      ]
+    },
+    {
+      "index": 2,
+      "state": "measured_exit",
+      "source": [
+        "serial_resume1",
+        "parallel"
+      ],
+      "rpc": [
+        80,
+        101
+      ],
+      "cache_hits": [
+        31,
+        10
+      ]
+    }
+  ],
+  "checks": {
+    "manifest_readable": {
+      "ok": true,
+      "detail": null
+    },
+    "chains_declared": {
+      "ok": true,
+      "detail": {
+        "serial": [
+          "serial",
+          "serial_resume1"
+        ],
+        "parallel": [
+          "parallel"
+        ]
+      }
+    },
+    "manifest_entry_unique:serial": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_entry_unique:serial_resume1": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_entry_unique:parallel": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_all_attributed": {
+      "ok": true,
+      "detail": {
+        "unattributed_tags": [],
+        "attempt_ids": [
+          "20260912T081049Z-0d84cb"
+        ]
+      }
+    },
+    "chain_checkpoint_consistent:serial": {
+      "ok": true,
+      "detail": [
+        "../tmp/rta-drv-nufp7lf1/runs/t_20260912T081049Z-0d84cb/serial.checkpoint.jsonl"
+      ]
+    },
+    "chain_checkpoint_consistent:parallel": {
+      "ok": true,
+      "detail": [
+        "../tmp/rta-drv-nufp7lf1/runs/t_20260912T081049Z-0d84cb/parallel.checkpoint.jsonl"
+      ]
+    },
+    "chain_checkpoint_consistent:independent": {
+      "ok": true,
+      "detail": "serial and parallel must use separate checkpoints"
+    },
+    "final_exit_0:serial": {
+      "ok": true,
+      "detail": {
+        "tag": "serial_resume1",
+        "exit": 0
+      }
+    },
+    "final_exit_0:parallel": {
+      "ok": true,
+      "detail": {
+        "tag": "parallel",
+        "exit": 0
+      }
+    },
+    "result_doc_present:serial": {
+      "ok": false,
+      "detail": "serial.json"
+    },
+    "evidence_complete:serial": {
+      "ok": false,
+      "detail": "evidence file missing"
+    },
+    "evidence_attributed:serial": {
+      "ok": false,
+      "detail": "evidence file missing"
+    },
+    "footer_matches_result:serial": {
+      "ok": false,
+      "detail": "evidence file missing"
+    },
+    "run_binding_matches:serial": {
+      "ok": false,
+      "detail": "evidence file missing"
+    },
+    "result_doc_present:serial_resume1": {
+      "ok": true,
+      "detail": "serial_resume1.json"
+    },
+    "evidence_complete:serial_resume1": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:serial_resume1": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "ed26320e0c5e47799b06b4e416b80480",
+        "headers": 1,
+        "runs_in_file": [
+          "ed26320e0c5e47799b06b4e416b80480"
+        ]
+      }
+    },
+    "footer_matches_result:serial_resume1": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:serial_resume1": {
+      "ok": true,
+      "detail": {
+        "doc": 1,
+        "manifest": 1
+      }
+    },
+    "run_binding_matches:serial_resume1": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "result_doc_present:parallel": {
+      "ok": true,
+      "detail": "parallel.json"
+    },
+    "evidence_complete:parallel": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:parallel": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "21e1a8bf24ce487b90beeb0bf597ac61",
+        "headers": 1,
+        "runs_in_file": [
+          "21e1a8bf24ce487b90beeb0bf597ac61"
+        ]
+      }
+    },
+    "footer_matches_result:parallel": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:parallel": {
+      "ok": true,
+      "detail": {
+        "doc": 2,
+        "manifest": 2
+      }
+    },
+    "run_binding_matches:parallel": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "binding_consistent": {
+      "ok": false,
+      "detail": {
+        "serial_resume1": {},
+        "parallel": {}
+      }
+    },
+    "binding_matches_expected": {
+      "ok": true,
+      "detail": {}
+    },
+    "checkpoint_binding:serial": {
+      "ok": true,
+      "detail": {
+        "missing": [],
+        "not_checked": [],
+        "diff": {}
+      }
+    },
+    "checkpoint_binding:parallel": {
+      "ok": true,
+      "detail": {
+        "missing": [],
+        "not_checked": [],
+        "diff": {}
+      }
+    },
+    "sample_well_formed": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "rows": 2,
+        "unique": 2
+      }
+    },
+    "final_results_one_per_candidate:serial": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "unique": 2,
+        "sample_n": 2,
+        "field_mismatch": []
+      }
+    },
+    "final_acceptance_clean:serial": {
+      "ok": true,
+      "detail": {
+        "non_empty": {},
+        "flags": {
+          "set_complete": true,
+          "process_completed": true,
+          "validation_passed": true,
+          "shutdown_stopped": false
+        },
+        "closed": {
+          "measurement_semantics_verified": false,
+          "economic_results_eligible": false
+        },
+        "validation_not_true": []
+      }
+    },
+    "final_results_traced:serial": {
+      "ok": true,
+      "detail": []
+    },
+    "final_results_one_per_candidate:parallel": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "unique": 2,
+        "sample_n": 2,
+        "field_mismatch": []
+      }
+    },
+    "final_acceptance_clean:parallel": {
+      "ok": true,
+      "detail": {
+        "non_empty": {},
+        "flags": {
+          "set_complete": true,
+          "process_completed": true,
+          "validation_passed": true,
+          "shutdown_stopped": false
+        },
+        "closed": {
+          "measurement_semantics_verified": false,
+          "economic_results_eligible": false
+        },
+        "validation_not_true": []
+      }
+    },
+    "final_results_traced:parallel": {
+      "ok": true,
+      "detail": []
+    },
+    "same_snapshot": {
+      "ok": true,
+      "detail": {
+        "serial": {
+          "number": 25900000,
+          "hash": "0x00000000000000000000000000000000000000000000000000000000018b33e0",
+          "timestamp": 310800000
+        },
+        "parallel": {
+          "number": 25900000,
+          "hash": "0x00000000000000000000000000000000000000000000000000000000018b33e0",
+          "timestamp": 310800000
+        }
+      }
+    },
+    "same_candidate_set": {
+      "ok": true,
+      "detail": {
+        "serial_only": [],
+        "parallel_only": []
+      }
+    },
+    "results_identical_except_allowed": {
+      "ok": true,
+      "detail": "0 mismatches"
+    },
+    "rpc_plus_cache_equal": {
+      "ok": true,
+      "detail": [
+        {
+          "candidate": 1,
+          "serial": [
+            104,
+            7
+          ],
+          "parallel": [
+            104,
+            7
+          ],
+          "ok": true
+        },
+        {
+          "candidate": 2,
+          "serial": [
+            80,
+            31
+          ],
+          "parallel": [
+            101,
+            10
+          ],
+          "ok": true
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "passed": false,
+    "required_absent": [],
+    "failed": [
+      "binding_consistent",
+      "evidence_attributed:serial",
+      "evidence_complete:serial",
+      "footer_matches_result:serial",
+      "result_doc_present:serial",
+      "run_binding_matches:serial"
+    ],
+    "n_checks": 43
+  }
+}

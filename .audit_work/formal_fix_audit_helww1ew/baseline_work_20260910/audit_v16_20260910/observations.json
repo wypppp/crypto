@@ -1,0 +1,150 @@
+[
+  {
+    "name": "unrelated_evidence_blocked",
+    "exit": 1,
+    "n": 2,
+    "acceptance": {
+      "declared": 2,
+      "n": 2,
+      "missing_candidates": [],
+      "duplicate_results": [],
+      "unexpected_results": [],
+      "sample_field_mismatch": [],
+      "worker_errors": [],
+      "set_complete": true,
+      "skipped_already_completed": [
+        1,
+        2
+      ],
+      "carried_from_checkpoint": [
+        1,
+        2
+      ],
+      "checkpoint_results_unusable": [],
+      "evidence_chain_problems": [
+        {
+          "reason": "evidence_run_id_absent",
+          "path": "/tmp/rta-v15-ds67yae5/first.jsonl",
+          "want_run_id": "086ef6796f5c4a07a970a607b326a20a",
+          "runs_present": [
+            "02e00394a29a4d158c4d73f5a3cb9d08"
+          ],
+          "candidate": 1
+        },
+        {
+          "reason": "evidence_run_id_absent",
+          "path": "/tmp/rta-v15-ds67yae5/first.jsonl",
+          "want_run_id": "086ef6796f5c4a07a970a607b326a20a",
+          "runs_present": [
+            "02e00394a29a4d158c4d73f5a3cb9d08"
+          ],
+          "candidate": 2
+        }
+      ],
+      "resumed": true,
+      "checkpoint": "/tmp/rta-v15-ds67yae5/shared.ck",
+      "incomplete": [],
+      "complete": 2,
+      "evidence_records": 13,
+      "gate": {
+        "http_sent": 0,
+        "http_reserved": 0,
+        "http_rejected_after_wait": 0,
+        "max_calls": 99999,
+        "logical_requests": 2,
+        "http_sent_per_worker": {},
+        "http_reserved_per_worker": {},
+        "logical_per_worker": {
+          "0": {
+            "rpc": 2
+          }
+        },
+        "interval_s": 0.0001,
+        "elapsed_s": 0.08,
+        "note": "http_reserved \u662f\u9884\u7b97\u53e3\u5f84\uff0c\u5360\u7528\u540e\u5373\u4f7f\u8bf7\u6c42\u672a\u53d1\u51fa\u4e5f\u4e0d\u9000\u8fd8\uff1b\u53ea\u6709 http_sent \u53ef\u5f53\u4f5c\u5b9e\u9645\u7f51\u7edc\u8c03\u7528\u91cf\u3002"
+      },
+      "validation_failed": [],
+      "validation_passed": false,
+      "process_completed": true,
+      "meaning": "process_completed \u4ec5\u8868\u793a\u672c\u6b21\u91c7\u96c6\u6d41\u7a0b\u8d70\u5b8c\u4e14\u6bcf\u4e2a\u5019\u9009\u843d\u5230\u5df2\u5b9a\u4e49\u72b6\u6001\uff1b\u5b83\u3010\u4e0d\u3011\u4ee3\u8868\u6d4b\u91cf\u8bed\u4e49\u5df2\u9a8c\u8bc1\uff0c\u4e5f\u3010\u4e0d\u3011\u4ee3\u8868\u6b63\u5f0f\u5b9e\u9a8c\u9a8c\u6536\u901a\u8fc7\u3002",
+      "measurement_semantics_verified": false,
+      "economic_results_eligible": false
+    }
+  },
+  {
+    "name": "sent_counter_correct",
+    "transport_calls": 1,
+    "stats": {
+      "http_sent": 1,
+      "http_reserved": 2,
+      "http_rejected_after_wait": 1,
+      "max_calls": 10,
+      "logical_requests": 0,
+      "http_sent_per_worker": {
+        "None": {
+          "unattributed": 1
+        }
+      },
+      "http_reserved_per_worker": {
+        "None": {
+          "unattributed": 2
+        }
+      },
+      "logical_per_worker": {},
+      "interval_s": 0.1,
+      "elapsed_s": 0.1,
+      "note": "http_reserved \u662f\u9884\u7b97\u53e3\u5f84\uff0c\u5360\u7528\u540e\u5373\u4f7f\u8bf7\u6c42\u672a\u53d1\u51fa\u4e5f\u4e0d\u9000\u8fd8\uff1b\u53ea\u6709 http_sent \u53ef\u5f53\u4f5c\u5b9e\u9645\u7f51\u7edc\u8c03\u7528\u91cf\u3002"
+    }
+  },
+  {
+    "name": "sell_attempts_preserved",
+    "exit": 1,
+    "state": "data_missing",
+    "sell": {
+      "exit_block": 24356011,
+      "exit_ts": 292272132,
+      "base_fee": 1000000000,
+      "stage": 20,
+      "classification": "simulated_revert",
+      "token_before": 1000000000000000000,
+      "token_after": 1000000000000000000,
+      "cash_in": 1000000000000000,
+      "reason": "0x",
+      "attempts": {
+        "swap": 1,
+        "approve": 2,
+        "basis": "reached swap"
+      }
+    },
+    "cost": {
+      "A_wei": 50000000000000000,
+      "R_wei": null,
+      "entry_attempts": {
+        "swap": 1,
+        "approve": 0,
+        "basis": "buy always attempts swap; no approve"
+      },
+      "exit_attempts": {
+        "swap": 1,
+        "approve": 2,
+        "basis": "reached swap"
+      },
+      "base_fee_entry": 1000000000,
+      "base_fee_exit": 1000000000,
+      "G_by_scenario": {
+        "swap120000_tip0": 340000000000000,
+        "swap120000_tip100000000": 374000000000000,
+        "swap120000_tip1000000000": 680000000000000,
+        "swap150000_tip0": 400000000000000,
+        "swap150000_tip100000000": 440000000000000,
+        "swap150000_tip1000000000": 800000000000000,
+        "swap200000_tip0": 500000000000000,
+        "swap200000_tip100000000": 550000000000000,
+        "swap200000_tip1000000000": 1000000000000000
+      },
+      "main_scenario": "swap150000_tip100000000",
+      "partial": true,
+      "note": "buy leg executed; cost already incurred. later stage aborted, so R_wei and exit cost stay UNKNOWN \u2014 an unknown exit price must not erase the known entry cost"
+    }
+  }
+]

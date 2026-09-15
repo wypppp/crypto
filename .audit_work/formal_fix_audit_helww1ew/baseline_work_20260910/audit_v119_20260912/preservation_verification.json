@@ -1,0 +1,38 @@
+[
+  {
+    "mode": "control",
+    "results_preserved": true,
+    "attempts_preserved": 2,
+    "remeasured_candidates": 0,
+    "evidence_chain_action": "none",
+    "same_per_candidate_reasons": true,
+    "economic_eligible": false
+  },
+  {
+    "mode": "runtime_changed",
+    "results_preserved": true,
+    "attempts_preserved": 2,
+    "remeasured_candidates": 0,
+    "evidence_chain_action": "carried_but_blocked: results and attempt history kept, acceptance fails; not re-measured under this checkpoint - start a new checkpoint to re-measure",
+    "same_per_candidate_reasons": true,
+    "economic_eligible": false
+  },
+  {
+    "mode": "primitives_changed",
+    "results_preserved": true,
+    "attempts_preserved": 2,
+    "remeasured_candidates": 0,
+    "evidence_chain_action": "carried_but_blocked: results and attempt history kept, acceptance fails; not re-measured under this checkpoint - start a new checkpoint to re-measure",
+    "same_per_candidate_reasons": true,
+    "economic_eligible": false
+  },
+  {
+    "mode": "binding_removed",
+    "results_preserved": true,
+    "attempts_preserved": 2,
+    "remeasured_candidates": 0,
+    "evidence_chain_action": "carried_but_blocked: results and attempt history kept, acceptance fails; not re-measured under this checkpoint - start a new checkpoint to re-measure",
+    "same_per_candidate_reasons": true,
+    "economic_eligible": false
+  }
+]

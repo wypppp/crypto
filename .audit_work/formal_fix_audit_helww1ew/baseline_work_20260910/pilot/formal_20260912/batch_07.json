@@ -1,0 +1,131 @@
+{
+  "declared_at": "2026-09-12T00:37:19Z",
+  "seed": 20260910,
+  "n": 20,
+  "universe_sha256": "dd672e3348bd308ebf4d5320f4a449740cec824fbc5bd1c6412c067947180958",
+  "universe_weth_rows": 16044,
+  "purpose": "formal batch 7 of main collection",
+  "parent_sample_sha256": "38d685ed8842c5335855defaa8caa1f56a4ad59d998f74ad38b5fbd03335e93a",
+  "sample": [
+    {
+      "index": 483030,
+      "pair": "0xe0cb30977bcbe5c3b56eccea1b11e207ee21a298",
+      "token": "0x30f8db2e8917a602bc1edea06aed35b551ec094d",
+      "created_block": 24329721
+    },
+    {
+      "index": 483102,
+      "pair": "0x0b5bef74b4f65d3f5adda96bf7a1b43da94d98cb",
+      "token": "0x52073ab0ded1dfca7b34377021873b2e7983f20c",
+      "created_block": 24332802
+    },
+    {
+      "index": 483301,
+      "pair": "0x94130ae6152404d7192784fb77215d5ddc62704a",
+      "token": "0x13a9b627a8b4456f4a348421f5a832d8cc6efc38",
+      "created_block": 24337939
+    },
+    {
+      "index": 483482,
+      "pair": "0xbe1ec9e36dd448f5743e4709d0c3b7b254f08134",
+      "token": "0x3b8983819d4b0152727cae16fc306b9a9c459b6e",
+      "created_block": 24343735
+    },
+    {
+      "index": 483497,
+      "pair": "0x812dcdee26ee737b8710cf2f1d133a85a663486d",
+      "token": "0xf3dadc7ff34192e6db9ba7028cc0ca77d9dea079",
+      "created_block": 24343904
+    },
+    {
+      "index": 483593,
+      "pair": "0x9fe90817a2e35b177e4c1e1b02e574b7a2122077",
+      "token": "0xabd4af5ba4f4372487c27b241a6c5384dbef5978",
+      "created_block": 24347113
+    },
+    {
+      "index": 483595,
+      "pair": "0xe4eeca4a25d07988a97d0ee5cec7d6f242c72dc3",
+      "token": "0xd6fd6a3f3ff51c43f762208a252834fbb9ef5de1",
+      "created_block": 24347146
+    },
+    {
+      "index": 483646,
+      "pair": "0xb6c6be3662803773d6ec12395134182abb9ac029",
+      "token": "0xd18ed721987dd17f7e7b3c57352c0e4d1895e082",
+      "created_block": 24349040
+    },
+    {
+      "index": 483718,
+      "pair": "0x1a196ef303cf5c74ef0c561bce98f210c5533754",
+      "token": "0x2051b3ef11ee5edb859df5efd086101bab2589ef",
+      "created_block": 24351468
+    },
+    {
+      "index": 483738,
+      "pair": "0x3d7170a01ccc788b778cb578417f76a143855375",
+      "token": "0x646316ceaf239311acfc61da919787a0d91604a4",
+      "created_block": 24351872
+    },
+    {
+      "index": 483855,
+      "pair": "0x8d2638b65f83fee0c31b2c4515d7ed67b81a4615",
+      "token": "0x22e4008a9bc8de34ae24e041fb6609a78c2fdff9",
+      "created_block": 24359076
+    },
+    {
+      "index": 483857,
+      "pair": "0x4501ba726cd163c66ceece4e889b08242eb32e74",
+      "token": "0x92b8a789422970913df91b052d52bf15262bf56f",
+      "created_block": 24359142
+    },
+    {
+      "index": 483952,
+      "pair": "0x68ebcf77f285f97722f1205eacd38d3011a0f28b",
+      "token": "0x523ac4a28b0e7b896cc5faf1685374b417138861",
+      "created_block": 24365491
+    },
+    {
+      "index": 484064,
+      "pair": "0x5eeeb543f95f7086e30796c7ed6b9e5940ee9385",
+      "token": "0x641e17f2562d28985a964958a13134a8def3a2de",
+      "created_block": 24373462
+    },
+    {
+      "index": 484135,
+      "pair": "0x11f1f8de387c2839ac11297a0eabc71c3f22b1b6",
+      "token": "0xd9fbb7c71875ce1e7144e642c300824f38fadd33",
+      "created_block": 24376711
+    },
+    {
+      "index": 484179,
+      "pair": "0x5a048312539386f0ce29321dd028f601df2fb86f",
+      "token": "0x5b8cb333817627d25284c41945ed34c605bc7309",
+      "created_block": 24380060
+    },
+    {
+      "index": 484291,
+      "pair": "0x1acf3e0f731b9e391706184244e6e23e3bdcfd80",
+      "token": "0x319c25d336d70abb2d840a906c48c90e505e6cd7",
+      "created_block": 24387361
+    },
+    {
+      "index": 484317,
+      "pair": "0x40186831ea4e37689ebf105407c88dcbdfb3340e",
+      "token": "0xead3558ef941768e884aaaffe2a3b24267c9faed",
+      "created_block": 24390068
+    },
+    {
+      "index": 484350,
+      "pair": "0x5e8072fe6b86f32ecec0c1ecb73abb60246d19f2",
+      "token": "0xcbbe2e4abceaf06450023861270a724411890bc9",
+      "created_block": 24396487
+    },
+    {
+      "index": 484391,
+      "pair": "0x9648ca323aaccf8be41cec7d2f4a1417fe690909",
+      "token": "0x3482042de3f40fef643af225596f0844d3077955",
+      "created_block": 24400093
+    }
+  ]
+}

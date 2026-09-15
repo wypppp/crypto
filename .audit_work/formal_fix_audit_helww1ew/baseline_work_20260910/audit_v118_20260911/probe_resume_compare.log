@@ -1,0 +1,4 @@
+{"mode": "control", "exit": 0, "verdict": {"passed": true, "required_absent": [], "failed": [], "n_checks": 44}}
+{"mode": "runtime_changed", "exit": 1, "verdict": {"passed": false, "required_absent": [], "failed": ["run_binding_matches:first"], "n_checks": 44}}
+{"mode": "primitives_changed", "exit": 1, "verdict": {"passed": false, "required_absent": [], "failed": ["run_binding_matches:first"], "n_checks": 44}}
+{"mode": "binding_removed", "exit": 1, "verdict": {"passed": false, "required_absent": [], "failed": ["run_binding_matches:first"], "n_checks": 44}}

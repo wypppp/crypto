@@ -1,0 +1,13 @@
+{
+  "name": "declare_again",
+  "argv": [
+    "/home/claude/miniconda3/bin/python3",
+    "-B",
+    "/home/ancillary/rightTail/baseline_work_20260910/runs/freeze_plan_20260912/declare_formal.py",
+    "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_20260912/declared_again"
+  ],
+  "cwd": "/home/ancillary/rightTail/baseline_work_20260910",
+  "exit": 0,
+  "stdout": "正式样本 300 个 -> /home/ancillary/rightTail/baseline_work_20260910/audit_formal_20260912/declared_again/formal_sample_300.json  sha256=422fd8eb9f0c6b3e…\n  排除开发候选 [477926, 478595, 479353, 480842, 482755, 488019, 491410, 491473]\n  创建块范围 24136276..24779363（cutoff 24781026）\n  主采集 15 批（每批 ≤20）；对照子集 30 个分 2 批\n",
+  "stderr": ""
+}

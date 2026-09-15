@@ -1,0 +1,191 @@
+{
+  "note": "条件压力情景，不是预测。区间端点来自各轮观察，不做 iid 外推；正式规模的墙钟与并行加速比没有实测",
+  "inputs": {
+    "rounds": {
+      "round1": {
+        "rpc": 687,
+        "errors": 4,
+        "etherscan": 8,
+        "error_fraction": 0.005822,
+        "error_stages": {
+          "chain_id": 2,
+          "state_validation_exit": 1,
+          "restore_check": 1
+        }
+      },
+      "round2": {
+        "rpc": 1605,
+        "errors": 4,
+        "etherscan": 20,
+        "error_fraction": 0.002492,
+        "error_stages": {
+          "exit_locate": 3,
+          "state_validation": 1
+        }
+      },
+      "round3": {
+        "rpc": 1755,
+        "errors": 5,
+        "etherscan": 21,
+        "error_fraction": 0.002849,
+        "error_stages": {
+          "exit_locate": 4,
+          "restore_check": 1
+        }
+      },
+      "formal_sub01": {
+        "rpc": 2669,
+        "errors": 3,
+        "etherscan": 33,
+        "error_fraction": 0.001124,
+        "error_stages": {
+          "state_validation": 1,
+          "state_validation_exit": 1,
+          "exit_locate": 1
+        }
+      }
+    },
+    "full_candidate_rpc_median": 104.0,
+    "failure_prefix_rpc": {
+      "n": 13,
+      "min": 10,
+      "median": 43,
+      "max": 104,
+      "note": "取决于失败发生的阶段：exit_locate 早期约 40–47，restore_check 晚期接近完整候选"
+    },
+    "no_mint_rpc": [
+      1
+    ],
+    "observed_errors_to_resume_processes": {
+      "round3": {
+        "errors": 5,
+        "resume_procs": 3
+      },
+      "formal_sub01": {
+        "errors": 3,
+        "resume_procs": 2
+      }
+    },
+    "resume_process_per_error_ratio_observed": [
+      0.6,
+      0.67
+    ]
+  },
+  "plan_A_base": {
+    "assumption": "300 个主采集 + 30×2 对照，全部按完整候选计（no_mint 更便宜，故这是偏保守的基准）",
+    "rpc": 37440,
+    "etherscan": 360
+  },
+  "scenarios": {
+    "低错误率·前缀取中位": {
+      "error_fraction": 0.001124,
+      "expected_rpc_errors": 42.1,
+      "failure_prefix_each": 43,
+      "resume_processes_range": [
+        25.2,
+        42.1
+      ],
+      "extra_rpc_range": [
+        1860,
+        1894
+      ],
+      "extra_etherscan_range": [
+        0,
+        42
+      ]
+    },
+    "低错误率·前缀取最大": {
+      "error_fraction": 0.001124,
+      "expected_rpc_errors": 42.1,
+      "failure_prefix_each": 104,
+      "resume_processes_range": [
+        25.2,
+        42.1
+      ],
+      "extra_rpc_range": [
+        4427,
+        4461
+      ],
+      "extra_etherscan_range": [
+        0,
+        42
+      ]
+    },
+    "高错误率·前缀取中位": {
+      "error_fraction": 0.005822,
+      "expected_rpc_errors": 218.0,
+      "failure_prefix_each": 43,
+      "resume_processes_range": [
+        130.8,
+        218.0
+      ],
+      "extra_rpc_range": [
+        9635,
+        9809
+      ],
+      "extra_etherscan_range": [
+        0,
+        218
+      ]
+    },
+    "高错误率·前缀取最大": {
+      "error_fraction": 0.005822,
+      "expected_rpc_errors": 218.0,
+      "failure_prefix_each": 104,
+      "resume_processes_range": [
+        130.8,
+        218.0
+      ],
+      "extra_rpc_range": [
+        22931,
+        23105
+      ],
+      "extra_etherscan_range": [
+        0,
+        218
+      ]
+    }
+  },
+  "total_rpc_range": {
+    "低错误率·前缀取中位": [
+      39300,
+      39334
+    ],
+    "低错误率·前缀取最大": [
+      41867,
+      41901
+    ],
+    "高错误率·前缀取中位": [
+      47075,
+      47249
+    ],
+    "高错误率·前缀取最大": [
+      60371,
+      60545
+    ]
+  },
+  "batching": {
+    "batch_size": 20,
+    "n_batches": 15,
+    "per_batch_rpc": 2080.0,
+    "limits": {
+      "max_calls": 4000,
+      "max_seconds": 3000,
+      "max_wall_s": 3600
+    },
+    "note": "每批 20 个：约 2100 次 RPC（上限 4000）、串行约 2532 s、并行两路约 1266 s"
+  },
+  "wall_clock": {
+    "per_candidate_s_median_by_round": {
+      "round1": 124.5,
+      "round2": 126.6,
+      "round3": 109.2,
+      "formal_sub01": 109.3
+    },
+    "caveat": "并行两路≈串行一半是**假设**，未在正式规模实测；rps=3 的全局限流下界为 总调用/rps；子运行墙钟之和不含尝试间等待、驱动与验收耗时，也不是主动工时"
+  },
+  "budget_gate": {
+    "mechanism": "驱动的 --budget-rpc / --budget-etherscan / --budget-wall-s 按运行目录累计（含中断尝试）拦截新子运行",
+    "note": "只设 --max-resumes 拦不住费用：每个子运行都会重新获得一份 max_calls/max_seconds"
+  }
+}

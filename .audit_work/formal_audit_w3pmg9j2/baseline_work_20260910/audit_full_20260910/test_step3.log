@@ -1,0 +1,42 @@
+A 截止供给非零不证明找到的是首次 Mint
+  [PASS] 漏掉真正首次 ⇒ 判 not_first_mint  — None/not_first_mint
+  [PASS] 留下前后供给证据  — before=5000 at=5000
+  [PASS] 正确的首次 Mint 通过（前 0、当块 >0）  — 1200/ok
+
+B 满页递归必须查右半区间
+  [PASS] 找到右半区间的 2800  — 2800/ok
+  [PASS] 确实查询了右半区间  — [(1000, 3000), (1000, 2000), (2001, 3000), (2001, 2500), (2501, 3000), (2501, 2750), (2751, 3000), (2751, 2875), (2751, 2813), (2751, 2782), (2783, 2813), (2783, 2798), (2799, 2813), (2799, 2806), (2799, 2802), (2799, 2800)]
+
+C 事件规范性
+  [PASS] removed=True 被拒收  — None/no_mint_by_cutoff
+  [PASS] removed=True 拒收原因落盘  — ['removed_log']
+  [PASS] 只有 1 个 topic 被拒收  — None/no_mint_by_cutoff
+  [PASS] 只有 1 个 topic 拒收原因落盘  — ['topics_count:1']
+  [PASS] data 长度不符 被拒收  — None/no_mint_by_cutoff
+  [PASS] data 长度不符 拒收原因落盘  — ['data_shape:64']
+  [PASS] 缺 transactionHash 被拒收  — None/no_mint_by_cutoff
+  [PASS] 缺 transactionHash 拒收原因落盘  — ['missing_tx_hash']
+  [PASS] 缺 logIndex 被拒收  — None/no_mint_by_cutoff
+  [PASS] 缺 logIndex 拒收原因落盘  — ['missing_log_index']
+
+C2 有日志但截止供给为零 = 矛盾
+  [PASS] 判 state_contradiction  — state_contradiction
+
+E 块结构与时间包围必须能阻断
+  [PASS] 正常块无失败项  — []
+  [PASS] 父链接断裂被记为失败  — ['parent link broken: block.parentHash != prev.hash']
+  [PASS] 时间包围成立时通过  — []
+  [PASS] 目标早于前块 ⇒ 未包围，失败
+  [PASS] 目标晚于当块 ⇒ 未包围，失败
+  [PASS] hash 格式不合法被记为失败  — ['bad hash format: 0xzz']
+
+D 防重组：fresh 复读必须发新请求
+  [PASS] fresh 调用被单独记录  — [(100, False), (100, True)]
+  [PASS] 第二次返回不同 hash ⇒ 可检出重组
+
+G 建池与首次 Mint 同块：block-1 上合约不存在，供给按定义为 0
+  [PASS] 同块建池+首铸 判 ok  — 24188628/ok
+  [PASS] 确实查了 block-1  — [24188627, 24188628]
+  [PASS] before=0 被记录  — 0
+
+通过 27 / 失败 0

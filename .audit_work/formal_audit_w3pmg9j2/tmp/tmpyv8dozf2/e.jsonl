@@ -1,0 +1,1 @@
+{"seq": 1, "run_id": "c492cdaa79a24646a68c5e30a2c299cf", "kind": "rpc_begin", "worker": null, "at": "2026-09-12T08:08:00Z", "mono_s": 0.0, "candidate": null, "stage": null, "op": "request", "detail": {"method": "eth_chainId"}, "pending_id": 1}

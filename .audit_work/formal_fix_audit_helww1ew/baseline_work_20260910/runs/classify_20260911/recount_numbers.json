@@ -1,0 +1,159 @@
+{
+  "per_run": [
+    {
+      "round": "round1",
+      "run": "parallel",
+      "rpc": 1,
+      "rpc_errors": 1,
+      "run_footer": false
+    },
+    {
+      "round": "round1",
+      "run": "resume_serial",
+      "rpc": 1,
+      "rpc_errors": 1,
+      "run_footer": false
+    },
+    {
+      "round": "round1",
+      "run": "serial",
+      "rpc": 685,
+      "rpc_errors": 2,
+      "run_footer": true
+    },
+    {
+      "round": "round2",
+      "run": "parallel",
+      "rpc": 605,
+      "rpc_errors": 2,
+      "run_footer": true
+    },
+    {
+      "round": "round2",
+      "run": "resume_parallel",
+      "rpc": 145,
+      "rpc_errors": 1,
+      "run_footer": true
+    },
+    {
+      "round": "round2",
+      "run": "resume_parallel2",
+      "rpc": 107,
+      "rpc_errors": 0,
+      "run_footer": true
+    },
+    {
+      "round": "round2",
+      "run": "resume_serial",
+      "rpc": 106,
+      "rpc_errors": 0,
+      "run_footer": true
+    },
+    {
+      "round": "round2",
+      "run": "serial",
+      "rpc": 642,
+      "rpc_errors": 1,
+      "run_footer": true
+    }
+  ],
+  "errors": [
+    {
+      "round": "round1",
+      "run": "parallel",
+      "at": "2026-09-11T01:43:15Z",
+      "stage": "chain_id",
+      "candidate": null,
+      "kind": "transport",
+      "message": "<urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    },
+    {
+      "round": "round1",
+      "run": "resume_serial",
+      "at": "2026-09-11T01:43:18Z",
+      "stage": "chain_id",
+      "candidate": null,
+      "kind": "transport",
+      "message": "<urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    },
+    {
+      "round": "round1",
+      "run": "serial",
+      "at": "2026-09-11T01:43:11Z",
+      "stage": "state_validation_exit",
+      "candidate": 491473,
+      "kind": "transport",
+      "message": "<urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    },
+    {
+      "round": "round1",
+      "run": "serial",
+      "at": "2026-09-11T01:43:13Z",
+      "stage": "restore_check",
+      "candidate": 491473,
+      "kind": "transport",
+      "message": "<urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>"
+    },
+    {
+      "round": "round2",
+      "run": "parallel",
+      "at": "2026-09-11T03:14:26Z",
+      "stage": "exit_locate",
+      "candidate": 480842,
+      "kind": "transport",
+      "message": "Remote end closed connection without response"
+    },
+    {
+      "round": "round2",
+      "run": "parallel",
+      "at": "2026-09-11T03:16:35Z",
+      "stage": "exit_locate",
+      "candidate": 491410,
+      "kind": "transport",
+      "message": "Remote end closed connection without response"
+    },
+    {
+      "round": "round2",
+      "run": "resume_parallel",
+      "at": "2026-09-11T03:32:25Z",
+      "stage": "exit_locate",
+      "candidate": 480842,
+      "kind": "transport",
+      "message": "<urlopen error _ssl.c:1114: The handshake operation timed out>"
+    },
+    {
+      "round": "round2",
+      "run": "serial",
+      "at": "2026-09-11T03:10:57Z",
+      "stage": "state_validation",
+      "candidate": 491473,
+      "kind": "transport",
+      "message": "Remote end closed connection without response"
+    }
+  ],
+  "all_rpc_execution_evidence": {
+    "errors": 8,
+    "rpc": 2292,
+    "rate": 0.00349
+  },
+  "complete_runs_only": {
+    "errors": 6,
+    "rpc": 2290
+  },
+  "iid_scenario_only": {
+    "formula": "1-(1-6/2290)^105",
+    "value": 0.240785,
+    "note": "requires independent, stable-rate calls and ~105 calls/candidate; NOT a measured candidate failure rate"
+  },
+  "round1_exit_codes": {
+    "serial": 1,
+    "parallel": 1,
+    "resume_serial": 1
+  },
+  "round2_wall_s": {
+    "first_pass_ratio": 0.5682,
+    "serial_incl_resumes": 902.2,
+    "parallel_incl_resumes": 715.0,
+    "ratio_incl_resumes": 0.7925
+  }
+}

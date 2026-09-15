@@ -1,0 +1,61 @@
+{
+  "sha": "9c82f61cb711b044a17f770ab8ce9f9bdf78f333",
+  "node_id": "C_kwDOOT4dDNoAKDljODJmNjFjYjcxMWIwNDRhMTdmNzcwYWI4Y2U5ZjliZGY3OGYzMzM",
+  "commit": {
+    "author": {
+      "name": "onesatz",
+      "email": "onesatz@batoncorporation.com",
+      "date": "2026-07-15T18:22:27Z"
+    },
+    "committer": {
+      "name": "onesatz",
+      "email": "onesatz@batoncorporation.com",
+      "date": "2026-07-15T18:22:27Z"
+    },
+    "message": "chore: README virtual quotes reserves",
+    "tree": {
+      "sha": "9e6a528ec6a35aa5456867b5dc8707ef14e1c008",
+      "url": "https://api.github.com/repos/pump-fun/pump-public-docs/git/trees/9e6a528ec6a35aa5456867b5dc8707ef14e1c008"
+    },
+    "url": "https://api.github.com/repos/pump-fun/pump-public-docs/git/commits/9c82f61cb711b044a17f770ab8ce9f9bdf78f333",
+    "comment_count": 0,
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  },
+  "url": "https://api.github.com/repos/pump-fun/pump-public-docs/commits/9c82f61cb711b044a17f770ab8ce9f9bdf78f333",
+  "html_url": "https://github.com/pump-fun/pump-public-docs/commit/9c82f61cb711b044a17f770ab8ce9f9bdf78f333",
+  "comments_url": "https://api.github.com/repos/pump-fun/pump-public-docs/commits/9c82f61cb711b044a17f770ab8ce9f9bdf78f333/comments",
+  "author": null,
+  "committer": null,
+  "parents": [
+    {
+      "sha": "2c22246b670812e2392e5f94b9543f500d6c9e15",
+      "url": "https://api.github.com/repos/pump-fun/pump-public-docs/commits/2c22246b670812e2392e5f94b9543f500d6c9e15",
+      "html_url": "https://github.com/pump-fun/pump-public-docs/commit/2c22246b670812e2392e5f94b9543f500d6c9e15"
+    }
+  ],
+  "stats": {
+    "total": 14,
+    "additions": 14,
+    "deletions": 0
+  },
+  "files": [
+    {
+      "sha": "ec4a68b2aef349f9c5819dd3cf805117003cc56c",
+      "filename": "README.md",
+      "status": "modified",
+      "additions": 14,
+      "deletions": 0,
+      "changes": 14,
+      "blob_url": "https://github.com/pump-fun/pump-public-docs/blob/9c82f61cb711b044a17f770ab8ce9f9bdf78f333/README.md",
+      "raw_url": "https://github.com/pump-fun/pump-public-docs/raw/9c82f61cb711b044a17f770ab8ce9f9bdf78f333/README.md",
+      "contents_url": "https://api.github.com/repos/pump-fun/pump-public-docs/contents/README.md?ref=9c82f61cb711b044a17f770ab8ce9f9bdf78f333",
+      "patch": "@@ -1,5 +1,19 @@\n # pump-public-docs\n \n+# PumpSwap Update: Virtual Quote Reserves\n+\n+PumpSwap pools now carry a `virtual_quote_reserves` field (appended to the `Pool` account). Buys and sells are priced against the pool's **effective quote reserves**:\n+\n+```text\n+effective_quote_reserves = pool_quote_token_account.amount + Pool::virtual_quote_reserves\n+```\n+\n+- Use effective quote reserves (not the raw quote-vault token balance) wherever you quote, price, or index a pool.\n+- `virtual_quote_reserves` is `0` on all pools today, so quotes are unchanged. Switching to effective quote reserves now keeps your quotes correct if a pool later carries a non-zero value.\n+- Indexers: the `BuyEvent` and `SellEvent` logs include the appended `virtual_quote_reserves` field, so effective quote reserves can be reconstructed from the event stream.\n+\n+Full details: [PumpSwap docs — Quoting: effective quote reserves](docs/PUMP_SWAP_README.md#quoting-effective-quote-reserves).\n+\n # New Bonding Curve Trade Instructions\n \n Hello everyone. As part of supporting stable paired meme coins, we are announcing three new trading instructions for the bonding curve program:"
+    }
+  ]
+}

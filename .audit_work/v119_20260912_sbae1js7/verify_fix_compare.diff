@@ -1,0 +1,11 @@
+--- v118/probe_resume_compare.py
++++ v119/verify_fix_compare.py
+@@ -10,7 +10,7 @@
+  rc,doc,rows,_=A.flow(d,'parallel',parallel=2,checkpoint=d/'parallel.ck');assert rc==0
+  manifest=[]
+  for tag,par,cp in [('first',1,'shared.ck'),('resume',1,'shared.ck'),('parallel',2,'parallel.ck')]:
+-  manifest.append(dict(kind='run',tag=tag,parallel=par,exit=0,checkpoint=str(d/cp),out=str(d/(tag+'.json')),evidence=str(d/(tag+'.jsonl'))))
++  manifest.append(dict(kind='run',tag=tag,parallel=par,exit=(1 if tag=='resume' and mode!='control' else 0),checkpoint=str(d/cp),out=str(d/(tag+'.json')),evidence=str(d/(tag+'.jsonl'))))
+  p=d/'audit_manifest.jsonl';assert not p.exists();p.write_text(''.join(json.dumps(x)+'\n' for x in manifest))
+  b=json.loads((d/'shared.ck').read_text().splitlines()[0])
+  cmd=[sys.executable,str(W/'realchain_tools/compare_runs.py'),'--dir',str(d),'--manifest',str(p),

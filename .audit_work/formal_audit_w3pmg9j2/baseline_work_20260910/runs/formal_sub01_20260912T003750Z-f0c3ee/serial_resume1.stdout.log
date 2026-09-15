@@ -1,0 +1,6 @@
+chain_id=1  finalized 快照 25957718  0x2ff001c72249fe7a…
+续跑：检查点已有 15 条尝试，可交付已完成 14 个候选，将跳过并原样并入交付
+  [9/15] idx=479940 state=measured_exit 106.46s rpc=104
+
+-> runs/formal_sub01_20260912T003750Z-f0c3ee/serial_resume1.json
+-> runs/formal_sub01_20260912T003750Z-f0c3ee/serial_resume1.evidence.jsonl  (361 条证据)

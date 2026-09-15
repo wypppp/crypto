@@ -1,0 +1,10 @@
+[
+  {
+    "entry": "verify_fix",
+    "exit": 0
+  },
+  {
+    "entry": "verify_fix_compare",
+    "exit": 0
+  }
+]

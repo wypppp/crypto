@@ -1,0 +1,15 @@
+{
+  "pilot_measure.py": "44f54f2cb67b9310453a13ed116b819ede9f3cd2e617ea5e5b3f6b1810dc2cc9",
+  "evidence.py": "1fe5c43c57420b1213c7f272619f844469bc95a8c39f196d236ef2e9f5f7420d",
+  "audit_flow.py": "4bdde3951bc44643315315a04641390cf59bd21be30144d2b00b3e4d18e6a355",
+  "test_audit_followup.py": "e1290a3a9691c40e6dbd162757cd9c75edf6e7f69863caf137b50075efd5d65b",
+  "test_parallel.py": "73336c00345e69ac977d89a7c57d2efec85629dd4b136199be5de61bb75f23f4",
+  "MEASUREMENT_SPEC.md": "feaaef66dfab4d83afae7c4163454344e7947673faa0988df7b1926cac58793b",
+  "MEASUREMENT_SPEC.v1.14.md": "f8dc892cca09636989ce919418edeb870601fac47a32a7f4e7f0590c55d189f0",
+  "MEASUREMENT_SPEC.v1.13.md": "32a0805cd2822d6dffb567d982561d446335d7a4c8a28057a865df7826eb8a7f",
+  "MEASUREMENT_SPEC.v1.12.md": "5da1d9fb4bbd163a1360b0508f66201a3d7318e595e87b00e025d98dd76db050",
+  "runs/tls_20260911/phase_probe.py": "8b42a532b1bcdcf860fa8269a22ae35f2794fe883e4853e02810746f81f8bd62",
+  "runs/tls_20260911/verify_and_dns_probe.py": "9091b54b5d5efd293979728423930f6a8b4bae7bb9aa1d9bc2247ed6ac2cb466",
+  "../baseline_20260909/verify_capabilities.py": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "_prefix_snapshot_evidence": "b45707a8bac672822864f24cadd7c5324a8197b57c76506c74e9fd79b7f6a065"
+}

@@ -1,0 +1,19 @@
+chain_id=1  finalized 快照 25957718  0x2ff001c72249fe7a…
+  [1/15] idx=476809 state=no_mint_by_cutoff 2.15s rpc=1
+  [2/15] idx=477707 state=measured_exit 109.08s rpc=105
+  [3/15] idx=478403 state=measured_exit 107.32s rpc=104
+  [5/15] idx=479064 state=measured_exit 108.35s rpc=104
+  [4/15] idx=478615 state=measured_exit 123.07s rpc=103
+  [6/15] idx=479104 state=no_mint_by_cutoff 1.98s rpc=1
+  [8/15] idx=479621 state=data_missing 15.06s rpc=13
+  [10/15] idx=481689 state=entry_unknown 29.33s rpc=27
+  [7/15] idx=479532 state=measured_exit 108.99s rpc=104
+  [12/15] idx=481714 state=execution_reverted_unknown 106.49s rpc=103
+  [9/15] idx=479940 state=data_missing 61.4s rpc=56
+  [14/15] idx=482524 state=measured_exit 111.93s rpc=104
+  [11/15] idx=481704 state=measured_exit 111.42s rpc=104
+  [13/15] idx=481860 state=measured_exit 128.05s rpc=103
+  [15/15] idx=484179 state=measured_exit 109.16s rpc=103
+
+-> runs/formal_sub01_20260912T003750Z-f0c3ee/parallel.json
+-> runs/formal_sub01_20260912T003750Z-f0c3ee/parallel.evidence.jsonl  (3676 条证据)

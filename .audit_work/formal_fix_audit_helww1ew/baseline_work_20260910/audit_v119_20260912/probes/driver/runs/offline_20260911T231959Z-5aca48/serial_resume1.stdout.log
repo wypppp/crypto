@@ -1,0 +1,7 @@
+fake_launch: tag=serial_resume1 action=measure
+chain_id=1  finalized 快照 25900000  0x0000000000000000…
+  [1/2] idx=1 state=measured_exit 3.31s rpc=74
+  [2/2] idx=2 state=measured_exit 2.67s rpc=50
+
+-> ../../.audit_work/v119_20260912_sbae1js7/probes/driver/runs/offline_20260911T231959Z-5aca48/serial_resume1.json
+-> ../../.audit_work/v119_20260912_sbae1js7/probes/driver/runs/offline_20260911T231959Z-5aca48/serial_resume1.evidence.jsonl  (449 条证据)

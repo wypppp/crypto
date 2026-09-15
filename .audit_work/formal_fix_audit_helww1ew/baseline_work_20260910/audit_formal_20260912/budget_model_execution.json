@@ -1,0 +1,12 @@
+{
+  "name": "budget_model",
+  "argv": [
+    "/home/claude/miniconda3/bin/python3",
+    "-B",
+    "/home/ancillary/rightTail/baseline_work_20260910/runs/freeze_plan_20260912/budget_model.py"
+  ],
+  "cwd": "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_20260912/budget_recomputed",
+  "exit": 0,
+  "stdout": "{\n  \"每候选RPC中位\": 105.0,\n  \"每候选秒数中位\": {\n    \"round1\": 124.5,\n    \"round2\": 126.6,\n    \"round3\": 109.2\n  },\n  \"上界基准RPC\": 31500,\n  \"错误率区间\": [\n    0.002492,\n    0.005822\n  ],\n  \"含续跑总RPC\": {\n    \"低\": 39899,\n    \"高\": 51123\n  },\n  \"串行墙钟s\": {\n    \"低\": {\n      \"low_latency\": 42698,\n      \"high_latency\": 47918\n    },\n    \"高\": {\n      \"low_latency\": 55978,\n      \"high_latency\": 61198\n    }\n  },\n  \"并行2路墙钟s\": {\n    \"低\": {\n      \"low_latency\": 21349,\n      \"high_latency\": 23959\n    },\n    \"高\": {\n      \"low_latency\": 27989,\n      \"high_latency\": 30599\n    }\n  },\n  \"限流下界s\": {\n    \"低\": 13300,\n    \"高\": 17041\n  },\n  \"单次运行候选上限\": {\n    \"by_max_calls\": 38,\n    \"by_max_seconds\": 23,\n    \"by_max_wall_s\": 28,\n    \"limit\": 23\n  },\n  \"需要运行批次\": 14,\n  \"采集方案\": {\n    \"A_全量并行2路 + 30 个子集串并行对照\": {\n      \"低\": {\n        \"RPC\": 47879,\n        \"总墙钟h\": 10.2\n      },\n      \"高\": {\n        \"RPC\": 61348,\n        \"总墙钟h\": 14.6\n      }\n    },\n    \"B_全量串并行对照（300 个各测两遍）\": {\n      \"低\": {\n        \"RPC\": 79799,\n        \"总墙钟h\": 25.0\n      },\n      \"高\": {\n        \"RPC\": 102246,\n        \"总墙钟h\": 33.5\n      }\n    }\n  }\n}\n",
+  "stderr": ""
+}

@@ -1,0 +1,104 @@
+{
+  "started_at": "2026-09-12T08:07:34.297897+00:00",
+  "finished_at": "2026-09-12T08:07:34.337327+00:00",
+  "chain_id": 1,
+  "sample_file": "/home/ancillary/.audit_work/formal_audit_w3pmg9j2/tmp/rta-followup-fix-enjypa8z/sample.json",
+  "resources": {
+    "limits": {
+      "hard_requested": false,
+      "hard_problems": [],
+      "soft_thresholds": {
+        "max_rss_kb": null,
+        "max_cpu_s": 0.001,
+        "max_wall_s": null,
+        "poll_s": 0.02,
+        "kind": "cooperative soft thresholds: set a stop flag; they do NOT prevent further allocation or execution"
+      },
+      "hard_backstop": {
+        "hard_rss_kb": null,
+        "hard_cpu_s": null,
+        "applied": {},
+        "kind": "kernel-enforced RLIMIT; independent of any in-process check"
+      },
+      "stop_grace": {
+        "grace_calls": 16,
+        "grace_seconds": 15.0,
+        "kind": "upper bound on work after a stop is requested"
+      }
+    },
+    "final": {
+      "rss_kb": 38980,
+      "rss_peak_kb": 104440,
+      "cpu_s": 7.75,
+      "wall_s": 0.04
+    },
+    "watchdog_observations": 1,
+    "stopped": true,
+    "stop_reason": "cpu_limit_exceeded",
+    "stop_detail": {
+      "cpu_s": 7.75,
+      "max_cpu_s": 0.001,
+      "measured": {
+        "rss_kb": 38980,
+        "rss_peak_kb": 104440,
+        "cpu_s": 7.75,
+        "wall_s": 0.021
+      }
+    },
+    "stop_latency_s": 0.018,
+    "requests_refused_or_graced_after_stop": 1,
+    "winddown_http_requests": 0,
+    "winddown_logical_requests": 0,
+    "absolute_deadline_closures": 0,
+    "escalations": 0,
+    "pending_inflight": 0,
+    "backstop_armed": false,
+    "deadline_basis": "absolute wall-clock deadline on the whole response (socket timeout alone is a per-read inactivity timeout, not a completion deadline)",
+    "peak_basis": "kernel VmHWM (measured high-water mark, not a sample)"
+  },
+  "results": [],
+  "acceptance": {
+    "declared": 2,
+    "n": 0,
+    "missing_candidates": [],
+    "duplicate_results": [],
+    "unexpected_results": [],
+    "sample_field_mismatch": [],
+    "worker_errors": [],
+    "not_started": [
+      {
+        "index": 1,
+        "reason": "cpu_limit_exceeded"
+      },
+      {
+        "index": 2,
+        "reason": "cpu_limit_exceeded"
+      }
+    ],
+    "shutdown": {
+      "stopped": true,
+      "reason": "cpu_limit_exceeded",
+      "detail": {
+        "cpu_s": 7.75,
+        "max_cpu_s": 0.001,
+        "measured": {
+          "rss_kb": 38980,
+          "rss_peak_kb": 104440,
+          "cpu_s": 7.75,
+          "wall_s": 0.021
+        },
+        "refused": "rpc",
+        "layer": "logical",
+        "why": "new work refused after stop"
+      },
+      "stage": "snapshot"
+    },
+    "set_complete": false,
+    "incomplete": [],
+    "validation_passed": false,
+    "process_completed": false,
+    "measurement_semantics_verified": false,
+    "economic_results_eligible": false,
+    "meaning": "启动阶段即有序停机；0 个候选开工，全部记名于 not_started。"
+  }
+}

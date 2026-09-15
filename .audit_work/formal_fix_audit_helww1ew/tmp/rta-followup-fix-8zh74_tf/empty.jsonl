@@ -1,0 +1,6 @@
+{"run_id": "r", "seq": 1, "kind": "run_header"}
+{"run_id": "r", "seq": 2, "kind": "rpc_begin", "pending_id": 1}
+{"run_id": "r", "seq": 3, "kind": "rpc_end", "pending_id": 1}
+{"run_id": "r", "seq": 4, "kind": "rpc_begin", "pending_id": 1}
+{"run_id": "r", "seq": 5, "kind": "rpc_end", "pending_id": 1}
+{"run_id": "r", "seq": 6, "kind": "run_footer"}

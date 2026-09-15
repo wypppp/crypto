@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/ancillary/rightTail/baseline_work_20260910/audit_realchain3_20260912/verify_delivery.py", line 227, in <module>
+    v=probe_return(calls[0]['response']['result']); rec=c[field]
+  File "/home/ancillary/rightTail/baseline_work_20260910/audit_realchain3_20260912/verify_delivery.py", line 198, in probe_return
+    raw=bytes.fromhex(hexdata.removeprefix('0x'))
+AttributeError: 'str' object has no attribute 'removeprefix'

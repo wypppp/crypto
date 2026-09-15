@@ -1,0 +1,58 @@
+{
+  "errors_per_run": {
+    "serial": [
+      488019,
+      491410
+    ],
+    "serial_resume1": [
+      491410
+    ],
+    "serial_resume2": [],
+    "parallel": [
+      480842,
+      491410
+    ],
+    "parallel_resume1": []
+  },
+  "new_candidates": {
+    "serial": [
+      477926,
+      478595,
+      479353,
+      480842,
+      482755,
+      488019,
+      491410,
+      491473
+    ],
+    "serial_resume1": [
+      488019,
+      491410
+    ],
+    "serial_resume2": [
+      491410
+    ],
+    "parallel": [
+      477926,
+      478595,
+      479353,
+      480842,
+      482755,
+      488019,
+      491410,
+      491473
+    ],
+    "parallel_resume1": [
+      480842,
+      491410
+    ]
+  },
+  "serial_candidates_started_after_first_error": [
+    491410,
+    491473
+  ],
+  "observed_rpc_errors": 5,
+  "observed_resume_processes": 3,
+  "plan_A_min_etherscan_without_any_resumes": 360,
+  "note": "This refutes one error == one process abort/resume. It does not estimate a population failure probability."
+}

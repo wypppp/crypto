@@ -1,0 +1,266 @@
+{
+  "mode": "single:parallel",
+  "inputs": {
+    "dir": "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_20260912/counter_case",
+    "manifest": "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_20260912/counter_case/runs.jsonl",
+    "serial": [],
+    "parallel": [
+      "parallel",
+      "parallel_resume1"
+    ],
+    "sample": "/home/ancillary/rightTail/baseline_work_20260910/pilot/formal_20260912/subset_pair_01.json",
+    "pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1",
+    "expect": {
+      "script_sha256": "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+      "evidence_module_sha256": "fc6126be8a8a68c79ef79ea7060a87d8933da6f88d9b3dc5d0c5feebe038966a",
+      "spec_sha256": "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f",
+      "primitives_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+      "runtime_params": {
+        "slot_limit": 32,
+        "diagnostics": true,
+        "cutoff_block": 24781026,
+        "amount_wei": 50000000000000000
+      }
+    }
+  },
+  "runs": {
+    "parallel": {
+      "side": "parallel",
+      "out": "parallel.json",
+      "evidence": "parallel.evidence.jsonl",
+      "exit": 1,
+      "wall_s": 739.3,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    },
+    "parallel_resume1": {
+      "side": "parallel",
+      "out": "parallel_resume1.json",
+      "evidence": "parallel_resume1.evidence.jsonl",
+      "exit": 0,
+      "wall_s": 126.1,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    }
+  },
+  "mismatches": [],
+  "allowed_diffs": [],
+  "candidates": [],
+  "checks": {
+    "manifest_readable": {
+      "ok": true,
+      "detail": null
+    },
+    "chains_declared": {
+      "ok": true,
+      "detail": {
+        "parallel": [
+          "parallel",
+          "parallel_resume1"
+        ]
+      }
+    },
+    "manifest_entry_unique:parallel": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_entry_unique:parallel_resume1": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_all_attributed": {
+      "ok": true,
+      "detail": {
+        "unattributed_tags": [],
+        "attempt_ids": [
+          "20260912T003750Z-f0c3ee"
+        ]
+      }
+    },
+    "chain_checkpoint_consistent:parallel": {
+      "ok": true,
+      "detail": [
+        "runs/formal_sub01_20260912T003750Z-f0c3ee/parallel.checkpoint.jsonl"
+      ]
+    },
+    "final_exit_0:parallel": {
+      "ok": true,
+      "detail": {
+        "tag": "parallel_resume1",
+        "exit": 0
+      }
+    },
+    "result_doc_present:parallel": {
+      "ok": true,
+      "detail": "parallel.json"
+    },
+    "evidence_complete:parallel": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:parallel": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "13aabb785b0f4c1db7a0ec663d04c72f",
+        "headers": 1,
+        "runs_in_file": [
+          "13aabb785b0f4c1db7a0ec663d04c72f"
+        ]
+      }
+    },
+    "footer_matches_result:parallel": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:parallel": {
+      "ok": true,
+      "detail": {
+        "doc": 2,
+        "manifest": 2
+      }
+    },
+    "run_binding_matches:parallel": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "result_doc_present:parallel_resume1": {
+      "ok": true,
+      "detail": "parallel_resume1.json"
+    },
+    "evidence_complete:parallel_resume1": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:parallel_resume1": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "896a718da1ec4445bca5a8bfa75ab971",
+        "headers": 1,
+        "runs_in_file": [
+          "896a718da1ec4445bca5a8bfa75ab971"
+        ]
+      }
+    },
+    "footer_matches_result:parallel_resume1": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:parallel_resume1": {
+      "ok": true,
+      "detail": {
+        "doc": 2,
+        "manifest": 2
+      }
+    },
+    "run_binding_matches:parallel_resume1": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "binding_consistent": {
+      "ok": true,
+      "detail": {
+        "parallel": {},
+        "parallel_resume1": {}
+      }
+    },
+    "binding_matches_expected": {
+      "ok": true,
+      "detail": {}
+    },
+    "checkpoint_binding:parallel": {
+      "ok": true,
+      "detail": {
+        "missing": [],
+        "not_checked": [],
+        "diff": {}
+      }
+    },
+    "sample_well_formed": {
+      "ok": true,
+      "detail": {
+        "n": 15,
+        "rows": 15,
+        "unique": 15
+      }
+    },
+    "final_results_one_per_candidate:parallel": {
+      "ok": true,
+      "detail": {
+        "n": 15,
+        "unique": 15,
+        "sample_n": 15,
+        "field_mismatch": []
+      }
+    },
+    "final_acceptance_clean:parallel": {
+      "ok": true,
+      "detail": {
+        "non_empty": {},
+        "flags": {
+          "set_complete": true,
+          "process_completed": true,
+          "validation_passed": true,
+          "shutdown_stopped": false
+        },
+        "closed": {
+          "measurement_semantics_verified": false,
+          "economic_results_eligible": false
+        },
+        "validation_not_true": []
+      }
+    },
+    "final_results_traced:parallel": {
+      "ok": true,
+      "detail": []
+    },
+    "snapshot_matches_pin:parallel": {
+      "ok": true,
+      "detail": {
+        "snapshot": {
+          "number": 25957718,
+          "hash": "0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1",
+          "timestamp": 1789172567
+        },
+        "pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1"
+      }
+    }
+  },
+  "verdict": {
+    "passed": true,
+    "required_absent": [],
+    "failed": [],
+    "n_checks": 27
+  }
+}

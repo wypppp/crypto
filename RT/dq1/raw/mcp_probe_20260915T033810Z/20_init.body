@@ -1,0 +1,4 @@
+event: message
+id: 221ebf20-9c22-4402-9968-0b855e064d12
+data: {"result":{"protocolVersion":"2025-03-26","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true}},"serverInfo":{"name":"dune","version":"1.0.0"}},"jsonrpc":"2.0","id":101}
+

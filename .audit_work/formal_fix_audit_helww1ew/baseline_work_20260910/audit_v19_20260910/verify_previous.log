@@ -1,0 +1,3 @@
+{"name": "active_candidate_aborts_after_sigterm", "exit": 3, "state": "aborted_by_shutdown", "checkpoint_completed": false, "rpc_after_signal": 10, "not_started": [{"index": 2, "reason": "signal"}]}
+{"name": "soft_threshold_still_cooperative_as_documented", "limit_kb": 1, "stopping": true, "allocated_after_stop_bytes": 8388608, "peak_kb": 37792}
+{"name": "precondition_return_cleans_governor", "exit": 2, "changed_signal_handlers": [], "watchdogs_alive": [false], "http_gate_still_installed": false}

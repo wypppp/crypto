@@ -1,0 +1,8 @@
+{
+  "entries": 10,
+  "passed": 688,
+  "failed": 0,
+  "all_exit_zero": true,
+  "same_source_in_isolated_copy": true,
+  "source_mismatches": []
+}

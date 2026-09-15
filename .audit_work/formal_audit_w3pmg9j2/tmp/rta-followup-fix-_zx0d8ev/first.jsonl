@@ -1,0 +1,2 @@
+{"seq": 1, "run_id": "08c2be5d4ce7408980fb9c65c8e7be34", "kind": "run_header", "worker": null, "at": "2026-09-12T08:07:09Z", "mono_s": 0.0, "note": "unrelated run"}
+{"seq": 2, "run_id": "08c2be5d4ce7408980fb9c65c8e7be34", "kind": "run_footer", "worker": null, "at": "2026-09-12T08:07:09Z", "mono_s": 0.004}

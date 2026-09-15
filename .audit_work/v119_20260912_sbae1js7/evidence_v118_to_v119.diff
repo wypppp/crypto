@@ -1,0 +1,123 @@
+--- v1.18/evidence
++++ v1.19/evidence
+@@ -1444,8 +1444,99 @@
+     return _HTTP["installed"] and _HTTP["gate"] is not None
+ 
+ 
++#: 运行证据里**还没有** `run_binding` 记录的历史版本。只有运行头里的
++#: (脚本 sha256, 规格 sha256) **恰好**是其中一对时，才允许走旧版规则；
++#: 其余一切缺 run_binding 的运行一律判问题，不跳过。按规格版本单独判定不够精确：
++#: v1.18 起的脚本总会写 run_binding，哪怕它被指向一份旧规格文件。
++LEGACY_BINDING_RULES = {
++    ("5cb58ed878751a22396bb4284e10a44b70ab18c7ac7387c5370871207439ba1e",
++     "2a6c5dcf613d263f8ec9067b047805e0c675a6b6df159896414b0bde4b756606"): "v1.16",
++    ("d9dfb8f098a4d42792a9cf55dac6601a475ad1b8e7bf4a175a36ff695b7e2db9",
++     "7cf15793c7626ce725c133ce748920998083bb46b32ef6913f17604a1ada3542"): "v1.17",
++}
++
++
++def verify_run_binding(recs, run_id, binding, *, result_doc=None, result_file=None):
++    """本运行的证据与检查点绑定在 **Checkpoint.BINDING_KEYS 全部键**上一致。
++
++    续跑（`verify_evidence_supports`）与对照比较器共用这一处 —— 此前完整核对只在比较器里，
++    续跑守卫只看运行头的 7 个字段：改掉或删掉原证据里的 `run_binding`，续跑照样跳过候选、
++    报 `evidence_chain_problems=[]`，同一份交付比较器却拒绝（审查 v1.18 P1）。
++
++    * 检查点绑定自身必须含全部键；
++    * 证据里有 `run_binding`（v1.18 起）：恰好一条，逐键等于检查点绑定，缺键即问题；
++    * 没有：只有运行头 (script, spec) 恰为 `LEGACY_BINDING_RULES` 中一对时走旧版规则 ——
++      `runtime_params` 逐键对照运行头 `params`，原语 hash 对照该运行结果文件里运行结束时独立算出的
++      `package_script_sha256`（需要 `result_doc` 或 `result_file`，拿不到就是问题，不跳过）；
++      否则判 `evidence_run_binding_missing`。
++
++    返回 (问题清单, 采用的规则)。
++    """
++    problems, keys = [], Checkpoint.BINDING_KEYS
++    binding = binding or {}
++    lacking = [k for k in keys if k not in binding]
++    if lacking:
++        problems.append({"reason": "checkpoint_binding_field_missing", "fields": lacking})
++    mine = [r for r in recs if r.get("run_id") == run_id]
++    rb = [r for r in mine if r.get("kind") == "run_binding"]
++    if rb:
++        if len(rb) != 1:
++            problems.append({"reason": "evidence_run_binding_duplicated", "count": len(rb)})
++        missing = [k for k in keys if k not in rb[0]]
++        diff = {k: {"evidence": rb[0][k], "checkpoint": binding.get(k)}
++                for k in keys if k in rb[0] and k in binding and rb[0][k] != binding[k]}
++        if missing:
++            problems.append({"reason": "evidence_run_binding_field_missing", "fields": missing})
++        if diff:
++            problems.append({"reason": "evidence_run_binding_mismatch", "diff": diff})
++        doc = result_doc
++        if doc is None and result_file and Path(result_file).is_file():
++            try:
++                doc = json.loads(Path(result_file).read_text(encoding="utf-8"))
++            except ValueError:
++                doc = None
++        if doc and doc.get("package_script_sha256") not in (None, binding.get("primitives_sha256")):
++            problems.append({"reason": "result_doc_primitives_mismatch",
++                             "result_doc": doc.get("package_script_sha256"),
++                             "checkpoint": binding.get("primitives_sha256")})
++        return problems, "run_binding"
++    h = next((r for r in mine if r.get("kind") == "run_header"), {})
++    legacy = LEGACY_BINDING_RULES.get((h.get("script_sha256"), h.get("spec_sha256")))
++    if legacy is None:
++        problems.append({"reason": "evidence_run_binding_missing", "run_id": run_id,
++                         "script_sha256": h.get("script_sha256"),
++                         "spec_sha256": h.get("spec_sha256")})
++        return problems, None
++    rule = f"legacy_{legacy}_header_params_and_result_doc"
++    rp, hp = binding.get("runtime_params"), h.get("params") or {}
++    if not isinstance(rp, dict) or not rp:
++        problems.append({"reason": "legacy_runtime_params_missing"})
++    else:
++        for k, v in rp.items():
++            hv = hp.get(k, "<absent>")
++            if k == "diagnostics" and hv != "<absent>":
++                hv = bool(hv)
++            if hv != v:
++                problems.append({"reason": "legacy_runtime_param_mismatch", "param": k,
++                                 "header": hv, "checkpoint": v})
++    doc = result_doc
++    if doc is None and result_file and Path(result_file).is_file():
++        try:
++            doc = json.loads(Path(result_file).read_text(encoding="utf-8"))
++        except ValueError:
++            doc = None
++    if not doc or "package_script_sha256" not in doc:
++        problems.append({"reason": "legacy_rule_needs_result_document",
++                         "result_file": str(result_file) if result_file else None})
++    elif doc["package_script_sha256"] != binding.get("primitives_sha256"):
++        problems.append({"reason": "legacy_primitives_mismatch",
++                         "result_doc": doc["package_script_sha256"],
++                         "checkpoint": binding.get("primitives_sha256")})
++    return problems, rule
++
++
+ def verify_evidence_supports(path, *, run_id, candidate, result_sha256,
+-                             binding=None, ignore_runs=()):
++                             binding=None, ignore_runs=(), result_doc=None, result_file=None):
+     """核验一份证据文件**确实支持**被复用的那条结果。
+ 
+     文件自身结构完整，不代表它跟这条结果有任何关系 —— 换成另一个运行的
+@@ -1454,7 +1545,8 @@
+     1. 文件可读、且（排除进行中的运行后）结构完整；
+     2. 里面**存在**记录中的那个 `run_id`；
+     3. 该运行有 `run_header`，且其绑定（脚本/证据模块/规格/样本/台账/finalized 块）
+-       与检查点绑定一致；
++       与检查点绑定一致；给了 `binding` 时，另按 `verify_run_binding` 核对检查点绑定的
++       **全部**键（含原语 hash 与 runtime_params，v1.19）；
+     4. 该运行里有这个候选的 `candidate_result`，且其 `record` 的规范 hash
+        等于检查点记的 `result_sha256`。
+ 
+@@ -1518,6 +1610,9 @@
+         if diffs:
+             problems.append({"reason": "evidence_binding_mismatch",
+                              "path": str(path), "run_id": run_id, "diff": diffs})
++        rb_problems, _rule = verify_run_binding(recs, run_id, binding,
++                                                result_doc=result_doc, result_file=result_file)
++        problems += [dict(x, path=str(path), run_id=run_id) for x in rb_problems]
+ 
+     hits = [r for r in mine
+             if r.get("kind") == "candidate_result" and r.get("candidate") == candidate]

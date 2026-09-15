@@ -1,0 +1,8 @@
+{
+  "source_path": "/home/ancillary/rightTail/baseline_work_20260910/runs/tls_20260911/phase_probe.json",
+  "copied_to": "phase_probe.overwritten_by_suite.json",
+  "current_sha256": "e8cc2ff34dc7f4e976ae0602ad0ccaf5c10eac6f49f1f3ec21372953b4f62ff5",
+  "mtime_ns": 1789088920771913681,
+  "pre_run_bytes_preserved": false,
+  "note": "test_audit_followup.py invokes hardcoded delivery probe; phase_probe.py writes its adjacent fixed phase_probe.json. Current bytes are from audit suite execution, not an immutable delivery original. No reconstruction or restore attempted."
+}

@@ -1,0 +1,10 @@
+{
+  "existing_artifacts_matching_pretest_copy": 1617,
+  "changed": [],
+  "source_files_unchanged": 13,
+  "historical_hashes_verified": 74,
+  "audit_files_scanned": 137,
+  "credential_hits": [],
+  "scan_scope": "literal current RPC URL, URL final path component, Etherscan key",
+  "new_real_endpoint_requests": false
+}

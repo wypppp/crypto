@@ -1,0 +1,348 @@
+{
+  "context": {
+    "apiVersion": "4.3.0-rc.0",
+    "slot": 446918342
+  },
+  "pool": {
+    "poolState": {
+      "volatilityTracker": {
+        "lastUpdateTimestamp": "0",
+        "padding": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "sqrtPriceReference": "0",
+        "volatilityAccumulator": "0",
+        "volatilityReference": "0"
+      },
+      "config": "CaDBnXEGdbJ9bKBN8U4AbbvJ7BMY6KMrBTXDyShaonjd",
+      "creator": "FeboyXo5myB9oV6kGqmRSoanbxw4mjHa7eexBMyrxM89",
+      "baseMint": "8irnNcd5b8UDcoijasSk5M148aJSuQpuqNUPd48K8kN9",
+      "baseVault": "5PXiMbxsM6hT58ZgskhHi65jxqmoE13YeGne6iqXBnny",
+      "quoteVault": "DHxfR3UsBebCxnzLnKeN2gM5Bg1AEB9A44b3VCPV4Fo8",
+      "baseReserve": "971900001280418",
+      "quoteReserve": "10950000000",
+      "protocolBaseFee": "97158123275",
+      "protocolQuoteFee": "38450001",
+      "partnerBaseFee": "388632494336",
+      "partnerQuoteFee": "153801452",
+      "sqrtPrice": "412481733966304067",
+      "activationPoint": "446917315",
+      "poolType": 1,
+      "isMigrated": 1,
+      "isPartnerWithdrawSurplus": 0,
+      "isProtocolWithdrawSurplus": 0,
+      "migrationProgress": 3,
+      "isWithdrawLeftover": 0,
+      "isCreatorWithdrawSurplus": 0,
+      "migrationFeeWithdrawStatus": 0,
+      "metrics": {
+        "totalProtocolBaseFee": "97158123275",
+        "totalProtocolQuoteFee": "38450001",
+        "totalTradingBaseFee": "388632494336",
+        "totalTradingQuoteFee": "153801452"
+      },
+      "finishCurveTimestamp": "1789370390",
+      "creatorBaseFee": "0",
+      "creatorQuoteFee": "0",
+      "legacyCreationFeeBits": 0,
+      "creationFeeBits": 0,
+      "hasSwap": 1,
+      "padding0": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "protocolLiquidityMigrationFeeBps": 20,
+      "padding1": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "protocolMigrationBaseFeeAmount": "43800000455",
+      "protocolMigrationQuoteFeeAmount": "21900000",
+      "padding2": [
+        "0",
+        "0",
+        "0"
+      ]
+    }
+  },
+  "config": {
+    "quoteMint": "So11111111111111111111111111111111111111112",
+    "feeClaimer": "J7yBcg2AmJ1Cm9kssQqG5sX6mZ9HiJ298Ak9YHeFXX4g",
+    "leftoverReceiver": "J7yBcg2AmJ1Cm9kssQqG5sX6mZ9HiJ298Ak9YHeFXX4g",
+    "poolFees": {
+      "baseFee": {
+        "cliffFeeNumerator": "2500000",
+        "secondFactor": "0",
+        "thirdFactor": "0",
+        "firstFactor": 0,
+        "baseFeeMode": 0,
+        "padding0": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "dynamicFee": {
+        "initialized": 0,
+        "padding": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "maxVolatilityAccumulator": 0,
+        "variableFeeControl": 0,
+        "binStep": 0,
+        "filterPeriod": 0,
+        "decayPeriod": 0,
+        "reductionFactor": 0,
+        "padding2": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "binStepU128": "0"
+      }
+    },
+    "partnerLiquidityVestingInfo": {
+      "isInitialized": 0,
+      "vestingPercentage": 0,
+      "padding": [
+        0,
+        0
+      ],
+      "bpsPerPeriod": 0,
+      "numberOfPeriods": 0,
+      "frequency": 0,
+      "cliffDurationFromMigrationTime": 0
+    },
+    "creatorLiquidityVestingInfo": {
+      "isInitialized": 1,
+      "vestingPercentage": 11,
+      "padding": [
+        0,
+        0
+      ],
+      "bpsPerPeriod": 10000,
+      "numberOfPeriods": 1,
+      "frequency": 1,
+      "cliffDurationFromMigrationTime": 86400
+    },
+    "padding0": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "padding1": 0,
+    "collectFeeMode": 1,
+    "migrationOption": 1,
+    "activationType": 0,
+    "tokenDecimal": 6,
+    "version": 0,
+    "tokenType": 1,
+    "quoteTokenFlag": 0,
+    "partnerPermanentLockedLiquidityPercentage": 0,
+    "partnerLiquidityPercentage": 0,
+    "creatorPermanentLockedLiquidityPercentage": 0,
+    "creatorLiquidityPercentage": 89,
+    "migrationFeeOption": 6,
+    "fixedTokenSupplyFlag": 1,
+    "creatorTradingFeePercentage": 0,
+    "tokenUpdateAuthority": 1,
+    "migrationFeePercentage": 0,
+    "creatorMigrationFeePercentage": 0,
+    "padding2": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "swapBaseAmount": "28099999479624",
+    "migrationQuoteThreshold": "10950000000",
+    "migrationBaseThreshold": "21900000227925",
+    "migrationSqrtPrice": "412481737123559485",
+    "lockedVestingConfig": {
+      "amountPerPeriod": "0",
+      "cliffDurationFromMigrationTime": "0",
+      "frequency": "0",
+      "numberOfPeriod": "0",
+      "cliffUnlockAmount": "0",
+      "padding": "0"
+    },
+    "preMigrationTokenSupply": "1000000000000000",
+    "postMigrationTokenSupply": "1000000000000000",
+    "migratedCollectFeeMode": 1,
+    "migratedDynamicFee": 0,
+    "migratedPoolFeeBps": 10,
+    "migratedPoolBaseFeeMode": 0,
+    "enableFirstSwapWithMinFee": 0,
+    "migratedCompoundingFeeBps": 0,
+    "poolCreationFee": "0",
+    "migratedPoolBaseFeeBytes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sqrtStartPrice": "321471537732820387",
+    "curve": [
+      {
+        "sqrtPrice": "412481737123559485",
+        "liquidity": "40941476260114986346290802090718"
+      },
+      {
+        "sqrtPrice": "79226673521066979257578248091",
+        "liquidity": "120630696504150140491401"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      },
+      {
+        "sqrtPrice": "0",
+        "liquidity": "0"
+      }
+    ]
+  },
+  "baseMint": {
+    "address": "8irnNcd5b8UDcoijasSk5M148aJSuQpuqNUPd48K8kN9",
+    "mintAuthority": null,
+    "supply": "1000000000000000",
+    "decimals": 6,
+    "isInitialized": true,
+    "freezeAuthority": null,
+    "tlvData": {
+      "base64": "EgBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcrrpIYwmPnM7u7fkIItJcXksU358X5nwA4BTgPPbKC4TALUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAByuukhjCY+czu7t+Qgi0lxeSxTfnxfmfADgFOA89soLhAAAABUaGUgTnZpZGlhIEhlaXN0BQAAAEhlaXN0UAAAAGh0dHBzOi8vaXBmcy5pby9pcGZzL2JhZmtyZWloYW95dDdqNmQ0M21hb3BteWNmMmp5ajYzbHZqb3R4bWQ0Z281YjQydmd2d3FxZDV4dGxxAAAAAA=="
+    }
+  },
+  "quoteMint": {
+    "address": "So11111111111111111111111111111111111111112",
+    "mintAuthority": null,
+    "supply": "0",
+    "decimals": 9,
+    "isInitialized": true,
+    "freezeAuthority": null,
+    "tlvData": {
+      "base64": ""
+    }
+  },
+  "baseExtensions": [
+    18,
+    19
+  ],
+  "quoteExtensions": []
+}

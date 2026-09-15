@@ -1,0 +1,12 @@
+test_budget_blocks_complete_result (test_collect_universe.CollectionTests) ... ok
+test_categories_and_zero_based_indices (test_collect_universe.CollectionTests) ... ok
+test_duplicates (test_collect_universe.CollectionTests) ... ok
+test_invalid_token_retained_unknown (test_collect_universe.CollectionTests) ... ok
+test_missing_event_blocks_complete_result (test_collect_universe.CollectionTests) ... ok
+test_missing_retained_as_unknown (test_collect_universe.CollectionTests) ... ok
+test_success_exit_and_artifacts (test_collect_universe.CollectionTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.514s
+
+OK

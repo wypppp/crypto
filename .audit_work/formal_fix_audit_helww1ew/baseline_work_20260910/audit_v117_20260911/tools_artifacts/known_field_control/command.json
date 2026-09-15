@@ -1,0 +1,22 @@
+[
+  "/home/claude/miniconda3/bin/python3",
+  "/home/ancillary/rightTail/baseline_work_20260910/realchain_tools/compare_runs.py",
+  "--dir",
+  "/tmp/rta-v117-tools-audit/known_field_control/inputs",
+  "--serial",
+  "serial,resume_serial",
+  "--parallel",
+  "parallel,resume_parallel,resume_parallel2",
+  "--sample",
+  "/home/ancillary/rightTail/baseline_work_20260910/pilot/dev_sample.json",
+  "--pin",
+  "25950799:0xe7e5d3e8b2be05e6e1c537f1a8ea534121c5defc9b6e7ea8edc54d01dd446e82",
+  "--expect-script-sha",
+  "5cb58ed878751a22396bb4284e10a44b70ab18c7ac7387c5370871207439ba1e",
+  "--expect-evidence-sha",
+  "1fe5c43c57420b1213c7f272619f844469bc95a8c39f196d236ef2e9f5f7420d",
+  "--expect-spec-sha",
+  "2a6c5dcf613d263f8ec9067b047805e0c675a6b6df159896414b0bde4b756606",
+  "--out",
+  "/tmp/rta-v117-tools-audit/known_field_control/report.json"
+]

@@ -1,0 +1,4 @@
+{"seq": 1, "run_id": "d7ba9144a27a457ca6db1d7d3b0c003c", "kind": "run_header", "worker": null, "at": "2026-09-12T09:11:28Z", "mono_s": 0.0}
+BROKEN
+{"seq": 2, "run_id": "d7ba9144a27a457ca6db1d7d3b0c003c", "kind": "rpc", "worker": null, "at": "2026-09-12T09:11:28Z", "mono_s": 0.004, "i": 1}
+{"seq": 3, "run_id": "d7ba9144a27a457ca6db1d7d3b0c003c", "kind": "run_footer", "worker": null, "at": "2026-09-12T09:11:28Z", "mono_s": 0.007}

@@ -1,0 +1,13 @@
+{
+  "pilot_measure.py": "2c15b2eeec10375c4c0b88eccbbc5e6cc44a3ad58a50cd4388d66cdbbf1e2b14",
+  "evidence.py": "dcff069ff0e6cd0bbb4484fb5ebd874675d28cb56c6fffcd2568e9df13a0667a",
+  "audit_flow.py": "7321028d205fc1671c08b4653bf52f3d088c1629a99c8ad3f36cab541c49e2bc",
+  "test_audit_followup.py": "0c61b9ee1e2ef7253dd3d865ab62de5c272febb603c5a36c1b0a07d9a9fbd031",
+  "test_parallel.py": "808aea36ebbb783ad8ed50bcf8534f382f1c88777790b65a9a180ae976208a80",
+  "MEASUREMENT_SPEC.md": "b4bfe2a2681334ab58791ec298701fc1618d63aad25afa65b25bcab787e65553",
+  "MEASUREMENT_SPEC.v1.10.md": "ed62d6aef1869d8474c16f1b0e3c2cd3ac64f9398b2958850da86d47e588166a",
+  "MEASUREMENT_SPEC.v1.9.md": "bc5ed56995bc67b8db477c55ace65b0e3329abee296e119730bcc9a994756833",
+  "MEASUREMENT_SPEC.v1.8.md": "121308b9902f74679f29bc185daf13949f989ee1d12ce16d81b595a80954df2a",
+  "../baseline_20260909/verify_capabilities.py": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "_prefix_snapshot_evidence": "e3be07df7798b36690d111fac77f24a3e429e48a4a3fb48590e99cc8a145a3cd"
+}

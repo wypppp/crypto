@@ -1,0 +1,38 @@
+{
+  "overshoots": [
+    {
+      "case": "rpc_cap_one",
+      "exit": 0,
+      "limit": 1,
+      "key": "rpc",
+      "spent": {
+        "rpc": 207,
+        "etherscan": 0,
+        "unmatched_rpc_begin": 0,
+        "wall_s": 3.3,
+        "evidence_files": [
+          "parallel.evidence.jsonl"
+        ],
+        "incomplete_evidence": []
+      }
+    },
+    {
+      "case": "wall_cap_tiny",
+      "exit": 0,
+      "limit": 0.001,
+      "key": "wall_s",
+      "spent": {
+        "rpc": 209,
+        "etherscan": 0,
+        "unmatched_rpc_begin": 0,
+        "wall_s": 3.6,
+        "evidence_files": [
+          "parallel.evidence.jsonl"
+        ],
+        "incomplete_evidence": []
+      }
+    }
+  ],
+  "zero_prelaunch_limit_blocks": true,
+  "exit3_not_retried": true
+}

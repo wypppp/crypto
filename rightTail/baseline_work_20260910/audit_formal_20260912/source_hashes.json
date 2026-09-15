@@ -1,0 +1,15 @@
+{
+  "pilot_measure.py": "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+  "evidence.py": "fc6126be8a8a68c79ef79ea7060a87d8933da6f88d9b3dc5d0c5feebe038966a",
+  "realchain_tools/compare_runs.py": "e005620683be80f04d980401997e37d5a0ce20a8b8ec45c2412d129d5b77c25c",
+  "realchain_tools/run_compare.py": "f7aea3f741eef605c44f202519fe99de417e587d4c1c7675c1c7f60425369d0a",
+  "realchain_tools/fake_launch.py": "382040db913d4aeb96cef4b7d84b2db1b2c0fc4f71212408a487e44636364aad",
+  "test_realchain_tools.py": "7c2a85c06b74a9ea1298bf62d9b75291af420f446d53975d9dda3febefd27a5b",
+  "MEASUREMENT_SPEC.v1.19.md": "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f",
+  "runs/freeze_plan_20260912/FREEZE_CRITERIA.md": "07f9d19bf4ef601d27263860a9acfe6affc25082cf00a6437f4a35e9bf3616e1",
+  "runs/freeze_plan_20260912/BUDGET_300.md": "74d8ef73f893e702cce626c16aa57e386d04692e2d83d6c4e64abe2d7c064509",
+  "runs/freeze_plan_20260912/budget_model.py": "94fa6a7de83ad2dc7db155f6a2af31ececad254db5b16e3e473148e663dbfb14",
+  "runs/freeze_plan_20260912/declare_formal.py": "da9b49dc443f0e8fd929ab739080928c89f13367e004754f26ffbe98c035eaf4",
+  "runs/formal_20260912/update_state.py": "a71cd34ae5594e2a18deee7baa7e44898b2d6859e7b843f0d8f7fdbe30408a06",
+  "runs/formal_20260912/COLLECTION_LOG.md": "2f93dbb7bb5a81a5fc6c08492a60a2c1e06a072c29fea9dffaafd191e56787be"
+}

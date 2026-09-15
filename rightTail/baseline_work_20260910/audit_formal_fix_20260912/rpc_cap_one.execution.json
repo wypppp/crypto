@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/home/claude/miniconda3/bin/python3",
+    "-B",
+    "/home/ancillary/rightTail/baseline_work_20260910/realchain_tools/run_compare.py",
+    "--name",
+    "rpc_cap_one",
+    "--runs-root",
+    "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_fix_20260912/fake_runs",
+    "--sample",
+    "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_fix_20260912/fake_sample.json",
+    "--pin",
+    "25900000:0x00000000000000000000000000000000000000000000000000000000018b33e0",
+    "--launch",
+    "/home/ancillary/rightTail/baseline_work_20260910/realchain_tools/fake_launch.py",
+    "--sides",
+    "parallel",
+    "--gap-s",
+    "0",
+    "--compare",
+    "--budget-rpc",
+    "1"
+  ],
+  "cwd": "/home/ancillary/rightTail/baseline_work_20260910",
+  "exit": 0,
+  "stdout": "{\"tag\": \"parallel\", \"parallel\": 2, \"exit\": 0, \"wall_s\": 3.3}\n{\"passed\": true, \"failed\": [], \"required_absent\": [], \"n_checks\": 21}\n{\"run_dir\": \"audit_formal_fix_20260912/fake_runs/rpc_cap_one_20260912T091529Z-2fd4de\", \"this_call_exit\": {\"parallel\": 0}, \"last_exit_per_side\": {\"parallel\": 0}, \"compare_exit\": 0, \"driver_exit\": 0}\n",
+  "stderr": ""
+}

@@ -1,0 +1,21 @@
+{
+  "source": "https://api.mainnet-beta.solana.com",
+  "request": {
+    "method": "getMultipleAccounts",
+    "jsonrpc": "2.0",
+    "params": [
+      [
+        "Ci3nUi7vQVisQsb6bosAP3NGf64kR8i5RNRqD6h3yPtW",
+        "CaDBnXEGdbJ9bKBN8U4AbbvJ7BMY6KMrBTXDyShaonjd",
+        "8irnNcd5b8UDcoijasSk5M148aJSuQpuqNUPd48K8kN9",
+        "So11111111111111111111111111111111111111112"
+      ],
+      {
+        "encoding": "base64",
+        "commitment": "finalized"
+      }
+    ],
+    "id": "b09ccf06-97be-44a5-8e61-bc3301abeeac"
+  },
+  "started_at": "2026-09-14T07:22:04.751Z"
+}

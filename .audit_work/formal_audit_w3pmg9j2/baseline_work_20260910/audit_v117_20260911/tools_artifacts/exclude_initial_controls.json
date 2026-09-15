@@ -1,0 +1,23 @@
+{
+  "candidate_failure_recovery": {
+    "exit": 1,
+    "verdict": {
+      "passed": false,
+      "required_absent": [],
+      "failed": [
+        "final_results_traced:serial",
+        "rpc_plus_cache_equal"
+      ],
+      "n_checks": 35
+    }
+  },
+  "startup_failure_recovery": {
+    "exit": 0,
+    "verdict": {
+      "passed": true,
+      "required_absent": [],
+      "failed": [],
+      "n_checks": 35
+    }
+  }
+}

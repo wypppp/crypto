@@ -1,0 +1,88 @@
+1 P0 续跑：结果缺失不得判成功，已完成候选必须交付得出来
+  [PASS] 首次跑通  — rc=0 n=2
+  [FAIL] 续跑仍交付全部候选  — []
+  [FAIL] 带出来的结果有出处标记  — 0 条
+  [FAIL] 带出来的结果与首跑逐字段一致
+  [PASS] 正常续跑退出 0  — 0
+  [FAIL] carried 记入验收  — <缺字段>
+  [FAIL] 删掉旧结果后续跑退出非零  — 0
+  [FAIL] 交付不再是空的  — 0
+  [FAIL] 证据链缺失被点名  — <缺字段>
+  [FAIL] 证据链问题写明是文件缺失  — <缺字段>
+  [FAIL] validation_passed=False
+
+2 P0 检查点中段损坏必须阻断（尾部半行才是中断的正常后果）
+  [FAIL] 中段损坏被拒绝复用  — 未拒绝，仍然跑完了
+  [PASS] 尾部半行被隔离而非阻断
+  [PASS] 隔离后已完成记录仍可读  — {1, 2}
+  [FAIL] 已完成的尝试里内联存有结果  — 检查点未持久化结果，无从校验
+  [FAIL] 被篡改的结果不算可交付  — []
+  [FAIL] 其余候选不受牵连  — []
+
+3 P0 全局预算：启动请求与串行分支都在预算内
+  [FAIL] 实际请求不超过上限  — 上限 2，实际 3
+  [PASS] 超预算时退出非零  — 1
+  [FAIL] 串行分支同样受同一预算  — 上限 2，实际 126
+  [FAIL] 串行也产出闸门统计
+  [FAIL] 实际 HTTP 与逻辑请求分开报  — []
+  [FAIL] 受控链下实际 HTTP 为 0（不拿预留冒充实际）  — http=<缺> logical=<缺>
+
+4 P1 买入成本：槽位查询抛异常也不得丢失已知买入腿
+  [PASS] 退出非零  — 1
+  [PASS] 买入腿仍在
+  [FAIL] 成本表存在
+  [FAIL] 买入 gas 非零  — {}
+  [FAIL] 回款保持未知
+  [FAIL] 退出腿标为未尝试
+  [FAIL] 成本标注为部分
+
+5 P1 样本唯一性：一候选恰好一条结果
+  [FAIL] 重复候选编号被拒绝测量  — 0
+  [FAIL] 拒绝时不产出结果文件
+  [FAIL] 声明数量与条目数不符被拒  — 0
+
+6/7 P1 证据完整性：空文件与孤立记录不得判为完整
+  [FAIL] 空文件不算完整
+  [FAIL] 空文件被点名  — <缺字段>
+  [FAIL] 孤立 rpc_end 不算完整
+  [FAIL] 孤立 end 被点名  — <缺字段>
+  [FAIL] 缺运行头被点名  — <缺字段>
+  [FAIL] 重复 pending_id 不算完整
+  [FAIL] 重复 pending_id 被点名  — <缺字段>
+  [PASS] 正常运行仍判完整  — {'empty': '<缺字段>', 'orphan_rpc_end': '<缺字段>', 'duplicate_pending_id': '<缺字段>', 'runs_without_header': '<缺字段>'}
+  [FAIL] 支持排除进行中的运行（否则同文件续跑必误判）  — {'error': "read_evidence() got an unexpected keyword argument 'ignore_runs'"}
+
+8 P1 Mint 元数据规范性
+  [PASS] 规范事件仍然通过  — None
+  [FAIL] transactionHash='0x' 被拒且理由明确  — None
+  [FAIL] transactionHash 非十六进制 被拒且理由明确  — None
+  [FAIL] blockHash='WRONG' 被拒且理由明确  — None
+  [FAIL] logIndex='garbage' 被拒且理由明确  — None
+  [FAIL] logIndex 为负 被拒且理由明确  — None
+  [FAIL] sender topic 非十六进制 被拒且理由明确  — <裸抛 ValueError>
+  [FAIL] 审查方原反例事件被拒  — None
+
+9 汇总里的规格标识必须是实际绑定的那一份
+  [FAIL] 规格不再写死 v1 (draft)  — MEASUREMENT_SPEC.md v1 (draft)
+  [FAIL] 规格带路径与 sha256  — MEASUREMENT_SPEC.md v1 (draft)
+
+10 Etherscan 计数按候选归集（并行下不得串味）
+  [FAIL] 按候选归集而非全局差值  — <无按候选计数>
+  [PASS] 全局计数仍是总和  — {'etherscan': 4}
+  [PASS] 与证据逐条统计一致  — {11: 3, 22: 1}
+
+11 区块缓存命中留有证据（缓存口径可查）
+  [FAIL] 缓存命中确实产生了记录  — 0 条
+  [FAIL] 命中记录写明取用双方  — 0 条
+  [FAIL] 命中记录带块号与块 hash  — 0 条
+
+12 同快照对照的机制：--pin-finalized
+  [FAIL] 串行确实改用了指定快照（而非默认 finalized）  — {'number': 25900000, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b33e0', 'timestamp': 310800000}
+  [PASS] 并行绑到同一个指定快照  — {'number': 25900000, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b33e0', 'timestamp': 310800000}
+  [FAIL] 与不指定时的默认快照确实不同  — {'number': 25900000, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b33e0', 'timestamp': 310800000} vs {'number': 25900000, 'hash': '0x00000000000000000000000000000000000000000000000000000000018b33e0', 'timestamp': 310800000}
+  [PASS] 两次是各自独立的检查点（不是靠跳过凑齐）  — [] / []
+  [PASS] 两边都真的测了全部候选
+  [FAIL] 指定块的 hash 不符即拒绝（重组保护）  — 0
+  [FAIL] 格式非法即拒绝  — 0
+
+通过 14 / 失败 51

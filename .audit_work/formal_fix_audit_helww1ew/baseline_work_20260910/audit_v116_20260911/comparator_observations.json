@@ -1,0 +1,68 @@
+[
+  {
+    "scene": "baseline",
+    "exit": 0,
+    "verdict": {
+      "same_snapshot": true,
+      "same_candidate_set": true,
+      "field_mismatches": 0,
+      "both_evidence_complete": true,
+      "final_cumulative_exit_0": true
+    }
+  },
+  {
+    "scene": "one_wei",
+    "exit": 1,
+    "verdict": {
+      "same_snapshot": true,
+      "same_candidate_set": true,
+      "field_mismatches": 1,
+      "both_evidence_complete": true,
+      "final_cumulative_exit_0": true
+    }
+  },
+  {
+    "scene": "validation_flip",
+    "exit": 1,
+    "verdict": {
+      "same_snapshot": true,
+      "same_candidate_set": true,
+      "field_mismatches": 1,
+      "both_evidence_complete": true,
+      "final_cumulative_exit_0": true
+    }
+  },
+  {
+    "scene": "missing_footer",
+    "exit": 0,
+    "verdict": {
+      "same_snapshot": true,
+      "same_candidate_set": true,
+      "field_mismatches": 0,
+      "both_evidence_complete": false,
+      "final_cumulative_exit_0": true
+    }
+  },
+  {
+    "scene": "final_exit_1",
+    "exit": 0,
+    "verdict": {
+      "same_snapshot": true,
+      "same_candidate_set": true,
+      "field_mismatches": 0,
+      "both_evidence_complete": true,
+      "final_cumulative_exit_0": false
+    }
+  },
+  {
+    "scene": "missing_final_run_entries",
+    "exit": 0,
+    "verdict": {
+      "same_snapshot": true,
+      "same_candidate_set": true,
+      "field_mismatches": 0,
+      "both_evidence_complete": true,
+      "final_cumulative_exit_0": true
+    }
+  }
+]

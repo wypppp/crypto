@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/home/claude/miniconda3/bin/python3",
+    "-B",
+    "/home/ancillary/rightTail/baseline_work_20260910/runs/formal_20260912/update_state.py",
+    "--state-dir",
+    "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_fix_20260912/state_recheck"
+  ],
+  "cwd": "/home/ancillary/rightTail/baseline_work_20260910",
+  "exit": 0,
+  "stdout": "{\n  \"cost_so_far\": {\n    \"rpc\": 5133,\n    \"etherscan\": 62,\n    \"wall_s\": 4588.0,\n    \"unmatched_rpc_begin\": 1\n  },\n  \"progress\": {\n    \"main_declared\": 15,\n    \"main_done\": 0,\n    \"subset_declared\": 2,\n    \"subset_done\": 1,\n    \"main_candidates_covered\": 0,\n    \"main_candidates_total\": 300,\n    \"missing_candidates\": [\n      476633,\n      476665,\n      476761,\n      476786,\n      476809,\n      476872,\n      477126,\n      477138,\n      477263,\n      477292,\n      477394,\n      477429,\n      477515,\n      477608,\n      477653,\n      477684,\n      477707,\n      477735,\n      477901,\n      477934\n    ]\n  },\n  \"unbound_run_dirs\": []\n}\n  sub01(15个,pair): done=True dirs=['formal_sub01_20260912T003750Z-f0c3ee']\n  sub02(15个,pair): done=False dirs=['formal_sub02_20260912T011723Z-17018c'] 问题=[{'run_dir': 'formal_sub02_20260912T011723Z-17018c', 'problems': ['driver_exit=None', 'compare not passed (None)', 'mode None != declared pair', 'verification report None not from the registered verification tool version - re-verify with the current comparator', 'no final result for side parallel']}]\n",
+  "stderr": ""
+}

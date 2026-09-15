@@ -1,0 +1,5 @@
+{"tag": "serial", "parallel": 1, "exit": 1, "wall_s": 771.0, "checkpoint": "runs/x/serial.checkpoint.jsonl"}
+{"tag": "parallel", "parallel": 2, "exit": 1, "wall_s": 438.1, "checkpoint": "runs/x/serial.checkpoint.jsonl"}
+{"tag": "resume_serial", "parallel": 1, "exit": 0, "wall_s": 131.2, "checkpoint": "runs/x/serial.checkpoint.jsonl"}
+{"tag": "resume_parallel", "parallel": 2, "exit": 1, "wall_s": 147.2, "checkpoint": "runs/x/serial.checkpoint.jsonl"}
+{"tag": "resume_parallel2", "parallel": 2, "exit": 0, "wall_s": 129.7, "checkpoint": "runs/x/serial.checkpoint.jsonl"}

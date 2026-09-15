@@ -1,0 +1,14 @@
+{
+  "pilot_measure.py": "537cd5c347761169fe71bc2e2301114559a9ab052f5479a792652b636aa055fd",
+  "evidence.py": "1fe5c43c57420b1213c7f272619f844469bc95a8c39f196d236ef2e9f5f7420d",
+  "audit_flow.py": "4ca051c65f830cbd94fe16927199547d014a5f8e884b76bffbc0763800a22d03",
+  "test_audit_followup.py": "4fd7142a62e45fdf655608c777a51014fd2d6f2139880673ce86e67416937243",
+  "test_parallel.py": "bee97f1924d46b9c83c6cbb57dde3ea861bf134c2cb656ad8052e7fa12c4f366",
+  "MEASUREMENT_SPEC.md": "d8e5c520a0a8298b7fafb14cd4d1c8ca8e95005dbd43fd2d9ed7a9f053330c6c",
+  "MEASUREMENT_SPEC.v1.15.md": "77f27cedf928684aa327625f30d3262c4725c5f94265d9c0bf65418361d66f8e",
+  "MEASUREMENT_SPEC.v1.14.md": "f8dc892cca09636989ce919418edeb870601fac47a32a7f4e7f0590c55d189f0",
+  "runs/tls_20260911/phase_probe.py": "202af82089f93e19b2d35da3382b56c3d697b97ac340ae6ed34966abe663eb5b",
+  "runs/fix_20260910/reproduce_retry_gated.py": "b1f8b17e94c5b92f6f4a52ee93e0f51ee3326f2f9edb6108a064d21d20f3ea8c",
+  "runs/tls_20260911/ARTIFACT_NOTE.md": "5950dd7b64dc2fbbc4c05ee66f552b5469fcace0ac350a66ac54f0e13e19b5a3",
+  "runs/tls_20260911/phase_probe.overwritten_by_audit_suite.json": "e8cc2ff34dc7f4e976ae0602ad0ccaf5c10eac6f49f1f3ec21372953b4f62ff5"
+}

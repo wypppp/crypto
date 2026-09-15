@@ -1,0 +1,19 @@
+--- audit_v116_20260911/verify_realchain.py
++++ audit_v117_20260911/verify_existing_realchain.py
+@@ -30,7 +30,7 @@
+     hh = [x for x in rr if x['kind'] == 'run_header']
+     assert len(hh) == 1 and hh[0]['run_id'] == d['run_id']
+     h = hh[0]; headers.append(h)
+-    assert h['script_sha256'] == sha(W / 'pilot_measure.py')
++    assert h['script_sha256'] == sha(W / 'audit_v116_20260911/pilot_measure.audited.py')
+     assert h['evidence_module_sha256'] == sha(W / 'evidence.py')
+     assert h['spec_sha256'] == sha(W / 'MEASUREMENT_SPEC.v1.16.md')
+     assert h['sample_sha256'] == d['sample_sha256'] == sha(W / 'pilot/dev_sample.json')
+@@ -70,6 +70,7 @@
+     binding = rr[0]
+     assert binding['kind'] == 'binding'
+     assert binding['primitives_sha256'] == sha(W / '../baseline_20260909/verify_capabilities.py')
++    assert binding['runtime_params'] == {k: headers[0]['params'][k] for k in ('slot_limit', 'diagnostics', 'cutoff_block', 'amount_wei')}
+     latest = {}
+     for x in rr[1:]:
+         if x['completed']: latest[x['candidate']] = x

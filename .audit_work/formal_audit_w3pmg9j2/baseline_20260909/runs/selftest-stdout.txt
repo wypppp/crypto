@@ -1,0 +1,22 @@
+[PASS] S.constants Deployment and virtual address encoding
+[PASS] S.selector.574f2ba3 allPairsLength()
+[PASS] S.selector.1e3dd18b allPairs(uint256)
+[PASS] S.selector.0dfe1681 token0()
+[PASS] S.selector.d21220a7 token1()
+[PASS] S.selector.18160ddd totalSupply()
+[PASS] S.selector.0902f1ac getReserves()
+[PASS] S.selector.70a08231 balanceOf(address)
+[PASS] S.selector.313ce567 decimals()
+[PASS] S.selector.e6a43905 getPair(address,address)
+[PASS] S.selector.dd62ed3e allowance(address,address)
+[PASS] S.selector.095ea7b3 approve(address,uint256)
+[PASS] S.topic.4c209b5f Mint(address,uint256,uint256)
+[PASS] S.topic.0d3648bd PairCreated(address,address,address,uint256)
+[PASS] S.keccak Independent Keccak vectors
+[PASS] S.abi Strict ABI/hex rejects empty and malformed data
+[PASS] S.rpc Null, errors and mismatched IDs cannot pass
+[PASS] S.search First Mint and timestamp boundary cases
+[PASS] S.gates Exit status, unknown classification, redaction and read-only guard
+[PASS] S.evm Independent EVM: normal/tax/missing balance/missing allowance/restriction
+[PASS] S.workflow Artificial historical workflow and ignored-override rejection
+{"counts": {"PASS": 21, "FAIL": 0, "UNRUN": 0}, "capability_gate": {"passed": true, "blocking_ids": []}, "baseline_ready": false, "log": "runs/local-selftest.json"}

@@ -1,0 +1,66 @@
+[
+  {
+    "test": "test_evidence",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 29 / 失败 0"
+    ]
+  },
+  {
+    "test": "test_first_mint",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 17 / 失败 0"
+    ]
+  },
+  {
+    "test": "test_step3",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 27 / 失败 0"
+    ]
+  },
+  {
+    "test": "test_step4",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 18 / 失败 0"
+    ]
+  },
+  {
+    "test": "test_e2e_blocking",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 41 / 失败 0"
+    ]
+  },
+  {
+    "test": "test_resume",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 23 / 失败 0"
+    ]
+  },
+  {
+    "test": "test_parallel",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 20 / 失败 0"
+    ]
+  },
+  {
+    "test": "test_audit_fixes",
+    "exit": 0,
+    "tail": [
+      "",
+      "通过 25 / 失败 0"
+    ]
+  }
+]

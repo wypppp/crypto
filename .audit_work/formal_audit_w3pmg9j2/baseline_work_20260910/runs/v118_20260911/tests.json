@@ -1,0 +1,52 @@
+[
+  {
+    "name": "evidence",
+    "exit": 0,
+    "summary": "通过 29 / 失败 0"
+  },
+  {
+    "name": "first_mint",
+    "exit": 0,
+    "summary": "通过 17 / 失败 0"
+  },
+  {
+    "name": "step3",
+    "exit": 0,
+    "summary": "通过 27 / 失败 0"
+  },
+  {
+    "name": "step4",
+    "exit": 0,
+    "summary": "通过 18 / 失败 0"
+  },
+  {
+    "name": "e2e_blocking",
+    "exit": 0,
+    "summary": "通过 41 / 失败 0"
+  },
+  {
+    "name": "resume",
+    "exit": 0,
+    "summary": "通过 23 / 失败 0"
+  },
+  {
+    "name": "parallel",
+    "exit": 0,
+    "summary": "通过 23 / 失败 0"
+  },
+  {
+    "name": "audit_fixes",
+    "exit": 0,
+    "summary": "通过 35 / 失败 0"
+  },
+  {
+    "name": "audit_followup",
+    "exit": 0,
+    "summary": "通过 363 / 失败 0"
+  },
+  {
+    "name": "realchain_tools",
+    "exit": 0,
+    "summary": "通过 72 / 失败 0"
+  }
+]

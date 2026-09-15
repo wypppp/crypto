@@ -1,0 +1,15 @@
+{
+  "protected_files": 1557,
+  "changed": [],
+  "audit_files_scanned": 29,
+  "credential_hits": [],
+  "scan_scope": "configured literal RPC URL, URL last segment, Etherscan key",
+  "package_verification": {
+    "command": "python3 -B verify_package.py",
+    "cwd": "/home/ancillary/rightTail/baseline_20260909",
+    "exit": 0,
+    "tool_observed_result": "PACKAGE VERIFIED: 11 files"
+  },
+  "sources_changed": false,
+  "new_endpoint_requests": false
+}

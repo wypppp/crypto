@@ -1,0 +1,20 @@
+{
+  "driver_exit": 1,
+  "attempts": [
+    {
+      "tag": "parallel",
+      "exit": 3
+    },
+    {
+      "tag": "parallel_resume1",
+      "exit": 3
+    },
+    {
+      "tag": "parallel_resume2",
+      "exit": 3
+    }
+  ],
+  "max_resumes_200_per_side_max_attempts": 201,
+  "each_attempt_gets_own_max_calls": 4000,
+  "resulting_per_side_logical_budget_bound": 804000
+}

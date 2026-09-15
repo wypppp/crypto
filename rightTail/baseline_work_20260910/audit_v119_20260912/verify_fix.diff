@@ -1,0 +1,27 @@
+--- v118/probe.py
++++ v119/verify_fix.py
+@@ -33,12 +33,15 @@
+  assert E.read_evidence(ev,report=True)[1]['complete']
+  rc2,doc2,rr2,_=A.flow(d,'resume',checkpoint=cp)
+  h=next(x for x in rr if x['kind']=='run_header');binding=json.loads(cp.read_text().splitlines()[0])
+- binding_ok,detail=C._run_binding_ok(rr,doc['run_id'],h,doc,binding)
++ problems,rule=E.verify_run_binding(rr,doc['run_id'],binding,result_doc=doc)
++ binding_ok,detail=not problems,dict(problems=problems,rule=rule)
+  item=dict(mode=mode,exit=rc2,acceptance=doc2['acceptance'],skipped=doc2['acceptance']['skipped_already_completed'],
+            comparator_binding_ok=binding_ok,comparator_binding_detail=detail,original_binding=original_rb,changed_binding=rb)
+  obs.append(item);print(json.dumps(item),flush=True)
+- assert rc2==0 and sorted(item['skipped'])==[1,2]
+- assert not doc2['acceptance']['evidence_chain_problems']
++ assert rc2==(0 if mode=='control' else 1) and sorted(item['skipped'])==[1,2]
++ assert len(doc2['results'])==2
++ assert doc2['acceptance']['economic_results_eligible'] is False
++ assert bool(doc2['acceptance']['evidence_chain_problems']) is (mode!='control')
+  assert binding_ok is (mode=='control')
+ (ROOT/'resume_observations.json').write_text(json.dumps(obs,indent=2)+'\n')
+ # Comparator historical positive/three original negative controls, correct new CLI.
+@@ -80,4 +83,4 @@
+ print('driver exit',p.returncode,manifest[-1],flush=True);assert p.returncode==0
+ assert [(x['tag'],x['exit']) for x in manifest if x['kind']=='run']==[('serial',2),('serial_resume1',0),('parallel',0)]
+ (ROOT/'driver_observation.json').write_text(json.dumps(dict(exit=p.returncode,last=manifest[-1]),indent=2))
+-print('Independent closed-path checks and resume binding counterexamples complete.',flush=True)
++print('Independent closed-path and full-resume binding verification complete.',flush=True)

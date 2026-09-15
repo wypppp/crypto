@@ -1,0 +1,134 @@
+{
+  "schema_version": "w00-probe-1",
+  "run_id": "RT-W00-20260914-codex-01",
+  "work_package": "RT-W00",
+  "run_role": "engineering_fixture",
+  "analysis_role": "development",
+  "agent_id": "codex",
+  "parent_run_id": null,
+  "started_at": "2026-09-14T07:18:59.195125+00:00",
+  "finished_at": "2026-09-14T07:19:23.079771+00:00",
+  "process_status": "completed",
+  "command": "python3 probe.py",
+  "exit_code": 0,
+  "git_sha": null,
+  "git_reason": "one-off scratch probe; no project checkout",
+  "source_snapshot": [
+    {
+      "path": "probe.py",
+      "sha256": "8249e1cde5fdebdb9561c5106f8de3027fbc70ed14a81c11128a2bdd1e3e3f18"
+    }
+  ],
+  "dependency_lock": {
+    "path": "package-lock.json",
+    "sha256": "d1c47d4460e096bc26dd6f233e20328fb49ac1ed2b6abe887a664fc9dfc930b7"
+  },
+  "spec": {
+    "path": "spec.json",
+    "sha256": "bcbdf2de59392ccd08ba4ff6b326647605e91ddc2ee0bc96cd3787a07468d232",
+    "frozen_at": "2026-09-14T07:18:59.195125+00:00"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "SDK": "@meteora-ag/dynamic-bonding-curve-sdk@1.5.12"
+  },
+  "inputs": [
+    {
+      "path": "raw/01_getVersion.request.json",
+      "sha256": "86f52780bd518b437c401c2cc830e353aa3e2c641ec18f8dd212d94330aa14f9",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": "2026-09-14T07:19:06.625320+00:00",
+      "started_at": "2026-09-14T07:18:59.617904+00:00"
+    },
+    {
+      "path": "raw/01_getVersion.response.json",
+      "sha256": "435c7e886f566f6e65e8cf99b266946808291ccb498abd81cbd08224e6546a95"
+    },
+    {
+      "path": "raw/02_getSignaturesForAddress.request.json",
+      "sha256": "ffedfab193e7771845e5b241f3a5060a5f292bc7dad962ee089fe268ddc9b134",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": "2026-09-14T07:19:12.113949+00:00",
+      "started_at": "2026-09-14T07:19:06.625484+00:00"
+    },
+    {
+      "path": "raw/02_getSignaturesForAddress.response.json",
+      "sha256": "648df4d4b2c14ffe52f261cebc81d305ce30050ae5a1509fd1a1c8815756dceb"
+    },
+    {
+      "path": "raw/03_getTransaction.request.json",
+      "sha256": "74f334afe26943c9a3438033d77472c82796eb2404c7debe2c1de65bd1242de7",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": "2026-09-14T07:19:17.678860+00:00",
+      "started_at": "2026-09-14T07:19:12.114224+00:00"
+    },
+    {
+      "path": "raw/03_getTransaction.response.json",
+      "sha256": "9cbc13524a55c1e863859a74bafade71f5e7b5c35f4135dcad896df66190d50c"
+    },
+    {
+      "path": "raw/04_getAccountInfo.request.json",
+      "sha256": "422e1683afd2cc5b6f7d513857facbf524ac9a6f1fed9c3fc19937aac225f2ac",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": "2026-09-14T07:19:23.079612+00:00",
+      "started_at": "2026-09-14T07:19:17.679178+00:00"
+    },
+    {
+      "path": "raw/04_getAccountInfo.response.json",
+      "sha256": "28aac92fffa79a9bd17b7ab6b4ab5b3c68f994eeb4b3b34aa3845ea4195bdf3c"
+    },
+    {
+      "path": "raw/dbc_idl.json",
+      "sha256": "cfd1bd8c16bc47889b3561a66189e79b1ce534ad6540138abb40d82517d7fea6",
+      "source": "MeteoraAg/dynamic-bonding-curve-sdk",
+      "source_commit": "aa1595c29a0457b23a80cfcf9843a04603954858",
+      "retrieved_at": null,
+      "retrieval_time_note": "Fetched in this session; exact tool timestamp not captured"
+    },
+    {
+      "path": "raw/source_tree.json",
+      "sha256": "c24e7c1bb8f0148579e03a318311fa7bd29de38dd3143e83fe59334b53c29573",
+      "source": "MeteoraAg/dynamic-bonding-curve-sdk",
+      "source_commit": "aa1595c29a0457b23a80cfcf9843a04603954858",
+      "retrieved_at": null,
+      "retrieval_time_note": "Fetched in this session; exact tool timestamp not captured"
+    },
+    {
+      "path": "raw/state.test.ts",
+      "sha256": "a5d6ef2cff8a904e97f511ca9dd27fcfa6d73d3ed1c1e8e848ec2449f14cf974",
+      "source": "MeteoraAg/dynamic-bonding-curve-sdk",
+      "source_commit": "aa1595c29a0457b23a80cfcf9843a04603954858",
+      "retrieved_at": null,
+      "retrieval_time_note": "Fetched in this session; exact tool timestamp not captured"
+    }
+  ],
+  "universe": {
+    "type": "purposive_engineering_fixture",
+    "enumeration_status": "not_performed",
+    "economic_sample_size": 0
+  },
+  "resources": {
+    "rpc_requests": 4,
+    "paid_API_charge_USD": 0,
+    "compute_network_cost_USD": null,
+    "note": "public RPC, no paid service; unmetered environment expenses not assumed zero"
+  },
+  "outputs": [
+    {
+      "path": "result.json",
+      "sha256": "617188d2cf9b5c440bd8a753bc5ddbd5b979e34784dc5db5be9d85a8ce78b362"
+    }
+  ],
+  "decision": {
+    "subprobe_result": "REAL_POOL_IDENTIFIED",
+    "full_W00": "INCOMPLETE",
+    "economic_profit_claim": "none"
+  },
+  "verification": {
+    "independent_reviewer": "UNRUN",
+    "data_source_independence": "single public RPC",
+    "same_agent_check": "verification.json"
+  },
+  "manifest_assembly": "Generated after completion from saved specs, responses and observed command results; not a live acceptance gate"
+}

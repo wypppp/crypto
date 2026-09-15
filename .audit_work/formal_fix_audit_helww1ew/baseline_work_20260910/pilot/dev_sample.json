@@ -1,0 +1,58 @@
+{
+  "declared_at": "2026-09-10T00:28:11.759070+00:00",
+  "seed": 20260910,
+  "n": 8,
+  "universe_sha256": "dd672e3348bd308ebf4d5320f4a449740cec824fbc5bd1c6412c067947180958",
+  "universe_weth_rows": 16044,
+  "purpose": "development sample for end-to-end measurement; NOT the formal 300",
+  "sample": [
+    {
+      "index": 477926,
+      "pair": "0xf01468992b2adb46445d80d4aca9f2d1d3f6dd78",
+      "token": "0xa0adaff8b1caba730b619dff69c021daea8d3153",
+      "created_block": 24171295
+    },
+    {
+      "index": 478595,
+      "pair": "0x614b89a5553bafddddf24dc9bee5822ebd799a86",
+      "token": "0x53129729c2fa7e076f697569176af908298bf46b",
+      "created_block": 24188628
+    },
+    {
+      "index": 479353,
+      "pair": "0xd803874babcb1fba49a0359adb445ab97471c8c6",
+      "token": "0x875ae8017eec90899ab87cb30d611cae8956b374",
+      "created_block": 24212104
+    },
+    {
+      "index": 480842,
+      "pair": "0x7c67070bead03f21abe3b363db35523561131de4",
+      "token": "0x21716e723e2de689caaa7e185d5c5bad0fc94672",
+      "created_block": 24257452
+    },
+    {
+      "index": 482755,
+      "pair": "0x5430db15eb8714f56b45f758ad93ea0d7b1912e3",
+      "token": "0xcf5157fb2c94cc2c00f11582248935abba35fea4",
+      "created_block": 24321972
+    },
+    {
+      "index": 488019,
+      "pair": "0x4eb4053213e7274fbbdd6e8e7a186371674a893b",
+      "token": "0x1756554146b5b934aa93bd2ffaca2ef084159910",
+      "created_block": 24521973
+    },
+    {
+      "index": 491410,
+      "pair": "0x101e034b651aa46ff7d68e97f7a5a87c27c12ea7",
+      "token": "0xe46d35541198b1d56f5237a221699b18602ea990",
+      "created_block": 24667890
+    },
+    {
+      "index": 491473,
+      "pair": "0x0b1bf50699ac941990e461109fd14e171c1b41a4",
+      "token": "0xb39ba550610084d094c893086b9eb7616ebbd363",
+      "created_block": 24673145
+    }
+  ]
+}

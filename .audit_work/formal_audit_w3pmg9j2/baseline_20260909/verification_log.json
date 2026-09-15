@@ -1,0 +1,152 @@
+{
+  "schema": "right-tail-preflight/2",
+  "script_version": "2.0",
+  "mode": "run",
+  "started_at": "2026-09-09T07:47:45.254093+00:00",
+  "results": [
+    {
+      "id": "T1",
+      "name": "Chain and finalized snapshot",
+      "status": "FAIL",
+      "detail": {
+        "error_type": "RpcFailure",
+        "message": "HTTP 403",
+        "kind": "http",
+        "code": 403
+      },
+      "required": true,
+      "elapsed_s": 7.478354
+    },
+    {
+      "id": "T2",
+      "name": "Actual cohort-window historical registry",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Prerequisite not established: snapshot"
+      },
+      "required": true,
+      "elapsed_s": 9e-06
+    },
+    {
+      "id": "T3",
+      "name": "First Mint with one-block event cross-check",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Prerequisite not established: registry_ok"
+      },
+      "required": true,
+      "elapsed_s": 4e-06
+    },
+    {
+      "id": "T4",
+      "name": "Observable historical overrides and isolation",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Prerequisite not established: registry_ok"
+      },
+      "required": true,
+      "elapsed_s": 1.5e-05
+    },
+    {
+      "id": "T5.buy",
+      "name": "Actual token balance delta in one execution",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Prerequisite not established: pair,overrides_ok"
+      },
+      "required": true,
+      "elapsed_s": 2e-06
+    },
+    {
+      "id": "T5.sell",
+      "name": "Actual exit cash delta with reconstructed balance",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Prerequisite not established: buy_received,exit_block"
+      },
+      "required": true,
+      "elapsed_s": 2e-06
+    },
+    {
+      "id": "T6",
+      "name": "Controlled taxes and environment/restriction failures",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Prerequisite not established: overrides_ok"
+      },
+      "required": true,
+      "elapsed_s": 2e-06
+    },
+    {
+      "id": "T7",
+      "name": "Historical block hash consistency",
+      "status": "UNRUN",
+      "detail": {
+        "reason": "Prerequisite not established: snapshot"
+      },
+      "required": true,
+      "elapsed_s": 2e-06
+    }
+  ],
+  "baseline_ready": false,
+  "scope": "capability probe only; no market return or strategy conclusion",
+  "script_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "embedded_source_sha256": "9e937f5df930546d9d0c166d539149aaaafb07731b95decd36998e509298216c",
+  "embedded_runtime_sha256": {
+    "FixtureRouter": "1f3225a29dc9b8d06bc2a3a8c91f2f001da4b6c5b117cccf91563342a2f90133",
+    "FixtureToken": "156077bddce3a76dfb9b27fc61075d140735c5e5312a31c7a2e1e730d9fdaf9f",
+    "Probe": "c18d052f2e9d20a1f6a55740d989d602c84fed811124161d384979b16b7cb8b9"
+  },
+  "rpc_host": "ethereum-rpc.publicnode.com",
+  "probe_parameters": {
+    "token": "0x6b175474e89094c44da98b954eedeac495271d0f",
+    "wallet": "0x00000000000000000000000000000000ba5e1001",
+    "caller": "0x00000000000000000000000000000000ba5e1002",
+    "input_wei": 50000000000000000,
+    "window_start": "2026-01-01T00:00:00Z",
+    "window_end_exclusive": "2026-04-01T00:00:00Z",
+    "max_calls": 10,
+    "max_seconds": 30.0,
+    "slot_limit": 32
+  },
+  "block_footprint": [],
+  "rpc_calls": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observed_at": "2026-09-09T07:47:45.255737+00:00",
+      "attempt": 1,
+      "error": {
+        "kind": "http",
+        "code": 403
+      },
+      "elapsed_s": 7.477931
+    }
+  ],
+  "evidence_level": "endpoint_test_for_recorded_cases_only",
+  "finished_at": "2026-09-09T07:47:52.734154+00:00",
+  "counts": {
+    "PASS": 0,
+    "FAIL": 1,
+    "UNRUN": 7
+  },
+  "capability_gate": {
+    "passed": false,
+    "blocking_ids": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5.buy",
+      "T5.sell",
+      "T6",
+      "T7"
+    ]
+  },
+  "baseline_remaining_gates": [
+    "frozen configuration and complete candidate denominator",
+    "candidate-specific holding-state/EOA semantics and missingness handling",
+    "cost convention, pilot quality and unchanged canonical block hashes"
+  ]
+}

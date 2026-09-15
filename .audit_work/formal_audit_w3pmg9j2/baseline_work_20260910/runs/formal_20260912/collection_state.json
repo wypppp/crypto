@@ -1,0 +1,108 @@
+{
+  "snapshot_pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1",
+  "formal_sample_sha256": "38d685ed8842c5335855defaa8caa1f56a4ad59d998f74ad38b5fbd03335e93a",
+  "batches": {},
+  "subsets": {
+    "01": {
+      "run_dir": "formal_sub01_20260912T003750Z-f0c3ee",
+      "attempts": [
+        {
+          "tag": "serial",
+          "parallel": 1,
+          "exit": 1,
+          "wall_s": 1305.4
+        },
+        {
+          "tag": "serial_resume1",
+          "parallel": 1,
+          "exit": 0,
+          "wall_s": 113.5
+        },
+        {
+          "tag": "parallel",
+          "parallel": 2,
+          "exit": 1,
+          "wall_s": 739.3
+        },
+        {
+          "tag": "parallel_resume1",
+          "parallel": 2,
+          "exit": 0,
+          "wall_s": 126.1
+        }
+      ],
+      "wall_s_total": 2284.3,
+      "rpc_records": 2669,
+      "rpc_errors": 3,
+      "etherscan_records": 33,
+      "driver_exit": 0,
+      "compare_exit": 0,
+      "compare_verdict": {
+        "passed": true,
+        "required_absent": [],
+        "failed": [],
+        "n_checks": 51
+      },
+      "finals": {
+        "serial": {
+          "tag": "serial_resume1",
+          "n_results": 15,
+          "states": {
+            "no_mint_by_cutoff": 2,
+            "measured_exit": 11,
+            "entry_unknown": 1,
+            "execution_reverted_unknown": 1
+          },
+          "set_complete": true,
+          "validation_passed": true,
+          "economic_results_eligible": false,
+          "incomplete": [],
+          "validation_unavailable": [],
+          "validation_failed": []
+        },
+        "parallel": {
+          "tag": "parallel_resume1",
+          "n_results": 15,
+          "states": {
+            "no_mint_by_cutoff": 2,
+            "measured_exit": 11,
+            "entry_unknown": 1,
+            "execution_reverted_unknown": 1
+          },
+          "set_complete": true,
+          "validation_passed": true,
+          "economic_results_eligible": false,
+          "incomplete": [],
+          "validation_unavailable": [],
+          "validation_failed": []
+        }
+      },
+      "sample": "subset_pair_01.json",
+      "pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1"
+    },
+    "02": {
+      "run_dir": "formal_sub02_20260912T011723Z-17018c",
+      "attempts": [],
+      "wall_s_total": 0,
+      "rpc_records": 0,
+      "rpc_errors": 0,
+      "etherscan_records": 0,
+      "driver_exit": null,
+      "compare_exit": null,
+      "compare_verdict": null,
+      "finals": {},
+      "sample": "subset_pair_02.json",
+      "pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1"
+    }
+  },
+  "progress": {
+    "subset_batches_declared": 2,
+    "subset_batches_passed": 1,
+    "main_batches_declared": 15,
+    "main_batches_passed": 0,
+    "rpc_records_so_far": 2669,
+    "rpc_errors_so_far": 3,
+    "wall_s_so_far": 2284.3,
+    "rpc_error_fraction_so_far": 0.001124
+  }
+}

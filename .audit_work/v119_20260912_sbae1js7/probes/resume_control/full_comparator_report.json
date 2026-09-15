@@ -1,0 +1,508 @@
+{
+  "inputs": {
+    "dir": "/home/ancillary/.audit_work/v119_20260912_sbae1js7/probes/resume_control",
+    "manifest": "/home/ancillary/.audit_work/v119_20260912_sbae1js7/probes/resume_control/audit_manifest.jsonl",
+    "serial": [
+      "first",
+      "resume"
+    ],
+    "parallel": [
+      "parallel"
+    ],
+    "sample": "/home/ancillary/.audit_work/v119_20260912_sbae1js7/probes/resume_control/sample.json",
+    "pin": "25900000:0x00000000000000000000000000000000000000000000000000000000018b33e0",
+    "expect": {
+      "script_sha256": "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+      "evidence_module_sha256": "fc6126be8a8a68c79ef79ea7060a87d8933da6f88d9b3dc5d0c5feebe038966a",
+      "spec_sha256": "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f",
+      "primitives_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+      "runtime_params": {
+        "slot_limit": 2,
+        "diagnostics": false,
+        "cutoff_block": 24781026,
+        "amount_wei": 50000000000000000
+      }
+    }
+  },
+  "runs": {
+    "first": {
+      "side": "serial",
+      "out": "first.json",
+      "evidence": "first.jsonl",
+      "exit": 0,
+      "wall_s": null,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    },
+    "resume": {
+      "side": "serial",
+      "out": "resume.json",
+      "evidence": "resume.jsonl",
+      "exit": 0,
+      "wall_s": null,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    },
+    "parallel": {
+      "side": "parallel",
+      "out": "parallel.json",
+      "evidence": "parallel.jsonl",
+      "exit": 0,
+      "wall_s": null,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    }
+  },
+  "mismatches": [],
+  "allowed_diffs": [
+    {
+      "candidate": 1,
+      "field": "carried_from_checkpoint",
+      "serial": {
+        "attempt": 1,
+        "at": "2026-09-11T23:19:09Z",
+        "result_sha256": "df9e4f261b75c9393709bec821897ba3c872a5e0c0cad656c398304020e86ed5",
+        "evidence_file": "/home/ancillary/.audit_work/v119_20260912_sbae1js7/probes/resume_control/first.jsonl",
+        "evidence_run_id": "578e85925c804e66a4298d5f77d395bb"
+      },
+      "parallel": null
+    },
+    {
+      "candidate": 1,
+      "field": "elapsed_s",
+      "serial": 1.69,
+      "parallel": 6.69
+    },
+    {
+      "candidate": 2,
+      "field": "carried_from_checkpoint",
+      "serial": {
+        "attempt": 1,
+        "at": "2026-09-11T23:19:10Z",
+        "result_sha256": "04b5f267c6e88d958eb58f84277e7e6d0cc3e7d0f95dc471abe2206abf530173",
+        "evidence_file": "/home/ancillary/.audit_work/v119_20260912_sbae1js7/probes/resume_control/first.jsonl",
+        "evidence_run_id": "578e85925c804e66a4298d5f77d395bb"
+      },
+      "parallel": null
+    },
+    {
+      "candidate": 2,
+      "field": "elapsed_s",
+      "serial": 1.57,
+      "parallel": 6.36
+    },
+    {
+      "candidate": 2,
+      "field": "rpc_calls",
+      "serial": 50,
+      "parallel": 71
+    }
+  ],
+  "candidates": [
+    {
+      "index": 1,
+      "state": "measured_exit",
+      "source": [
+        "first",
+        "parallel"
+      ],
+      "rpc": [
+        74,
+        74
+      ],
+      "cache_hits": [
+        7,
+        7
+      ]
+    },
+    {
+      "index": 2,
+      "state": "measured_exit",
+      "source": [
+        "first",
+        "parallel"
+      ],
+      "rpc": [
+        50,
+        71
+      ],
+      "cache_hits": [
+        31,
+        10
+      ]
+    }
+  ],
+  "checks": {
+    "manifest_readable": {
+      "ok": true,
+      "detail": null
+    },
+    "chains_declared": {
+      "ok": true,
+      "detail": {
+        "serial": [
+          "first",
+          "resume"
+        ],
+        "parallel": [
+          "parallel"
+        ]
+      }
+    },
+    "manifest_entry_unique:first": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_entry_unique:resume": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_entry_unique:parallel": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_all_attributed": {
+      "ok": true,
+      "detail": {
+        "unattributed_tags": [],
+        "attempt_ids": [
+          "None"
+        ]
+      }
+    },
+    "chain_checkpoint_consistent:serial": {
+      "ok": true,
+      "detail": [
+        "/home/ancillary/.audit_work/v119_20260912_sbae1js7/probes/resume_control/shared.ck"
+      ]
+    },
+    "chain_checkpoint_consistent:parallel": {
+      "ok": true,
+      "detail": [
+        "/home/ancillary/.audit_work/v119_20260912_sbae1js7/probes/resume_control/parallel.ck"
+      ]
+    },
+    "chain_checkpoint_consistent:independent": {
+      "ok": true,
+      "detail": "serial and parallel must use separate checkpoints"
+    },
+    "final_exit_0:serial": {
+      "ok": true,
+      "detail": {
+        "tag": "resume",
+        "exit": 0
+      }
+    },
+    "final_exit_0:parallel": {
+      "ok": true,
+      "detail": {
+        "tag": "parallel",
+        "exit": 0
+      }
+    },
+    "result_doc_present:first": {
+      "ok": true,
+      "detail": "first.json"
+    },
+    "evidence_complete:first": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:first": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "578e85925c804e66a4298d5f77d395bb",
+        "headers": 1,
+        "runs_in_file": [
+          "578e85925c804e66a4298d5f77d395bb"
+        ]
+      }
+    },
+    "footer_matches_result:first": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:first": {
+      "ok": true,
+      "detail": {
+        "doc": 1,
+        "manifest": 1
+      }
+    },
+    "run_binding_matches:first": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "result_doc_present:resume": {
+      "ok": true,
+      "detail": "resume.json"
+    },
+    "evidence_complete:resume": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:resume": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "4be97acb669141edbb97c6a858b1eac0",
+        "headers": 1,
+        "runs_in_file": [
+          "4be97acb669141edbb97c6a858b1eac0"
+        ]
+      }
+    },
+    "footer_matches_result:resume": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:resume": {
+      "ok": true,
+      "detail": {
+        "doc": 1,
+        "manifest": 1
+      }
+    },
+    "run_binding_matches:resume": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "result_doc_present:parallel": {
+      "ok": true,
+      "detail": "parallel.json"
+    },
+    "evidence_complete:parallel": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:parallel": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "4bf396c91d114e68bbdfcc1cd6606bf2",
+        "headers": 1,
+        "runs_in_file": [
+          "4bf396c91d114e68bbdfcc1cd6606bf2"
+        ]
+      }
+    },
+    "footer_matches_result:parallel": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:parallel": {
+      "ok": true,
+      "detail": {
+        "doc": 2,
+        "manifest": 2
+      }
+    },
+    "run_binding_matches:parallel": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "binding_consistent": {
+      "ok": true,
+      "detail": {
+        "first": {},
+        "resume": {},
+        "parallel": {}
+      }
+    },
+    "binding_matches_expected": {
+      "ok": true,
+      "detail": {}
+    },
+    "checkpoint_binding:serial": {
+      "ok": true,
+      "detail": {
+        "missing": [],
+        "not_checked": [],
+        "diff": {}
+      }
+    },
+    "checkpoint_binding:parallel": {
+      "ok": true,
+      "detail": {
+        "missing": [],
+        "not_checked": [],
+        "diff": {}
+      }
+    },
+    "sample_well_formed": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "rows": 2,
+        "unique": 2
+      }
+    },
+    "final_results_one_per_candidate:serial": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "unique": 2,
+        "sample_n": 2,
+        "field_mismatch": []
+      }
+    },
+    "final_acceptance_clean:serial": {
+      "ok": true,
+      "detail": {
+        "non_empty": {},
+        "flags": {
+          "set_complete": true,
+          "process_completed": true,
+          "validation_passed": true,
+          "shutdown_stopped": false
+        },
+        "closed": {
+          "measurement_semantics_verified": false,
+          "economic_results_eligible": false
+        },
+        "validation_not_true": []
+      }
+    },
+    "final_results_traced:serial": {
+      "ok": true,
+      "detail": []
+    },
+    "final_results_one_per_candidate:parallel": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "unique": 2,
+        "sample_n": 2,
+        "field_mismatch": []
+      }
+    },
+    "final_acceptance_clean:parallel": {
+      "ok": true,
+      "detail": {
+        "non_empty": {},
+        "flags": {
+          "set_complete": true,
+          "process_completed": true,
+          "validation_passed": true,
+          "shutdown_stopped": false
+        },
+        "closed": {
+          "measurement_semantics_verified": false,
+          "economic_results_eligible": false
+        },
+        "validation_not_true": []
+      }
+    },
+    "final_results_traced:parallel": {
+      "ok": true,
+      "detail": []
+    },
+    "same_snapshot": {
+      "ok": true,
+      "detail": {
+        "serial": {
+          "number": 25900000,
+          "hash": "0x00000000000000000000000000000000000000000000000000000000018b33e0",
+          "timestamp": 310800000
+        },
+        "parallel": {
+          "number": 25900000,
+          "hash": "0x00000000000000000000000000000000000000000000000000000000018b33e0",
+          "timestamp": 310800000
+        }
+      }
+    },
+    "same_candidate_set": {
+      "ok": true,
+      "detail": {
+        "serial_only": [],
+        "parallel_only": []
+      }
+    },
+    "results_identical_except_allowed": {
+      "ok": true,
+      "detail": "0 mismatches"
+    },
+    "rpc_plus_cache_equal": {
+      "ok": true,
+      "detail": [
+        {
+          "candidate": 1,
+          "serial": [
+            74,
+            7
+          ],
+          "parallel": [
+            74,
+            7
+          ],
+          "ok": true
+        },
+        {
+          "candidate": 2,
+          "serial": [
+            50,
+            31
+          ],
+          "parallel": [
+            71,
+            10
+          ],
+          "ok": true
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "passed": true,
+    "required_absent": [],
+    "failed": [],
+    "n_checks": 44
+  }
+}

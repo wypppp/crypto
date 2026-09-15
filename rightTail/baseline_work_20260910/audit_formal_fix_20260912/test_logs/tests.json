@@ -1,0 +1,167 @@
+[
+  {
+    "entry": "evidence",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_evidence.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 1.52,
+    "counts": [
+      "29",
+      "0"
+    ]
+  },
+  {
+    "entry": "first_mint",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_first_mint.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 0.32,
+    "counts": [
+      "17",
+      "0"
+    ]
+  },
+  {
+    "entry": "step3",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_step3.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 0.22,
+    "counts": [
+      "27",
+      "0"
+    ]
+  },
+  {
+    "entry": "step4",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_step4.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 0.27,
+    "counts": [
+      "18",
+      "0"
+    ]
+  },
+  {
+    "entry": "e2e_blocking",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_e2e_blocking.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 6.19,
+    "counts": [
+      "41",
+      "0"
+    ]
+  },
+  {
+    "entry": "resume",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_resume.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 7.2,
+    "counts": [
+      "23",
+      "0"
+    ]
+  },
+  {
+    "entry": "parallel",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_parallel.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 17.34,
+    "counts": [
+      "23",
+      "0"
+    ]
+  },
+  {
+    "entry": "audit_fixes",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_audit_fixes.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 13.48,
+    "counts": [
+      "35",
+      "0"
+    ]
+  },
+  {
+    "entry": "audit_followup",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_audit_followup.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 132.47,
+    "counts": [
+      "392",
+      "0"
+    ]
+  },
+  {
+    "entry": "realchain_tools",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_realchain_tools.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 135.35,
+    "counts": [
+      "89",
+      "0"
+    ]
+  },
+  {
+    "entry": "ledger",
+    "cmd": [
+      "/home/claude/miniconda3/bin/python3",
+      "-B",
+      "test_ledger.py"
+    ],
+    "cwd": "/home/ancillary/.audit_work/formal_fix_audit_helww1ew/baseline_work_20260910",
+    "exit": 0,
+    "elapsed_s": 1.17,
+    "counts": [
+      "11",
+      "0"
+    ]
+  }
+]

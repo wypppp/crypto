@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "n": 300,
+  "excluded": [
+    477926,
+    478595,
+    479353,
+    480842,
+    482755,
+    488019,
+    491410,
+    491473
+  ],
+  "batches": 15,
+  "subset_n": 30,
+  "note": "Candidate membership and partition reproduced; declared_at and dependent parent hash are intentionally not identical across regeneration."
+}

@@ -26,20 +26,23 @@ TERMINAL_STATES = {
 
 
 def dune_key(root: Path) -> str | None:
-    """Read DUNE_API_KEY from the process or the local ignored .env file."""
+    """Read the process, workspace .env, then the caller's local .env."""
     key = os.environ.get("DUNE_API_KEY")
     if key:
         return key
-    env_path = root / ".env"
-    if not env_path.exists():
-        return None
-    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
+    workspace = Path(__file__).resolve().parents[2]
+    for env_path in dict.fromkeys((workspace / ".env", root / ".env")):
+        if not env_path.exists():
             continue
-        name, value = line.split("=", 1)
-        if name.strip() == "DUNE_API_KEY":
-            return value.strip().strip("'\"") or None
+        for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            name, value = line.split("=", 1)
+            if name.strip() == "DUNE_API_KEY":
+                key = value.strip().strip("'\"")
+                if key:
+                    return key
     return None
 
 

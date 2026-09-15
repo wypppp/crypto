@@ -1,0 +1,457 @@
+{
+ "group_sizes": {
+  "W": 9,
+  "M": 25,
+  "L": 161,
+  "U": 11
+ },
+ "criteria": {
+  "c1_discriminating_value": false,
+  "c2_W_at_least_5": true,
+  "c3_W_median_mpi_T50_ge_2": true,
+  "W_median_mpi_T50": 3.27682119205298
+ },
+ "verdict": "不值得",
+ "table": [
+  {
+   "feature": "Launchpad",
+   "value": "True",
+   "n_all": 29,
+   "n_W": 2,
+   "n_M": 3,
+   "n_L": 24,
+   "n_U": 0,
+   "cov_W": 0.2222222222222222,
+   "cov_all": 0.1407766990291262,
+   "lift_W": 1.578544061302682,
+   "meets_1": false
+  },
+  {
+   "feature": "Launchpool",
+   "value": "True",
+   "n_all": 88,
+   "n_W": 3,
+   "n_M": 12,
+   "n_L": 73,
+   "n_U": 0,
+   "cov_W": 0.3333333333333333,
+   "cov_all": 0.42718446601941745,
+   "lift_W": 0.7803030303030303,
+   "meets_1": false
+  },
+  {
+   "feature": "HODLer Airdrop",
+   "value": "True",
+   "n_all": 47,
+   "n_W": 1,
+   "n_M": 7,
+   "n_L": 39,
+   "n_U": 0,
+   "cov_W": 0.1111111111111111,
+   "cov_all": 0.22815533980582525,
+   "lift_W": 0.4869976359338061,
+   "meets_1": false
+  },
+  {
+   "feature": "Megadrop",
+   "value": "True",
+   "n_all": 49,
+   "n_W": 1,
+   "n_M": 7,
+   "n_L": 41,
+   "n_U": 0,
+   "cov_W": 0.1111111111111111,
+   "cov_all": 0.23786407766990292,
+   "lift_W": 0.4671201814058957,
+   "meets_1": false
+  },
+  {
+   "feature": "Pre-Market",
+   "value": "True",
+   "n_all": 3,
+   "n_W": 0,
+   "n_M": 0,
+   "n_L": 3,
+   "n_U": 0,
+   "cov_W": 0.0,
+   "cov_all": 0.014563106796116505,
+   "lift_W": 0.0,
+   "meets_1": false
+  },
+  {
+   "feature": "无渠道关键词",
+   "value": "True",
+   "n_all": 112,
+   "n_W": 6,
+   "n_M": 13,
+   "n_L": 82,
+   "n_U": 11,
+   "cov_W": 0.6666666666666666,
+   "cov_all": 0.5436893203883495,
+   "lift_W": 1.2261904761904763,
+   "meets_1": false
+  },
+  {
+   "feature": "Seed Tag",
+   "value": "True",
+   "n_all": 142,
+   "n_W": 7,
+   "n_M": 22,
+   "n_L": 107,
+   "n_U": 6,
+   "cov_W": 0.7777777777777778,
+   "cov_all": 0.6893203883495146,
+   "lift_W": 1.1283255086071988,
+   "meets_1": false
+  },
+  {
+   "feature": "Monitoring Tag",
+   "value": "True",
+   "n_all": 0,
+   "n_W": 0,
+   "n_M": 0,
+   "n_L": 0,
+   "n_U": 0,
+   "cov_W": 0.0,
+   "cov_all": 0.0,
+   "lift_W": null,
+   "meets_1": false
+  },
+  {
+   "feature": "X3_lead",
+   "value": "<=24h",
+   "n_all": 140,
+   "n_W": 6,
+   "n_M": 16,
+   "n_L": 108,
+   "n_U": 10,
+   "cov_W": 0.6666666666666666,
+   "cov_all": 0.6796116504854369,
+   "lift_W": 0.9809523809523808,
+   "meets_1": false
+  },
+  {
+   "feature": "X3_lead",
+   "value": "24-72h",
+   "n_all": 26,
+   "n_W": 2,
+   "n_M": 4,
+   "n_L": 20,
+   "n_U": 0,
+   "cov_W": 0.2222222222222222,
+   "cov_all": 0.1262135922330097,
+   "lift_W": 1.7606837606837606,
+   "meets_1": false
+  },
+  {
+   "feature": "X3_lead",
+   "value": ">72h",
+   "n_all": 40,
+   "n_W": 1,
+   "n_M": 5,
+   "n_L": 33,
+   "n_U": 1,
+   "cov_W": 0.1111111111111111,
+   "cov_all": 0.1941747572815534,
+   "lift_W": 0.5722222222222222,
+   "meets_1": false
+  },
+  {
+   "feature": "X3_lead",
+   "value": "不可用",
+   "n_all": 0,
+   "n_W": 0,
+   "n_M": 0,
+   "n_L": 0,
+   "n_U": 0,
+   "cov_W": 0.0,
+   "cov_all": 0.0,
+   "lift_W": null,
+   "meets_1": false
+  },
+  {
+   "feature": "X4_btc90",
+   "value": ">=1.2",
+   "n_all": 74,
+   "n_W": 0,
+   "n_M": 9,
+   "n_L": 63,
+   "n_U": 2,
+   "cov_W": 0.0,
+   "cov_all": 0.3592233009708738,
+   "lift_W": 0.0,
+   "meets_1": false
+  },
+  {
+   "feature": "X4_btc90",
+   "value": "0.8-1.2",
+   "n_all": 107,
+   "n_W": 7,
+   "n_M": 13,
+   "n_L": 79,
+   "n_U": 8,
+   "cov_W": 0.7777777777777778,
+   "cov_all": 0.5194174757281553,
+   "lift_W": 1.497403946002077,
+   "meets_1": false
+  },
+  {
+   "feature": "X4_btc90",
+   "value": "<0.8",
+   "n_all": 25,
+   "n_W": 2,
+   "n_M": 3,
+   "n_L": 19,
+   "n_U": 1,
+   "cov_W": 0.2222222222222222,
+   "cov_all": 0.12135922330097088,
+   "lift_W": 1.831111111111111,
+   "meets_1": false
+  },
+  {
+   "feature": "X4_btc90",
+   "value": "不可用",
+   "n_all": 0,
+   "n_W": 0,
+   "n_M": 0,
+   "n_L": 0,
+   "n_U": 0,
+   "cov_W": 0.0,
+   "cov_all": 0.0,
+   "lift_W": null,
+   "meets_1": false
+  }
+ ],
+ "exit_summary": {
+  "W": {
+   "mpi_T50_median_n": [
+    3.27682119205298,
+    9
+   ],
+   "mpi_180_median_n": [
+    3.8771963699555894,
+    9
+   ],
+   "mstar_close_median_n": [
+    7.486892935982339,
+    9
+   ]
+  },
+  "M": {
+   "mpi_T50_median_n": [
+    1.141142151912936,
+    25
+   ],
+   "mpi_180_median_n": [
+    0.7445228369847754,
+    25
+   ],
+   "mstar_close_median_n": [
+    2.383260406148323,
+    25
+   ]
+  },
+  "L": {
+   "mpi_T50_median_n": [
+    0.49563318777292575,
+    161
+   ],
+   "mpi_180_median_n": [
+    0.2525458248472505,
+    161
+   ],
+   "mstar_close_median_n": [
+    1.0344880915558305,
+    161
+   ]
+  },
+  "U": {
+   "mpi_T50_median_n": [
+    0.5519187358916479,
+    9
+   ],
+   "mpi_180_median_n": [
+    null,
+    0
+   ],
+   "mstar_close_median_n": [
+    1.145221971407073,
+    9
+   ]
+  }
+ },
+ "winners": [
+  {
+   "base": "GMT",
+   "T0_day": "2022-03-09",
+   "mstar_close_180": 25.272126379800383,
+   "mpi_180": 4.574657941701369,
+   "mpi_T50": 11.708440742944013,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2022-05-09",
+   "exit_day_quote_volume": 673424750.090595,
+   "entry_day_quote_volume": 247030696.650497,
+   "Launchpad": true,
+   "Launchpool": true,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": false,
+   "X3_lead": "<=24h",
+   "X4_btc90": "<0.8"
+  },
+  {
+   "base": "GALA",
+   "T0_day": "2021-09-13",
+   "mstar_close_180": 12.94888346127006,
+   "mpi_180": 3.731681786461968,
+   "mpi_T50": 6.005582693649686,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2022-01-07",
+   "exit_day_quote_volume": 249092206.90446,
+   "entry_day_quote_volume": 333987929.17604,
+   "Launchpad": false,
+   "Launchpool": false,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": false,
+   "X3_lead": "<=24h",
+   "X4_btc90": "0.8-1.2"
+  },
+  {
+   "base": "ORDI",
+   "T0_day": "2023-11-07",
+   "mstar_close_180": 8.418999806912531,
+   "mpi_180": 3.8771963699555894,
+   "mpi_T50": 4.151187487932033,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2024-04-16",
+   "exit_day_quote_volume": 122057543.71835,
+   "entry_day_quote_volume": 154421755.1806,
+   "Launchpad": false,
+   "Launchpool": false,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": true,
+   "X3_lead": "<=24h",
+   "X4_btc90": "0.8-1.2"
+  },
+  {
+   "base": "TIA",
+   "T0_day": "2023-10-31",
+   "mstar_close_180": 8.3588052271313,
+   "mpi_180": 4.169259489732421,
+   "mpi_T50": 3.6631404272972414,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2024-04-12",
+   "exit_day_quote_volume": 78322800.41107,
+   "entry_day_quote_volume": 136711996.4488,
+   "Launchpad": false,
+   "Launchpool": false,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": true,
+   "X3_lead": "24-72h",
+   "X4_btc90": "0.8-1.2"
+  },
+  {
+   "base": "NEIRO",
+   "T0_day": "2024-09-16",
+   "mstar_close_180": 7.486892935982339,
+   "mpi_180": 0.7591611479028697,
+   "mpi_T50": 3.27682119205298,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2024-12-18",
+   "exit_day_quote_volume": 146881220.87632805,
+   "entry_day_quote_volume": 214231360.0028607,
+   "Launchpad": false,
+   "Launchpool": false,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": true,
+   "X3_lead": "<=24h",
+   "X4_btc90": "0.8-1.2"
+  },
+  {
+   "base": "MMT",
+   "T0_day": "2025-11-04",
+   "mstar_close_180": 5.612244897959184,
+   "mpi_180": 0.28358843537414963,
+   "mpi_T50": 1.5922619047619049,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2025-11-05",
+   "exit_day_quote_volume": 501633414.16288,
+   "entry_day_quote_volume": 931122562.16021,
+   "Launchpad": false,
+   "Launchpool": true,
+   "HODLer Airdrop": true,
+   "Megadrop": true,
+   "Seed Tag": true,
+   "X3_lead": "24-72h",
+   "X4_btc90": "0.8-1.2"
+  },
+  {
+   "base": "BANANAS31",
+   "T0_day": "2025-03-27",
+   "mstar_close_180": 5.5214296307281625,
+   "mpi_180": 0.7800682188936675,
+   "mpi_T50": 2.7154085718522913,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2025-07-11",
+   "exit_day_quote_volume": 232954508.661322,
+   "entry_day_quote_volume": 5331743.294486,
+   "Launchpad": false,
+   "Launchpool": false,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": true,
+   "X3_lead": "<=24h",
+   "X4_btc90": "0.8-1.2"
+  },
+  {
+   "base": "SEI",
+   "T0_day": "2023-08-15",
+   "mstar_close_180": 5.132180358245831,
+   "mpi_180": 4.190240889437925,
+   "mpi_T50": 0.6516368128474367,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2023-10-10",
+   "exit_day_quote_volume": 3295343.99571,
+   "entry_day_quote_volume": 116233132.15686,
+   "Launchpad": true,
+   "Launchpool": true,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": true,
+   "X3_lead": ">72h",
+   "X4_btc90": "0.8-1.2"
+  },
+  {
+   "base": "币安人生",
+   "T0_day": "2026-01-07",
+   "mstar_close_180": 5.127113337507827,
+   "mpi_180": 4.502191609267376,
+   "mpi_T50": 0.799624295554164,
+   "T50_reason": "trailing_50",
+   "T50_exit_day": "2026-01-31",
+   "exit_day_quote_volume": 38355096.15203,
+   "entry_day_quote_volume": 43219879.67813,
+   "Launchpad": false,
+   "Launchpool": false,
+   "HODLer Airdrop": false,
+   "Megadrop": false,
+   "Seed Tag": true,
+   "X3_lead": "<=24h",
+   "X4_btc90": "<0.8"
+  }
+ ],
+ "inputs": {
+  "results_csv_sha256": "3e395d272499cd780f19b06d244281dfcec6d16abdfd119b9b50417f6b55f168",
+  "card_sha256": "1fc3c56bc07151fa391dd33941613aae7aa77cf57d1cd7382afb1e701c20d177",
+  "script_sha256": "0f0093844d850486b775a0348cb5d59ff6bed59c8b2d553ecde595aeb6499b27"
+ },
+ "implementation_notes": [
+  "T50 参考高点包含入场价与入场日及之后的日收盘价",
+  "容量代理为日 K quote_volume（USDT），不是可执行深度",
+  "W 含 M*close 为下界已达 5 的记录"
+ ]
+}

@@ -1,0 +1,75 @@
+{
+  "started_at": "2026-09-10T00:32:14.143205+00:00",
+  "sample_file": "pilot/one.json",
+  "finalized_snapshot": {
+    "number": 25943342,
+    "hash": "0x5f9fa40c4e5314286cc6e1ee66fcbf27900a3197199e2bdc615d86fc28f7a18c",
+    "timestamp": 1788999383
+  },
+  "sample_sha256": "8db80bc75f8589ffcb98698ca1684d96d78d181e7842eff6808eb46537ea9207",
+  "package_script_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+  "spec": "MEASUREMENT_SPEC.md v1 (draft)",
+  "slot_limit": 32,
+  "diagnostics": true,
+  "total_elapsed_s": 98.2,
+  "rpc_calls": 61,
+  "results": [
+    {
+      "index": 478595,
+      "pair": "0x614b89a5553bafddddf24dc9bee5822ebd799a86",
+      "token": "0x53129729c2fa7e076f697569176af908298bf46b",
+      "created_block": 24188628,
+      "trigger": {
+        "first_mint_block": 24188628,
+        "status": "ok"
+      },
+      "entry": {
+        "entry_block": 24188629,
+        "entry_ts": 1767859235,
+        "stage": 0,
+        "classification": "simulated_success",
+        "received": 3713168547887793494308710768,
+        "eth_debit": 50000000000000000,
+        "base_fee": 46125334,
+        "reason": "0x"
+      },
+      "exit": {
+        "exit_block": 24403612,
+        "exit_ts": 1770451235,
+        "base_fee": 98442006,
+        "stage": 0,
+        "classification": "simulated_success",
+        "token_before": 3713168547887793494308710768,
+        "token_after": 0,
+        "cash_in": 21870350350051,
+        "reason": "0x"
+      },
+      "model": {
+        "slot_scan_calls": 34,
+        "slot_status": "ok",
+        "slot": 0,
+        "holding_state": "adequate_proven_by_execution"
+      },
+      "data": null,
+      "state": "measured_exit",
+      "cost": {
+        "A_wei": 50000000000000000,
+        "R_wei": 21870350350051,
+        "G_by_scenario": {
+          "swap120000_tip0": 27192281400000,
+          "swap120000_tip100000000": 61192281400000,
+          "swap120000_tip1000000000": 367192281400000,
+          "swap150000_tip0": 31529301600000,
+          "swap150000_tip100000000": 71529301600000,
+          "swap150000_tip1000000000": 431529301600000,
+          "swap200000_tip0": 38757668600000,
+          "swap200000_tip100000000": 88757668600000,
+          "swap200000_tip1000000000": 538757668600000
+        },
+        "main_scenario": "swap150000_tip100000000"
+      },
+      "elapsed_s": 98.2,
+      "rpc_calls": 60
+    }
+  ]
+}

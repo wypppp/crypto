@@ -1,0 +1,128 @@
+[
+  {
+    "name": "summary_json_bypasses_redaction",
+    "exit": 1,
+    "fake_secret_in_summary": true,
+    "fake_secret_in_evidence": false
+  },
+  {
+    "name": "worker_budget_exhaustion_success",
+    "exit": 0,
+    "expected_n": 2,
+    "actual_n": 0,
+    "acceptance": {
+      "n": 0,
+      "skipped_already_completed": [],
+      "resumed": false,
+      "checkpoint": "/tmp/tmpsrngdmnc/budget_crash.ck",
+      "incomplete": [],
+      "complete": 0,
+      "evidence_records": 322,
+      "validation_failed": [],
+      "validation_passed": true,
+      "process_completed": true,
+      "meaning": "process_completed 仅表示本次采集流程走完且每个候选落到已定义状态；它【不】代表测量语义已验证，也【不】代表正式实验验收通过。",
+      "measurement_semantics_verified": false,
+      "economic_results_eligible": false
+    }
+  },
+  {
+    "name": "parallel_outer_rpc",
+    "exit": 0,
+    "reported_rpc": 52,
+    "actual_mock_rpc": 148,
+    "unowned_worker_requests": 52,
+    "unowned_methods": [
+      "eth_getBlockByNumber"
+    ]
+  },
+  {
+    "name": "duplicate_pending_identifiers",
+    "duplicate_keys": 46
+  },
+  {
+    "name": "worker_failure_success",
+    "exit": 0,
+    "expected_n": 2,
+    "actual_n": 0,
+    "acceptance": {
+      "n": 0,
+      "skipped_already_completed": [],
+      "resumed": false,
+      "checkpoint": "/tmp/tmpybli551y/worker_crash.ck",
+      "incomplete": [],
+      "complete": 0,
+      "evidence_records": 10,
+      "validation_failed": [],
+      "validation_passed": true,
+      "process_completed": true,
+      "meaning": "process_completed 仅表示本次采集流程走完且每个候选落到已定义状态；它【不】代表测量语义已验证，也【不】代表正式实验验收通过。",
+      "measurement_semantics_verified": false,
+      "economic_results_eligible": false
+    }
+  },
+  {
+    "name": "changed_runtime_config_resumed",
+    "first_exit": 0,
+    "second_exit": 0,
+    "slot_limit": 0,
+    "skipped": [
+      1,
+      2
+    ],
+    "remaining_result_rows": 0
+  },
+  {
+    "name": "verified_no_mint_not_completable",
+    "exit": 1,
+    "states": [
+      "no_mint_by_cutoff",
+      "no_mint_by_cutoff"
+    ],
+    "validation": [
+      false,
+      false
+    ]
+  },
+  {
+    "name": "checkpoint_partial_append_loses_success",
+    "before": [
+      1
+    ],
+    "after": []
+  },
+  {
+    "name": "unmatched_begin_considered_complete",
+    "complete": true
+  },
+  {
+    "name": "http_retry_exceeds_shared_budget",
+    "max_calls": 1,
+    "gate_calls": 1,
+    "http_attempts": 2,
+    "result": "0x1"
+  },
+  {
+    "name": "zero_unexecuted_leg_erases_known_buy_cost",
+    "costs": {
+      "swap120000_tip0": "unknown",
+      "swap120000_tip100000000": "unknown",
+      "swap120000_tip1000000000": "unknown",
+      "swap150000_tip0": "unknown",
+      "swap150000_tip100000000": "unknown",
+      "swap150000_tip1000000000": "unknown",
+      "swap200000_tip0": "unknown",
+      "swap200000_tip100000000": "unknown",
+      "swap200000_tip1000000000": "unknown"
+    }
+  },
+  {
+    "name": "malformed_mint_accepted",
+    "rejection": null
+  },
+  {
+    "name": "request_admitted_after_time_budget",
+    "elapsed": 0.05,
+    "budget": 0.01
+  }
+]

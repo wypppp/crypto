@@ -1,0 +1,12 @@
+chain_id=1  finalized 快照 25957369  0xf1589d1aadf7c4a8…
+  [1/8] idx=477926 state=no_mint_by_cutoff 1.95s rpc=1
+  [2/8] idx=478595 state=measured_exit 108.04s rpc=105
+  [3/8] idx=479353 state=execution_reverted_unknown 108.34s rpc=106
+  [4/8] idx=480842 state=data_missing 42.42s rpc=40
+  [5/8] idx=482755 state=measured_exit 109.84s rpc=104
+  [6/8] idx=488019 state=execution_reverted_unknown 113.91s rpc=106
+  [7/8] idx=491410 state=data_missing 49.84s rpc=45
+  [8/8] idx=491473 state=measured_exit 103.52s rpc=102
+
+-> runs/v119_20260911T233131Z-546793/parallel.json
+-> runs/v119_20260911T233131Z-546793/parallel.evidence.jsonl  (1978 条证据)

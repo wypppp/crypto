@@ -1,0 +1,12 @@
+{"case": "baseline", "exit": 0, "state": "measured_exit", "validation_status": "passed", "validation_passed": true, "evidence_complete": true}
+{"case": "sides_only", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
+{"case": "sides_then_transport", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
+{"case": "restore_dirty", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
+{"case": "restore_dirty_then_budget", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
+{"case": "entry_dirty_then_budget", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
+Traceback (most recent call last):
+  File "audit_v117_20260911/reproduce_remaining.py", line 97, in <module>
+    if __name__=='__main__': main()
+  File "audit_v117_20260911/reproduce_remaining.py", line 86, in main
+    assert x['exit']==1 and x['state']=='data_missing' and x['validation_passed'] is None
+AssertionError

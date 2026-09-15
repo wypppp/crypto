@@ -1,0 +1,453 @@
+{
+  "campaign": {
+    "pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1",
+    "formal_sample_sha256": "38d685ed8842c5335855defaa8caa1f56a4ad59d998f74ad38b5fbd03335e93a",
+    "plan": "A：全量并行一侧测一遍 + 30 个子集串并行对照"
+  },
+  "cost_so_far": {
+    "rpc": 5133,
+    "etherscan": 62,
+    "wall_s": 4588.0,
+    "unmatched_rpc_begin": 1
+  },
+  "cost_note": "已落盘的执行记录；unmatched_rpc_begin 是只有 begin、结果未知的请求，既不算成功也不能当未发生。不等于账户计费总量",
+  "progress": {
+    "main_declared": 15,
+    "main_done": 0,
+    "subset_declared": 2,
+    "subset_done": 1,
+    "main_candidates_covered": 0,
+    "main_candidates_total": 300,
+    "missing_candidates": [
+      476633,
+      476665,
+      476761,
+      476786,
+      476809,
+      476872,
+      477126,
+      477138,
+      477263,
+      477292,
+      477394,
+      477429,
+      477515,
+      477608,
+      477653,
+      477684,
+      477707,
+      477735,
+      477901,
+      477934
+    ]
+  },
+  "unbound_run_dirs": [],
+  "batches": [
+    {
+      "id": "main01",
+      "kind": "main",
+      "sample": "batch_01.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main02",
+      "kind": "main",
+      "sample": "batch_02.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main03",
+      "kind": "main",
+      "sample": "batch_03.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main04",
+      "kind": "main",
+      "sample": "batch_04.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main05",
+      "kind": "main",
+      "sample": "batch_05.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main06",
+      "kind": "main",
+      "sample": "batch_06.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main07",
+      "kind": "main",
+      "sample": "batch_07.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main08",
+      "kind": "main",
+      "sample": "batch_08.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main09",
+      "kind": "main",
+      "sample": "batch_09.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main10",
+      "kind": "main",
+      "sample": "batch_10.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main11",
+      "kind": "main",
+      "sample": "batch_11.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main12",
+      "kind": "main",
+      "sample": "batch_12.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main13",
+      "kind": "main",
+      "sample": "batch_13.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main14",
+      "kind": "main",
+      "sample": "batch_14.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "main15",
+      "kind": "main",
+      "sample": "batch_15.json",
+      "n": 20,
+      "mode": "single:parallel",
+      "done": false,
+      "problems": [
+        "no run directory bound to this batch"
+      ],
+      "run_dirs": []
+    },
+    {
+      "id": "sub01",
+      "kind": "subset_pair",
+      "sample": "subset_pair_01.json",
+      "n": 15,
+      "mode": "pair",
+      "done": true,
+      "problems": [],
+      "run_dirs": [
+        "formal_sub01_20260912T003750Z-f0c3ee"
+      ]
+    },
+    {
+      "id": "sub02",
+      "kind": "subset_pair",
+      "sample": "subset_pair_02.json",
+      "n": 15,
+      "mode": "pair",
+      "done": false,
+      "problems": [
+        {
+          "run_dir": "formal_sub02_20260912T011723Z-17018c",
+          "problems": [
+            "driver_exit=None",
+            "compare not passed (None)",
+            "mode None != declared pair",
+            "verification report None not from the registered verification tool version - re-verify with the current comparator",
+            "no final result for side parallel"
+          ]
+        }
+      ],
+      "run_dirs": [
+        "formal_sub02_20260912T011723Z-17018c"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "run_dir": "formal_sub01_20260912T003750Z-f0c3ee",
+      "sample": "subset_pair_01.json",
+      "sample_sha256": "5639a911ed4e62701ad0cadeac298767236e8ae537b02c16ac5abfdcf67a7eda",
+      "pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1",
+      "sides_declared_by_driver": null,
+      "batch_id": "sub01",
+      "bound": true,
+      "attempts": [
+        {
+          "tag": "serial",
+          "side": "serial",
+          "exit": 1,
+          "wall_s": 1305.4
+        },
+        {
+          "tag": "serial_resume1",
+          "side": "serial",
+          "exit": 0,
+          "wall_s": 113.5
+        },
+        {
+          "tag": "parallel",
+          "side": "parallel",
+          "exit": 1,
+          "wall_s": 739.3
+        },
+        {
+          "tag": "parallel_resume1",
+          "side": "parallel",
+          "exit": 0,
+          "wall_s": 126.1
+        }
+      ],
+      "started_not_finished": [],
+      "budget_stops": [],
+      "driver_exit": 0,
+      "compare_invocation": "c524e8e3",
+      "compare_verdict": {
+        "passed": true,
+        "required_absent": [],
+        "failed": [],
+        "n_checks": 53
+      },
+      "compare_mode": "pair",
+      "compare_report": "recompare_20260912T083633Z.json",
+      "compare_tool_current": true,
+      "spent": {
+        "rpc": 2669,
+        "etherscan": 33,
+        "unmatched_rpc_begin": 0,
+        "wall_s": 2284.3,
+        "evidence_files": [
+          "parallel.evidence.jsonl",
+          "parallel_resume1.evidence.jsonl",
+          "serial.evidence.jsonl",
+          "serial_resume1.evidence.jsonl"
+        ],
+        "incomplete_evidence": []
+      },
+      "finals": {
+        "serial": {
+          "tag": "serial_resume1",
+          "indices": [
+            476809,
+            477707,
+            478403,
+            478615,
+            479064,
+            479104,
+            479532,
+            479621,
+            479940,
+            481689,
+            481704,
+            481714,
+            481860,
+            482524,
+            484179
+          ],
+          "set_complete": true,
+          "validation_passed": true,
+          "economic_results_eligible": false
+        },
+        "parallel": {
+          "tag": "parallel_resume1",
+          "indices": [
+            476809,
+            477707,
+            478403,
+            478615,
+            479064,
+            479104,
+            479532,
+            479621,
+            479940,
+            481689,
+            481704,
+            481714,
+            481860,
+            482524,
+            484179
+          ],
+          "set_complete": true,
+          "validation_passed": true,
+          "economic_results_eligible": false
+        }
+      },
+      "states": {
+        "no_mint_by_cutoff": 4,
+        "measured_exit": 22,
+        "entry_unknown": 2,
+        "execution_reverted_unknown": 2
+      }
+    },
+    {
+      "run_dir": "formal_sub02_20260912T011723Z-17018c",
+      "sample": "subset_pair_02.json",
+      "sample_sha256": "4681d69e7be0e8c8c2291c7799773c6f84b01ae5d9cf0d14875086101826c5b3",
+      "pin": "25957718:0x2ff001c72249fe7a64b8fe7e8f9a5963b59585831c328b998f5b93c7c10bf6d1",
+      "sides_declared_by_driver": null,
+      "batch_id": "sub02",
+      "bound": true,
+      "attempts": [
+        {
+          "tag": "serial",
+          "side": "serial",
+          "exit": 1,
+          "wall_s": 1762.9
+        },
+        {
+          "tag": "serial_resume1",
+          "side": "serial",
+          "exit": 0,
+          "wall_s": 540.8
+        }
+      ],
+      "started_not_finished": [],
+      "budget_stops": [],
+      "driver_exit": null,
+      "compare_invocation": null,
+      "compare_verdict": null,
+      "compare_mode": null,
+      "compare_report": null,
+      "compare_tool_current": null,
+      "spent": {
+        "rpc": 2464,
+        "etherscan": 29,
+        "unmatched_rpc_begin": 1,
+        "wall_s": 2303.7,
+        "evidence_files": [
+          "parallel.evidence.jsonl",
+          "serial.evidence.jsonl",
+          "serial_resume1.evidence.jsonl"
+        ],
+        "incomplete_evidence": [
+          "parallel.evidence.jsonl"
+        ]
+      },
+      "finals": {
+        "serial": {
+          "tag": "serial_resume1",
+          "indices": [
+            484611,
+            485028,
+            485942,
+            486632,
+            487245,
+            487304,
+            487865,
+            488068,
+            488286,
+            489248,
+            489328,
+            490926,
+            491895,
+            491900,
+            492587
+          ],
+          "set_complete": true,
+          "validation_passed": true,
+          "economic_results_eligible": false
+        }
+      },
+      "states": {
+        "measured_exit": 13,
+        "execution_reverted_unknown": 2
+      }
+    }
+  ]
+}

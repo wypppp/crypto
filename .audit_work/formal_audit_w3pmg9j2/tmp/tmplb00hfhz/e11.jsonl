@@ -1,0 +1,2 @@
+{"seq": 1, "run_id": "d5712b4d2d094c1aa6b1c752f7dbe3ed", "kind": "etherscan", "worker": null, "at": "2026-09-12T08:06:01Z", "mono_s": 0.0, "error": "URLError: <urlopen error <redacted>>", "params": {"k": "v"}}
+{"seq": 2, "run_id": "d5712b4d2d094c1aa6b1c752f7dbe3ed", "kind": "rpc", "worker": null, "at": "2026-09-12T08:06:01Z", "mono_s": 0.004, "record": {"nested": {"deep": "...<redacted>..."}}}

@@ -1,0 +1,90 @@
+--- pilot_measure.serial.py
++++ pilot_measure.py
+@@ -9,7 +9,8 @@
+     python pilot_measure.py declare --n 8 --out pilot/dev_sample.json
+     python pilot_measure.py measure --sample pilot/dev_sample.json --out pilot/pilot_results.json
+ """
+-import argparse, csv, hashlib, json, os, random, sys, time, urllib.parse, urllib.request
++import argparse, csv, hashlib, json, os, random, sys, threading, time
++import urllib.parse, urllib.request
+ from pathlib import Path
+ 
+ PKG = Path(__file__).resolve().parent.parent / "baseline_20260909"
+@@ -526,12 +527,16 @@
+ 
+     t_all = time.time()
+     results, skipped = [], []
+-    for i, c in enumerate(decl["sample"], 1):
++    res_lock = threading.Lock()
++
++    def handle(i, c, rpc):
++        """处理一个候选。**串行与并行共用同一份语义**，只有调度不同。"""
+         t0, c0 = time.time(), len(rpc.records)
+         if c["index"] in done:
+             log.write("candidate_skipped", candidate=c["index"], reason="already_completed")
+-            skipped.append(c["index"])
+-            continue
++            with res_lock:
++                skipped.append(c["index"])
++            return
+         es0 = log.counts.get("etherscan", 0)
+         rpc.mark(candidate=c["index"], stage="start")
+         log.write("candidate_start", candidate=c["index"], pair=c["pair"],
+@@ -775,7 +780,8 @@
+         rec["elapsed_s"] = round(time.time() - t0, 2)
+         rec["rpc_calls"] = len(rpc.records) - c0
+         rec["etherscan_calls"] = log.counts.get("etherscan", 0) - es0
+-        results.append(rec)
++        with res_lock:
++            results.append(rec)
+         log.resource(candidate=c["index"], stage="end")
+         COMPLETE_STATES = {"measured_exit", "execution_reverted_unknown",
+                            "no_mint_by_cutoff", "entry_failed_verified", "entry_unknown",
+@@ -792,7 +798,38 @@
+                   etherscan_calls=rec["etherscan_calls"], record=rec)
+         print(f"  [{i}/{len(decl['sample'])}] idx={c['index']} state={rec.get('state')} "
+               f"{rec['elapsed_s']}s rpc={rec['rpc_calls']}", flush=True)
++
++    # ---- 调度：串行 or N 路并行。语义共用 handle()，仅调度不同 ----
++    gate_stats = None
++    if args.parallel <= 1:
++        for i, c in enumerate(decl["sample"], 1):
++            handle(i, c, rpc)
++    else:
++        gate = EV.SharedGate(args.rps, args.max_calls, args.max_seconds)
++        rpc.gate, rpc.worker = gate, 0
++        lanes = [[] for _ in range(args.parallel)]
++        for k, c in enumerate(decl["sample"]):
++            lanes[k % args.parallel].append((k + 1, c))
++
++        def worker(wid, items):
++            threading.current_thread().worker_id = wid
++            own = V.RPC(url, max_calls=args.max_calls, max_seconds=args.max_seconds,
++                        rps=10 ** 6)          # 自身限流不生效，节流由全局闸门统一施加
++            tap = EV.RpcTap(own, log, gate=gate, worker=wid)
++            for i, c in items:
++                handle(i, c, tap)
++
++        threads = [threading.Thread(target=worker, args=(w, items), daemon=True)
++                   for w, items in enumerate(lanes) if items]
++        for t in threads:
++            t.start()
++        for t in threads:
++            t.join()
++        gate_stats = gate.stats()
++        log.write("gate_stats", **gate_stats)
++    results.sort(key=lambda r: r["index"])
+     doc = {"started_at": started_at, "finished_at": V.utcnow(),
++           "parallel": args.parallel, "gate_stats": gate_stats,
+            "evidence_file": str(args.evidence), "run_id": log.run_id,
+            "chain_id": chain_id, "sample_file": str(args.sample),
+            "finalized_snapshot": SNAPSHOT,
+@@ -850,6 +887,8 @@
+     m.add_argument("--max-seconds", type=int, default=3000); m.add_argument("--rps", type=float, default=3)
+     m.add_argument("--diagnostics", action="store_true", default=True)
+     m.add_argument("--evidence", default=None)
++    m.add_argument("--parallel", type=int, default=1,
++                   help="并行路数。>1 时限流与调用预算由全局闸门共享，不各分一半")
+     m.add_argument("--checkpoint", default=None,
+                    help="断点续跑检查点（追加式）。绑定样本/规格/脚本/台账/finalized 块")
+     m.add_argument("--spec", default="MEASUREMENT_SPEC.v1.4.md",

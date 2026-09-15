@@ -1,0 +1,5 @@
+{"tag": "serial", "parallel": 1, "exit": 2, "wall_s": 0.5}
+{"tag": "serial_resume1", "parallel": 1, "exit": 0, "wall_s": 3.6}
+{"tag": "parallel", "parallel": 2, "exit": 0, "wall_s": 4.3}
+{"passed": false, "failed": ["binding_consistent", "evidence_attributed:serial", "evidence_complete:serial", "footer_matches_result:serial", "result_doc_present:serial", "run_parallel_matches_side:serial"], "required_absent": [], "n_checks": 41}
+{"run_dir": "../../../../tmp/rta-v117-tools-audit/startup_failure_recovery/runs/offline_20260911T064438Z-2e0e8b", "this_call_exit": {"serial": 0, "parallel": 0}, "last_exit_per_side": {"serial": 0, "parallel": 0}, "compare_exit": 1, "driver_exit": 1}

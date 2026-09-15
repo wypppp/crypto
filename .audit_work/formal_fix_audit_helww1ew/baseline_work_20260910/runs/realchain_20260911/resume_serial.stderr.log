@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "pilot_measure.py", line 1528, in <module>
+    main()
+  File "pilot_measure.py", line 1524, in main
+    sys.exit(declare(a) if a.cmd == "declare" else measure(a))
+  File "pilot_measure.py", line 708, in measure
+    chain_id = int(rpc.request("eth_chainId", []), 16)
+  File "/home/ancillary/rightTail/baseline_work_20260910/evidence.py", line 240, in request
+    return self.rpc.request(method, params)
+  File "/home/ancillary/rightTail/baseline_20260909/verify_capabilities.py", line 353, in request
+    raise RpcFailure("transport", self.redact(str(exc))) from None
+verify_capabilities.RpcFailure: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1131)>

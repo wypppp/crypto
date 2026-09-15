@@ -1,0 +1,3 @@
+{"seq": 1, "run_id": "dc6986c7bf634c3dae686709013a763c", "kind": "run_header", "worker": null, "at": "2026-09-12T09:11:28Z", "mono_s": 0.0, "note": "a"}
+{"seq": 2, "run_id": "dc6986c7bf634c3dae686709013a763c", "kind": "rpc", "worker": null, "at": "2026-09-12T09:11:28Z", "mono_s": 0.005, "candidate": 1}
+{"seq": 3, "kind": "rpc", "record": {"id"

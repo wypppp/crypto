@@ -1,0 +1,13 @@
+{
+  "driver_exit": 0,
+  "child_exits": [
+    2,
+    2,
+    2
+  ],
+  "prior_run_retained": false,
+  "historical_stdout_retained": false,
+  "historical_stderr_retained": false,
+  "stdout": "{\"tag\":\"serial\",\"parallel\":1,\"exit\":2,\"wall_s\":0.1,\"checkpoint\":\"runs/realchain2_20260911/serial.checkpoint.jsonl\"}\n{\"tag\":\"parallel\",\"parallel\":2,\"exit\":2,\"wall_s\":0.1,\"checkpoint\":\"runs/realchain2_20260911/parallel.checkpoint.jsonl\"}\n{\"tag\":\"resume_serial\",\"parallel\":1,\"exit\":2,\"wall_s\":0.0,\"checkpoint\":\"runs/realchain2_20260911/serial.checkpoint.jsonl\"}\nDONE\n",
+  "stderr": ""
+}

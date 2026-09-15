@@ -1,0 +1,12 @@
+chain_id=1  finalized 快照 25950799  0xe7e5d3e8b2be05e6…
+  [1/8] idx=477926 state=no_mint_by_cutoff 2.16s rpc=1
+  [2/8] idx=478595 state=measured_exit 123.22s rpc=105
+  [3/8] idx=479353 state=execution_reverted_unknown 128.25s rpc=106
+  [4/8] idx=480842 state=measured_exit 127.16s rpc=104
+  [5/8] idx=482755 state=measured_exit 127.01s rpc=104
+  [6/8] idx=488019 state=execution_reverted_unknown 125.79s rpc=106
+  [7/8] idx=491410 state=measured_exit 122.37s rpc=104
+  [8/8] idx=491473 state=data_missing 12.25s rpc=10
+
+-> runs/realchain2_20260911/serial.json
+-> runs/realchain2_20260911/serial.evidence.jsonl  (2070 条证据)

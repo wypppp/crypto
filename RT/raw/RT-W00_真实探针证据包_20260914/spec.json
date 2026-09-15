@@ -1,0 +1,35 @@
+{
+  "work_package": "RT-W00",
+  "run_id": "RT-W00-20260914-codex-01",
+  "run_role": "engineering_fixture",
+  "analysis_role": "development",
+  "decision_to_change": "Determine whether public RPC plus pinned official IDL can identify a real DBC pool and retrieve current state; establish exact remaining state gap before installing a simulator.",
+  "scope": "read-only identity/state-availability subprobe; not full buy-hold-exit acceptance",
+  "chain": "solana-mainnet-beta",
+  "program": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+  "sdk_source_commit": "aa1595c29a0457b23a80cfcf9843a04603954858",
+  "selection_rule": "first successful signature among newest five program signatures with an IDL-recognized instruction naming pool/virtual_pool; inspect at most three transactions, no return-based selection",
+  "entry_Q": null,
+  "currency": null,
+  "capital_scope": "not applicable to identity-only probe; freeze Q before any return measurement",
+  "exit_policy": null,
+  "measurement_target": [
+    "instruction identity",
+    "current account owner/discriminator/context slot"
+  ],
+  "not_measured": [
+    "historical account state",
+    "quote",
+    "buy/sell simulation",
+    "holding continuity",
+    "migration venue at exit",
+    "M_pi",
+    "M_star"
+  ],
+  "resource_budget": {
+    "rpc_requests_max": 8,
+    "per_request_timeout_seconds": 15,
+    "paid_services": false
+  },
+  "frozen_at": "2026-09-14T07:18:59.195125+00:00"
+}

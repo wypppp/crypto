@@ -1,0 +1,1 @@
+{"tcp_established": true, "phase": "TLS handshake", "grace_s": 0.15, "escalate_after_s": 0.05, "stop_latency_s": 0.165, "registered_during_tls": 1, "escalations": 0, "result": "Shutdown:wall_deadline_exceeded", "rpc_records": [{"id": 1, "method": "eth_chainId", "params": [], "observed_at": "2026-09-11T01:11:49.492957+00:00", "attempt": 1, "elapsed_s": 0.189113}]}

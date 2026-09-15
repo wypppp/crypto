@@ -1,0 +1,46 @@
+{
+  "pilot_measure.py": {
+    "actual": "90703719835702b62447c18cea048fbccd2a1e88641d149af45369beac686c9f",
+    "matches_delivery": true
+  },
+  "evidence.py": {
+    "actual": "56f1f45cf3f62f342f98fb19ef443badedd567014446a67ef41514e66dd2814c",
+    "matches_delivery": true
+  },
+  "audit_flow.py": {
+    "actual": "b51afa546290b6890ccbded26fd16f1084ce62534138bf5e794bba9c5e77dbe4",
+    "matches_delivery": true
+  },
+  "test_audit_followup.py": {
+    "actual": "f4dc01d643774be6e6fde0a19d8a629447edda2baf7052c2935a3bea69bf3957",
+    "matches_delivery": true
+  },
+  "test_audit_fixes.py": {
+    "actual": "c43f1595e63413abd7b57e49c03e7d53a4894014cf19b402f6d99abc52376195",
+    "matches_delivery": true
+  },
+  "test_parallel.py": {
+    "actual": "2ef391932b7e700100f2a34c6be6895a9378609e82e4cb945b0582def66b1062",
+    "matches_delivery": true
+  },
+  "fake_chain.py": {
+    "actual": "01ac6c5dde106a659d1997d67d0871a0b5d29c65499ecce60a39f7d995b1ce52",
+    "matches_delivery": true
+  },
+  "MEASUREMENT_SPEC.md": {
+    "actual": "3237ed9f16152852bcf8a2906bf5dbae7c0066b85b42568a51abc0640febfbd5",
+    "matches_delivery": true
+  },
+  "MEASUREMENT_SPEC.v1.5.md": {
+    "actual": "9c8d8480d4657aa393cec9e9a29ca8e8c4b7190bdd9cb436735956b5cdc6e34a",
+    "matches_delivery": true
+  },
+  "MEASUREMENT_SPEC.v1.4.md": {
+    "actual": "ffb6ecf0dd84517e4a598d7b76a7736305347655241f1e3e23c39a098f259b5a",
+    "matches_delivery": true
+  },
+  "../baseline_20260909/verify_capabilities.py": {
+    "actual": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+    "matches_delivery": true
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "MEASUREMENT_SPEC.v1.4.md": {
+    "sha256": "ffb6ecf0dd84517e4a598d7b76a7736305347655241f1e3e23c39a098f259b5a",
+    "unchanged_from_v16_audit": true
+  },
+  "MEASUREMENT_SPEC.v1.5.md": {
+    "sha256": "9c8d8480d4657aa393cec9e9a29ca8e8c4b7190bdd9cb436735956b5cdc6e34a",
+    "unchanged_from_v16_audit": true
+  },
+  "MEASUREMENT_SPEC.v1.6.md": {
+    "sha256": "30853652fa452509d48d2477e9dc93d6366d018d285f5cbeb677e2c8362d7df8",
+    "unchanged_from_v16_audit": true
+  },
+  "../baseline_20260909/verify_capabilities.py": {
+    "sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+    "unchanged_from_v16_audit": true
+  }
+}

@@ -1,0 +1,2 @@
+{"项": "不信任测试证书时的校验", "判定": "REJECTED", "细节": "RpcFailure: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed cer", "残留登记": 0}
+{"项": "DNS 阶段（getaddrinfo 卡 30s）", "退出码": 3, "DNS期间在途登记": "1", "子进程总耗时s": 0.55, "理论上界s": "停机于0.05s + grace 0.1 + escalate 0.1 + force_exit 0.1 ≈ 0.35（另含解释器启动）", "未被强制退出": false}

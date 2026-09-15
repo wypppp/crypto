@@ -1,0 +1,346 @@
+{
+  "mode": "pair",
+  "inputs": {
+    "dir": "/home/ancillary/.audit_work/formal_audit_w3pmg9j2/tmp/rta-cmp-qf_uyhc6",
+    "manifest": "/home/ancillary/.audit_work/formal_audit_w3pmg9j2/tmp/rta-cmp-qf_uyhc6/runs.jsonl",
+    "serial": [
+      "serial"
+    ],
+    "parallel": [
+      "parallel"
+    ],
+    "sample": "/home/ancillary/.audit_work/formal_audit_w3pmg9j2/tmp/rta-drv-nufp7lf1/sample.json",
+    "pin": "25900000:0x00000000000000000000000000000000000000000000000000000000018b33e0",
+    "expect": {
+      "script_sha256": "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+      "evidence_module_sha256": "fc6126be8a8a68c79ef79ea7060a87d8933da6f88d9b3dc5d0c5feebe038966a",
+      "spec_sha256": "4912eb662141fb26686d23828d1b35a93b869a393e1f76e9348832df8e98b15f",
+      "primitives_sha256": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52",
+      "runtime_params": {
+        "slot_limit": 32,
+        "diagnostics": true,
+        "cutoff_block": 24781026,
+        "amount_wei": 50000000000000000
+      }
+    }
+  },
+  "runs": {
+    "serial": {
+      "side": "serial",
+      "out": "serial.json",
+      "evidence": "serial.evidence.jsonl",
+      "exit": 2,
+      "wall_s": 0.3,
+      "evidence_diag": {
+        "complete": false,
+        "bad_lines": [],
+        "runs_without_footer": [
+          "3510d241c9bb4d6ea3ce48ff06e7a6e0"
+        ],
+        "runs_without_header": [
+          "3510d241c9bb4d6ea3ce48ff06e7a6e0"
+        ],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "startup_abort"
+    },
+    "parallel": {
+      "side": "parallel",
+      "out": "parallel.json",
+      "evidence": "parallel.evidence.jsonl",
+      "exit": 0,
+      "wall_s": 3.0,
+      "evidence_diag": {
+        "complete": true,
+        "bad_lines": [],
+        "runs_without_footer": [],
+        "runs_without_header": [],
+        "unmatched_rpc_begin": [],
+        "orphan_rpc_end": [],
+        "empty": false
+      },
+      "role": "run",
+      "binding_rule": "run_binding"
+    }
+  },
+  "mismatches": [],
+  "allowed_diffs": [],
+  "candidates": [],
+  "checks": {
+    "manifest_readable": {
+      "ok": true,
+      "detail": null
+    },
+    "chains_declared": {
+      "ok": true,
+      "detail": {
+        "serial": [
+          "serial"
+        ],
+        "parallel": [
+          "parallel"
+        ]
+      }
+    },
+    "manifest_entry_unique:serial": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_entry_unique:parallel": {
+      "ok": true,
+      "detail": "1 entries"
+    },
+    "manifest_all_attributed": {
+      "ok": true,
+      "detail": {
+        "unattributed_tags": [],
+        "attempt_ids": [
+          "20260912T081049Z-0d84cb"
+        ]
+      }
+    },
+    "chain_checkpoint_consistent:serial": {
+      "ok": true,
+      "detail": [
+        "../tmp/rta-drv-nufp7lf1/runs/t_20260912T081049Z-0d84cb/serial.checkpoint.jsonl"
+      ]
+    },
+    "chain_checkpoint_consistent:parallel": {
+      "ok": true,
+      "detail": [
+        "../tmp/rta-drv-nufp7lf1/runs/t_20260912T081049Z-0d84cb/parallel.checkpoint.jsonl"
+      ]
+    },
+    "chain_checkpoint_consistent:independent": {
+      "ok": true,
+      "detail": "serial and parallel must use separate checkpoints"
+    },
+    "final_exit_0:serial": {
+      "ok": false,
+      "detail": {
+        "tag": "serial",
+        "exit": 2
+      }
+    },
+    "final_exit_0:parallel": {
+      "ok": true,
+      "detail": {
+        "tag": "parallel",
+        "exit": 0
+      }
+    },
+    "startup_abort_inert:serial": {
+      "ok": false,
+      "detail": {
+        "run_id": "3510d241c9bb4d6ea3ce48ff06e7a6e0",
+        "problems": [
+          "the last run of a side cannot be a startup abort"
+        ],
+        "abort": [
+          [
+            "endpoint_unreachable",
+            "chain_id"
+          ]
+        ]
+      }
+    },
+    "run_parallel_matches_side:serial": {
+      "ok": true,
+      "detail": {
+        "manifest": 1
+      }
+    },
+    "result_doc_present:parallel": {
+      "ok": true,
+      "detail": "parallel.json"
+    },
+    "evidence_complete:parallel": {
+      "ok": true,
+      "detail": {
+        "complete": true,
+        "footers": 1,
+        "aborts": []
+      }
+    },
+    "evidence_attributed:parallel": {
+      "ok": true,
+      "detail": {
+        "doc_run_id": "21e1a8bf24ce487b90beeb0bf597ac61",
+        "headers": 1,
+        "runs_in_file": [
+          "21e1a8bf24ce487b90beeb0bf597ac61"
+        ]
+      }
+    },
+    "footer_matches_result:parallel": {
+      "ok": true,
+      "detail": null
+    },
+    "run_parallel_matches_side:parallel": {
+      "ok": true,
+      "detail": {
+        "doc": 2,
+        "manifest": 2
+      }
+    },
+    "run_binding_matches:parallel": {
+      "ok": true,
+      "detail": {
+        "rule": "run_binding",
+        "problems": []
+      }
+    },
+    "binding_consistent": {
+      "ok": true,
+      "detail": {
+        "parallel": {}
+      }
+    },
+    "binding_matches_expected": {
+      "ok": true,
+      "detail": {}
+    },
+    "checkpoint_binding:serial": {
+      "ok": true,
+      "detail": {
+        "missing": [],
+        "not_checked": [],
+        "diff": {}
+      }
+    },
+    "checkpoint_binding:parallel": {
+      "ok": true,
+      "detail": {
+        "missing": [],
+        "not_checked": [],
+        "diff": {}
+      }
+    },
+    "sample_well_formed": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "rows": 2,
+        "unique": 2
+      }
+    },
+    "final_results_one_per_candidate:serial": {
+      "ok": false,
+      "detail": {
+        "n": 0,
+        "unique": 0,
+        "sample_n": 2,
+        "field_mismatch": []
+      }
+    },
+    "final_acceptance_clean:serial": {
+      "ok": false,
+      "detail": {
+        "non_empty": {
+          "incomplete": null,
+          "missing_candidates": null,
+          "duplicate_results": null,
+          "unexpected_results": null,
+          "sample_field_mismatch": null,
+          "worker_errors": null,
+          "not_started": null,
+          "evidence_chain_problems": null,
+          "checkpoint_results_unusable": null,
+          "validation_failed": null
+        },
+        "flags": {
+          "set_complete": null,
+          "process_completed": null,
+          "validation_passed": null,
+          "shutdown_stopped": null
+        },
+        "closed": {
+          "measurement_semantics_verified": null,
+          "economic_results_eligible": null
+        },
+        "validation_not_true": []
+      }
+    },
+    "final_results_traced:serial": {
+      "ok": false,
+      "detail": "no checkpoint rows or no results"
+    },
+    "final_results_one_per_candidate:parallel": {
+      "ok": true,
+      "detail": {
+        "n": 2,
+        "unique": 2,
+        "sample_n": 2,
+        "field_mismatch": []
+      }
+    },
+    "final_acceptance_clean:parallel": {
+      "ok": true,
+      "detail": {
+        "non_empty": {},
+        "flags": {
+          "set_complete": true,
+          "process_completed": true,
+          "validation_passed": true,
+          "shutdown_stopped": false
+        },
+        "closed": {
+          "measurement_semantics_verified": false,
+          "economic_results_eligible": false
+        },
+        "validation_not_true": []
+      }
+    },
+    "final_results_traced:parallel": {
+      "ok": true,
+      "detail": []
+    },
+    "same_snapshot": {
+      "ok": false,
+      "detail": {
+        "serial": {},
+        "parallel": {
+          "number": 25900000,
+          "hash": "0x00000000000000000000000000000000000000000000000000000000018b33e0",
+          "timestamp": 310800000
+        }
+      }
+    },
+    "same_candidate_set": {
+      "ok": false,
+      "detail": {
+        "serial_only": [],
+        "parallel_only": [
+          1,
+          2
+        ]
+      }
+    },
+    "results_identical_except_allowed": {
+      "ok": false,
+      "detail": "0 mismatches"
+    },
+    "rpc_plus_cache_equal": {
+      "ok": false,
+      "detail": []
+    }
+  },
+  "verdict": {
+    "passed": false,
+    "required_absent": [],
+    "failed": [
+      "final_acceptance_clean:serial",
+      "final_exit_0:serial",
+      "final_results_one_per_candidate:serial",
+      "final_results_traced:serial",
+      "results_identical_except_allowed",
+      "rpc_plus_cache_equal",
+      "same_candidate_set",
+      "same_snapshot",
+      "startup_abort_inert:serial"
+    ],
+    "n_checks": 33
+  }
+}

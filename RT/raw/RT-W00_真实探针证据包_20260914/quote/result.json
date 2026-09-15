@@ -1,0 +1,40 @@
+{
+  "run_id": "RT-W00-20260914-codex-02",
+  "measurement_status": "unknown",
+  "economic_status": "undetermined",
+  "execution_check_status": {
+    "entry": {
+      "quote": "UNRUN",
+      "build": "UNRUN",
+      "simulation": "UNRUN",
+      "submission": "UNRUN"
+    },
+    "exit": {
+      "quote": "UNRUN",
+      "build": "UNRUN",
+      "simulation": "UNRUN",
+      "submission": "UNRUN"
+    }
+  },
+  "limitations": "No executable round-trip, return distribution or historical holding result; if migrated, report DBC quote not applicable instead of switching unverified venues.",
+  "context": {
+    "apiVersion": "4.3.0-rc.0",
+    "slot": 446918342
+  },
+  "pool_owner": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+  "migration_progress": 3,
+  "config_migration_option": 1,
+  "base_decimals": 6,
+  "quote_decimals": 9,
+  "base_extensions": [
+    18,
+    19
+  ],
+  "error": {
+    "name": "Error",
+    "message": "Migration state needs venue-specific interpretation before a DBC quote"
+  },
+  "decision": "UNRESOLVED",
+  "rpc_requests": 1,
+  "finished_at": "2026-09-14T07:22:11.917Z"
+}

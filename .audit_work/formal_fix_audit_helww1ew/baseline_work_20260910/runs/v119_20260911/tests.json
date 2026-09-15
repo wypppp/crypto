@@ -1,0 +1,72 @@
+[
+  {
+    "name": "evidence",
+    "passed": 29,
+    "failed": 0,
+    "summary": "通过 29 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "first_mint",
+    "passed": 17,
+    "failed": 0,
+    "summary": "通过 17 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "step3",
+    "passed": 27,
+    "failed": 0,
+    "summary": "通过 27 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "step4",
+    "passed": 18,
+    "failed": 0,
+    "summary": "通过 18 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "e2e_blocking",
+    "passed": 41,
+    "failed": 0,
+    "summary": "通过 41 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "resume",
+    "passed": 23,
+    "failed": 0,
+    "summary": "通过 23 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "parallel",
+    "passed": 23,
+    "failed": 0,
+    "summary": "通过 23 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "audit_fixes",
+    "passed": 35,
+    "failed": 0,
+    "summary": "通过 35 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "audit_followup",
+    "passed": 392,
+    "failed": 0,
+    "summary": "通过 392 / 失败 0",
+    "exit": 0
+  },
+  {
+    "name": "realchain_tools",
+    "passed": 75,
+    "failed": 0,
+    "summary": "通过 75 / 失败 0",
+    "exit": 0
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "constants_match": true,
+  "cases": [
+    {
+      "mode": "real_v116",
+      "problems": [],
+      "rule": "legacy_v1.16_header_params_and_result_doc"
+    },
+    {
+      "mode": "no_legacy_result_doc",
+      "problems": [
+        {
+          "reason": "legacy_rule_needs_result_document",
+          "result_file": null
+        }
+      ],
+      "rule": "legacy_v1.16_header_params_and_result_doc"
+    },
+    {
+      "mode": "wrong_result_primitives",
+      "problems": [
+        {
+          "reason": "legacy_primitives_mismatch",
+          "result_doc": "0000000000000000000000000000000000000000000000000000000000000000",
+          "checkpoint": "bc9ea52ec51259d79cfe435d47dc0d846fadd56d866494e7dfcfaf3b92c15d52"
+        }
+      ],
+      "rule": "legacy_v1.16_header_params_and_result_doc"
+    },
+    {
+      "mode": "current_script_old_spec",
+      "problems": [
+        {
+          "reason": "evidence_run_binding_missing",
+          "run_id": "2823d29740284ca4b942b8da45e18080",
+          "script_sha256": "85eb8a6034d84353458a9b789f62b6ee52253e2bf08672646b4690196805063e",
+          "spec_sha256": "2a6c5dcf613d263f8ec9067b047805e0c675a6b6df159896414b0bde4b756606"
+        }
+      ],
+      "rule": null
+    },
+    {
+      "mode": "mixed_legacy_pair",
+      "problems": [
+        {
+          "reason": "evidence_run_binding_missing",
+          "run_id": "2823d29740284ca4b942b8da45e18080",
+          "script_sha256": "5cb58ed878751a22396bb4284e10a44b70ab18c7ac7387c5370871207439ba1e",
+          "spec_sha256": "7cf15793c7626ce725c133ce748920998083bb46b32ef6913f17604a1ada3542"
+        }
+      ],
+      "rule": null
+    }
+  ]
+}

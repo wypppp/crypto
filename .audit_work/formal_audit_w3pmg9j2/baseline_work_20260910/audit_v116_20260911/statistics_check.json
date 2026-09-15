@@ -1,0 +1,35 @@
+{
+  "complete_run_records": {
+    "rpc": 2290,
+    "transport_errors": 6,
+    "observed_fraction": 0.0026200873362445414
+  },
+  "all_execution_evidence": {
+    "rpc": 2292,
+    "transport_errors": 8,
+    "observed_fraction": 0.0034904013961605585
+  },
+  "separate_preflight_rpc_count_from_summary": 2,
+  "conditional_iid_105_calls": 0.24078494826586783,
+  "conditional_iid_not_empirical_forecast": true,
+  "round2_firstpass": {
+    "serial": {
+      "failed": 1,
+      "attempted": 8
+    },
+    "parallel": {
+      "failed": 2,
+      "attempted": 8
+    },
+    "same_eight_candidates_repeated": true
+  },
+  "machine_wall_s": {
+    "serial_initial": 771.0,
+    "parallel_initial": 438.1,
+    "initial_ratio": 0.5682230869001297,
+    "serial_including_resumes": 902.2,
+    "parallel_including_resumes": 715.0,
+    "completion_ratio": 0.7925072046109509,
+    "excludes_manual_gaps_and_active_labor": true
+  }
+}

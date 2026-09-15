@@ -1,0 +1,239 @@
+CACHE_CHECK 477926 1 0 1 0
+CACHE_CHECK 478595 105 7 105 7
+CACHE_CHECK 479353 106 8 106 8
+CACHE_CHECK 480842 104 8 105 7
+CACHE_CHECK 482755 104 8 104 8
+CACHE_CHECK 488019 106 8 106 8
+CACHE_CHECK 491410 104 8 105 7
+CACHE_CHECK 491473 104 7 103 8
+{
+  "runs": {
+    "serial": {
+      "rpc": 642,
+      "etherscan": 8,
+      "http": 650,
+      "evidence_complete": true,
+      "new_candidates": [
+        477926,
+        478595,
+        479353,
+        480842,
+        482755,
+        488019,
+        491410,
+        491473
+      ],
+      "skipped": [],
+      "rss_peak_kb": 45380,
+      "cpu_s": 28.96,
+      "transport_errors": 1
+    },
+    "parallel": {
+      "rpc": 605,
+      "etherscan": 8,
+      "http": 613,
+      "evidence_complete": true,
+      "new_candidates": [
+        477926,
+        478595,
+        479353,
+        480842,
+        482755,
+        488019,
+        491410,
+        491473
+      ],
+      "skipped": [],
+      "rss_peak_kb": 54500,
+      "cpu_s": 26.69,
+      "transport_errors": 2
+    },
+    "resume_serial": {
+      "rpc": 106,
+      "etherscan": 1,
+      "http": 107,
+      "evidence_complete": true,
+      "new_candidates": [
+        491473
+      ],
+      "skipped": [
+        477926,
+        478595,
+        479353,
+        480842,
+        482755,
+        488019,
+        491410
+      ],
+      "rss_peak_kb": 85876,
+      "cpu_s": 6.04,
+      "transport_errors": 0
+    },
+    "resume_parallel": {
+      "rpc": 145,
+      "etherscan": 2,
+      "http": 147,
+      "evidence_complete": true,
+      "new_candidates": [
+        480842,
+        491410
+      ],
+      "skipped": [
+        477926,
+        478595,
+        479353,
+        482755,
+        488019,
+        491473
+      ],
+      "rss_peak_kb": 74548,
+      "cpu_s": 7.66,
+      "transport_errors": 1
+    },
+    "resume_parallel2": {
+      "rpc": 107,
+      "etherscan": 1,
+      "http": 108,
+      "evidence_complete": true,
+      "new_candidates": [
+        480842
+      ],
+      "skipped": [
+        477926,
+        478595,
+        479353,
+        482755,
+        491410,
+        488019,
+        491473
+      ],
+      "rss_peak_kb": 74996,
+      "cpu_s": 8.22,
+      "transport_errors": 0
+    }
+  },
+  "candidates": [
+    {
+      "index": 477926,
+      "state": "no_mint_by_cutoff",
+      "same_fields": true,
+      "rpc": [
+        1,
+        1
+      ],
+      "cache": [
+        0,
+        0
+      ],
+      "cash_in": null
+    },
+    {
+      "index": 478595,
+      "state": "measured_exit",
+      "same_fields": true,
+      "rpc": [
+        105,
+        105
+      ],
+      "cache": [
+        7,
+        7
+      ],
+      "cash_in": 21870350350051
+    },
+    {
+      "index": 479353,
+      "state": "execution_reverted_unknown",
+      "same_fields": true,
+      "rpc": [
+        106,
+        106
+      ],
+      "cache": [
+        8,
+        8
+      ],
+      "cash_in": 0
+    },
+    {
+      "index": 480842,
+      "state": "measured_exit",
+      "same_fields": true,
+      "rpc": [
+        104,
+        105
+      ],
+      "cache": [
+        8,
+        7
+      ],
+      "cash_in": 11194254527540
+    },
+    {
+      "index": 482755,
+      "state": "measured_exit",
+      "same_fields": true,
+      "rpc": [
+        104,
+        104
+      ],
+      "cache": [
+        8,
+        8
+      ],
+      "cash_in": 644875193331
+    },
+    {
+      "index": 488019,
+      "state": "execution_reverted_unknown",
+      "same_fields": true,
+      "rpc": [
+        106,
+        106
+      ],
+      "cache": [
+        8,
+        8
+      ],
+      "cash_in": 0
+    },
+    {
+      "index": 491410,
+      "state": "measured_exit",
+      "same_fields": true,
+      "rpc": [
+        104,
+        105
+      ],
+      "cache": [
+        8,
+        7
+      ],
+      "cash_in": 14874468531643
+    },
+    {
+      "index": 491473,
+      "state": "measured_exit",
+      "same_fields": true,
+      "rpc": [
+        104,
+        103
+      ],
+      "cache": [
+        7,
+        8
+      ],
+      "cash_in": 854801562738
+    }
+  ],
+  "evidence_support_checks": 16,
+  "raw_probe_checks": 28,
+  "snapshot": {
+    "number": 25950799,
+    "hash": "0xe7e5d3e8b2be05e6e1c537f1a8ea534121c5defc9b6e7ea8edc54d01dd446e82",
+    "timestamp": 1789089239
+  },
+  "cache_accounting_matches": true,
+  "result_fields_and_provenance_passed": true,
+  "passed": true
+}

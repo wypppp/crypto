@@ -1,0 +1,4 @@
+{"seq": 1, "run_id": "1593869d4c434fa4880e2273427602ff", "kind": "run_header", "worker": null, "at": "2026-09-12T09:11:27Z", "mono_s": 0.0, "note": "x"}
+{"seq": 2, "run_id": "1593869d4c434fa4880e2273427602ff", "kind": "candidate_start", "worker": null, "at": "2026-09-12T09:11:27Z", "mono_s": 0.006, "candidate": 0}
+{"seq": 3, "run_id": "1593869d4c434fa4880e2273427602ff", "kind": "candidate_start", "worker": null, "at": "2026-09-12T09:11:27Z", "mono_s": 0.01, "candidate": 1}
+{"seq": 4, "run_id": "1593869d4c434fa4880e2273427602ff", "kind": "candidate_start", "worker": null, "at": "2026-09-12T09:11:27Z", "mono_s": 0.014, "candidate": 2}

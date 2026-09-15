@@ -1,0 +1,82 @@
+A 比较器：正对照 + 逐项破坏（副本目录，原件只读）
+  [PASS] 正对照：第二轮既有证据全部必需检查通过、退出 0  — rc=0 failed=[] n=58
+  [PASS] 正对照：8 个候选逐一回溯并比较  — 8
+  [PASS] cash_in 改 1 wei：退出 1 且点名 results_identical_except_allowed  — failed=['final_results_traced:parallel', 'results_identical_except_allowed']
+  [PASS] 出场校验 passed 翻转：退出 1 且点名 results_identical_except_allowed  — failed=['final_results_traced:parallel', 'results_identical_except_allowed']
+  [PASS] 删除一份证据的 footer：退出 1 且点名 evidence_complete:serial  — failed=['evidence_complete:serial', 'final_results_traced:serial', 'footer_matches_result:serial']
+  [PASS] 最终并行运行退出码改为 1：退出 1 且点名 final_exit_0:parallel  — failed=['final_exit_0:parallel']
+  [PASS] 删除两份最终运行的执行记录（旧版空 all() 放行）：退出 1 且点名 manifest_entry_unique:resume_serial  — failed=['chain_checkpoint_consistent:parallel', 'chain_checkpoint_consistent:serial', 'checkpoint_binding:parallel']
+  [PASS] 清单里同一运行出现两次（归属歧义）：退出 1 且点名 manifest_entry_unique:parallel  — failed=['chain_checkpoint_consistent:parallel', 'manifest_entry_unique:parallel', 'run_parallel_matches_side:parallel']
+  [PASS] 清单里有来历不明的运行：退出 1 且点名 manifest_all_attributed  — failed=['manifest_all_attributed']
+  [PASS] 清单文件缺失：退出 1 且点名 manifest_readable  — failed=['chain_checkpoint_consistent:independent', 'chain_checkpoint_consistent:parallel', 'chain_checkpoint_consistent:serial']
+  [PASS] 两侧误用同一检查点：退出 1 且点名 chain_checkpoint_consistent  — failed=['chain_checkpoint_consistent:independent', 'final_results_traced:parallel', 'rpc_plus_cache_equal']
+  [PASS] 最终结果少了一个候选：退出 1 且点名 final_results_one_per_candidate:parallel  — failed=['final_results_one_per_candidate:parallel', 'final_results_traced:parallel', 'same_candidate_set']
+  [PASS] 带出来的结果与检查点不符（改的是允许不同的 elapsed_s）：退出 1 且点名 final_results_traced:serial  — failed=['final_results_traced:serial']
+  [PASS] 被带出结果所依据的旧证据文件被删：退出 1 且点名 final_results_traced:serial  — failed=['binding_consistent', 'evidence_attributed:serial', 'evidence_complete:serial']
+  [PASS] 证据文件被换成另一次运行的（归属错）：退出 1 且点名 evidence_attributed:parallel  — failed=['evidence_attributed:parallel', 'final_results_traced:parallel', 'footer_matches_result:parallel']
+  [PASS] 最终结果文件与其证据 footer 不一致：退出 1 且点名 footer_matches_result:resume_parallel2  — failed=['final_acceptance_clean:parallel', 'footer_matches_result:resume_parallel2']
+  [PASS] 检查点缺失：退出 1 且点名 checkpoint_binding:parallel  — failed=['checkpoint_binding:parallel', 'final_results_traced:parallel', 'rpc_plus_cache_equal']
+  [PASS] 清单里的并行路数与结果不符：退出 1 且点名 run_parallel_matches_side:parallel  — failed=['run_parallel_matches_side:parallel']
+  [PASS] 期望的规格 hash 不符：退出 1 且点名 binding_matches_expected  — failed=['binding_matches_expected']
+  [PASS] 快照不符：退出 1 且点名 binding_matches_expected  — failed=['binding_matches_expected', 'same_snapshot']
+  [PASS] 并行一侧没声明任何运行（空链）：退出 1 且点名 chains_declared  — failed=['chain_checkpoint_consistent:parallel', 'chains_declared', 'checkpoint_binding:parallel']
+  [PASS] 串行检查点 primitives_sha256 改成全 0：退出 1 且点名 checkpoint_binding:serial  — failed=['checkpoint_binding:serial', 'final_results_traced:serial', 'run_binding_matches:resume_serial']
+  [PASS] 串行检查点 runtime_params.slot_limit 32→0：退出 1 且点名 checkpoint_binding:serial  — failed=['checkpoint_binding:serial', 'final_results_traced:serial', 'run_binding_matches:resume_serial']
+  [PASS] 串行检查点删掉 primitives_sha256 与 runtime_params：退出 1 且点名 checkpoint_binding:serial  — failed=['checkpoint_binding:serial', 'final_results_traced:serial', 'run_binding_matches:resume_serial']
+  [PASS] 并行检查点 runtime_params.diagnostics 翻转：退出 1 且点名 checkpoint_binding:parallel  — failed=['checkpoint_binding:parallel', 'final_results_traced:parallel', 'run_binding_matches:parallel']
+  [PASS] 期望的原语 hash 不符：退出 1 且点名 checkpoint_binding  — failed=['checkpoint_binding:parallel', 'checkpoint_binding:serial']
+  [PASS] 期望的 runtime_params 不符：退出 1 且点名 checkpoint_binding  — failed=['checkpoint_binding:parallel', 'checkpoint_binding:serial']
+  [PASS] 旧版规则：检查点与运行头 params 不符（两处同时改成一致的假值也要抓到）：退出 1 且点名 run_binding_matches:serial  — failed=['checkpoint_binding:parallel', 'final_results_traced:serial', 'run_binding_matches:resume_serial']
+  [PASS] 旧版规则：检查点原语与结果文件的 package_script_sha256 不符：退出 1 且点名 run_binding_matches:resume_serial  — failed=['final_results_traced:serial', 'run_binding_matches:resume_serial']
+  [PASS] 样本里有重复 index：退出 1 且点名 sample_well_formed  — failed=['binding_matches_expected', 'final_results_one_per_candidate:parallel', 'final_results_one_per_candidate:serial']
+  [PASS] --expect-runtime-params 不是 JSON 对象：退出 2  — rc=2
+  [PASS] 正对照：5 次历史运行都走明确的旧版绑定规则（不是跳过）  — {'serial': 'legacy_v1.16_header_params_and_result_doc', 'resume_serial': 'legacy_v1.16_header_params_and_result_doc', 'parallel': 'legacy_v1.16_header_params_and_result_doc', 'resume_parallel': 'legacy_v1.16_header_params_and_result_doc', 'resume_parallel2': 'legacy_v1.16_header_params_and_result_doc'}
+  [PASS] 来历不明的运行被显式 --ignore-tag 后不再阻断  — rc=0 []
+  [PASS] 报告路径已存在：退出 2、原文件不动  — rc=2
+  [PASS] 没有任何检查时判不通过（空 all() 不放行）
+  [PASS] 必需检查缺席时判不通过
+  [PASS] 只有真正的 True 才算通过（1 / 非空对象不算）
+
+B 驱动：失败反映到退出码；历史只追加、不覆盖；续跑需显式指定
+  [PASS] 子运行全部返回 2：驱动退出 1（旧驱动退出 0）  — rc=1 
+  [PASS] 清单记下每个子运行的真实退出码  — [2, 2]
+  [PASS] 清单末尾写明 driver_exit=1
+  [PASS] 第二次全新执行：新建另一个运行目录  — /tmp/rta-drv-alsyziyd/runs/t_20260911T232505Z-77ad78
+  [PASS] 第二次全新执行：第一次目录的所有文件原字节保留
+  [PASS] 子运行 1 / 3（未完成 / 停机）同样让驱动退出 1  — rc=1
+  [PASS] 续跑：清单只追加（旧内容是新清单的字节前缀）
+  [PASS] 续跑：已有同名文件的标签被跳过，新运行用 parallel_resume2  — ['parallel_resume2']
+  [PASS] 续跑：此前所有文件原字节保留（含预置的同名日志）
+  [PASS] 续跑：沿用本目录这一侧的检查点，而不是新建或借用别处的  — ['../../../../tmp/rta-drv-alsyziyd/runs/t_20260911T232504Z-3dcca7/parallel.checkpoint.jsonl']
+  [PASS] 续跑失败：驱动退出 1  — rc=1
+  [PASS] 续跑未指明哪一侧 / 全新执行带 --resume / 续跑改 pin：一律退出 2  — (2, 2, 2)
+  [PASS] 正对照：两侧完成、比较器通过 ⇒ 驱动退出 0  — rc=0 [] 
+  [PASS] 自动续跑：串行 1→0，并行 0，比较器通过，驱动退出 0  — [('serial', 1), ('serial_resume1', 0), ('parallel', 0)] rc=0
+  [PASS] 首跑被接口故障打断的候选：data_missing + validation unavailable  — data_missing / unavailable
+  [PASS] 一侧最终未完成：驱动退出 1、比较器不运行  — rc=1 {'kind': 'driver_end', 'attempt_id': '20260911T232525Z-c6e367', 'invocation_id': 'cd379db0', 'at': '2026-09-11T23:25:32Z', 'this_call_exit': {'serial': 1, 'parallel': 0}, 'last_exit_per_side': {'serial': 1, 'parallel': 0}, 'compare_exit': None, 'driver_exit': 1}
+  [PASS] 子运行都报 0 但证据缺失：比较器退出 1、驱动退出 1  — rc=1 {'kind': 'driver_end', 'attempt_id': '20260911T232533Z-b65ef6', 'invocation_id': '6532ec74', 'at': '2026-09-11T23:25:33Z', 'this_call_exit': {'serial': 0, 'parallel': 0}, 'last_exit_per_side': {'serial': 0, 'parallel': 0}, 'compare_exit': 1, 'driver_exit': 1}
+  [PASS] 新格式正对照：两次运行都走 run_binding 规则、退出 0  — rc=0 []
+  [PASS] 驱动记下的期望 runtime_params 来自 pilot_measure 自身推导（slot_limit=32、含 cutoff/amount）  — {'slot_limit': 32, 'diagnostics': True, 'cutoff_block': 24781026, 'amount_wei': 50000000000000000}
+  [PASS] 证据 run_binding 的 runtime_params 被改：退出 1、点名 run_binding_matches:serial  — rc=1 ['final_results_traced:serial', 'run_binding_matches:serial']
+  [PASS] 证据 run_binding 的原语 hash 被改：退出 1、点名 run_binding_matches:serial  — rc=1 ['final_results_traced:serial', 'run_binding_matches:serial']
+  [PASS] 证据 run_binding 删掉一个键：退出 1、点名 run_binding_matches:serial  — rc=1 ['final_results_traced:serial', 'run_binding_matches:serial']
+  [PASS] 新版本运行缺 run_binding（不得退回旧版规则）：退出 1、点名 run_binding_matches:serial  — rc=1 ['final_results_traced:serial', 'run_binding_matches:serial']
+  [PASS] 启动断连后续跑补齐：serial 2 → serial_resume1 0、parallel 0，比较器通过、驱动退出 0  — [('serial', 2), ('serial_resume1', 0), ('parallel', 0)] rc=0 []
+  [PASS] 首次启动尝试被识别为惰性启动失败，原 abort 证据原样保留  — startup_abort
+  [PASS] P2 负对照 · 伪装的启动失败其实开工过候选：退出 1、点名 startup_abort_inert:serial  — rc=1 ['startup_abort_inert:serial']
+  [PASS] P2 负对照 · 检查点里有尝试引用该启动失败运行：退出 1、点名 startup_abort_inert:serial  — rc=1 ['startup_abort_inert:serial']
+  [PASS] P2 负对照 · abort 原因不是启动阶段的端点/预算/停机（chain_id_mismatch）：退出 1、点名 result_doc_present:serial  — rc=1 ['binding_consistent', 'evidence_attributed:serial', 'evidence_complete:serial', 'footer_matches_result:serial']
+  [PASS] P2 负对照 · 清单把该尝试的退出码改成 0：退出 1、点名 result_doc_present:serial  — rc=1 ['binding_consistent', 'evidence_attributed:serial', 'evidence_complete:serial', 'footer_matches_result:serial']
+  [PASS] P2 负对照 · 启动失败尝试的证据文件缺失：退出 1、点名 result_doc_present:serial  — rc=1 ['binding_consistent', 'evidence_attributed:serial', 'evidence_complete:serial', 'footer_matches_result:serial']
+  [PASS] P2 负对照 · 整条串行链只剩那次启动失败：退出 1、点名 final_exit_0:serial  — rc=1 ['final_acceptance_clean:serial', 'final_exit_0:serial', 'final_results_one_per_candidate:serial', 'final_results_traced:serial']
+  [PASS] 有继承结果的首遍被 --ignore-tag 排除：退出 1（带出结果的来源不在链内）  — rc=1 ['final_results_traced:serial', 'rpc_plus_cache_equal']
+  [PASS] 续跑改 --extra：退出 2  — rc=2
+  [PASS] 驱动续跑：原证据 run_binding 与检查点矛盾 ⇒ 续跑退出 1、驱动退出 1、比较器不运行  — rc=1 end={'kind': 'driver_end', 'attempt_id': '20260911T232506Z-ee54eb', 'invocation_id': 'a8507cdb', 'at': '2026-09-11T23:25:46Z', 'this_call_exit': {'serial': 1}, 'last_exit_per_side': {'serial': 1, 'parallel': 0}, 'compare_exit': None, 'driver_exit': 1}
+  [PASS] 驱动续跑：续跑交付点名 evidence_run_binding_mismatch、处置为带出但阻断  — ['evidence_run_binding_mismatch']
+  [PASS] 同一条链交给比较器：同样退出 1，点名 run_binding_matches:serial  — rc=1 ['final_acceptance_clean:serial', 'final_exit_0:serial', 'final_results_traced:serial', 'run_binding_matches:serial']
+  [PASS] 驱动测试产物里没有任何 .env 凭据值（只报数量）  — 0 个文件
+
+C 历史交付目录原字节
+  [PASS] runs/realchain2_20260911 整个目录前后一致（含旧比较器与旧驱动）  — []
+
+通过 75 / 失败 0
