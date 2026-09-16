@@ -6,3 +6,4 @@
 /.venv
 /.env
 /crypto/prediction_market_research/data/shadow/*.gz
+/1.md
