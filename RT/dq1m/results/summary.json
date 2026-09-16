@@ -1,0 +1,97 @@
+{
+ "csv_sha256": "b5c56a127086143b02a77e7602f7d7ff682f9d038c3d441294342c21adb0db9a",
+ "script_sha256": "afcc379237308530e6084e6de572d4b89ea660ce6480053329bb1c0a546ee078",
+ "sol_usd_mean_0601_0607": 69.76,
+ "rows": 191192,
+ "denominator": {
+  "总发行": 191192,
+  "非 SOL 计价（排除）": 7230,
+  "SOL 计价": 183962,
+  "  无法入场（30 分钟内无成交）": 15370,
+  "  已入场·异常（虚拟 SOL >120，单列）": 8279,
+  "  已入场·主样本": 160313,
+  "    其中入场后再无成交": 120004,
+  "    其中 60 天内毕业": 1298,
+  "    其中入场时已在池上": 944
+ },
+ "flags_other": {
+  "mayhem（SOL 计价）": 60901,
+  "异常且 mayhem": 8279,
+  "退出不可行": 1,
+  "池来自建池兜底": 0,
+  "小数位未知": 0,
+  "费率缺失": 0
+ },
+ "criteria": {
+  "c1_mpi_t50_ge10_excl_anomaly": 18,
+  "c1_pass": true,
+  "c2_distinct_cdays": 6,
+  "c2_pass": true,
+  "c3_bad_share_of_sol": 0.1286,
+  "c3_pass": true,
+  "continue": true
+ },
+ "capacity": {
+  "entry_cap_usd_p50_all": 51.7,
+  "q_over_entry_x_p50": 0.0167,
+  "mpi_t50_ge10_and_entry_cap_ge_1400": 0,
+  "hv_60d_ge10_and_entry_cap_ge_1400": 0,
+  "ms_60d_ge10_and_entry_cap_ge_1400": 0,
+  "mpi_t50_ge10_and_entry_cap_ge_14000": 0,
+  "hv_60d_ge10_and_entry_cap_ge_14000": 0,
+  "ms_60d_ge10_and_entry_cap_ge_14000": 0,
+  "winners_entry_cap_usd": {
+   "count": 18.0,
+   "mean": 84.4,
+   "std": 38.6,
+   "min": 40.3,
+   "25%": 52.6,
+   "50%": 67.0,
+   "75%": 115.3,
+   "max": 152.1
+  },
+  "winners_exit_cap_usd": {
+   "count": 18.0,
+   "mean": 408.4,
+   "std": 275.4,
+   "min": 160.0,
+   "25%": 193.0,
+   "50%": 315.0,
+   "75%": 488.8,
+   "max": 1102.0
+  }
+ },
+ "multi_horizon": {
+  "spearman_ms_2h_ms_60d": 0.633,
+  "spearman_hv_2h_hv_60d": 0.119,
+  "spearman_hv_24h_hv_60d": 0.541,
+  "spearman_hv_2h_mpi_t50": 0.12,
+  "ms_2h_ge2_n": 683,
+  "ms_2h_ge2_hv60_quantiles": {
+   "0.1": 0.001,
+   "0.25": 0.026,
+   "0.5": 0.107,
+   "0.75": 0.285,
+   "0.9": 0.674
+  },
+  "ms_2h_ge2_mpi_t50_quantiles": {
+   "0.1": 0.001,
+   "0.25": 0.037,
+   "0.5": 0.232,
+   "0.75": 0.471,
+   "0.9": 0.978
+  },
+  "ms_2h_ge2_share_mpi_t50_ge10": 0.0117,
+  "all_share_mpi_t50_ge10": 0.00011
+ },
+ "equal_weight_all_entered": {
+  "mean_mpi_t50": 0.7531,
+  "mean_hv_60d": 0.7476,
+  "capital_sol_per_day": 13140.0,
+  "capital_usd_per_day": 916694.0
+ },
+ "sell_cap_bias": {
+  "post_rows_price_never_above_1.05_but_hv60_lt_0.5": 33274,
+  "share_of_main": 0.2076
+ }
+}

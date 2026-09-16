@@ -1,0 +1,127 @@
+{
+ "card": "DQ1F_卡.md",
+ "frozen_at": "2026-09-16T14:29:35.367438+00:00",
+ "candidates": [
+  {
+   "rank": 1,
+   "primary": true,
+   "filter": "net_sol_pre >= 5.34452 AND slot0_buyers <= 0",
+   "rule": "x50_24h",
+   "dev_n": 703,
+   "dev_per_day": 100.4,
+   "dev_winners": 6,
+   "dev_mean": 1.19,
+   "dev_robust": 1.0704,
+   "dev_base_active_same_rule": 0.976,
+   "turnover_mean_hold_hours": 25.08,
+   "turnover_median_hold_hours": 11.36,
+   "capacity_entry_usd_p10_p50_p90": [
+    33.0,
+    75.7,
+    162.5
+   ],
+   "gross_usd_per_year_at_60usd_each": 417955.0,
+   "winners_rule_vs_t50": [
+    [
+     5.75,
+     54.22
+    ],
+    [
+     1.49,
+     12.3
+    ],
+    [
+     66.61,
+     14.86
+    ],
+    [
+     0.58,
+     15.95
+    ],
+    [
+     85.17,
+     18.59
+    ],
+    [
+     3.57,
+     10.64
+    ]
+   ]
+  },
+  {
+   "rank": 2,
+   "primary": false,
+   "filter": "entry_x_sol >= 59.1866 AND dev_prior_launches <= 11",
+   "rule": "x50_1h",
+   "dev_n": 887,
+   "dev_per_day": 126.7,
+   "dev_winners": 4,
+   "dev_mean": 1.1437,
+   "dev_robust": 1.0488,
+   "dev_base_active_same_rule": 0.9713,
+   "turnover_mean_hold_hours": 2.14,
+   "turnover_median_hold_hours": 1.0,
+   "capacity_entry_usd_p10_p50_p90": [
+    107.7,
+    143.3,
+    276.1
+   ],
+   "gross_usd_per_year_at_60usd_each": 398731.0,
+   "winners_rule_vs_t50": [
+    [
+     1.41,
+     14.32
+    ],
+    [
+     20.11,
+     39.73
+    ],
+    [
+     8.45,
+     10.94
+    ],
+    [
+     85.17,
+     18.59
+    ]
+   ]
+  },
+  {
+   "rank": 3,
+   "primary": false,
+   "filter": "entry_x_sol <= 33.4564 AND dev_prior_launches <= 0",
+   "rule": "x30_24h",
+   "dev_n": 1976,
+   "dev_per_day": 282.3,
+   "dev_winners": 3,
+   "dev_mean": 1.1383,
+   "dev_robust": 1.044,
+   "dev_base_active_same_rule": 0.9857,
+   "turnover_mean_hold_hours": 34.31,
+   "turnover_median_hold_hours": 28.88,
+   "capacity_entry_usd_p10_p50_p90": [
+    52.6,
+    53.4,
+    56.1
+   ],
+   "gross_usd_per_year_at_60usd_each": 855160.0,
+   "winners_rule_vs_t50": [
+    [
+     18.76,
+     12.72
+    ],
+    [
+     66.61,
+     14.86
+    ],
+    [
+     2.28,
+     18.07
+    ]
+   ]
+  }
+ ],
+ "excluded_features": [],
+ "dev_csv_sha256": "1c701696724b33c7b22b42d63ef508f66855cbc497bdae05a772d6db4b69914e",
+ "script_sha256": "f9e810379a4f45454cf492f32bf7acd15d331d7d738fd8fad1f60adbe6d96aec"
+}

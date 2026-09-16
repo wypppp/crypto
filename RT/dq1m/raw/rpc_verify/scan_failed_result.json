@@ -1,0 +1,37 @@
+{
+ "stats": {
+  "pump": {
+   "scanned": 2000,
+   "failed": 1775,
+   "failed_checked": 40,
+   "failed_with_event": 0
+  },
+  "amm": {
+   "scanned": 2000,
+   "failed": 892,
+   "failed_checked": 40,
+   "failed_with_event": 1
+  }
+ },
+ "found": {
+  "pump": [],
+  "amm": [
+   {
+    "signature": "5wXqz4uo9Rfk5UnmmKNvYHz2C1edcqwJRy2wBokH6PDrY5Vw8yu6Vi317j9sgBKPLHqGm4A395EY3gzhhdUoJZK7",
+    "slot": 447367847,
+    "block_time": 1789512671,
+    "events": [
+     "sell"
+    ],
+    "err": {
+     "InstructionError": [
+      3,
+      {
+       "Custom": 6001
+      }
+     ]
+    }
+   }
+  ]
+ }
+}
