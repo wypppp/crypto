@@ -1,0 +1,32 @@
+{
+ "1": {
+  "mean": 0.9255,
+  "mean_after_0.002SOL": 0.9215,
+  "mean_after_0.005SOL": 0.9155,
+  "mean_after_0.01SOL": 0.9055,
+  "sample_rate_to_fit_1400usd": 0.275,
+  "trades_per_year_at_1400usd": 8933.0,
+  "exp_net_usd_per_year_no_cost": -39929.0,
+  "exp_net_usd_per_year_cost_0.002": -42073.0
+ },
+ "2": {
+  "mean": 0.9741,
+  "mean_after_0.002SOL": 0.9701,
+  "mean_after_0.005SOL": 0.9641,
+  "mean_after_0.01SOL": 0.9541,
+  "sample_rate_to_fit_1400usd": 1.0,
+  "trades_per_year_at_1400usd": 51152.0,
+  "exp_net_usd_per_year_no_cost": -79490.0,
+  "exp_net_usd_per_year_cost_0.002": -91767.0
+ },
+ "3": {
+  "mean": 1.0138,
+  "mean_after_0.002SOL": 1.0098,
+  "mean_after_0.005SOL": 1.0038,
+  "mean_after_0.01SOL": 0.9938,
+  "sample_rate_to_fit_1400usd": 0.0567,
+  "trades_per_year_at_1400usd": 6165.0,
+  "exp_net_usd_per_year_no_cost": 5104.0,
+  "exp_net_usd_per_year_cost_0.002": 3625.0
+ }
+}

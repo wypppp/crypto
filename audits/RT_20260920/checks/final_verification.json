@@ -1,0 +1,19 @@
+{
+  "snapshot_files_verified": 4204,
+  "snapshot_sha256_mismatches": [],
+  "source_files_changed": [
+    "RT/diag/收益公式改善目标表.md",
+    "RT/右尾_STATUS.md",
+    "RT/右尾_事实库.md"
+  ],
+  "expected_document_only_changes": true,
+  "new_scripts_parse": [
+    "independent_checks.py",
+    "semantic_checks.py",
+    "framing_checks.py"
+  ],
+  "broken_new_links": [],
+  "stored_hash_correspondences_verified": 15,
+  "selected_result_invariants": "passed",
+  "head": "e47bc55d2c41a1055480568b1832c1c62da73f57"
+}

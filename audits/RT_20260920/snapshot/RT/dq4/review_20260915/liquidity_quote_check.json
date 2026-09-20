@@ -1,0 +1,187 @@
+{
+  "purpose": "Read-only fixed-input quote check and liquidity non-uniqueness check",
+  "account_context_slot": 447136511,
+  "pairs": [
+    {
+      "direction": "buy",
+      "previous_slot": 446918647,
+      "next_slot": 446918648,
+      "previous_tx_error": null,
+      "next_tx_error": null,
+      "runs": [
+        {
+          "liquidity_delta": "0",
+          "liquidity": "991681178047270730718219105698",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        },
+        {
+          "liquidity_delta": "1",
+          "liquidity": "991681178047270730718219105699",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        },
+        {
+          "liquidity_delta": "-1",
+          "liquidity": "991681178047270730718219105697",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        },
+        {
+          "liquidity_delta": "1000000000",
+          "liquidity": "991681178047270730719219105698",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        }
+      ]
+    },
+    {
+      "direction": "sell",
+      "previous_slot": 446918668,
+      "next_slot": 446926286,
+      "previous_tx_error": null,
+      "next_tx_error": null,
+      "runs": [
+        {
+          "liquidity_delta": "0",
+          "liquidity": "991681178047270730718219105698",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        },
+        {
+          "liquidity_delta": "1",
+          "liquidity": "991681178047270730718219105699",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        },
+        {
+          "liquidity_delta": "-1",
+          "liquidity": "991681178047270730718219105697",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        },
+        {
+          "liquidity_delta": "1000000000",
+          "liquidity": "991681178047270730719219105698",
+          "all_nine_fields_match": true,
+          "match": {
+            "included_fee_input_amount": true,
+            "excluded_fee_input_amount": true,
+            "amount_left": true,
+            "output_amount": true,
+            "next_sqrt_price": true,
+            "claiming_fee": true,
+            "protocol_fee": true,
+            "compounding_fee": true,
+            "referral_fee": true
+          }
+        }
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "path": "node/package-lock.json",
+      "sha256": "ecbff55ed62cba24bb37ed0b230e1c7d3ab2758676acf9826ab0572c55199fda"
+    },
+    {
+      "path": "node/reproduce_damm.mjs",
+      "sha256": "a1d8ca7ba18ca7cc000fa6ab8e4cb390c7f35ce54212408d019e231eca619968"
+    },
+    {
+      "path": "node/reproduce_damm_env.mjs",
+      "sha256": "221fe19b6ab89e82499cbf107f168e54b19523c91cfcea9aefdef243d1befae7"
+    },
+    {
+      "path": "raw/rpc/10_damm_pool_account_now.response.json",
+      "sha256": "69475c64d274c756cc9fbae32f80f5f302cf66cdc80e0d0ea9c711c52b0ab206"
+    },
+    {
+      "path": "raw/rpc/13_tx_damm_buycand_prev_446918647.response.json",
+      "sha256": "7ad2970ebcd95769cc3f144b5d32793159e800a5d43535ba745e0f903e19cd7c"
+    },
+    {
+      "path": "raw/rpc/12_tx_damm_buycand_next_446918648.response.json",
+      "sha256": "c94f9d58787aba9b8752866bcb6b100139bcc387ff0e454e1af6b93751b2f141"
+    },
+    {
+      "path": "raw/rpc/08_tx_damm_prev.response.json",
+      "sha256": "eb0028d83a3239e0cd16e8105c412d03f44768024926e78a97cb009610f85de4"
+    },
+    {
+      "path": "raw/rpc/09_tx_damm_next.response.json",
+      "sha256": "4e8331be57842852a4c20c1252cc3d40ad564eef972a2f82cfada3c51275f38c"
+    }
+  ],
+  "interpretation": "Different nearby liquidity integers reproduce all nine observed result fields. This refutes unique exact state identification from quote equality alone; the perturbations are tiny relative to total liquidity and do not demonstrate a material quote error or refute approximately 89% liquidity reduction. The unresolved issue is independently reconstructing the historical state path."
+}

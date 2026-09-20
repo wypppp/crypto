@@ -1,0 +1,131 @@
+{
+  "search_query": "dynamic_bonding_curve",
+  "full_name": "meteora_solana.dynamic_bonding_curve_evt_evtswap2",
+  "category": "decoded",
+  "dataset_type": "decoded_table",
+  "blockchains": [
+    "solana"
+  ],
+  "visibility": "public",
+  "schema": {
+    "fields": [
+      {
+        "name": "pool",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "config",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "trade_direction",
+        "nullable": true,
+        "type": "integer"
+      },
+      {
+        "name": "has_referral",
+        "nullable": true,
+        "type": "boolean"
+      },
+      {
+        "name": "swap_parameters",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "swap_result",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "quote_reserve_amount",
+        "nullable": true,
+        "type": "varbinary"
+      },
+      {
+        "name": "migration_threshold",
+        "nullable": true,
+        "type": "varbinary"
+      },
+      {
+        "name": "current_timestamp",
+        "nullable": true,
+        "type": "varbinary"
+      },
+      {
+        "name": "block_slot",
+        "nullable": true,
+        "type": "bigint"
+      },
+      {
+        "name": "block_date",
+        "nullable": true,
+        "type": "date"
+      },
+      {
+        "name": "block_time",
+        "nullable": true,
+        "type": "timestamp"
+      },
+      {
+        "name": "block_hash",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "tx_index",
+        "nullable": true,
+        "type": "integer"
+      },
+      {
+        "name": "inner_instruction_index",
+        "nullable": true,
+        "type": "integer"
+      },
+      {
+        "name": "outer_instruction_index",
+        "nullable": true,
+        "type": "integer"
+      },
+      {
+        "name": "inner_executing_account",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "outer_executing_account",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "executing_account",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "is_inner",
+        "nullable": true,
+        "type": "boolean"
+      },
+      {
+        "name": "tx_id",
+        "nullable": true,
+        "type": "varchar"
+      },
+      {
+        "name": "tx_signer",
+        "nullable": true,
+        "type": "varchar"
+      }
+    ],
+    "type": "struct"
+  },
+  "metadata": {
+    "page_rank_score": 1.5829650183150186,
+    "abi_type": "event",
+    "contract_name": "dynamic_bonding_curve",
+    "project_name": "meteora"
+  }
+}

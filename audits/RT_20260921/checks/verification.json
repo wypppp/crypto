@@ -1,0 +1,12 @@
+{
+  "old_frozen_sql_unchanged": [
+    "RT/dq11/sql/T1b_S0_failrate.sql",
+    "RT/dq11/sql/T1b_S1_fee.sql",
+    "RT/dq12/sql/V0_catalog.sql",
+    "RT/dq12/sql/V0b_catalog_zora.sql"
+  ],
+  "new_sql_executed": false,
+  "broken_new_links": [],
+  "checks": "passed",
+  "sql_parser_available_system_python": false
+}

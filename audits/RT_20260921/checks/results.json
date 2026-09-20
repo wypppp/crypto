@@ -1,0 +1,83 @@
+{
+  "data_sha256": "a5671e590af0f14060a0928e47dbf162fcde0892e722c7f2142d4ee0f864e150",
+  "summary_rows": [
+    {
+      "mint": "__SUMMARY__",
+      "cday": 187350,
+      "flags": 15221
+    }
+  ],
+  "real_rows": 14918,
+  "real_rows_invalid_cday": 0,
+  "creator": {
+    "main_n": 981,
+    "saved_mean": 0.9740925565749237,
+    "scenarios": [
+      {
+        "upper_count": 13,
+        "n_added": 34,
+        "scenario_mean": 0.9743226709359607
+      },
+      {
+        "upper_count": 15,
+        "n_added": 67,
+        "scenario_mean": 0.9756259064885497
+      },
+      {
+        "upper_count": 20,
+        "n_added": 125,
+        "scenario_mean": 0.9738274683544305
+      },
+      {
+        "upper_count": 30,
+        "n_added": 215,
+        "scenario_mean": 0.9729186864548497
+      }
+    ],
+    "excluded_n": 1911,
+    "oracle_min_add_to_cross1": 8,
+    "oracle_mean_add8": 1.0006584256825077,
+    "oracle_mean_add8_is_actual_fix": false,
+    "first_day_counterexample": {
+      "created": "2026-06-08 12:00:00",
+      "old_event": "2026-05-09 06:00:00",
+      "fixed": 1,
+      "rolling30": 0
+    },
+    "entry_asof_counterexample": {
+      "creation_count": 11,
+      "new_launch_before_entry": 1,
+      "entry_count": 12
+    }
+  },
+  "ordering": {
+    "b50_mismatch_selected_n": 9,
+    "b50_delta_sum": -0.0473040000000003,
+    "b50_delta_over_old_candidate_n": -4.822018348623883e-05,
+    "candidate_old_exit_rules_differ_n": 91,
+    "direct_x50_1h_reconstruction": false
+  },
+  "existing_catalog": {
+    "path": "RT/dq4/raw/dune_datasets_dynamic_bonding_curve.json",
+    "sha256": "42dcf397fdfee4584b6b1ff26c1789bfef2f45975c9cb29637ab9f2b66db607f",
+    "table": "meteora_solana.dynamic_bonding_curve_evt_evtswap2",
+    "has_fee_basis_points": false,
+    "swap_result_type": "varchar"
+  },
+  "counterexamples": {
+    "venue_100_pool_median_bps": 125,
+    "venue_lowfee_pool_count": 40,
+    "fee_10000_lamports_can_be_single_signature_plus5000_priority_or_two_signature_no_priority": true,
+    "small_error_0_004_can_flip_1_003": 0.9989999999999999,
+    "large_nonnegative_omitted_cost_0_03_keeps_0_974_below1": 0.944
+  },
+  "existing_failed_rpc": {
+    "n": 76,
+    "with_fee": 76,
+    "with_required_signatures": 76,
+    "all_failed": true,
+    "with_program_data": 8,
+    "pump_actually_invoked": 0,
+    "population_failure_rate_identified": false
+  }
+}

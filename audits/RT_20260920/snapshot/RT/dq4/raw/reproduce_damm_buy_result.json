@@ -1,0 +1,73 @@
+{
+ "account_name": "Pool",
+ "account_now": {
+  "context_slot": 447136511,
+  "liquidity": "991681178047270730718219105698",
+  "sqrt_price": "1090536249179732",
+  "activation_type": 1,
+  "collect_fee_mode": 0,
+  "pool_status": 0,
+  "dynamic_fee_initialized": 0,
+  "fee_version": 1,
+  "layout_version": 1
+ },
+ "initial_liquidity_from_event": "9015283436793370279256537324536",
+ "prev": {
+  "slot": 446918647,
+  "blockTime": 1789370617,
+  "err": null,
+  "events": [
+   "EvtSwap2"
+  ]
+ },
+ "next": {
+  "slot": 446918648,
+  "blockTime": 1789370617,
+  "err": null,
+  "events": [
+   "EvtSwap2"
+  ]
+ },
+ "liquidity_unchanged_since_migration": false,
+ "inputs": {
+  "pre_sqrtPrice": "2541360089948859",
+  "pre_reserve_a": "390216711897462",
+  "pre_reserve_b": "7407304",
+  "currentPoint": "1789370617",
+  "trade_direction": 1,
+  "swap_mode": 0,
+  "amount_0": "50000",
+  "amount_1": "1",
+  "collect_fee_mode": 0
+ },
+ "observed": {
+  "included_fee_input_amount": "50000",
+  "excluded_fee_input_amount": "50000",
+  "amount_left": "0",
+  "output_amount": "2614089402985",
+  "next_sqrt_price": "2558516933017666",
+  "claiming_fee": "2093364888",
+  "protocol_fee": "418672978",
+  "compounding_fee": "0",
+  "referral_fee": "104668244"
+ },
+ "quoted": {
+  "amountLeft": "0",
+  "includedFeeInputAmount": "50000",
+  "excludedFeeInputAmount": "50000",
+  "outputAmount": "2614089402985",
+  "nextSqrtPrice": "2558516933017666",
+  "claimingFee": "2093364888",
+  "compoundingFee": "0",
+  "protocolFee": "418672978",
+  "referralFee": "104668244",
+  "minimumAmountOut": "2614089402985"
+ },
+ "match": {
+  "outputAmount": true,
+  "nextSqrtPrice": true,
+  "claimingFee": true,
+  "protocolFee": true
+ },
+ "decision": "EXACT_REPRODUCTION"
+}

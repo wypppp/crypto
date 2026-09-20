@@ -1,0 +1,4 @@
+event: message
+id: 6ad31f09-a5e1-472f-a498-188955b63282
+data: {"result":{"content":[{"type":"text","text":"{\"billingPeriodStart\":\"2026-09-07T00:00:00.000Z\",\"billingPeriodEnd\":null,\"subscriptionPlanName\":\"visitor_fluid_engine\",\"creditsUsed\":0.027,\"creditsQuota\":0}"}],"structuredContent":{"billingPeriodStart":"2026-09-07T00:00:00.000Z","billingPeriodEnd":null,"subscriptionPlanName":"visitor_fluid_engine","creditsUsed":0.027,"creditsQuota":0}},"jsonrpc":"2.0","id":13}
+

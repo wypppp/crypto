@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@meteora-ag/dynamic-bonding-curve-sdk": "1.5.12"
+  }
+}

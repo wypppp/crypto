@@ -1,0 +1,18 @@
+{
+  "observed_at_utc": "2026-09-15",
+  "note": "逐字摘自本机 run_dune.py 与直接 API 调用的输出；API key 未记录",
+  "usage_endpoint": {
+    "request": "POST https://api.dune.com/api/v1/usage {}",
+    "http_status": 200,
+    "body": {"private_queries": 0, "private_dashboards": 1, "bytes_used": 0, "bytes_allowed": 15000000000, "billing_periods": [{"start_date": "2026-09-07", "end_date": "2026-09-15", "credits_used": 0, "credits_included": 0}]},
+    "other_attempts": [{"request": "GET /api/v1/usage", "http_status": 405, "body": "{\"error\":\"HTTP method not allowed\"}"}]
+  },
+  "sql_execute_attempts": [
+    {"sql": "RT/dq1/sql/A_trade_fields.sql", "mode": "EXPLAIN (TYPE VALIDATE)", "performance": "medium", "http_status": 400, "body": "{\"error\":\"Invalid performance tier\"}"},
+    {"sql": "RT/dq1/sql/B1_denominator.sql", "mode": "EXPLAIN (TYPE VALIDATE)", "performance": "medium", "http_status": 400, "body": "{\"error\":\"Invalid performance tier\"}"},
+    {"sql": "RT/dq1/sql/B2_migration.sql", "mode": "EXPLAIN (TYPE VALIDATE)", "performance": "medium", "http_status": 400, "body": "{\"error\":\"Invalid performance tier\"}"},
+    {"sql": "RT/dq1/sql/A_trade_fields.sql", "mode": "EXPLAIN (TYPE VALIDATE)", "performance": "large", "http_status": 400, "body": "{\"error\":\"Invalid performance tier\"}"},
+    {"sql": "RT/dq1/sql/A_trade_fields.sql", "mode": "EXPLAIN (TYPE VALIDATE)", "performance": "small", "http_status": 402, "body": "{\"error\":\"This api request would exceed your configured datapoint limit per billing cycle. Please visit your subscription settings on dune.com and adjust your limits to perform this request.\"}"}
+  ],
+  "executions_started": 0
+}

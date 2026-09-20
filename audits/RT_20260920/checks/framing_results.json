@@ -1,0 +1,118 @@
+{
+  "metric_denominators": {
+    "A": [
+      {
+        "layer": "all",
+        "n": 14120,
+        "loser_fraction": 0.25339943342776206,
+        "loser_mean": 0.7524455542202347,
+        "base": 0.9719405064447593,
+        "published_rounded_threshold": 1.0074,
+        "cash_replacement_mean": 1.0346706627478754,
+        "selected_only_mean": 1.0464380343388353,
+        "required_fraction_cash_convention": 0.5652702885658096,
+        "required_fraction_selected_convention": 0.5488634354803748,
+        "note": "Oracle removal is a diagnostic bound, not an implementable selector. Thresholds are not revalidated."
+      },
+      {
+        "layer": "top20",
+        "n": 2824,
+        "loser_fraction": 0.5832152974504249,
+        "loser_mean": 0.6639919666059501,
+        "base": 1.0026866731586401,
+        "published_rounded_threshold": 1.0344,
+        "cash_replacement_mean": 1.1986516983002833,
+        "selected_only_mean": 1.4766290535259132,
+        "required_fraction_cash_convention": 0.16183156570126495,
+        "required_fraction_selected_convention": 0.1468021782198083,
+        "note": "Oracle removal is a diagnostic bound, not an implementable selector. Thresholds are not revalidated."
+      },
+      {
+        "layer": "top5",
+        "n": 880,
+        "loser_fraction": 0.5852272727272727,
+        "loser_mean": 0.7027333786407767,
+        "base": 1.1360794727272727,
+        "published_rounded_threshold": 1.0688,
+        "cash_replacement_mean": 1.310048006818182,
+        "selected_only_mean": 1.747513002739726,
+        "required_fraction_cash_convention": 0,
+        "required_fraction_selected_convention": 0,
+        "note": "Oracle removal is a diagnostic bound, not an implementable selector. Thresholds are not revalidated."
+      }
+    ],
+    "B": [
+      {
+        "layer": "all",
+        "n": 14918,
+        "loser_fraction": 0.2494972516423113,
+        "loser_mean": 0.7503569535196131,
+        "base": 0.9475542022389061,
+        "published_rounded_threshold": 1.0035,
+        "cash_replacement_mean": 1.0098394562273765,
+        "selected_only_mean": 1.0131104866023581,
+        "required_fraction_cash_convention": 0.8982189872975419,
+        "required_fraction_selected_convention": 0.8858000546061199,
+        "note": "Oracle removal is a diagnostic bound, not an implementable selector. Thresholds are not revalidated."
+      },
+      {
+        "layer": "top20",
+        "n": 2984,
+        "loser_fraction": 0.5807640750670241,
+        "loser_mean": 0.6606912850548182,
+        "base": 0.879658061997319,
+        "published_rounded_threshold": 1.0125,
+        "cash_replacement_mean": 1.076716373994638,
+        "selected_only_mean": 1.1829909352517984,
+        "required_fraction_cash_convention": 0.6741250173932692,
+        "required_fraction_selected_convention": 0.6501729026233753,
+        "note": "Oracle removal is a diagnostic bound, not an implementable selector. Thresholds are not revalidated."
+      },
+      {
+        "layer": "top5",
+        "n": 966,
+        "loser_fraction": 0.5351966873706004,
+        "loser_mean": 0.6934952224371373,
+        "base": 0.9201801759834367,
+        "published_rounded_threshold": 1.0267,
+        "cash_replacement_mean": 1.0842205175983435,
+        "selected_only_mean": 1.1811960356347435,
+        "required_fraction_cash_convention": 0.649351391053696,
+        "required_fraction_selected_convention": 0.5973182771591549,
+        "note": "Oracle removal is a diagnostic bound, not an implementable selector. Thresholds are not revalidated."
+      }
+    ]
+  },
+  "correction_propagation": [
+    {
+      "commit": "1eeaeff0",
+      "status_sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5",
+      "facts_sha256": "f4ad0e9180e655b96daadeeab2d4dfca735de38dabb7cada63e679ddfc0519c1",
+      "diagnostics_sha256": "ae0da3bdb804e8157f2ee8e0673e86a9938fcdc5e88448931d4e21a23bfae514"
+    },
+    {
+      "commit": "9b23b2d0",
+      "status_sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5",
+      "facts_sha256": "1c83fdd75c78848291821babb18b227273c8a481ceed5eab45fb5ed754370971",
+      "diagnostics_sha256": "06a2f7e499e93a87c668c6991fc2dee4e91dd71fa33de08e70f97e867cc90cb9"
+    },
+    {
+      "commit": "c8a558e2",
+      "status_sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5",
+      "facts_sha256": "9add724f7f36f06a019c33722b41e6a9ea178a942fba992339dbdc11d7282960",
+      "diagnostics_sha256": "06364f28a83e1e81b1935dca4a86e7a91f6b0ee5801e0309456a650fcde28a3e"
+    },
+    {
+      "commit": "637eb077",
+      "status_sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5",
+      "facts_sha256": "bdd3e148cdc63bc4e29b4f37c0f2a33d55650b33706d4e0e333875b038fbdc2d",
+      "diagnostics_sha256": "6630a55ddd27f514a6ea9580f3c7758b9fec7692c9f30521955a600c85600f77"
+    },
+    {
+      "commit": "e47bc55d",
+      "status_sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5",
+      "facts_sha256": "bdd3e148cdc63bc4e29b4f37c0f2a33d55650b33706d4e0e333875b038fbdc2d",
+      "diagnostics_sha256": "6630a55ddd27f514a6ea9580f3c7758b9fec7692c9f30521955a600c85600f77"
+    }
+  ]
+}

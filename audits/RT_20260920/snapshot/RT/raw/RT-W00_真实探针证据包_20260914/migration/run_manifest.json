@@ -1,0 +1,141 @@
+{
+  "schema_version": "w00-probe-1",
+  "run_id": "RT-W00-20260914-codex-03",
+  "work_package": "RT-W00",
+  "run_role": "engineering_fixture",
+  "analysis_role": "development",
+  "agent_id": "codex",
+  "parent_run_id": "RT-W00-20260914-codex-02",
+  "started_at": "2026-09-14T07:23:54.654242+00:00",
+  "finished_at": "2026-09-14T07:24:02.700Z",
+  "process_status": "completed",
+  "command": "node probe.mjs",
+  "exit_code": 0,
+  "git_sha": null,
+  "git_reason": "one-off scratch probe; no project checkout",
+  "source_snapshot": [
+    {
+      "path": "migration/probe.mjs",
+      "sha256": "ecbe199bbddcaa546d2348daa8e3b562a2194518a64b5334c32db366e42ffaa3"
+    }
+  ],
+  "dependency_lock": {
+    "path": "package-lock.json",
+    "sha256": "d1c47d4460e096bc26dd6f233e20328fb49ac1ed2b6abe887a664fc9dfc930b7"
+  },
+  "spec": {
+    "path": "migration/spec.json",
+    "sha256": "c1f16668233313b6df1b9d7f935b5be00421727f3e1a8c6f848ba781e10cb966",
+    "frozen_at": "2026-09-14T07:23:54.654242+00:00"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "SDK": "@meteora-ag/dynamic-bonding-curve-sdk@1.5.12"
+  },
+  "inputs": [
+    {
+      "path": "migration/raw/1_getSignaturesForAddress.http.json",
+      "sha256": "1eb73c196a9a3cc1a656b1c67df3f5fe08f051f00fd512d4bd19075c8c34b74f"
+    },
+    {
+      "path": "migration/raw/1_getSignaturesForAddress.request.json",
+      "sha256": "91949ae5d7cf18f53fc85acdffc5f6130ebc5b1075523055f1aa06194e909f9f",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": null,
+      "started_at": "2026-09-14T07:23:55.397Z"
+    },
+    {
+      "path": "migration/raw/1_getSignaturesForAddress.response.json",
+      "sha256": "2af2abe281fc15e53c95c4c128558178d51dae9bf96a16d3dc313e27654ecafb"
+    },
+    {
+      "path": "migration/raw/2_getTransaction.http.json",
+      "sha256": "a22640b658735d2c3878206d267ad38e92565ef44a6afce17b1c5b1aa3d7a4d3"
+    },
+    {
+      "path": "migration/raw/2_getTransaction.request.json",
+      "sha256": "895dfcb2f7eeb6d2b143b43a41c402f093efed7b7c6b9113fd7918b7d01aa226",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": null,
+      "started_at": "2026-09-14T07:24:01.699Z"
+    },
+    {
+      "path": "migration/raw/2_getTransaction.response.json",
+      "sha256": "278a88caad08ab9a77d2a8187bf5e4db09ed4f94d7a4383958d935d5ce62fde7"
+    },
+    {
+      "path": "migration/raw/3_getTransaction.http.json",
+      "sha256": "3f455afa20b9f9548280000100ffda66fc892d6a3e353f1b17f5df5ff77f6194"
+    },
+    {
+      "path": "migration/raw/3_getTransaction.request.json",
+      "sha256": "9f74aefbc37852de5b32c8d9744f9c1227b01e43d3af4c6c42685d0d35483494",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": null,
+      "started_at": "2026-09-14T07:24:01.959Z"
+    },
+    {
+      "path": "migration/raw/3_getTransaction.response.json",
+      "sha256": "fac492d70b7aeb84f709b7f31a2b396f902fa4b6aba2d91eeaa4fd959fef17af"
+    },
+    {
+      "path": "migration/raw/4_getTransaction.http.json",
+      "sha256": "892b7583031a4b10485902f7e5648935412e724ec51f8b977c9957a0d60ab809"
+    },
+    {
+      "path": "migration/raw/4_getTransaction.request.json",
+      "sha256": "c0ba900e1c80ed2ec5fa90d5019672680abe076cb9e6c7ddfdb64a927c128a10",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": null,
+      "started_at": "2026-09-14T07:24:02.208Z"
+    },
+    {
+      "path": "migration/raw/4_getTransaction.response.json",
+      "sha256": "90fc2b2b2016434671117f2de6abb773a360b615827f7160d280aba670b8256f"
+    },
+    {
+      "path": "migration/raw/5_getAccountInfo.http.json",
+      "sha256": "ddac72ef6d141e33ef78a8b498c514cf190b6ffc83fa14a09a3003b44a4a1ea2"
+    },
+    {
+      "path": "migration/raw/5_getAccountInfo.request.json",
+      "sha256": "cbd5b80e9d4dde0d02b8196a777b29b629c5a0e3177394ff4a342a728847637b",
+      "source": "https://api.mainnet-beta.solana.com",
+      "retrieved_at": null,
+      "started_at": "2026-09-14T07:24:02.464Z"
+    },
+    {
+      "path": "migration/raw/5_getAccountInfo.response.json",
+      "sha256": "163b67b6bc96f589f164008b8c2c84f876a6d006ab7f9bab60a961a46bf9d705"
+    }
+  ],
+  "universe": {
+    "type": "purposive_engineering_fixture",
+    "enumeration_status": "not_performed",
+    "economic_sample_size": 0
+  },
+  "resources": {
+    "rpc_requests": 5,
+    "paid_API_charge_USD": 0,
+    "compute_network_cost_USD": null,
+    "note": "public RPC, no paid service; unmetered environment expenses not assumed zero"
+  },
+  "outputs": [
+    {
+      "path": "migration/result.json",
+      "sha256": "d93ff6909ad149294f42b8808860fb7795edd381b20ca4c30ad70b1de467d526"
+    }
+  ],
+  "decision": {
+    "subprobe_result": "MIGRATION_AND_TARGET_OWNER_CONFIRMED",
+    "full_W00": "INCOMPLETE",
+    "economic_profit_claim": "none"
+  },
+  "verification": {
+    "independent_reviewer": "UNRUN",
+    "data_source_independence": "single public RPC",
+    "same_agent_check": "verification.json"
+  },
+  "manifest_assembly": "Generated after completion from saved specs, responses and observed command results; not a live acceptance gate"
+}

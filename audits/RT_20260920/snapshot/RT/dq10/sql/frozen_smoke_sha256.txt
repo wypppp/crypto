@@ -1,0 +1,10 @@
+6d5ea8cdee6cacfd41ade72f2eaaed3da533f9778b5555048a398b602294d821  sql/S1_smoke.sql
+051000428f47c5783875387f9fb1334f34dfaed25210123e6b392b89092a1959  sql/S2_calib.sql
+917832c99c4a19249ec976fbc57f747e405c9ea738074885bc4b50dcbeb63bc3  sql/build_s.py
+3661c16337957ee6799d467bedf3c908f7d11b4807d1a6045d60c1cc845c2d85  raw/smoke_mints_20260607.csv
+84df6be58912490af37b1ac0233a1eeb9a65d221b3ca612acac8d1bec8ec7c2b  S2w_wallets.sql
+dc74f38bd648318f3bdbc7994750de1243073468dc566aed49c6474f74a84509  build_s.py
+# 以上两行为 09-17 冒烟修订（S2_calib 超时后），未读取任何收益列
+ea681999ce762dd92f5540bfaa6fbba8f26f562e3eff0417afe53dcbd92a8537  S2w_wallets.sql
+a7cbb584f10cc27cf3ada1707b7f0a9aa9588a927e86d10bbb69a71f604bdbed  build_s.py
+# 以上两行为 09-17 S2w 语法修正（GROUPING SETS 只接受列名；逻辑不变，未读取任何收益列）

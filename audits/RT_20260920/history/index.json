@@ -1,0 +1,342 @@
+[
+  {
+    "commit": "e47bc55d2c41a1055480568b1832c1c62da73f57",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5"
+  },
+  {
+    "commit": "e47bc55d2c41a1055480568b1832c1c62da73f57",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "bdd3e148cdc63bc4e29b4f37c0f2a33d55650b33706d4e0e333875b038fbdc2d"
+  },
+  {
+    "commit": "e47bc55d2c41a1055480568b1832c1c62da73f57",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "e47bc55d2c41a1055480568b1832c1c62da73f57",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "86200d9adfa24b773c6afb5d30eb20472a9dab104c2d997e4f91d3b800ee8d0b"
+  },
+  {
+    "commit": "e47bc55d2c41a1055480568b1832c1c62da73f57",
+    "path": "RT/diag/收益公式改善目标表.md",
+    "sha256": "6630a55ddd27f514a6ea9580f3c7758b9fec7692c9f30521955a600c85600f77"
+  },
+  {
+    "commit": "e47bc55d2c41a1055480568b1832c1c62da73f57",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "2991bc0eaefd5318c73a7d8f16229c873f14a2d5ede0d5ba39cacf350adb5c51"
+  },
+  {
+    "commit": "e47bc55d2c41a1055480568b1832c1c62da73f57",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "637eb077016c9288ac4949b9811c52159817c0d1",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5"
+  },
+  {
+    "commit": "637eb077016c9288ac4949b9811c52159817c0d1",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "bdd3e148cdc63bc4e29b4f37c0f2a33d55650b33706d4e0e333875b038fbdc2d"
+  },
+  {
+    "commit": "637eb077016c9288ac4949b9811c52159817c0d1",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "637eb077016c9288ac4949b9811c52159817c0d1",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "86200d9adfa24b773c6afb5d30eb20472a9dab104c2d997e4f91d3b800ee8d0b"
+  },
+  {
+    "commit": "637eb077016c9288ac4949b9811c52159817c0d1",
+    "path": "RT/diag/收益公式改善目标表.md",
+    "sha256": "6630a55ddd27f514a6ea9580f3c7758b9fec7692c9f30521955a600c85600f77"
+  },
+  {
+    "commit": "637eb077016c9288ac4949b9811c52159817c0d1",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "637eb077016c9288ac4949b9811c52159817c0d1",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "c8a558e28dd75552d02d39a02199baace21ce6e7",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5"
+  },
+  {
+    "commit": "c8a558e28dd75552d02d39a02199baace21ce6e7",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "9add724f7f36f06a019c33722b41e6a9ea178a942fba992339dbdc11d7282960"
+  },
+  {
+    "commit": "c8a558e28dd75552d02d39a02199baace21ce6e7",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "c8a558e28dd75552d02d39a02199baace21ce6e7",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "86200d9adfa24b773c6afb5d30eb20472a9dab104c2d997e4f91d3b800ee8d0b"
+  },
+  {
+    "commit": "c8a558e28dd75552d02d39a02199baace21ce6e7",
+    "path": "RT/diag/收益公式改善目标表.md",
+    "sha256": "06364f28a83e1e81b1935dca4a86e7a91f6b0ee5801e0309456a650fcde28a3e"
+  },
+  {
+    "commit": "c8a558e28dd75552d02d39a02199baace21ce6e7",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "c8a558e28dd75552d02d39a02199baace21ce6e7",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "9b23b2d03b075babf9db417d6a6af4b7e27d5513",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5"
+  },
+  {
+    "commit": "9b23b2d03b075babf9db417d6a6af4b7e27d5513",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "1c83fdd75c78848291821babb18b227273c8a481ceed5eab45fb5ed754370971"
+  },
+  {
+    "commit": "9b23b2d03b075babf9db417d6a6af4b7e27d5513",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "9b23b2d03b075babf9db417d6a6af4b7e27d5513",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "86200d9adfa24b773c6afb5d30eb20472a9dab104c2d997e4f91d3b800ee8d0b"
+  },
+  {
+    "commit": "9b23b2d03b075babf9db417d6a6af4b7e27d5513",
+    "path": "RT/diag/收益公式改善目标表.md",
+    "sha256": "06a2f7e499e93a87c668c6991fc2dee4e91dd71fa33de08e70f97e867cc90cb9"
+  },
+  {
+    "commit": "9b23b2d03b075babf9db417d6a6af4b7e27d5513",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "9b23b2d03b075babf9db417d6a6af4b7e27d5513",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "1eeaeff0ad68e7b867897425fe575c3876fba1a6",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "abfe8d45b2534e25885cdb98808266004ad7e04bb9d647afa2b5879f79205ca5"
+  },
+  {
+    "commit": "1eeaeff0ad68e7b867897425fe575c3876fba1a6",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "f4ad0e9180e655b96daadeeab2d4dfca735de38dabb7cada63e679ddfc0519c1"
+  },
+  {
+    "commit": "1eeaeff0ad68e7b867897425fe575c3876fba1a6",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "1eeaeff0ad68e7b867897425fe575c3876fba1a6",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "86200d9adfa24b773c6afb5d30eb20472a9dab104c2d997e4f91d3b800ee8d0b"
+  },
+  {
+    "commit": "1eeaeff0ad68e7b867897425fe575c3876fba1a6",
+    "path": "RT/diag/收益公式改善目标表.md",
+    "sha256": "ae0da3bdb804e8157f2ee8e0673e86a9938fcdc5e88448931d4e21a23bfae514"
+  },
+  {
+    "commit": "1eeaeff0ad68e7b867897425fe575c3876fba1a6",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "1eeaeff0ad68e7b867897425fe575c3876fba1a6",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "dec846398ecddddee984e2c4449bafb91bf38aa7",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "db7a4511f6e9ab990be8b239ecddf2d7dc4184cb8e94384391823ed0ead1a367"
+  },
+  {
+    "commit": "dec846398ecddddee984e2c4449bafb91bf38aa7",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "5f1ac0d00986bbedd438ca4cbf00a656e641e617b2286ac3ad599f9c765d6da9"
+  },
+  {
+    "commit": "dec846398ecddddee984e2c4449bafb91bf38aa7",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "dec846398ecddddee984e2c4449bafb91bf38aa7",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "86200d9adfa24b773c6afb5d30eb20472a9dab104c2d997e4f91d3b800ee8d0b"
+  },
+  {
+    "commit": "dec846398ecddddee984e2c4449bafb91bf38aa7",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "dec846398ecddddee984e2c4449bafb91bf38aa7",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "a241ce4fe75f5f0e39041911261c87c48f669c69",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "47b094ddfeced2d8e50fcae092bb526327c23a89b53b8a39e2b40f8f1e33853d"
+  },
+  {
+    "commit": "a241ce4fe75f5f0e39041911261c87c48f669c69",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "801aa4e3d543c5d94a95eb1a085382fbdab9a4fc028164c249f5cd99dbc7de0c"
+  },
+  {
+    "commit": "a241ce4fe75f5f0e39041911261c87c48f669c69",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "a241ce4fe75f5f0e39041911261c87c48f669c69",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "aa1d51778ee3dfa41ac096fd037d7e32cd5e663a4f779bb004007be4e0646ca5"
+  },
+  {
+    "commit": "a241ce4fe75f5f0e39041911261c87c48f669c69",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "a241ce4fe75f5f0e39041911261c87c48f669c69",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "3ce23782ab17d8e38917c12f50a657f4a712c1cc",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "45f914fd0e441ba897bef2efdd404989a3fe2457259e81ae528d6df2e82a30d2"
+  },
+  {
+    "commit": "3ce23782ab17d8e38917c12f50a657f4a712c1cc",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "801aa4e3d543c5d94a95eb1a085382fbdab9a4fc028164c249f5cd99dbc7de0c"
+  },
+  {
+    "commit": "3ce23782ab17d8e38917c12f50a657f4a712c1cc",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "cd8f7cb8e2ce487b356407f31bd50b2ec61be4f4c2a841ead2eba1f4c6aa93a6"
+  },
+  {
+    "commit": "3ce23782ab17d8e38917c12f50a657f4a712c1cc",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "aef6172e42528fe6cc46a428683699c6bd3049ef8d8a0f2b1ad3b774ab8c4597"
+  },
+  {
+    "commit": "3ce23782ab17d8e38917c12f50a657f4a712c1cc",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "3ce23782ab17d8e38917c12f50a657f4a712c1cc",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "537323a4c084b42fc2806653825175d7390b359a",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "3c2586e1fc1056aed57c5077aeb9e6f399e299687bf267074e139224bfe600d4"
+  },
+  {
+    "commit": "537323a4c084b42fc2806653825175d7390b359a",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "801aa4e3d543c5d94a95eb1a085382fbdab9a4fc028164c249f5cd99dbc7de0c"
+  },
+  {
+    "commit": "537323a4c084b42fc2806653825175d7390b359a",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "27462bd5b253def8556b1dbd07e03275a0ab9584cf0a706fafd4715860f4c751"
+  },
+  {
+    "commit": "537323a4c084b42fc2806653825175d7390b359a",
+    "path": "RT/第一性原理重构_20260917.md",
+    "sha256": "42b807cd6dc0c76f5f01a20031f63338dcfd6e920f201d0d4ecce798ef782b4b"
+  },
+  {
+    "commit": "537323a4c084b42fc2806653825175d7390b359a",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "537323a4c084b42fc2806653825175d7390b359a",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "6fce7f2c092e78889aeb0a8ca994f284d6327ddf",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "46fe737b82704c1adc474350c1b139a94263a0c2e95afc9ff5528a47794cb3c7"
+  },
+  {
+    "commit": "6fce7f2c092e78889aeb0a8ca994f284d6327ddf",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "801aa4e3d543c5d94a95eb1a085382fbdab9a4fc028164c249f5cd99dbc7de0c"
+  },
+  {
+    "commit": "6fce7f2c092e78889aeb0a8ca994f284d6327ddf",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "038f5681d47268ed838904718c28a30717aaf099122adf5f1a2bd7f7659579d1"
+  },
+  {
+    "commit": "6fce7f2c092e78889aeb0a8ca994f284d6327ddf",
+    "path": "RT/路线复盘_pump曲线_20260916.md",
+    "sha256": "54257b81345a9296d29cadfc30dd9abc92f5cb60264064c1a0704faaae873826"
+  },
+  {
+    "commit": "6fce7f2c092e78889aeb0a8ca994f284d6327ddf",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  },
+  {
+    "commit": "81c47d519fe40851082b9a52bfa42f9ffb5604b1",
+    "path": "RT/右尾_STATUS.md",
+    "sha256": "3e1989182675b55cd3e4e46abb7877b5e59b13d6f1e9d30e248f99ca316a7247"
+  },
+  {
+    "commit": "81c47d519fe40851082b9a52bfa42f9ffb5604b1",
+    "path": "RT/右尾_事实库.md",
+    "sha256": "c265be9a785b7a35dddc49c91adb5aa58514e563336f0ce5f6ab37dd2abe250d"
+  },
+  {
+    "commit": "81c47d519fe40851082b9a52bfa42f9ffb5604b1",
+    "path": "RT/右尾研究方案_v1.md",
+    "sha256": "038f5681d47268ed838904718c28a30717aaf099122adf5f1a2bd7f7659579d1"
+  },
+  {
+    "commit": "81c47d519fe40851082b9a52bfa42f9ffb5604b1",
+    "path": "背景.md",
+    "sha256": "02816de422e26c003abe9c2ab2337247cd3eaebb0141e6212b5ea2851848dc58"
+  }
+]

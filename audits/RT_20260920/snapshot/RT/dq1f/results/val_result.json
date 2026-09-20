@@ -1,0 +1,152 @@
+{
+ "val_csv_sha256": "a5671e590af0f14060a0928e47dbf162fcde0892e722c7f2142d4ee0f864e150",
+ "frozen_sha256": "07d7a6c33777156d0a6cfe6c75095bf834cc672653d66b8b81d01ce79db62733",
+ "script_sha256": "02ee85f006d48c9baf32456f36e1cc6b1765479ff29609687067a09f6698d66e",
+ "summary_row": {
+  "sol_cohort": 187350,
+  "non_sol": 15221
+ },
+ "active_rows": 14918,
+ "winners_t50": 20,
+ "dup_mints": 0,
+ "base_active": {
+  "x30_1h": 0.9659,
+  "x30_24h": 0.965,
+  "x50_1h": 0.9553,
+  "x50_24h": 0.9516,
+  "x70_1h": 0.9377,
+  "x70_24h": 0.9235,
+  "xNA_1h": 0.8957,
+  "xNA_24h": 0.8547,
+  "mpi_t50": 0.8934
+ },
+ "candidates": [
+  {
+   "v1_0_rank": 1,
+   "primary": false,
+   "filter": "net_sol_pre >= 5.34452 AND slot0_buyers <= 0",
+   "rule": "x50_24h",
+   "n": 623,
+   "winners_t50": 5,
+   "mean": 0.9255,
+   "excl_top1": 0.9007,
+   "excl_top2": 0.876,
+   "median": 0.6314,
+   "base_active_same_rule": 0.9516,
+   "mean_hold_hours": 22.88,
+   "concurrent_capital_usd_at_60": 5091.0,
+   "entry_capacity_usd_p10_p50_p90": [
+    40.2,
+    74.7,
+    160.6
+   ],
+   "top3_by_rule": [
+    [
+     "7LNfxxMAu5sNbg4uY5Kuu5Tvg6CsQGUo4ASkD79Xpump",
+     16.38,
+     11.15,
+     41.3
+    ],
+    [
+     "3JN2DbSjNVAKfj3F12BHNaoYdsySEi4DR3CoqMCqpump",
+     16.23,
+     15.11,
+     60.69
+    ],
+    [
+     "EQHgekT3TAyNqXmENfgbexxzBj6rQzXV6n5nEM89pump",
+     10.67,
+     2.05,
+     26.11
+    ]
+   ]
+  },
+  {
+   "v1_0_rank": 2,
+   "primary": true,
+   "filter": "entry_x_sol >= 59.1866 AND dev_prior_launches <= 11",
+   "rule": "x50_1h",
+   "n": 981,
+   "winners_t50": 3,
+   "mean": 0.9741,
+   "excl_top1": 0.9642,
+   "excl_top2": 0.9559,
+   "median": 0.9309,
+   "base_active_same_rule": 0.9553,
+   "mean_hold_hours": 2.32,
+   "concurrent_capital_usd_at_60": 814.0,
+   "entry_capacity_usd_p10_p50_p90": [
+    107.7,
+    141.7,
+    283.8
+   ],
+   "top3_by_rule": [
+    [
+     "EQHgekT3TAyNqXmENfgbexxzBj6rQzXV6n5nEM89pump",
+     10.67,
+     2.05,
+     26.11
+    ],
+    [
+     "3Ln2EH9txLwMjLP4NEcLuEfGEbwb1pKjUyiMfKYDpump",
+     9.1,
+     0.58,
+     19.03
+    ],
+    [
+     "6ko852fpenuBeyQF3L6G4gJt17x7zpNdW55JgRndpump",
+     7.16,
+     0.43,
+     15.43
+    ]
+   ],
+   "criteria": {
+    "c1_mean_gt_1": false,
+    "c2_excl_top1_ge_0.95": true,
+    "c3_n_ge_70": true,
+    "c4_beats_active_pool": true
+   },
+   "PASS": false
+  },
+  {
+   "v1_0_rank": 3,
+   "primary": false,
+   "filter": "entry_x_sol <= 33.4564 AND dev_prior_launches <= 0",
+   "rule": "x30_24h",
+   "n": 2084,
+   "winners_t50": 6,
+   "mean": 1.0138,
+   "excl_top1": 1.0054,
+   "excl_top2": 1.0002,
+   "median": 0.9229,
+   "base_active_same_rule": 0.965,
+   "mean_hold_hours": 33.16,
+   "concurrent_capital_usd_at_60": 24678.0,
+   "entry_capacity_usd_p10_p50_p90": [
+    52.6,
+    53.4,
+    56.1
+   ],
+   "top3_by_rule": [
+    [
+     "AtJ351dUKdWz8MP1pQCK5UxyVqdkjyr61vXCgegQpump",
+     18.55,
+     89.39,
+     317.64
+    ],
+    [
+     "2sDCRhLKeUF7c1dG2cqQFuY2VZQqPVrZRSGxqy8Gpump",
+     11.9,
+     22.39,
+     234.81
+    ],
+    [
+     "2bLdDpT9LfghnNenBPLMA2BvoToaCvbVyFQhLV9Kpump",
+     9.78,
+     12.37,
+     69.01
+    ]
+   ]
+  }
+ ]
+}

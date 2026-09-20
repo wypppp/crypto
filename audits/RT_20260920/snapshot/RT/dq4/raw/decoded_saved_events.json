@@ -1,0 +1,246 @@
+{
+  "dbc_program": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+  "cpamm_program": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+  "idlFields": {
+    "EvtInitializePool": [
+      "pool:pubkey",
+      "token_a_mint:pubkey",
+      "token_b_mint:pubkey",
+      "creator:pubkey",
+      "payer:pubkey",
+      "alpha_vault:pubkey",
+      "pool_fees:{\"defined\":{\"name\":\"PoolFeeParameters\"}}",
+      "sqrt_min_price:u128",
+      "sqrt_max_price:u128",
+      "activation_type:u8",
+      "collect_fee_mode:u8",
+      "liquidity:u128",
+      "sqrt_price:u128",
+      "activation_point:u64",
+      "token_a_flag:u8",
+      "token_b_flag:u8",
+      "token_a_amount:u64",
+      "token_b_amount:u64",
+      "total_amount_a:u64",
+      "total_amount_b:u64",
+      "pool_type:u8"
+    ],
+    "EvtLiquidityChange": [
+      "pool:pubkey",
+      "position:pubkey",
+      "owner:pubkey",
+      "token_a_amount:u64",
+      "token_b_amount:u64",
+      "transfer_fee_included_token_a_amount:u64",
+      "transfer_fee_included_token_b_amount:u64",
+      "reserve_a_amount:u64",
+      "reserve_b_amount:u64",
+      "liquidity_delta:u128",
+      "token_a_amount_threshold:u64",
+      "token_b_amount_threshold:u64",
+      "change_type:u8"
+    ]
+  },
+  "transactions": [
+    {
+      "file": "raw/03_getTransaction.response.json",
+      "slot": 446917776,
+      "blockTime": 1789370340,
+      "err": null,
+      "n_events": 2,
+      "events": [
+        {
+          "program": "DBC",
+          "tag_hex": "e445a52e51cb9a1d",
+          "name": "evtSwap",
+          "data": {
+            "pool": "Ci3nUi7vQVisQsb6bosAP3NGf64kR8i5RNRqD6h3yPtW",
+            "config": "CaDBnXEGdbJ9bKBN8U4AbbvJ7BMY6KMrBTXDyShaonjd",
+            "tradeDirection": 1,
+            "hasReferral": false,
+            "params": {
+              "amountIn": "15364615",
+              "minimumAmountOut": "33689867169"
+            },
+            "swapResult": {
+              "actualInputAmount": "15364615",
+              "outputAmount": "34381393826",
+              "nextSqrtPrice": "389534991338392569",
+              "tradingFee": "68935126",
+              "protocolFee": "17233781",
+              "referralFee": "0"
+            },
+            "amountIn": "15364615",
+            "currentTimestamp": "1789370340"
+          }
+        },
+        {
+          "program": "DBC",
+          "tag_hex": "e445a52e51cb9a1d",
+          "name": "evtSwap2",
+          "data": {
+            "pool": "Ci3nUi7vQVisQsb6bosAP3NGf64kR8i5RNRqD6h3yPtW",
+            "config": "CaDBnXEGdbJ9bKBN8U4AbbvJ7BMY6KMrBTXDyShaonjd",
+            "tradeDirection": 1,
+            "hasReferral": false,
+            "swapParameters": {
+              "amount0": "15364615",
+              "amount1": "33689867169",
+              "swapMode": 0
+            },
+            "swapResult": {
+              "includedFeeInputAmount": "15364615",
+              "excludedFeeInputAmount": "15364615",
+              "amountLeft": "0",
+              "outputAmount": "34381393826",
+              "nextSqrtPrice": "389534991338392569",
+              "tradingFee": "68935126",
+              "protocolFee": "17233781",
+              "referralFee": "0"
+            },
+            "quoteReserveAmount": "8189135341",
+            "migrationThreshold": "10950000000",
+            "currentTimestamp": "1789370340"
+          }
+        }
+      ]
+    },
+    {
+      "file": "migration/raw/2_getTransaction.response.json",
+      "slot": 446918646,
+      "blockTime": 1789370617,
+      "err": null,
+      "n_events": 1,
+      "events": [
+        {
+          "program": "DBC",
+          "tag_hex": "e445a52e51cb9a1d",
+          "name": "evtWithdrawLeftover",
+          "data": {
+            "pool": "Ci3nUi7vQVisQsb6bosAP3NGf64kR8i5RNRqD6h3yPtW",
+            "leftoverReceiver": "J7yBcg2AmJ1Cm9kssQqG5sX6mZ9HiJ298Ak9YHeFXX4g",
+            "leftoverAmount": "950000001052494"
+          }
+        }
+      ]
+    },
+    {
+      "file": "migration/raw/3_getTransaction.response.json",
+      "slot": 446918646,
+      "blockTime": 1789370617,
+      "err": null,
+      "n_events": 1,
+      "events": [
+        {
+          "program": "DBC",
+          "tag_hex": "e445a52e51cb9a1d",
+          "name": "evtClaimTradingFee",
+          "data": {
+            "pool": "Ci3nUi7vQVisQsb6bosAP3NGf64kR8i5RNRqD6h3yPtW",
+            "tokenBaseAmount": "388632494336",
+            "tokenQuoteAmount": "153801452"
+          }
+        }
+      ]
+    },
+    {
+      "file": "migration/raw/4_getTransaction.response.json",
+      "slot": 446917936,
+      "blockTime": 1789370391,
+      "err": null,
+      "n_events": 3,
+      "events": [
+        {
+          "program": "DAMM_V2",
+          "tag_hex": "e445a52e51cb9a1d",
+          "name": "EvtCreatePosition",
+          "data": {
+            "pool": "AQ7q2SabJfGSTsSZzZhNvj7Mddj3KHjKBEMfJ9SusH3T",
+            "owner": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM",
+            "position": "97rMi6ytG8vw43bd2cnto2VRm1ooDdUQzjfwFhmG91HA",
+            "position_nft_mint": "DFEFhcGK2ZuTM7FFzZMFU2aSRmedHrb1fhKecEVRtWzo"
+          }
+        },
+        {
+          "program": "DAMM_V2",
+          "tag_hex": "e445a52e51cb9a1d",
+          "name": "EvtInitializePool",
+          "data": {
+            "pool": "AQ7q2SabJfGSTsSZzZhNvj7Mddj3KHjKBEMfJ9SusH3T",
+            "token_a_mint": "8irnNcd5b8UDcoijasSk5M148aJSuQpuqNUPd48K8kN9",
+            "token_b_mint": "So11111111111111111111111111111111111111112",
+            "creator": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM",
+            "payer": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM",
+            "alpha_vault": "11111111111111111111111111111111",
+            "pool_fees": {
+              "base_fee": {
+                "data": [
+                  64,
+                  66,
+                  15,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "compounding_fee_bps": 0,
+              "padding": 0,
+              "dynamic_fee": null
+            },
+            "sqrt_min_price": "4295048016",
+            "sqrt_max_price": "79226673521066979257578248091",
+            "activation_type": 1,
+            "collect_fee_mode": 0,
+            "liquidity": "9015283436793370279256537324536",
+            "sqrt_price": "412481737123559485",
+            "activation_point": "1789370391",
+            "token_a_flag": 1,
+            "token_b_flag": 0,
+            "token_a_amount": "21856200227469",
+            "token_b_amount": "10928100000",
+            "total_amount_a": "21856200227469",
+            "total_amount_b": "10928100000",
+            "pool_type": 1
+          }
+        },
+        {
+          "program": "DAMM_V2",
+          "tag_hex": "e445a52e51cb9a1d",
+          "name": "EvtLockPosition",
+          "data": {
+            "pool": "AQ7q2SabJfGSTsSZzZhNvj7Mddj3KHjKBEMfJ9SusH3T",
+            "position": "97rMi6ytG8vw43bd2cnto2VRm1ooDdUQzjfwFhmG91HA",
+            "owner": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM",
+            "vesting": "97rMi6ytG8vw43bd2cnto2VRm1ooDdUQzjfwFhmG91HA",
+            "cliff_point": "1789456791",
+            "period_frequency": "1",
+            "cliff_unlock_liquidity": "0",
+            "liquidity_per_period": "991681178047270730718219105698",
+            "number_of_period": 1
+          }
+        }
+      ]
+    }
+  ]
+}

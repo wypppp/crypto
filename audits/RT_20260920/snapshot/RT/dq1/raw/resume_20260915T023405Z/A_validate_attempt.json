@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/home/ancillary/.venv/bin/python",
+    "/home/ancillary/crypto/pump_tail_research/run_dune.py",
+    "--sql",
+    "/home/ancillary/RT/dq1/sql/A_trade_fields.sql",
+    "--out",
+    "/home/ancillary/RT/dq1/raw/resume_20260915T023405Z/A_validate.csv",
+    "--performance",
+    "small",
+    "--validate",
+    "--timeout-minutes",
+    "2"
+  ],
+  "credential_source": "/home/ancillary/.env",
+  "sql_sha256": "fc55e7a3a800e5bee6241987bb6c68cc8d8ba3d2aa74085809c0cf81b6ef757d",
+  "exit_code": 1,
+  "finished_at": "2026-09-15T02:34:38.692987+00:00"
+}

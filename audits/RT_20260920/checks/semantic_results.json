@@ -1,0 +1,93 @@
+{
+  "creator_history_counterexample": {
+    "source": "dq1f/sql/F1_val.sql:31-68",
+    "target_creation": "2026-06-14T12:00:00",
+    "previous_launches": [
+      "2026-05-10T12:00:00",
+      "2026-06-01T12:00:00"
+    ],
+    "sql_fixed_lower_boundary_count": 2,
+    "intended_rolling30_count": 1,
+    "actual_affected_tokens": "unknown: creation history is not in exported F1/F2 CSVs",
+    "additional_note": "SQL counts at creation, not entry +30m; same-second launches lack a complete ordering key."
+  },
+  "label_counterexample": {
+    "path_day_multiple": [
+      [
+        20,
+        12
+      ],
+      [
+        40,
+        20
+      ]
+    ],
+    "peak_filter_winner": false,
+    "actual30_winner": true
+  },
+  "weekly_service_exclusion_counterexample": {
+    "source": "dq10/DQ10M_卡_草案.md service exclusion rule 3",
+    "early_share": 0.005,
+    "end_week_share": 0.09545454545454546,
+    "threshold": 0.01,
+    "early_excluded": false,
+    "end_week_excluded": true,
+    "scope": "Design defect if current-week totals are used retrospectively; no executed economic result asserted."
+  },
+  "dq2_three_valued_counts": {
+    "a30_H180_mstar>=10": {
+      "yes": 4,
+      "no": 191,
+      "unknown": 11
+    },
+    "a30_H180_mstar>=50": {
+      "yes": 0,
+      "no": 195,
+      "unknown": 11
+    },
+    "a30_H180_mstar>=100": {
+      "yes": 0,
+      "no": 195,
+      "unknown": 11
+    },
+    "a30_H180_mstar_close>=10": {
+      "yes": 2,
+      "no": 193,
+      "unknown": 11
+    },
+    "a30_H180_mstar_close>=50": {
+      "yes": 0,
+      "no": 195,
+      "unknown": 11
+    },
+    "a30_H180_mstar_close>=100": {
+      "yes": 0,
+      "no": 195,
+      "unknown": 11
+    }
+  },
+  "cex_raw_daily_checks": [
+    {
+      "base": "GMT",
+      "stored_entry_price": 0.15129,
+      "daily_file_count": 7,
+      "days": 181,
+      "high_multiple": 27.619208143300945,
+      "close_multiple": 25.272126379800383,
+      "recorded_high_multiple": 27.619208143300945,
+      "recorded_close_multiple": 25.272126379800383,
+      "scope": "Raw daily-bar reconstruction with saved entry denominator, not orderbook execution or independent entry-price reconstruction."
+    },
+    {
+      "base": "GALA",
+      "stored_entry_price": 0.05732,
+      "daily_file_count": 7,
+      "days": 181,
+      "high_multiple": 14.676901605024424,
+      "close_multiple": 12.94888346127006,
+      "recorded_high_multiple": 14.676901605024424,
+      "recorded_close_multiple": 12.94888346127006,
+      "scope": "Raw daily-bar reconstruction with saved entry denominator, not orderbook execution or independent entry-price reconstruction."
+    }
+  ]
+}

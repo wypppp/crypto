@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 """定点影响核验：创建者窗口口径不符能否翻转 DQ-1F 结论。0 credits，只读 F1_val.csv。
-不计算修正值（需逐创建事件），只界定同一条规则在修正后的成员变化范围与阈值敏感性。"""
+不计算修正值或误差上界（需逐创建事件），只计算假定加回集合与旧门槛敏感性。"""
 import warnings, numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
 d = pd.read_csv("dq1f/raw/F1_val.csv")
+d = d[d.mint != "__SUMMARY__"].copy()
+assert d.cday.between(1, 7).all(), "real token cday outside cohort"
 E = d.entry_x_sol >= 59.1866
 RULE = E & (d.dev_prior_launches <= 11)
 bn, bs = int(RULE.sum()), d.x50_1h[RULE].sum()
 print("冻结主候选 n=%d 均值 %.8f" % (bn, bs/bn))
 
-print("\nA. 窗口漂移（cday=1 恰 30 天，cday=7 为 36 天，计数只会高估）")
+print("\nA. 按 cohort 日分组（固定起日窗口约 30–37 天；这里只描述旧计数）")
 for c, g in d[d.cday <= 7].groupby("cday"):
     ge = g[g.entry_x_sol >= 59.1866]
-    print("   cday=%d 超窗%d天  E层n=%d  计数>11 占比 %.1f%%" % (c, c-1, len(ge), 100*(ge.dev_prior_launches > 11).mean()))
+    print("   cday=%d cohort日偏移%d天  E层n=%d  计数>11 占比 %.1f%%" % (c, c-1, len(ge), 100*(ge.dev_prior_launches > 11).mean()))
 
-print("\nB. 现实加回集合的影响")
+print("\nB. 假定加回集合的影响（不是实际修正或误差上界）")
 for hi in (13, 15, 20, 30):
     S = E & (d.dev_prior_launches > 11) & (d.dev_prior_launches <= hi) & (d.cday > 1)
     m = (bs + d.x50_1h[S].sum())/(bn + S.sum())
