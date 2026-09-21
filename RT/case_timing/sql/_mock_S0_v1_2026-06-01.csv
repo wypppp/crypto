@@ -1,0 +1,4 @@
+mint,row_type,is_mayhem,created_at,signal_time,signal_slot,signal_tx_index,signal_signature,signal_venue,signal_actors,signal_buy_lamports,signal_pre30_lamports,n_created,n_sol_created,n_sol_without_decoded_events,n_triggered_coins,n_eligible_txs,n_decoded_txs,n_triggered_mayhem,n_bad_txs,n_large_mixed_txs
+__SUMMARY__,summary,,,,,,,,,,,2,2.0,0.0,1.0,1.0,9562.0,0.0,0.0,0.0
+YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump,fixture,False,2026-06-01 01:45:55,,,,,,,,,1,1.0,0.0,0.0,0.0,1716.0,0.0,0.0,0.0
+B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump,candidate,False,2026-06-01 17:07:17,2026-06-02 01:10:13,423707026,86,5UytBTjifYKgd7q41bZ6FSMg5fZ2EkHzjRMKTLHP1oTBgh9udaKQNKcha1zjKVDQyvjG2yBpcsCxSdpxL5vPSHXF,pool,G6nyYGhcXPEsdLnoHdCmyPW6XqQbdmW19dmLc8cEtkgE,26113797485.0,0.0,1,1.0,0.0,1.0,1.0,7846.0,0.0,0.0,0.0

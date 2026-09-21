@@ -1,0 +1,196 @@
+{
+  "method": {
+    "creator_field": "creation transaction first account (fee payer/signatory proxy only; creator identity not verified from Create instruction/event)",
+    "creator": "DFUc5Cj17B2d2RE1LbquQY2dcp8CEYdmoBc6LNz6HEkN",
+    "graph": "SPL token Transfer/TransferChecked logs + exact target-mint balance deltas; one negative source only; curve/pool owners excluded; swap/mint/burn and ambiguous multi-source tx excluded",
+    "wallet_selection": "8 GDP buy wallets in [06:21:28,06:23:40], excluding 4X micro-bot and non-buy row"
+  },
+  "ignition": {
+    "utc": "2026-06-03T06:21:28Z",
+    "duration_seconds": 132,
+    "wallets": [
+      "6e7JGdVmnAFGuNj7myWk4rY6JVCcXYrJXTvsdWNeoUpC",
+      "8sDu4cYZCYXsZQiDyRL8cb4XPm8C4Un8hJrnyycNXWZz",
+      "AN1WZWrUbK9c6oJZaAvjojzv2FjzPzAvQ3Hvxh2oMSct",
+      "BGWMLdh2RVjFsNi6Gj2jndu2CJ7VhxRFsyDz3wEEUgFL",
+      "EEX36p4rjYnTuCwK8tERKL4ywzuNsWW6QiZWEwcRqBE6",
+      "Ejhe74yR9VedNNPJvHAwrmvVwQPkTQ8x6ykzYCL88LfN",
+      "FdwVhbBQhY9rwF5yaZwVH2SK6jhtxj67idgVrrGgAmKS",
+      "tCPHCKBKPmVvDCPiv3JmTeXXc7ivPpTRfvPZuzTodir"
+    ]
+  },
+  "connectivity": {
+    "pre_ignition": {
+      "edge_count": 1,
+      "components": [
+        [
+          "6e7JGdVmnAFGuNj7myWk4rY6JVCcXYrJXTvsdWNeoUpC"
+        ],
+        [
+          "8sDu4cYZCYXsZQiDyRL8cb4XPm8C4Un8hJrnyycNXWZz"
+        ],
+        [
+          "AN1WZWrUbK9c6oJZaAvjojzv2FjzPzAvQ3Hvxh2oMSct"
+        ],
+        [
+          "BGWMLdh2RVjFsNi6Gj2jndu2CJ7VhxRFsyDz3wEEUgFL"
+        ],
+        [
+          "EEX36p4rjYnTuCwK8tERKL4ywzuNsWW6QiZWEwcRqBE6"
+        ],
+        [
+          "Ejhe74yR9VedNNPJvHAwrmvVwQPkTQ8x6ykzYCL88LfN"
+        ],
+        [
+          "FdwVhbBQhY9rwF5yaZwVH2SK6jhtxj67idgVrrGgAmKS"
+        ],
+        [
+          "tCPHCKBKPmVvDCPiv3JmTeXXc7ivPpTRfvPZuzTodir"
+        ]
+      ],
+      "all_8_connected": false,
+      "creator_in_all8_component": false,
+      "creator_component_size": 0
+    },
+    "ignition_plus_8m": {
+      "edge_count": 1,
+      "components": [
+        [
+          "6e7JGdVmnAFGuNj7myWk4rY6JVCcXYrJXTvsdWNeoUpC"
+        ],
+        [
+          "8sDu4cYZCYXsZQiDyRL8cb4XPm8C4Un8hJrnyycNXWZz"
+        ],
+        [
+          "AN1WZWrUbK9c6oJZaAvjojzv2FjzPzAvQ3Hvxh2oMSct"
+        ],
+        [
+          "BGWMLdh2RVjFsNi6Gj2jndu2CJ7VhxRFsyDz3wEEUgFL"
+        ],
+        [
+          "EEX36p4rjYnTuCwK8tERKL4ywzuNsWW6QiZWEwcRqBE6"
+        ],
+        [
+          "Ejhe74yR9VedNNPJvHAwrmvVwQPkTQ8x6ykzYCL88LfN"
+        ],
+        [
+          "FdwVhbBQhY9rwF5yaZwVH2SK6jhtxj67idgVrrGgAmKS"
+        ],
+        [
+          "tCPHCKBKPmVvDCPiv3JmTeXXc7ivPpTRfvPZuzTodir"
+        ]
+      ],
+      "all_8_connected": false,
+      "creator_in_all8_component": false,
+      "creator_component_size": 0
+    },
+    "creation_plus_24h": {
+      "edge_count": 35,
+      "components": [
+        [
+          "3ypfqpSCMygtvvFg3V5qGssp99wQK3YBnGcTkMXMJSQS",
+          "4BHM7fKm6BKLLPGMxjHqogLnXixnftm1HbmfCzajHFGo",
+          "4GbBrSXFsDyrYtE1MjeJTLD4YBBk1NDrStQkM7UYi5oB",
+          "5iKKDbpswdNcQLrDZrkih5U6PsPTnTozeJ1cbNgkxrtB",
+          "5uAJNeHNvaHQCH5qQWJiERfFEW9hrNXiNSg6VJQBRPLb",
+          "68WmgWmeZUAhriSD6EUHXLqmtFq5fjbe6XY2YpeW62Zt",
+          "6e7JGdVmnAFGuNj7myWk4rY6JVCcXYrJXTvsdWNeoUpC",
+          "6f4RFUzsknzmCVKj5UYkKsgFcYPyrNxPzGZyAFsdJjJV",
+          "77ovSt6TM1njZPXfLeVhiHAFisizLUsu2adBzChGWg1k",
+          "8sDu4cYZCYXsZQiDyRL8cb4XPm8C4Un8hJrnyycNXWZz",
+          "8snzm3UoFCgrsvEonQQkutemfzcNMBpLLkainu8twVht",
+          "9gVHcuivKLETR13Caj2LUz3zPNH4xRqbNPhXJ4RSi53",
+          "9wh4exmwhuHxwQDy5dfkh5JA4ibtgFC9Z34TaBvfhmYW",
+          "A62njfQeZPpp68iaMDQJY5Sxf2C91csQ6Eof4P3GQhPR",
+          "AN1WZWrUbK9c6oJZaAvjojzv2FjzPzAvQ3Hvxh2oMSct",
+          "BGWMLdh2RVjFsNi6Gj2jndu2CJ7VhxRFsyDz3wEEUgFL",
+          "CEKU24W6sxtJiAo7SvSREUPbtRAnJuFSmLmgm4kvPbTX",
+          "D1wV6q96Ri39ie8PQD5tpYAnrridEmnr2qD6RW5hT464",
+          "DFUc5Cj17B2d2RE1LbquQY2dcp8CEYdmoBc6LNz6HEkN",
+          "Du7teoPjJkS1vYBLyZ4htYBVYPuLhYvfka3aUfELH7cN",
+          "EEX36p4rjYnTuCwK8tERKL4ywzuNsWW6QiZWEwcRqBE6",
+          "EVn5ugeSLZ9q4bAB1G9SrhEsjXW4swyerVGhfq89RCK5",
+          "Ejhe74yR9VedNNPJvHAwrmvVwQPkTQ8x6ykzYCL88LfN",
+          "EqwRtdk7aCUPfCawGG3jMLMJ5bjt9YBKcDYjC5ynMDJA",
+          "FdwVhbBQhY9rwF5yaZwVH2SK6jhtxj67idgVrrGgAmKS",
+          "G2BxyiXtqAsRJc3zC4W813cFVki4CEZa3Rj8qYVG53cr",
+          "GzUCxSpuvwZ737S6VW4HCNgc1avrCsPcSnoqtTR32FtR",
+          "HZLD6nxGEYvW72uXZeGK115DP9yfBYMFGbVfSystP6G5",
+          "HcadB8dXBUDkxXMGUMavYPy1PCqyoVJEuiRXpXgJWfSn",
+          "Hcet4wzgRoBhVHYhRTJQ3fRaNgjyHaRvRcuHQa9ByUvM",
+          "HdzmLhAA7VZmFfxMjjteG2APCoztn7GVSxxw2QxQkRMD",
+          "J1FB6YSXaqX69CHa6JBxqrjGy3nnFdoJXerSsKtZP1hb",
+          "gakedj1i1ViGwYPdkVLWEqCi36opn75WrK5gfGDEVRb",
+          "tCPHCKBKPmVvDCPiv3JmTeXXc7ivPpTRfvPZuzTodir",
+          "tREoYqBQRkfXzyYfXjVDD2gaT18FD7ST3H7wjRMcSGq"
+        ]
+      ],
+      "all_8_connected": true,
+      "creator_in_all8_component": true,
+      "creator_component_size": 35
+    },
+    "first_all8_connected": {
+      "block_time": 1780468323,
+      "utc": "2026-06-03T06:32:03Z",
+      "scope": "first accepted transfer edge that makes all 8 connected"
+    }
+  },
+  "b1c2": {
+    "ignition_wallet": "G6nyYGhcXPEsdLnoHdCmyPW6XqQbdmW19dmLc8cEtkgE",
+    "claim_check": {
+      "trade_sol_net_buy_positive": 25.31404458300003,
+      "wallet_net_sol_flow_inflow_positive": -25.31404458300003,
+      "signer_fees_sol": 0.0006020000000000006,
+      "token_net_base_units": 0,
+      "final_token_balance_base_units_last_seen": 0,
+      "n_trade_rows": 78
+    },
+    "interpretation": "trade_sol_net_buy_positive uses pool-leg sign (buy positive); wallet_net_sol_flow_inflow_positive=-sum(sol). Thus G6ny is -25.314 SOL signed wallet flow (cash outflow), while same-slot four-wallet aggregate is +42.59 SOL. These are realized trade legs; fees and residual holdings must be separately included for complete PnL",
+    "creation_slot": {
+      "slot": 423634062,
+      "buyers": [
+        {
+          "wallet": "3NitgwcmnB9K41Lbqg4JCsgH1cSwDBnYxJTFQ5ArRHvk",
+          "trade_sol_net_buy_positive": -6.087335932000002,
+          "wallet_net_sol_flow_inflow_positive": 6.087335932000002,
+          "signer_fees_sol": 0.00201,
+          "token_net_base_units": 0,
+          "final_token_balance_base_units_last_seen": 0,
+          "n_trade_rows": 2
+        },
+        {
+          "wallet": "5bsNZbbEnTktmmvZDjYsiBaGqGuLsYwqpx6xoxh84h2t",
+          "trade_sol_net_buy_positive": -8.905395938000002,
+          "wallet_net_sol_flow_inflow_positive": 8.905395938000002,
+          "signer_fees_sol": 0.00201,
+          "token_net_base_units": 0,
+          "final_token_balance_base_units_last_seen": 0,
+          "n_trade_rows": 2
+        },
+        {
+          "wallet": "D6bTtoSgLknJ9KrgDFUtB5WpqomrNEjBJipVVRoFh2DC",
+          "trade_sol_net_buy_positive": -13.00049559,
+          "wallet_net_sol_flow_inflow_positive": 13.00049559,
+          "signer_fees_sol": 0.007039999999999999,
+          "token_net_base_units": 0,
+          "final_token_balance_base_units_last_seen": 0,
+          "n_trade_rows": 7
+        },
+        {
+          "wallet": "EodbjawcBBrCWGEqg5iHAxvgLvZCWFT8r6ZUK2tSEeD5",
+          "trade_sol_net_buy_positive": -14.597406650999988,
+          "wallet_net_sol_flow_inflow_positive": 14.597406650999988,
+          "signer_fees_sol": 0.00201,
+          "token_net_base_units": 0,
+          "final_token_balance_base_units_last_seen": 0,
+          "n_trade_rows": 2
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "This is a conservative transfer graph; accepted transfers only. Non-connection means no accepted edge under this algorithm, not proof no relationship exists",
+    "raw records provide balance snapshots and logs; transactions with ambiguous many-to-many owner changes are omitted rather than made edges",
+    "24h is cached horizon and does not establish common control or cross-mint identity"
+  ]
+}

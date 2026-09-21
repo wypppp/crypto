@@ -1,0 +1,2 @@
+f2_rows_after_summary_and_nonnull_top1,top1_gt_0_7_n,top1_gt_0_7_winners_ms30_ge10,top1_gt_0_7_winner_rate_pct,winner_definition,top1_definition
+14080,8455,18,0.21289178001182735,ms_30d >= 10.0,"top1_net / pos_net_total, rounded to 4 decimals in F2 export"

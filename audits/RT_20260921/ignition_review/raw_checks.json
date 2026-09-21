@@ -1,0 +1,56 @@
+[
+  {
+    "mint": "5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump",
+    "sha256_matches_manifest": true,
+    "n": 248,
+    "expected": 248,
+    "unique_signatures": 248,
+    "failed": 0,
+    "out_of_window": 0
+  },
+  {
+    "mint": "6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump",
+    "sha256_matches_manifest": true,
+    "n": 111,
+    "expected": 111,
+    "unique_signatures": 111,
+    "failed": 0,
+    "out_of_window": 0
+  },
+  {
+    "mint": "B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump",
+    "sha256_matches_manifest": true,
+    "n": 8593,
+    "expected": 8593,
+    "unique_signatures": 8593,
+    "failed": 0,
+    "out_of_window": 0
+  },
+  {
+    "mint": "BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump",
+    "sha256_matches_manifest": true,
+    "n": 3012,
+    "expected": 3012,
+    "unique_signatures": 3012,
+    "failed": 0,
+    "out_of_window": 0
+  },
+  {
+    "mint": "FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump",
+    "sha256_matches_manifest": true,
+    "n": 272,
+    "expected": 272,
+    "unique_signatures": 272,
+    "failed": 0,
+    "out_of_window": 0
+  },
+  {
+    "mint": "YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump",
+    "sha256_matches_manifest": true,
+    "n": 1757,
+    "expected": 1757,
+    "unique_signatures": 1757,
+    "failed": 0,
+    "out_of_window": 0
+  }
+]

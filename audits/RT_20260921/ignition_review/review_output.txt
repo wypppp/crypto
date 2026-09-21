@@ -1,0 +1,23 @@
+FIRST_GE4
+           role  pair                                         mint       first_ge4_utc first_ge4_hours_after_entry first_ge4_sol post_entry_max_buy_sol
+         winner     1 BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump 2026-06-06 22:55:54                    0.638056      4.406667              30.923631
+failure_control     1 FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump                None                        None          None               3.043358
+         winner     2 B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump 2026-06-02 01:10:13                    7.548889     26.113797              26.113797
+failure_control     2  YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump                None                        None          None                0.78633
+         winner     3 5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump 2026-06-03 06:21:28                    3.648333      4.889867               17.36824
+failure_control     3 6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump                None                        None          None                      0
+
+TOP1_SUMMARY
+ f2_rows_after_summary_and_nonnull_top1  top1_gt_0_7_n  top1_gt_0_7_winners_ms30_ge10  top1_gt_0_7_winner_rate_pct winner_definition                                              top1_definition
+                                  14080           8455                             18                     0.212892    ms_30d >= 10.0 top1_net / pos_net_total, rounded to 4 decimals in F2 export
+
+TOP1_BUCKETS
+top1_bucket    n  winners  mean_b50  winner_rate_pct
+      <=0.1 1213       52  0.964018         4.286892
+    0.1-0.2 1068       29  0.912494         2.715356
+    0.2-0.3  903       22  1.007326         2.436323
+    0.3-0.5 1392       16  0.963067         1.149425
+    0.5-0.7 1049       14  1.002731         1.334604
+       >0.7 8455       18  0.981109         0.212892
+
+F3_NOTE: no F3_dev input was read; 42 endpoint prices are therefore not independently rechecked by this audit.

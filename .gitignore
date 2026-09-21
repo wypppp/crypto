@@ -9,3 +9,5 @@
 /1.md
 RT/case_timing/raw/full24h_*.jsonl.gz
 RT/case_timing/raw/pf_coin_*.json
+RT/case_timing/raw/failed24h_*.jsonl.gz
+RT/case_timing/__pycache__/

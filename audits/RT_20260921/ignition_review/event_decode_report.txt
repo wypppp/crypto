@@ -1,0 +1,9 @@
+archive tx rows decoded: 13993
+rows with recognized buy amount: 8351
+rows with sell events: 4057
+rows with liquidity/migration events: 11
+pure buy curve/pool eligible comparisons: 8305
+eligible exact lamport matches: 8299
+eligible nonzero differences: 6
+eligible unsupported/missing amount: 9
+max absolute eligible difference lamports: 250560
