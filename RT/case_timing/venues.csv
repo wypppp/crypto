@@ -1,0 +1,7 @@
+role,pair,mint,curve,pool,entry_price,n,kinds
+winner,1,BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump,J4bpwgvjd4kTZ6Z3Se1z9bDSVMLoNYhw6jZ5JEePWfUG,Fkt8xVrcxwrv5QxqP6EGbXLuJZCUV82fRtf1P2KbKXvX,2.4224768445942803e-07,3012,"{'buy': 1759, 'other': 727, 'sell': 502, 'transfer': 24}"
+failure_control,1,FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump,3upAqQGT2dsHKdd7z2AjeRAHgTxDa9mC79tBcSo3NJna,,1.550882601432927e-07,272,"{'buy': 133, 'sell': 135, 'other': 3, 'transfer': 1}"
+winner,2,B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump,CixwTWXZ6qw7PbtcMuj4vaDVeJFm8ycqA3nACL7M2Bmh,6BFwKjg8rwk9T6mWwJXWy6WeyqBCTyqVYMwhjFHqepfU,1.993013003889075e-08,8593,"{'buy': 5510, 'other': 734, 'sell': 2338, 'transfer': 11}"
+failure_control,2,YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump,GxaHNzJNZrRnMGk5y73bCLs1YN8QdjgT3WSow4jkA6SG,6k9SA4gFtBagm9hUYs4LJgMH66M2dh8ePf8jBqHqvP2z,1.9926932835851962e-08,1757,"{'buy': 779, 'transfer': 13, 'sell': 938, 'other': 27}"
+winner,3,5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,EYx2nsNXrt8JuKC8oVBFV5wo6nuKczPfBge71ivcmCJo,A4ddhithnumMUVDdzA7qC4NkFhvttGqgPrqYs4KhFbQf,3.8229209974888635e-08,248,"{'buy': 129, 'sell': 55, 'other': 28, 'transfer': 36}"
+failure_control,3,6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump,BNNxYS5L7MrCy1LAoWUSjdvGttuoAesqweLab3Km3dXQ,8i4JBFbhjSSujy9xC6Hznsp5RDire89vkrhudsFimhuJ,2.033039940761637e-09,111,"{'buy': 53, 'sell': 49, 'other': 8, 'transfer': 1}"

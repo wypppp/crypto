@@ -1,0 +1,12 @@
+{
+  "inputs": {
+    "audits/RT_20260921/strategy_followup/case_seed.csv": "15daca2ca3b31ad6383f1186fad9e1f48151fec8115be7073b1ce4b8bddd7ad9",
+    "RT/dq7/raw/F2_dev.csv": "2a6c1b9af11cda4521086503afc1eaf408be4cde15e8730f0210bf0b2c6203c7",
+    "RT/dq8/raw/F3_devA.csv": "60fb0b32e1380596a8984d9fb0a6118e6d4ea69e87a088ef6c5edd08d22a5704",
+    "audits/RT_20260921/direction_reset/build_case_timelines.py": "764b11b03e449ccd1828f4910afb19b2b635694e1c44ab6306874d46e0560753"
+  },
+  "case_count": 6,
+  "materialized_interval_rows": 72,
+  "delayed_entry_examples": 9,
+  "scope": "Opened A development week only. No confirmation cohorts accessed."
+}

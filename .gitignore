@@ -7,3 +7,5 @@
 /.env
 /crypto/prediction_market_research/data/shadow/*.gz
 /1.md
+RT/case_timing/raw/full24h_*.jsonl.gz
+RT/case_timing/raw/pf_coin_*.json

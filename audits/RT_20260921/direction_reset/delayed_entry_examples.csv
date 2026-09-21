@@ -1,0 +1,10 @@
+mint,pair,checkpoint_k,decision_sec,execution_sec,position_SOL,stop_pct,exit_sec,cached_recovery,recovery_after_fixed_deduction,scope
+BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump,1,5,7200,7205,0.5,50,167353.0,53.753551,53.749551000000004,"Selected winner; cached F3 execution model, not independent execution verification"
+BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump,1,6,14400,14405,0.5,50,167353.0,15.863013,15.859013000000001,"Selected winner; cached F3 execution model, not independent execution verification"
+BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump,1,7,28800,28805,0.5,50,167353.0,17.048217,17.044217,"Selected winner; cached F3 execution model, not independent execution verification"
+B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump,2,5,7200,7205,0.5,50,34721.0,86.34697,86.34297,"Selected winner; cached F3 execution model, not independent execution verification"
+B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump,2,6,14400,14405,0.5,50,34721.0,86.34697,86.34297,"Selected winner; cached F3 execution model, not independent execution verification"
+B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump,2,7,28800,28805,0.5,50,34721.0,3.330837,3.326837,"Selected winner; cached F3 execution model, not independent execution verification"
+5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,3,5,7200,7205,0.5,50,404227.0,67.746706,67.742706,"Selected winner; cached F3 execution model, not independent execution verification"
+5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,3,6,14400,14405,0.5,50,404227.0,0.749666,0.745666,"Selected winner; cached F3 execution model, not independent execution verification"
+5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,3,7,28800,28805,0.5,50,404227.0,0.748786,0.744786,"Selected winner; cached F3 execution model, not independent execution verification"

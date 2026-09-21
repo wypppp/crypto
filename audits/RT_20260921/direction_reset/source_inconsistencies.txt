@@ -1,0 +1,4 @@
+Local source checks only; these are data/definition discrepancies, not economic findings.
+No seed/F2 cday or F3/F2 b50 mismatches found.
+F3 omits no-trade intervals by SQL definition; case_timelines.csv materializes those iv rows with missing values.
+No exact creation UTC timestamps were found in the permitted case extracts; cday is retained as calendar-day scope only.
