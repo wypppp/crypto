@@ -1,4 +1,4 @@
 mint,row_type,is_mayhem,created_at,signal_time,signal_slot,signal_tx_index,signal_signature,signal_venue,signal_actors,signal_buy_lamports,signal_pre30_lamports,n_created,n_sol_created,n_sol_without_decoded_events,n_triggered_coins,n_eligible_txs,n_decoded_txs,n_triggered_mayhem,n_bad_txs,n_large_mixed_txs
-__SUMMARY__,summary,,,,,,,,,,,2,2.0,0.0,1.0,2.0,283.0,0.0,0.0,0.0
+__SUMMARY__,summary,,,,,,,,,,,2,2.0,0.0,1.0,2.0,284.0,0.0,0.0,0.0
 6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump,fixture,False,2026-06-03 05:47:23,,,,,,,,,1,1.0,0.0,0.0,0.0,101.0,0.0,0.0,0.0
-5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,candidate,False,2026-06-03 02:12:34,2026-06-03 06:21:28,423971339,39,4V1FRBFXHgJxM6B47xag3gRffgXb422cLkG2KprsAqFSyMeSKNiV5JoztokfMvZvWViShX57TFUx7tzBanAHcwWC,pool,6e7JGdVmnAFGuNj7myWk4rY6JVCcXYrJXTvsdWNeoUpC,4889866666.0,0.0,1,1.0,0.0,1.0,2.0,182.0,0.0,0.0,0.0
+5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,candidate,False,2026-06-03 02:12:34,2026-06-03 06:21:28,423971339,39,4V1FRBFXHgJxM6B47xag3gRffgXb422cLkG2KprsAqFSyMeSKNiV5JoztokfMvZvWViShX57TFUx7tzBanAHcwWC,pool,6e7JGdVmnAFGuNj7myWk4rY6JVCcXYrJXTvsdWNeoUpC,4889866666.0,0.0,1,1.0,0.0,1.0,2.0,183.0,0.0,0.0,0.0

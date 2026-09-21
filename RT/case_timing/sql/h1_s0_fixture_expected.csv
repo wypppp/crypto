@@ -1,7 +1,7 @@
 mint,role,creation_day,n_decoded_txs,n_bad_txs,local_create_decode_fail,n_large_mixed_txs,n_eligible_txs,signal_time,signal_slot,signal_tx_index,signal_signature,signal_buy_lamports,signal_pre30_lamports
-BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump,winner,2026-06-06,2259,0,1,0,5,2026-06-06 22:55:54,424771436.0,574.0,38nqCbkYb2vfxMC6q5xWxGABHbbh3YLjCLim6cacWJXDs8uNpMyP4jMdijEWbzY1aAbkT6aRCWFaXEus94ArsDck,4406666666.0,2190296023.0
-FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump,failure_control,2026-06-06,268,0,1,0,0,,,,,,
-B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump,winner,2026-06-01,7846,0,1,0,1,2026-06-02 01:10:13,423707026.0,86.0,5UytBTjifYKgd7q41bZ6FSMg5fZ2EkHzjRMKTLHP1oTBgh9udaKQNKcha1zjKVDQyvjG2yBpcsCxSdpxL5vPSHXF,26113797485.0,0.0
-YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump,failure_control,2026-06-01,1716,0,1,0,0,,,,,,
-5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,winner,2026-06-03,182,0,1,0,2,2026-06-03 06:21:28,423971339.0,39.0,4V1FRBFXHgJxM6B47xag3gRffgXb422cLkG2KprsAqFSyMeSKNiV5JoztokfMvZvWViShX57TFUx7tzBanAHcwWC,4889866666.0,0.0
-6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump,failure_control,2026-06-03,101,0,1,0,0,,,,,,
+BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump,winner,2026-06-06,2261,0,0,0,5,2026-06-06 22:55:54,424771436.0,574.0,38nqCbkYb2vfxMC6q5xWxGABHbbh3YLjCLim6cacWJXDs8uNpMyP4jMdijEWbzY1aAbkT6aRCWFaXEus94ArsDck,4406666666.0,2190296023.0
+FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump,failure_control,2026-06-06,268,0,0,0,0,,,,,,
+B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump,winner,2026-06-01,7848,0,0,0,1,2026-06-02 01:10:13,423707026.0,86.0,5UytBTjifYKgd7q41bZ6FSMg5fZ2EkHzjRMKTLHP1oTBgh9udaKQNKcha1zjKVDQyvjG2yBpcsCxSdpxL5vPSHXF,26113797485.0,0.0
+YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump,failure_control,2026-06-01,1717,0,0,0,0,,,,,,
+5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump,winner,2026-06-03,183,0,0,0,2,2026-06-03 06:21:28,423971339.0,39.0,4V1FRBFXHgJxM6B47xag3gRffgXb422cLkG2KprsAqFSyMeSKNiV5JoztokfMvZvWViShX57TFUx7tzBanAHcwWC,4889866666.0,0.0
+6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump,failure_control,2026-06-03,101,0,0,0,0,,,,,,

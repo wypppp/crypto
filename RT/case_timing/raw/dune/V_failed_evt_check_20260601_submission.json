@@ -1,0 +1,11 @@
+{
+  "requested_at_utc": "2026-09-21T13:41:55.609744+00:00",
+  "sql_file": "RT/case_timing/sql/V_failed_evt_check_20260601.sql",
+  "sql_sha256": "a2b8a996792c6a75f45e64b734f60e90724d427fb81f1eeb65bb84f4c05e4af4",
+  "performance": "small",
+  "user_reported_cost_cap": 50,
+  "cost_cap_verified_by_api": false,
+  "endpoint": "POST /api/v1/sql/execute",
+  "http_status": 402,
+  "error": "{\"error\":\"This api request would exceed your configured datapoint limit per billing cycle. Please visit your subscription settings on dune.com and adjust your limits to perform this request.\"}"
+}

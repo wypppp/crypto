@@ -1,0 +1,23 @@
+{
+  "checked_at_utc": "2026-09-21T13:38:35.180081+00:00",
+  "endpoint": "POST /api/v1/usage",
+  "key_available": true,
+  "sql_executions_started": 0,
+  "http_status": 200,
+  "response_keys": [
+    "billing_periods",
+    "bytes_allowed",
+    "bytes_used",
+    "private_dashboards",
+    "private_queries"
+  ],
+  "billing_periods": [
+    {
+      "start_date": "2026-09-07",
+      "end_date": "2026-09-21",
+      "credits_used": 0.145,
+      "credits_included": 0
+    }
+  ],
+  "cost_cap_fields": {}
+}

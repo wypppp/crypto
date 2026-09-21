@@ -311,3 +311,41 @@ def main_v1():
     target = Path(__file__).parent / "sql" / f"H1_S0_v1_{args.day.isoformat()}.sql"
     target.write_text(render_v1(args.day))
     print(target)
+
+
+# ---------------------------------------------------------------------------
+# v1 range (2026-09-21, executor): the SAME v1 query over several consecutive creation days in one execution.
+# Only changes vs render_v1(d1): creation-day filters become a BETWEEN range, event partitions end at d2+2,
+# fixture mints of all days are output, and a per-creation-day summary row (row_type 'day_summary') is added.
+def render_v1_range(d1: date, d2: date) -> str:
+    assert date(2026, 6, 1) <= d1 <= d2 <= date(2026, 6, 7)
+    s = render_v1(d1)
+    e1, e2 = d1 + timedelta(days=2), d2 + timedelta(days=2)
+    s = _sub(s, f"-- H1 S0 v1: ONE creation day {d1}; event enumeration, NO returns. Rendered by build_h1_s0.py render_v1.\n",
+             f"-- H1 S0 v1 RANGE: creation days {d1} .. {d2}; event enumeration, NO returns. Rendered by build_h1_s0.py render_v1_range.\n"
+             "-- Same v1 logic per coin; adds per-creation-day summary rows (row_type day_summary).\n")
+    s = _sub(s, f"-- Scan partitions: {d1} .. {e1}; per-mint end = created_at + 1470 minutes.\n",
+             f"-- Scan partitions: {d1} .. {e2}; per-mint end = created_at + 1470 minutes.\n")
+    n = s.count(f"DATE '{d1}' AND DATE '{e1}'")
+    assert n >= 8, n
+    s = s.replace(f"DATE '{d1}' AND DATE '{e1}'", f"DATE '{d1}' AND DATE '{e2}'")
+    n = s.count(f"evt_block_date = DATE '{d1}'")
+    assert n == 3, n  # mayhem, cohort, creation branch
+    s = s.replace(f"evt_block_date = DATE '{d1}'", f"evt_block_date BETWEEN DATE '{d1}' AND DATE '{d2}'")
+    s = _sub(s, "    SELECT p.mint, p.created_at, p.is_sol,\n", "    SELECT p.mint, CAST(p.created_at AS date) AS cday, p.created_at, p.is_sol,\n")
+    s = _sub(s, "    IF(grouping(mint) = 1, '__SUMMARY__', mint) AS mint,\n    IF(grouping(mint) = 1, 'summary',\n",
+             "    CASE WHEN grouping(mint) = 0 THEN mint WHEN grouping(cday) = 0 THEN '__DAY__' ELSE '__SUMMARY__' END AS mint,\n"
+             "    IF(grouping(mint) = 1, IF(grouping(cday) = 0, 'day_summary', 'summary'),\n")
+    s = _sub(s, "    IF(grouping(mint) = 0, arbitrary(is_mayhem)) AS is_mayhem,\n",
+             "    IF(grouping(mint) = 0, arbitrary(is_mayhem)) AS is_mayhem,\n"
+             "    CASE WHEN grouping(cday) = 0 THEN cday WHEN grouping(mint) = 0 THEN arbitrary(cday) END AS cday,\n")
+    s = _sub(s, "GROUP BY GROUPING SETS ((mint), ())\n", "GROUP BY GROUPING SETS ((mint), (cday), ())\n")
+    fx = [m for d, ms in FIXTURES.items() if d1 <= d <= d2 for m in ms]
+    old_having = [l for l in s.split("\n") if l.startswith("HAVING ")]
+    assert len(old_having) == 1
+    having = "HAVING grouping(mint) = 1 OR max(n_eligible_txs) > 0 OR max(n_bad_txs) > 0"
+    if fx:
+        having += " OR mint IN (" + ", ".join(f"'{m}'" for m in fx) + ")"
+    s = s.replace(old_having[0], having)
+    s = _sub(s, "ORDER BY row_type DESC, signal_time, mint\n", "ORDER BY row_type DESC, cday, signal_time, mint\n")
+    return s
