@@ -24,13 +24,17 @@ def account_keys(x):
     la = x["meta"].get("loadedAddresses") or {}
     return x["transaction"]["message"]["accountKeys"] + la.get("writable", []) + la.get("readonly", [])
 
+def u64(raw, o):
+    return int.from_bytes(raw[o:o + 8], "little")
+
+
 def iter_events(x):
     """Yield dicts: name, outer_program, and decoded fields used by H1 (fixed offsets from the checked-in IDLs)."""
     keys = account_keys(x)
     top = x["transaction"]["message"]["instructions"]
     for grp in x["meta"].get("innerInstructions") or []:
         outer = keys[top[grp["index"]]["programIdIndex"]]
-        for ins in grp["instructions"]:
+        for ii, ins in enumerate(grp["instructions"]):
             if keys[ins["programIdIndex"]] not in (PUMP, AMM):
                 continue
             d = b58d(ins["data"])
@@ -39,13 +43,19 @@ def iter_events(x):
             raw = d[8:]; name = EVENTS.get(raw[:8])
             if not name:
                 continue
-            e = {"name": name, "outer": outer}
+            e = {"name": name, "outer": outer, "oix": grp["index"], "iix": ii}
             if name == "TradeEvent":
-                e.update(mint=b58e(raw[8:40]), sol_amount=int.from_bytes(raw[40:48], "little"), is_buy=bool(raw[56]), user=b58e(raw[57:89]))
+                e.update(mint=b58e(raw[8:40]), sol_amount=u64(raw, 40), token_amount=u64(raw, 48), is_buy=bool(raw[56]),
+                         user=b58e(raw[57:89]), virtual_sol_reserves=u64(raw, 97), virtual_token_reserves=u64(raw, 105),
+                         real_sol_reserves=u64(raw, 113), fee_basis_points=u64(raw, 161), creator_fee_basis_points=u64(raw, 209))
             elif name in ("BuyEvent", "SellEvent"):
-                e.update(pool=b58e(raw[120:152]), user=b58e(raw[152:184]))
+                e.update(pool=b58e(raw[120:152]), user=b58e(raw[152:184]), pool_base_token_reserves=u64(raw, 48),
+                         pool_quote_token_reserves=u64(raw, 56), lp_fee_basis_points=u64(raw, 72), lp_fee=u64(raw, 80),
+                         protocol_fee_basis_points=u64(raw, 88), protocol_fee=u64(raw, 96), coin_creator_fee_basis_points=u64(raw, 344))
                 if name == "BuyEvent":
-                    e["quote_amount_in_with_lp_fee"] = int.from_bytes(raw[104:112], "little")
+                    e.update(quote_amount_in=u64(raw, 64), quote_amount_in_with_lp_fee=u64(raw, 104), base_amount_out=u64(raw, 16))
+                else:
+                    e.update(quote_amount_out=u64(raw, 64), base_amount_in=u64(raw, 16))
             elif name in ("DepositEvent", "WithdrawEvent"):
                 e["pool"] = b58e(raw[96:128])
             elif name == "CompletePumpAmmMigrationEvent":
