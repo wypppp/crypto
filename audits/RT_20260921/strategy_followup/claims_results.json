@@ -1,0 +1,162 @@
+{
+  "scope": "Arithmetic reproduction only; original new oracle script not located.",
+  "constants": {
+    "sol_usd": 69.76,
+    "usd_cny": 7.1,
+    "fixed_return_deduction": 0.004,
+    "quoted_capacity_multiplier": 0.025,
+    "existing_project_capacity_multiplier": 0.02469507659595993
+  },
+  "A": {
+    "input": "RT/dq7/raw/F2_dev.csv",
+    "sha256": "2a6c1b9af11cda4521086503afc1eaf408be4cde15e8730f0210bf0b2c6203c7",
+    "return_column": "b50",
+    "n": 14120,
+    "positive_n": 788,
+    "positive_excess_return_sum": 1155.285583,
+    "negative_excess_return_sum": 1551.485632,
+    "net_excess_return_sum": -396.2000489999998,
+    "mean_recovery": 0.9719405064447593,
+    "concentration": {
+      "5": {
+        "population_share": 0.0003541076487252125,
+        "positive_profit_share": 0.26741090562020803
+      },
+      "50": {
+        "population_share": 0.0035410764872521247,
+        "positive_profit_share": 0.5902521316238046
+      }
+    },
+    "quoted_table_reconstruction": [
+      {
+        "budget_cny": 10000,
+        "n": 7,
+        "allocated_cny": 9214.1400768,
+        "linear_profit_cny": 314050.42176411365,
+        "maximum_holding_days": 1.9369560185185186,
+        "positions_held_over_seven_days": 0
+      },
+      {
+        "budget_cny": 30000,
+        "n": 21,
+        "allocated_cny": 29889.9620368,
+        "linear_profit_cny": 437588.8626271537,
+        "maximum_holding_days": 17.495625,
+        "positions_held_over_seven_days": 3
+      },
+      {
+        "budget_cny": 1000000,
+        "n": 788,
+        "allocated_cny": 570519.7857968,
+        "linear_profit_cny": 864945.2030644056,
+        "maximum_holding_days": 28.747268518518517,
+        "positions_held_over_seven_days": 21
+      }
+    ],
+    "fractional_optimum_in_same_static_linear_relaxation": [
+      {
+        "budget_cny": 10000,
+        "n": 10,
+        "allocated_cny": 10000.0,
+        "linear_profit_cny": 336601.3325762838,
+        "maximum_holding_days": 4.678553240740741,
+        "positions_held_over_seven_days": 0
+      },
+      {
+        "budget_cny": 30000,
+        "n": 41,
+        "allocated_cny": 30000.000000000007,
+        "linear_profit_cny": 482889.56266341335,
+        "maximum_holding_days": 17.495625,
+        "positions_held_over_seven_days": 2
+      },
+      {
+        "budget_cny": 1000000,
+        "n": 788,
+        "allocated_cny": 570519.7857968,
+        "linear_profit_cny": 864945.2030644056,
+        "maximum_holding_days": 28.747268518518517,
+        "positions_held_over_seven_days": 21
+      }
+    ],
+    "unconstrained_single_coin_hindsight_profit_at_10000_cny": 841643.22
+  },
+  "B": {
+    "input": "RT/dq1f/raw/F1_val.csv",
+    "sha256": "a5671e590af0f14060a0928e47dbf162fcde0892e722c7f2142d4ee0f864e150",
+    "return_column": "x50_24h",
+    "n": 14918,
+    "positive_n": 816,
+    "positive_excess_return_sum": 873.546951,
+    "negative_excess_return_sum": 1655.933362,
+    "net_excess_return_sum": -782.386411,
+    "mean_recovery": 0.9475542022389061,
+    "concentration": {
+      "5": {
+        "population_share": 0.0003351655717924655,
+        "positive_profit_share": 0.14748053193079028
+      },
+      "50": {
+        "population_share": 0.003351655717924655,
+        "positive_profit_share": 0.4595371726047041
+      }
+    },
+    "quoted_table_reconstruction": [
+      {
+        "budget_cny": 10000,
+        "n": 10,
+        "allocated_cny": 8965.16716,
+        "linear_profit_cny": 101918.30308432477,
+        "maximum_holding_days": 6.7831828703703705,
+        "positions_held_over_seven_days": 0
+      },
+      {
+        "budget_cny": 30000,
+        "n": 21,
+        "allocated_cny": 28867.522504,
+        "linear_profit_cny": 170522.44866907247,
+        "maximum_holding_days": 6.7831828703703705,
+        "positions_held_over_seven_days": 0
+      },
+      {
+        "budget_cny": 1000000,
+        "n": 816,
+        "allocated_cny": 583084.5414016,
+        "linear_profit_cny": 587270.775835557,
+        "maximum_holding_days": 19.742106481481482,
+        "positions_held_over_seven_days": 12
+      }
+    ],
+    "fractional_optimum_in_same_static_linear_relaxation": [
+      {
+        "budget_cny": 10000,
+        "n": 19,
+        "allocated_cny": 9999.999999999996,
+        "linear_profit_cny": 123243.1618332997,
+        "maximum_holding_days": 11.81162037037037,
+        "positions_held_over_seven_days": 1
+      },
+      {
+        "budget_cny": 30000,
+        "n": 48,
+        "allocated_cny": 30000.0,
+        "linear_profit_cny": 222098.90807963198,
+        "maximum_holding_days": 11.81162037037037,
+        "positions_held_over_seven_days": 1
+      },
+      {
+        "budget_cny": 1000000,
+        "n": 816,
+        "allocated_cny": 583084.5414016,
+        "linear_profit_cny": 587270.775835557,
+        "maximum_holding_days": 19.742106481481482,
+        "positions_held_over_seven_days": 12
+      }
+    ],
+    "unconstrained_single_coin_hindsight_profit_at_10000_cny": 338647.7
+  },
+  "source_of_three_year_claim": {
+    "A": 134931451.67804727,
+    "B": 91614241.0303469
+  }
+}

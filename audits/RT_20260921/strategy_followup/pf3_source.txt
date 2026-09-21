@@ -1,0 +1,309 @@
+PF3 source capture
+==================
+
+Source URL: https://moneyleavesclues.substack.com/p/inside-the-economics-of-pumpfun-call
+Title: Inside the Economics of Pump.fun Call Channels.
+Publisher/byline: Money Leaves Clues
+Published: 2026-07-31
+Captured: 2026-09-21 (HTTP 200; public Substack article body)
+Source type: public newsletter / on-chain analysis; not a peer-reviewed paper or arXiv author manuscript.
+
+The following is the public article text in reading order. Formatting-only elements and image captions are omitted.
+
+Today we will analyse a call channel in telegram. If you are in the crypto space, especially memecoin, you probably have seen these. They promise incredible results that seems to beat the market, but are these real?
+
+So we decided to break down an on-chain investigation of 770 public Pump.fun calls and more than 2.4 million trade records.
+
+We wanted to answer three questions:
+
+What could a normal public subscriber realistically earn?
+
+Which wallets repeatedly bought before the Telegram posts?
+
+Does the pattern look more like privileged access, automated sniping or momentum detection?
+
+The investigation started with 8,118 signals
+
+The Telegram export covered the period from January 22 to March 9, 2025.
+
+It contained:
+
+144,913 total messages
+8,118 signal messages
+8,102 unique token contracts
+3,524 promotional profit updates
+
+We saw a multiplier as big as 7,086.5x. This multiplier would be enough to become a crypto millionaire, but the truth is far from that.
+
+Remember that a token touched an extraordinary peak does not mean a subscriber really profited from that.
+
+In fact maximum upside ignores:
+
+the delay between the trade and the public message;
+the subscriber’s reaction time;
+available liquidity;
+slippage;
+transaction priority;
+competition from bots;
+and the difficulty of selling before everyone else tries to exit.
+
+We started with just 50 calls to create an investigative plan.
+
+Then we expanded investigation collecting 770 calls, of which 767 were completed successfully. The resulting dataset contained 2,411,719 trade records and 79,415 early-buyer events. Usable performance curves were available for 375 calls.
+
+Now the central question are simple:
+
+Does following a bot really give an advantage in the memecoin market?
+
+The first result looked bullish—until time entered the calculation
+
+In the initial 50-call test twenty-two reached at least +20%.
+
+On the surface that could look like a 56.4% win rate.
+
+But to make money a subscriber would have needed to enter quickly, recognize the peak and sell at exactly the right moment. This is an ideal situation so we added a realistic delay and the advantage deteriorated.
+
+With a 30-second entry delay, the percentage of calls that subsequently reached +20% fell from 56.4% to 31.4%.
+
+Fixed-time exits were already negative at the median:
+
+approximately −6.2% after one minute;
+−10.5% after five minutes;
+−10.7% after ten minutes.
+
+Entering 15 seconds after the signal and exiting at 30 seconds produced a median gross return of just +0.2%.
+
+You might think: Oh well, 0.2% profit per token isn’t that bad!
+
+Wrong! if you add slippage, fees, price impact, failed transactions and real execution latency the profit disappears.
+
+Also:
+
+At three minutes, the median result was already deeply negative.
+
+At five minutes, a subscriber entering 30 seconds after the call faced a median loss of 27.6%.
+
+The averages tell the wrong story
+
+Memecoin data is perfectly structured to mislead anyone who looks only at averages.
+
+In one idealized scenario—buying at the exact moment of the call and selling 30 seconds later—the average return was +552.2%.
+
+The median was −4.0%.
+
+Both numbers can be mathematically correct.
+
+Only one describes the typical experience.
+
+No retail trader can profit from this channel only high frequency bots can profit from these because they have milliseconds latency.
+
+The vip program
+
+In the channel there is the option to pay for vip gaining some “advantage”. So we identified wallets that purchased called tokens during the five minutes before the corresponding public Telegram post.
+
+The preliminary ranking considered:
+
+how frequently the wallet anticipated calls;
+whether it sold after the same call;
+whether it appeared among the first ten non-creator buyers;
+whether its lead time fell within a 10-to-120-second window.
+
+We found some interesting wallets.
+
+One wallet, abbreviated dc5d…6X2K, bought before 146 calls with a median lead time of 99.5 seconds.
+
+It subsequently sold after the same call in 72.6% of those cases.
+
+Two others, zero…av7C and AtTj…a1oy, combined high pre-signal frequency with repeated post-call selling.
+
+Another wallet, o7RY…Wcvc, appeared among the first ten non-creator buyers of 132 called tokens.
+
+That final wallet looks like a sniper rather than a vip wallet.
+
+A wallet appearing before many signals is evidence of temporal correlation but it is not proof that the wallet belongs to:
+
+an administrator;
+a VIP member;
+a channel operator;
+or an insider.
+
+The missing metric is precision:
+
+Of every token purchased by the wallet, how many were subsequently called by the group?
+
+A wallet that anticipates 100 calls while buying 50,000 launches is less informative than a wallet that anticipates 30 calls from only 40 total purchases.
+
+The group is hunting tokens that are only minutes old
+
+The called tokens were extraordinarily young.
+
+The median token age at the time of the Telegram post was 2.9 minutes.
+
+A quarter were called within 51 seconds of creation.
+
+Three-quarters were called within 9.1 minutes.
+
+And 90% were called within 28.2 minutes.
+
+This places the group inside the most strange of a token’s life cycle: the period when liquidity is limited, automated buyers are active and a relatively small wave of demand can move the price sharply.
+
+The creator data weakens one simple explanation.
+
+Across 767 token origins, the investigation identified 720 distinct creators.
+
+Only 29 creators appeared more than once, accounting for 76 tokens in total.
+
+That does not look like a single, small token factory feeding every launch to the channel.
+
+The early-buyer data points somewhere else.
+
+Certain non-creator wallets repeatedly appeared within the first seconds of token creation.
+
+One appeared among the first ten buyers of 132 called tokens.
+
+Others appeared in 119, 108 and 90.
+
+That is the signature of automation.
+
+It could represent:
+
+universal launch monitoring;
+bundled execution;
+sniper infrastructure;
+automated trading services;
+or systems shared across many unrelated tokens.
+
+It could also coexist with private information.
+
+We followed the funding trail—and found a network-shaped ambiguity
+
+The creator-funding dataset contained 18,046 candidate SOL movements associated with creator wallets.
+
+Many were small transfers or technical artifacts.
+
+After applying a minimum threshold of 0.01 SOL, 7,316 movements remained, involving 695 creators and 743 candidate fee payers.
+
+Some fee payers appeared across dozens of distinct creators.
+
+Two appeared across 50 creators and 50 tokens each.
+
+Another appeared across 36.
+
+That looks network-like.
+
+But the label matters.
+
+A common fee payer could be:
+
+an exchange;
+a centralized funding service;
+shared infrastructure;
+an automated deployment service;
+or an operational wallet used by multiple unrelated parties.
+
+Three explanations fit the evidence
+
+The data currently supports three possible models.
+
+1. A momentum scanner
+
+The group may be detecting tokens that are already accelerating in their first minutes.
+
+The tokens are extremely young.
+
+The public-trader result deteriorates rapidly.
+
+Recurring automated buyers are already active before the call.
+
+This is the explanation best supported by the available evidence.
+
+2. A private signal layer
+
+Some recurring wallets buy before the public calls and sell afterward.
+
+That is consistent with the possibility that calls circulate earlier in a private channel.
+
+But consistency is not proof.
+
+We still lack:
+
+each wallet’s complete purchase history;
+its precision outside the called sample;
+its performance on tokens that were never promoted;
+and direct evidence that a signal was distributed privately before it became public.
+
+A private layer remains possible.
+
+It is not demonstrated.
+
+3. Connected creators or funders
+
+A minority of creators recur, and some candidate fee payers touch many creator wallets.
+
+This could indicate connected subgroups.
+
+But it does not appear dominant across the full sample, and common service providers could generate a similar structure.
+
+The most defensible conclusion is therefore a combination:
+
+The channel appears to select extremely young tokens already showing momentum, inside a market saturated with persistent automated infrastructure.
+
+A private or economically connected component may exist in some cases.
+
+What the data does not prove
+
+This investigation has important boundaries.
+
+Only 375 of the 770 collected calls had usable performance curves.
+
+The calculated returns are gross.
+
+They do not yet fully account for:
+
+slippage;
+price impact;
+Pump.fun or decentralized-exchange fees;
+priority fees;
+transaction failures;
+position size;
+or whether the entire position could actually be sold.
+
+The real product may be timing
+
+The visible product of the public channel is the call: a token name, a contract address, a promised opportunity.
+
+But the data suggests that the scarcer product is timing.
+
+The actors who arrive first can purchase before attention concentrates.
+
+The public subscriber receives the signal while the window is already closing.
+
+If the public post generates new demand, earlier buyers possess something the late buyer does not: Optionality.
+
+They can hold. They can sell into the incoming flow. Or they can exit before the median trade becomes sharply negative.
+
+This does not prove that the group intentionally uses public subscribers as exit liquidity.
+
+It demonstrates the economic structure that can produce the same outcome even without explicit coordination.
+
+By the time the opportunity becomes visible to everyone, its most valuable part may already belong to someone else.
+
+What comes next
+
+The next phase must separate general bots from genuinely informed actors.
+
+That requires reconstructing the complete purchase history of the highest-ranked wallets—including every token they bought that the Telegram group never called.
+
+This will reveal precision, persistence across different days, realized profit, the number of false positives, and whether the apparent pre-signal advantage is selective or merely the result of monitoring everything.
+
+A matched control group of uncalled Pump.fun tokens should then be created.
+
+Those tokens must be aligned by creation time, age, market capitalization, volume, and market conditions.
+
+Without that comparison, characteristics common to the entire Pump.fun market could be incorrectly attributed to the Telegram group.
+
+Finally, candidate fee payers and funders must be labeled transaction by transaction to distinguish exchanges and shared infrastructure from direct economic relationships.
+
+The unanswered question is no longer whether some wallets arrive before the public. They do. The unanswered question is why.
+
+This article presents technical and investigative analysis. It is not financial advice, does not identify the owners of the wallets discussed and does not allege illegal conduct.

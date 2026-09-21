@@ -1,0 +1,235 @@
+{
+  "A": {
+    "input": "RT/dq7/raw/F2_dev.csv",
+    "sha256": "2a6c1b9af11cda4521086503afc1eaf408be4cde15e8730f0210bf0b2c6203c7",
+    "n": 14120,
+    "positive_n": 788,
+    "concentration_capacity_net": {
+      "5": {
+        "mint_count": 5,
+        "positive_profit_share": 0.32121894894268516,
+        "positive_profit_cny": 277836.78902136575,
+        "total_positive_profit_cny": 864945.2030644056,
+        "population_share": 0.0003541076487252125
+      },
+      "50": {
+        "mint_count": 50,
+        "positive_profit_share": 0.6306773140680518,
+        "positive_profit_cny": 545501.317484705,
+        "total_positive_profit_cny": 864945.2030644056,
+        "population_share": 0.0035410764872521247
+      }
+    },
+    "concentration_equal_return": {
+      "5": 0.26741090562020803,
+      "50": 0.5902521316238047
+    },
+    "top20_stats": {
+      "peak_dt": {
+        "median": 30600.5,
+        "n_nonnull": 20
+      },
+      "pre_peak_pm": {
+        "median": 1.3627,
+        "n_nonnull": 20
+      },
+      "n_buyers_pre": {
+        "median": 228.0,
+        "n_nonnull": 20
+      }
+    },
+    "top20_mints": [
+      "3FDvp4d7RVqU1Ng6DQXBpVnyG844CeJYx8WW5PBHpump",
+      "BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump",
+      "9L1tgYt2XpSvdQTfCS1oRKrvRpekvrumXbNJjAZHpump",
+      "J4x1EMmQjF6WEzXq2tUtzY89x5aMhYz5CzfevcJEpump",
+      "9UuLsJ3jf8ViBNeRcwXD53re5G3ypgfKK3s2EiMMpump",
+      "B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump",
+      "ES6ZcfTUTVET37RaYW9qDhX1DBBDEaTuvg87Lw9epump",
+      "DMU6LRnRBV7URLdpCYadHNKxXxyf4MRkdqSqC2tkpump",
+      "5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump",
+      "7e6DWSoo3HLnS7f5RXqbN9kiraKG587idkqVrJo3pump",
+      "FVZDfhvsyrfmWRFwDqMHiFuVwBeJWdp8FubGSsyUpump",
+      "2gp9TZWCfNwHFFW6uzZs9f3PixTKtaH3EhLCFFpopump",
+      "BxVHLVaDaFAVtuuEsqUr5s12R4Nn5KxM8XB2uk4Fpump",
+      "E6QZmyAi86yhXieF4TSvF2ChkNMFwLxTJRdseRbXpump",
+      "6gwoNDv86bDCmJWZPyvYyhor1en1YxS13sbBo6zdpump",
+      "7QpiDt12WkMyU8niRizYEYwKoz9yR2QHU6ZxZbx3pump",
+      "8pNiw1yRRvTLQ3uSgdKVwtXgq4TBvzsRvJncW1JHpump",
+      "BAngYQaodbbHm2JN83z4E9D4oEy5hv8ThVBq5Psopump",
+      "8PrKyi8nVNZGZUGwTQbuFXfxDJWsys9owR4JZzZwpump",
+      "HAJAeRURXJrniiEcsVU3Y7VBXi7zxB5k5AiYyNpqpump"
+    ]
+  },
+  "B": {
+    "input": "RT/dq1f/raw/F1_val.csv",
+    "sha256": "a5671e590af0f14060a0928e47dbf162fcde0892e722c7f2142d4ee0f864e150",
+    "n": 14918,
+    "positive_n": 816,
+    "concentration_capacity_net": {
+      "5": {
+        "mint_count": 5,
+        "positive_profit_share": 0.10134615766076528,
+        "positive_profit_cny": 59517.63663739029,
+        "total_positive_profit_cny": 587270.7758355569,
+        "population_share": 0.0003351655717924655
+      },
+      "50": {
+        "mint_count": 50,
+        "positive_profit_share": 0.46373753717413063,
+        "positive_profit_cny": 272339.5032403221,
+        "total_positive_profit_cny": 587270.7758355569,
+        "population_share": 0.003351655717924655
+      }
+    },
+    "concentration_equal_return": {
+      "5": 0.14748053193079028,
+      "50": 0.45953717260470406
+    },
+    "top20_stats": {
+      "peak_dt": {
+        "median": 42587.0,
+        "n_nonnull": 20
+      },
+      "pre_peak_pm": {
+        "median": 1.1477,
+        "n_nonnull": 20
+      },
+      "n_buyers_pre": {
+        "median": 75.0,
+        "n_nonnull": 20
+      }
+    },
+    "top20_mints": [
+      "DhU4Ro5sthxe6baYwD5v53eCyPp69nswhvrdPmqdpump",
+      "AtJ351dUKdWz8MP1pQCK5UxyVqdkjyr61vXCgegQpump",
+      "HekScrY6tsVMB7TMrkEmV5cEGz185PPvr86opBgipump",
+      "2bLdDpT9LfghnNenBPLMA2BvoToaCvbVyFQhLV9Kpump",
+      "XPUzHiGTQ1io871gbDQdybWRwfuuKMpD4onenropump",
+      "7LNfxxMAu5sNbg4uY5Kuu5Tvg6CsQGUo4ASkD79Xpump",
+      "3JN2DbSjNVAKfj3F12BHNaoYdsySEi4DR3CoqMCqpump",
+      "2W3W1GgTrRcqrx2gdKBPSf7Cbgk71yhqJw4J9c27pump",
+      "HqMdpaFZn9F8WJLdaJqQU1rgMtJgxY9jQ5tSUiLLpump",
+      "EQHgekT3TAyNqXmENfgbexxzBj6rQzXV6n5nEM89pump",
+      "Gh5tgNMDbWTMsUZa1YVoocz5Q2URzFMtzGp3WKfGpump",
+      "8HzRWh3zdW7ewhjE16sCowoxeKZZ9hF3TjhCwqVMpump",
+      "2ZcrrjkHkCoyoqx37t2njhTqXkq32di2QKdzHtAEpump",
+      "3Ln2EH9txLwMjLP4NEcLuEfGEbwb1pKjUyiMfKYDpump",
+      "7s3hcgyeL7vaJkCQPVUjQTLC13sczS7qBUREyBWF4c5S",
+      "5iDAk3xqPCAupe7F9N38sF2S8iduFLv399LFH4Jzpump",
+      "HPLF4VwuybS6s7CFEHA2n3yvC9wPE3qbfVMjE9ipump",
+      "AdPAbURo4XpJabaxsv6qPD1267yAH92mNGDTncgUpump",
+      "HCuEWUjbSU2LeeqPnkxGgdQPpzAEe6oqCktnFksxpump",
+      "3TxKQK6CRVNCraaAzWE99ytkvQBZZ94sKiwzEV95pump"
+    ]
+  },
+  "F3_devA": {
+    "input": "RT/dq8/raw/F3_devA.csv",
+    "sha256": "60fb0b32e1380596a8984d9fb0a6118e6d4ea69e87a088ef6c5edd08d22a5704",
+    "rows": 59753,
+    "mints": 14115,
+    "duplicate_mint_iv": 0,
+    "iv_counts": {
+      "0": 14115,
+      "1": 4137,
+      "2": 4437,
+      "3": 4320,
+      "4": 4467,
+      "5": 4442,
+      "6": 4301,
+      "7": 4227,
+      "8": 4809,
+      "9": 4101,
+      "10": 3241,
+      "11": 3156
+    },
+    "adjacent_pairs": 35435,
+    "pair_mint_count": 6001,
+    "spearman_all": -0.040222315375404966,
+    "split_zero_vs_positive": {
+      "zero": {
+        "n": 13944,
+        "rho": null
+      },
+      "positive": {
+        "n": 21491,
+        "rho": 0.0037114175371785302
+      }
+    },
+    "by_iv": {
+      "0": {
+        "n": 4137,
+        "rho": -0.036830290353384816
+      },
+      "1": {
+        "n": 3348,
+        "rho": -0.08978290981468935
+      },
+      "2": {
+        "n": 3417,
+        "rho": -0.09717201642893158
+      },
+      "3": {
+        "n": 3333,
+        "rho": -0.20672798171898002
+      },
+      "4": {
+        "n": 3350,
+        "rho": -0.2632567882688956
+      },
+      "5": {
+        "n": 3264,
+        "rho": -0.19922956046257118
+      },
+      "6": {
+        "n": 3120,
+        "rho": -0.1796223458274685
+      },
+      "7": {
+        "n": 3297,
+        "rho": -0.23424979350906072
+      },
+      "8": {
+        "n": 3286,
+        "rho": -0.2625430903657971
+      },
+      "9": {
+        "n": 2597,
+        "rho": -0.1102344665985583
+      },
+      "10": {
+        "n": 2286,
+        "rho": -0.19409371188912386
+      }
+    },
+    "time_boundaries_seconds": [
+      0,
+      300,
+      900,
+      1800,
+      3600,
+      7200,
+      14400,
+      28800,
+      86400,
+      259200,
+      604800
+    ],
+    "reported_style_any_previous_next": {
+      "before": {
+        "n": 37124,
+        "mints": 6703,
+        "rho": 0.08399046936963807
+      },
+      "after": {
+        "n": 37124,
+        "mints": 6703,
+        "rho": -0.0856036944166173
+      },
+      "middle_with_both_values": 37124,
+      "middle_mints": 6703,
+      "note": "group shift crosses missing/no-trade iv rows; iv boundaries are non-equidistant"
+    },
+    "interpretation": "f_pm is interval-last pm; f_newb30 is interval-last feature. Reported-style ratios use previous/next observed rows (may skip iv); no grid search."
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "run_date": "2026-09-21",
+  "scope": "Six supplied Solana mints only; public discoverability pilot; no performance or case-seed data used.",
+  "search_method": "One exact-address web search per mint. For search misses only, one shared no-key public endpoint was tried: https://api.dexscreener.com/latest/dex/tokens/{mint}.",
+  "records": [
+    {
+      "mint": "5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump",
+      "exact_search_query": "\"5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump\"",
+      "search_status": "hit",
+      "metadata_name": "GDP",
+      "metadata_symbol": "GDP",
+      "metadata_source_urls": ["https://www.coinbase.com/en-de/price/gdp-solana-d54653c5"],
+      "social_urls_for_navigation": [],
+      "propagation_found": false,
+      "propagation_time_verifiable": false,
+      "propagation_explicit_mint": false,
+      "propagation_edit_or_backfill": "not_applicable",
+      "notes": "Current public metadata page maps GDP to the supplied Solana address. No original public propagation message was identified in the bounded search."
+    },
+    {
+      "mint": "6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump",
+      "exact_search_query": "\"6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump\"",
+      "search_status": "no_result",
+      "metadata_name": null,
+      "metadata_symbol": null,
+      "metadata_source_urls": ["https://api.dexscreener.com/latest/dex/tokens/6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump"],
+      "social_urls_for_navigation": [],
+      "propagation_found": false,
+      "propagation_time_verifiable": false,
+      "propagation_explicit_mint": false,
+      "propagation_edit_or_backfill": "not_applicable",
+      "notes": "Search miss; shared public endpoint returned pairs:null. This channel did not detect a result."
+    },
+    {
+      "mint": "B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump",
+      "exact_search_query": "\"B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump\"",
+      "search_status": "no_result",
+      "metadata_name": null,
+      "metadata_symbol": null,
+      "metadata_source_urls": ["https://api.dexscreener.com/latest/dex/tokens/B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump"],
+      "social_urls_for_navigation": [],
+      "propagation_found": false,
+      "propagation_time_verifiable": false,
+      "propagation_explicit_mint": false,
+      "propagation_edit_or_backfill": "not_applicable",
+      "notes": "Search miss; shared public endpoint returned pairs:null. This channel did not detect a result."
+    },
+    {
+      "mint": "BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump",
+      "exact_search_query": "\"BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump\"",
+      "search_status": "hit",
+      "metadata_name": "Son Goku",
+      "metadata_symbol": "GOKU",
+      "metadata_source_urls": ["https://www.coinbase.com/en-ca/price/son-goku-solana-84a15ed1", "https://coinboom.net/coin/son-goku-5"],
+      "social_urls_for_navigation": ["https://x.com/Goku_Solana", "https://ww.twstalker.com/Howard_BThyName"],
+      "propagation_found": true,
+      "propagation_time_verifiable": false,
+      "displayed_copy_date_available": true,
+      "propagation_explicit_mint": true,
+      "propagation_or_source_urls": ["https://www.bitmart.com/uk-UA/price/goku", "https://ww.twstalker.com/Howard_BThyName"],
+      "propagation_time_evidence": "A secondary BitMart display shows dated 2026-06-09 entries for this mint; no original message URL, timezone, or edit history was available. The 2026-06-25 entry was excluded because it identifies a different CA (Dm8g1s9t...).",
+      "propagation_edit_or_backfill": "not_verifiable_from_public_copies",
+      "notes": "The same GOKU page mixes messages for different mints. Messages were attributed only when the individual text contained the supplied BUvu... address; ticker-only attribution was not used."
+    },
+    {
+      "mint": "FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump",
+      "exact_search_query": "\"FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump\"",
+      "search_status": "no_result",
+      "metadata_name": null,
+      "metadata_symbol": null,
+      "metadata_source_urls": ["https://api.dexscreener.com/latest/dex/tokens/FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump"],
+      "social_urls_for_navigation": [],
+      "propagation_found": false,
+      "propagation_time_verifiable": false,
+      "propagation_explicit_mint": false,
+      "propagation_edit_or_backfill": "not_applicable",
+      "notes": "Search miss; shared public endpoint returned pairs:null. This channel did not detect a result."
+    },
+    {
+      "mint": "YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump",
+      "exact_search_query": "\"YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump\"",
+      "search_status": "no_result",
+      "metadata_name": null,
+      "metadata_symbol": null,
+      "metadata_source_urls": ["https://api.dexscreener.com/latest/dex/tokens/YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump"],
+      "social_urls_for_navigation": [],
+      "propagation_found": false,
+      "propagation_time_verifiable": false,
+      "propagation_explicit_mint": false,
+      "propagation_edit_or_backfill": "not_applicable",
+      "notes": "Search miss; shared public endpoint returned pairs:null. This channel did not detect a result."
+    }
+  ],
+  "request_log": [
+    {"type": "exact_address_web_search", "queries": 6, "query_pattern": "\"{mint}\"", "source_urls": ["https://www.coinbase.com/en-de/price/gdp-solana-d54653c5", "https://www.bitmart.com/uk-UA/price/goku", "https://www.coinbase.com/en-ca/price/son-goku-solana-84a15ed1", "https://coinboom.net/coin/son-goku-5", "https://ww.twstalker.com/Howard_BThyName"]},
+    {"type": "public_metadata_endpoint", "endpoint_pattern": "https://api.dexscreener.com/latest/dex/tokens/{mint}", "attempted_for_search_misses": 4, "response": "pairs:null for all four"}
+  ]
+}
