@@ -34,7 +34,8 @@
 
 **不能，这是有意的。**这里的脚本和冻结文件保持原样，因为很多文件的 sha256 被结果报告和冻结清单记录着，改一个字节就无法再证明“运行前已冻结”。代价是：脚本里写的是整理前的目录名（`dq7/`、`case_timing/` 等），在现在的目录结构下跑不起来。
 
-- **复现旧结果**：检出整理前的布局。`git worktree add ../RT_旧布局 01b169e4` 会在旁边生成一份与当时一致的目录，脚本在那里按原样运行。那个版本里 `node_modules` 和 MELT 解压文件已删，需要时 `npm ci`，或从 `bundle.zip` 解压。
+- **复现旧结果**：检出整理前的布局。`git worktree add ../RT_旧布局 01b169e4` 只恢复 Git 跟踪文件；它不含被 `.gitignore` 排除的 H1 Helius 原始交易 `raw/*.jsonl.gz`（也不含对应 `pf_coin_*.json`）。当前副本仍在 `1_实验/pump曲线_案例时序与点火跟随_H1/raw/`，文件名和 sha256 见该目录的 `raw/manifest.txt`；全量备份的 `/mnt/d/ancillary_backup/20260922/untracked.tar` 内保存的是旧布局 `RT/case_timing/raw/` 路径。需要复现时先从备份解出这些文件，再按旧路径放入 worktree，并用 `raw/manifest.txt` 核 hash；`node_modules` 需在旧布局的 `RT/dq4/node/` 下 `npm ci`，MELT 解压文件从 `bundle.zip` 恢复。不能把仅检出 worktree 视为自动可运行的完整复现环境。
+- `3_审计/2026-09-21_推进复核/checks/verification.json` 是重排前运行记录，仍使用 `dq11/`、`dq12/` 旧路径；它记录当时结果，不是当前布局的校验清单。当前校验应先按本页旧目录名对照表定位文件，再在旧布局 worktree 或恢复后的路径上执行。
 - **复用代码做新检验**：把需要的脚本复制到新实验文件夹里，再改路径，不要在旧文件夹里改。
 
 ## 旧目录名对照
