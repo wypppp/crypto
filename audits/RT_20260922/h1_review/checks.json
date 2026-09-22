@@ -1,0 +1,57 @@
+{
+  "source_sha256": "62b5a416f86aede7a743a3de0c50e6926c38d350608c2cca4649eee4586a7001",
+  "returns": [
+    {
+      "delay": 30,
+      "n": 308,
+      "mean": 1.3312368668831167,
+      "n_nonseed": 305,
+      "mean_nonseed": 0.8973198295081967,
+      "seed_pnl_sol": 66.6692035,
+      "nonseed_pnl_sol": -15.658725999999998
+    },
+    {
+      "delay": 120,
+      "n": 308,
+      "mean": 1.2303689188311688,
+      "n_nonseed": 305,
+      "mean_nonseed": 0.9111768852459017,
+      "seed_pnl_sol": 49.0223385,
+      "nonseed_pnl_sol": -13.545525
+    },
+    {
+      "delay": 300,
+      "n": 308,
+      "mean": 1.1751439188311688,
+      "n_nonseed": 305,
+      "mean_nonseed": 0.9167608131147541,
+      "seed_pnl_sol": 39.6661395,
+      "nonseed_pnl_sol": -12.693976000000003
+    }
+  ],
+  "timing": {
+    "exit_ts": {
+      "peak_positions": 49,
+      "median_hold_h": 9.529166666666665,
+      "p90_hold_h": 67.26644444444446,
+      "negative_holds": 10
+    },
+    "exit_clock": {
+      "peak_positions": 63,
+      "median_hold_h": 16.15416666666667,
+      "p90_hold_h": 89.57302777777782,
+      "negative_holds": 0
+    }
+  },
+  "idle_events": 87,
+  "nonseed_daily_means": {
+    "2026-06-01": 0.9211669433962265,
+    "2026-06-02": 1.0833516734693878,
+    "2026-06-03": 0.9028466818181818,
+    "2026-06-04": 0.9024666444444445,
+    "2026-06-05": 0.7222514999999999,
+    "2026-06-06": 0.8523260833333333,
+    "2026-06-07": 0.99247840625
+  },
+  "scope": "CSV arithmetic and exit-clock correction only; not independent raw-event replay"
+}
