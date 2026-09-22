@@ -1,0 +1,62 @@
+[
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?subreddit=solana&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 402,
+    "out": "agg_posts_solana_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?subreddit=SolanaMemeCoins&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 402,
+    "out": "agg_posts_SolanaMemeCoins_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?subreddit=memecoins&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 402,
+    "out": "agg_posts_memecoins_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?subreddit=CryptoMoonShots&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 402,
+    "out": "agg_posts_CryptoMoonShots_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?subreddit=pumpfun&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 401,
+    "out": "agg_posts_pumpfun_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/comments/search/aggregate?subreddit=solana&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 409,
+    "out": "agg_comments_solana_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/comments/search/aggregate?subreddit=SolanaMemeCoins&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 400,
+    "out": "agg_comments_SolanaMemeCoins_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/comments/search/aggregate?subreddit=memecoins&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 402,
+    "out": "agg_comments_memecoins_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/comments/search/aggregate?subreddit=CryptoMoonShots&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 402,
+    "out": "agg_comments_CryptoMoonShots_daily.json"
+  },
+  {
+    "url": "https://arctic-shift.photon-reddit.com/api/comments/search/aggregate?subreddit=pumpfun&after=2026-06-01&before=2026-06-08&aggregate=created_utc&frequency=day",
+    "http": 200,
+    "size": 399,
+    "out": "agg_comments_pumpfun_daily.json"
+  }
+]

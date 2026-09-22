@@ -1,0 +1,45 @@
+# Snapchain
+
+## Docs
+
+- [Getting Started](/getting-started): If your goal is to get started as quickly as possible, consider a managed service like [Neynar](https://neynar.com/) instead of running your own node.
+- [Mainnet Validators](/validators): Snapchain uses a set of trusted validators to reach consensus on the state of the network.
+The full, authoritative list of validator sets is maintained in [`validators.toml`](https://github.com/farcasterxyz/snapchain/blob/main/validators.toml) at the root of the repository.
+- [Whitepaper](/whitepaper): Snapchain is a blockchain-like network for storing and syncing Farcaster's social data. It has stronger and faster consistency guarantees than the current [deltagraph](https://www.varunsrinivasan.com/2024/04/28/the-goldilocks-consensus-problem) system which is finding it hard to keep all the nodes in sync in near real-time. The tradeoff we make for the consistency improvements is a new consensus step that introduces more complexity and failure modes which must be addressed.
+- [Casts API](/reference/httpapi/casts): Get a cast by its FID and Hash.
+- [Events API](/reference/httpapi/events): The events API returns events as they are merged into the Hub, which can be used to listen to Hub activity.
+- [Fids API](/reference/httpapi/fids): Get a list of all the FIDs
+- [HTTP API](/reference/httpapi/httpapi): Snapchain nodes serve a HTTP API on port 3381 by default.
+- [Info API](/reference/httpapi/info): Get the Hub's info
+- [Links API](/reference/httpapi/links): A Link represents a relationship between two users (e.g. follow)
+- [Message API](/reference/httpapi/message): The Message API lets you validate and submit signed Farcaster protocol messages to the Hub. Note that the message has to
+be sent as the encoded bytestream of the protobuf (`Message.encode(msg).finish()` in typescript), as POST data to the
+endpoint.
+- [On Chain API](/reference/httpapi/onchain): Get a list of account keys (signers) provided by an FID
+- [Reactions API](/reference/httpapi/reactions): The Reactions API will accept the following values for the `reaction_type` field.
+- [Storage API](/reference/httpapi/storagelimits): Get an FID's storage limits.
+- [UserData API](/reference/httpapi/userdata): The UserData API will accept the following values for the `user_data_type` field.
+- [Username Proofs API](/reference/httpapi/usernameproof): Get an proof for a username by the Farcaster username
+- [Verifications API](/reference/httpapi/verification): Get a list of verifications provided by an FID
+- [Blocks API](/reference/grpcapi/blocks): Used to retrieve blocks and shard chunks from the chain.
+- [Casts API](/reference/grpcapi/casts): Used to retrieve valid casts or tombstones for deleted casts
+- [Events API](/reference/grpcapi/events): Used to subscribe to real-time event updates from the Snapchain node
+- [Fids API](/reference/grpcapi/fids): Used to retrieve a list of all fids
+- [GRPC API](/reference/grpcapi/grpcapi): Snapchain nodes serve a gRPC API on port 3383 by default.
+- [Links API](/reference/grpcapi/links): A Link represents a relationship between two users (e.g. follow)
+- [Message API](/reference/grpcapi/message): Used to validate and send a message to the Snapchain node. Valid messages are accepted and gossiped to other nodes in the
+network.
+- [MessageError](/reference/grpcapi/message)
+- [Metadata API](/reference/grpcapi/metadata): These APIs are used to retrieve node metadata and for synchronization between nodes. Some methods are not meant for use by external applications.
+- [OnChainEvents API](/reference/grpcapi/onchain): Used to retrieve on chain events (id registry, keys, storage rent)
+- [Reactions API](/reference/grpcapi/reactions): Used to retrieve valid or revoked reactions
+- [Storage API](/reference/grpcapi/storagelimits): Get an FID's storage limits.
+- [UserData API](/reference/grpcapi/userdata): Used to retrieve the current metadata associated with a user
+- [Username Proofs API](/reference/grpcapi/usernameproof): Used to retrieve proofs of username ownership.
+- [Verifications API](/reference/grpcapi/verification): Used to retrieve valid or revoked proof of ownership of an Ethereum Address.
+- [Events](/reference/datatypes/events): Events represent state changes, like a new message or contract event.
+- [Messages](/reference/datatypes/messages): A message is the fundamental data type in the Farcaster network.
+- [Migrating to Snapchain from Hubble](/guides/migrating-to-snapchain): Snapchain is designed to be a drop-in replacement for [Hubble](https://github.com/farcasterxyz/hub-monorepo). To migrate, follow these steps:
+- [Run Snapchain on AWS](/guides/running-a-node): If your goal is to get started as quickly as possible, consider a managed service like [Neynar](https://neynar.com/) instead of running your own node.
+- [Sync Snapchain to Postgres](/guides/syncing-to-db): Read access to a Snapchain node
+- [Writing to snapchain](/guides/writing-messages): Create your Farcaster account programmatically and publish your first message.

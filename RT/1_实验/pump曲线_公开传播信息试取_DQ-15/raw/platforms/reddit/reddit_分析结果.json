@@ -1,0 +1,222 @@
+{
+  "solana": {
+    "posts_total": 265,
+    "comments_total": 1088,
+    "daily_posts": {
+      "2026-06-01": 45,
+      "2026-06-02": 36,
+      "2026-06-03": 41,
+      "2026-06-04": 50,
+      "2026-06-05": 31,
+      "2026-06-06": 27,
+      "2026-06-07": 35
+    },
+    "daily_comments": {
+      "2026-06-01": 166,
+      "2026-06-02": 196,
+      "2026-06-03": 137,
+      "2026-06-04": 186,
+      "2026-06-05": 120,
+      "2026-06-06": 142,
+      "2026-06-07": 141
+    },
+    "posts_with_addr": 1,
+    "comments_with_addr": 1,
+    "distinct_addrs_found": 2,
+    "distinct_addrs_in_a_week_list": 2,
+    "distinct_addrs_in_h1_triggers": 1,
+    "addrs_in_a_week_list": [
+      "7avv4WnQpR4zmS35fZWJrkjoqN9ypzPvcP7LTiqYpump",
+      "GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump"
+    ],
+    "addrs_not_in_a_week_list": [],
+    "edited_posts": 0,
+    "removed_posts_by_category": 145,
+    "deleted_or_removed_selftext": 120,
+    "edited_comments": 2,
+    "removed_comments_by_category": 0
+  },
+  "SolanaMemeCoins": {
+    "posts_total": 165,
+    "comments_total": 91,
+    "daily_posts": {
+      "2026-06-01": 42,
+      "2026-06-02": 17,
+      "2026-06-03": 26,
+      "2026-06-04": 24,
+      "2026-06-05": 16,
+      "2026-06-06": 17,
+      "2026-06-07": 23
+    },
+    "daily_comments": {
+      "2026-06-01": 11,
+      "2026-06-02": 10,
+      "2026-06-03": 29,
+      "2026-06-04": 10,
+      "2026-06-05": 9,
+      "2026-06-06": 14,
+      "2026-06-07": 8
+    },
+    "posts_with_addr": 10,
+    "comments_with_addr": 0,
+    "distinct_addrs_found": 9,
+    "distinct_addrs_in_a_week_list": 3,
+    "distinct_addrs_in_h1_triggers": 1,
+    "addrs_in_a_week_list": [
+      "5mbEzkr8NMMynSx3aqhjEhHvk3MnGT1hQ42L76cPpump",
+      "DpPowzjETiU6421ReuwBB8XmDB7sMyB2JGzFLssYpump",
+      "Fksmw79BNH8kzN2WWhaCFR4F2BPr5uhdji3Ekynipump"
+    ],
+    "addrs_not_in_a_week_list": [
+      "4soZDChqgeALPn6QJeuPrCFFHFPiaW7xZEY4ozRHpump",
+      "A4STU4JNW9euEWnsqnTFxAJnTKrPgcw4XNJqYMG1pump",
+      "Cz7LGKdZPpAxonXx23ZYPW3RtDQvjcf17ZDCZEzFpump",
+      "DhaLZtprNqwpUYqhrTrtnCGSuxsdnk489UqSrZj3pump",
+      "Dph1p6ywQdb75GXGLnvrPubMctU4ikxZaz46DLcUpump",
+      "Gqqdgfkn7bcsuBQZEk9oMBkqCv1bRXvPmTLs3sQ9pump"
+    ],
+    "edited_posts": 0,
+    "removed_posts_by_category": 113,
+    "deleted_or_removed_selftext": 87,
+    "edited_comments": 0,
+    "removed_comments_by_category": 0
+  },
+  "memecoins": {
+    "posts_total": 136,
+    "comments_total": 286,
+    "daily_posts": {
+      "2026-06-01": 22,
+      "2026-06-02": 22,
+      "2026-06-03": 18,
+      "2026-06-04": 16,
+      "2026-06-05": 16,
+      "2026-06-06": 12,
+      "2026-06-07": 30
+    },
+    "daily_comments": {
+      "2026-06-01": 61,
+      "2026-06-02": 36,
+      "2026-06-03": 38,
+      "2026-06-04": 46,
+      "2026-06-05": 26,
+      "2026-06-06": 27,
+      "2026-06-07": 52
+    },
+    "posts_with_addr": 6,
+    "comments_with_addr": 3,
+    "distinct_addrs_found": 6,
+    "distinct_addrs_in_a_week_list": 3,
+    "distinct_addrs_in_h1_triggers": 0,
+    "addrs_in_a_week_list": [
+      "342JZgWmgqKqEdChQJW77y87nXoM5UaGFGrEnuVZpump",
+      "6yxLF2HpbzQehJZrpZS6MiAktSdc9NmDQ1sSWJyYpump",
+      "BVeQLPLYrBhrRVD1V3RjF3YdwGpn6WVT7QsXSxiypump"
+    ],
+    "addrs_not_in_a_week_list": [
+      "5hiLgyybrAYPpUwNFa38agfZ8iEtnahWKAPixcfspump",
+      "EuDGQRFvuDezFXsrPwA9XbeWj6PkgdVfKUuef7qBpump",
+      "FeXXbSVWPvV9GE9RbTovLxeezUCbx2fpLZPtQ2BFpump"
+    ],
+    "edited_posts": 0,
+    "removed_posts_by_category": 100,
+    "deleted_or_removed_selftext": 85,
+    "edited_comments": 0,
+    "removed_comments_by_category": 0
+  },
+  "CryptoMoonShots": {
+    "posts_total": 110,
+    "comments_total": 239,
+    "daily_posts": {
+      "2026-06-01": 18,
+      "2026-06-02": 15,
+      "2026-06-03": 22,
+      "2026-06-04": 17,
+      "2026-06-05": 15,
+      "2026-06-06": 12,
+      "2026-06-07": 11
+    },
+    "daily_comments": {
+      "2026-06-01": 28,
+      "2026-06-02": 68,
+      "2026-06-03": 37,
+      "2026-06-04": 32,
+      "2026-06-05": 23,
+      "2026-06-06": 25,
+      "2026-06-07": 26
+    },
+    "posts_with_addr": 4,
+    "comments_with_addr": 1,
+    "distinct_addrs_found": 5,
+    "distinct_addrs_in_a_week_list": 2,
+    "distinct_addrs_in_h1_triggers": 1,
+    "addrs_in_a_week_list": [
+      "5mbEzkr8NMMynSx3aqhjEhHvk3MnGT1hQ42L76cPpump",
+      "DpPowzjETiU6421ReuwBB8XmDB7sMyB2JGzFLssYpump"
+    ],
+    "addrs_not_in_a_week_list": [
+      "CbyQSD5njpmhcEa8S3MczdF5xRHKT5NpyyceX285pump",
+      "Dpse6VGe8eYUiSuikDv5M5JJ86JoWhAm49CyW7V9pump",
+      "FeXXbSVWPvV9GE9RbTovLxeezUCbx2fpLZPtQ2BFpump"
+    ],
+    "edited_posts": 0,
+    "removed_posts_by_category": 81,
+    "deleted_or_removed_selftext": 81,
+    "edited_comments": 0,
+    "removed_comments_by_category": 0
+  },
+  "pumpfun": {
+    "posts_total": 89,
+    "comments_total": 112,
+    "daily_posts": {
+      "2026-06-01": 13,
+      "2026-06-02": 6,
+      "2026-06-03": 15,
+      "2026-06-04": 16,
+      "2026-06-05": 11,
+      "2026-06-06": 12,
+      "2026-06-07": 16
+    },
+    "daily_comments": {
+      "2026-06-01": 9,
+      "2026-06-02": 7,
+      "2026-06-03": 26,
+      "2026-06-04": 25,
+      "2026-06-05": 15,
+      "2026-06-06": 8,
+      "2026-06-07": 22
+    },
+    "posts_with_addr": 19,
+    "comments_with_addr": 2,
+    "distinct_addrs_found": 19,
+    "distinct_addrs_in_a_week_list": 16,
+    "distinct_addrs_in_h1_triggers": 0,
+    "addrs_in_a_week_list": [
+      "342JZgWmgqKqEdChQJW77y87nXoM5UaGFGrEnuVZpump",
+      "38m4k1TVYw5BY4AQjUwEFHZhyBNkuWynEtmgTsnrpump",
+      "47HkGncD6Gg2tQYdFV5oErKQ4Z5Bp84ERTgGFWXBpump",
+      "5h2FH6HtNcG9m9Zkus69Dm2rxhrqiyTaW1GaUY2Tpump",
+      "5ubwvWHYNegcP7PU4f2j9JtuQmxmFu7rguDUZC8Zpump",
+      "6f1d3Qyb1coViAR4VBm4Widqbu8pYAT1kkbLDJxFpump",
+      "6tDgjeYkJV42N9BmiiXMu56pBoB4pN9dP61TWqRMpump",
+      "7iqHbv2Y8oqKTDJ2AHBdEpiyUTpk1htrqNbfpLGjpump",
+      "9Wen4UkzPfkpe2q7k9kYiqNwDXq1y43qkGxStMSSpump",
+      "9wdUDF1PQkiiKMEDVBK2TNvPFKbZ6jfboMfTRtozpump",
+      "Cgua5bWXMLtPfr9BgSUFLrdHYFL79hKa1yDCWvjWpump",
+      "F2K1AY5Yqjphyut3DYaHaS2oGptHwMwb9QEHMGXYpump",
+      "FyrY9U9G73z4tvKrq1Q1iDFcYsn8bZczwD9GTgPEpump",
+      "GcLWhDMCchAxakzxb7pm7oE3tWTdBVNxCrwykig1pump",
+      "NezmJHwYbbPTCxH7FnzzkeDP53DpApkZpaMLeTEpump",
+      "WX489YfGvZAvFyxnQMotm3AYpS3cmVqk2r566aHpump"
+    ],
+    "addrs_not_in_a_week_list": [
+      "Cz7LGKdZPpAxonXx23ZYPW3RtDQvjcf17ZDCZEzFpump",
+      "FeMbDoX7R1Psc4GEcvJdsbNbZA3bfztcyDCatJVJpump",
+      "Hqes1FCBtFtkLchR29wjpuCHRubb2qm4zcTVhSCEpump"
+    ],
+    "edited_posts": 0,
+    "removed_posts_by_category": 36,
+    "deleted_or_removed_selftext": 31,
+    "edited_comments": 0,
+    "removed_comments_by_category": 0
+  }
+}
