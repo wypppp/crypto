@@ -1,4 +1,0 @@
-{"阶段": "TLS 握手（握手中停机）", "结果": "Shutdown:wall_deadline_exceeded(tls_handshake)", "停机后耗时s": 0.162, "期限s": 0.15, "握手期间登记数": 1}
-{"阶段": "TCP 建连（建连中停机）", "结果": "Shutdown:wall_deadline_exceeded(tcp_connect)", "停机后耗时s": 0.159, "期限s": 0.15, "socket_timeout_s": 3}
-{"阶段": "TLS 慢响应体（停机后发起）", "结果": "Shutdown:wall_deadline_exceeded(response)", "停机后耗时s": 0.161, "期限s": 0.15}
-{"阶段": "TLS 慢响应体（未停机对照，证书校验开启）", "结果": "0x1", "耗时s": 0.398, "在途登记残留": 0}

@@ -1,3 +1,0 @@
-{"mode": "stop_before_request", "result": "Shutdown:wall_deadline_exceeded", "grace_s": 0.15, "总耗时s": 0.176, "停机后耗时s": 0.175, "分段数": 5, "最大段间隔s": 0.0357, "到点强制关闭": 2, "升级": 0}
-{"mode": "stop_during_request", "result": "Shutdown:wall_deadline_exceeded", "grace_s": 0.15, "总耗时s": 0.182, "停机后耗时s": 0.17, "分段数": 5, "最大段间隔s": 0.0354, "到点强制关闭": 2, "升级": 0}
-{"mode": "no_stop_control", "result": "0x1", "grace_s": 0.15, "总耗时s": 0.387, "停机后耗时s": null, "分段数": 11, "最大段间隔s": 0.0354, "到点强制关闭": 0, "升级": 0}

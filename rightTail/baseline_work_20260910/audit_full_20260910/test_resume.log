@@ -1,9 +1,0 @@
-第一次运行：建立检查点
-Traceback (most recent call last):
-  File "test_resume.py", line 60, in <module>
-    code, doc, out, rpc1 = run(tmp, sample, tag="run1")
-  File "test_resume.py", line 51, in run
-    code = P.measure(args)
-  File "/home/ancillary/rightTail/baseline_work_20260910/pilot_measure.py", line 804, in measure
-    if args.parallel <= 1:
-AttributeError: 'Namespace' object has no attribute 'parallel'

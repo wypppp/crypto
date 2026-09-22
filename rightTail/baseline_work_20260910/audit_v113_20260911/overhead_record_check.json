@@ -1,8 +1,0 @@
-{
-  "before_reported_delta_ms": 0.993,
-  "after_reported_delta_ms": 0.111,
-  "difference_of_reported_deltas_ms": 0.882,
-  "before_naive_SE_ms": 0.20426652523928956,
-  "after_naive_SE_ms": 0.21027096803886167,
-  "recomputed_from_raw_pairs": false
-}

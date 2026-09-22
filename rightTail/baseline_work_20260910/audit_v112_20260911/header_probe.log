@@ -1,3 +1,0 @@
-{"mode": "stop_before_headers", "result": "Shutdown:wall_deadline_exceeded", "总耗时s": 0.18, "停机后耗时s": 0.179, "头分段": 7, "收头期间登记数": 1, "升级次数": 0, "到点强制关闭": 1}
-{"mode": "stop_during_headers", "result": "Shutdown:wall_deadline_exceeded", "总耗时s": 0.198, "停机后耗时s": 0.183, "头分段": 8, "收头期间登记数": 1, "升级次数": 0, "到点强制关闭": 1}
-{"mode": "no_stop_control", "result": "0x1", "总耗时s": 0.467, "停机后耗时s": null, "头分段": 17, "收头期间登记数": 1, "升级次数": 0, "到点强制关闭": 0}

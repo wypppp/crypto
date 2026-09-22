@@ -1,7 +1,0 @@
-chain_id=1  finalized 快照 25957369  0xf1589d1aadf7c4a8…
-续跑：检查点已有 8 条尝试，可交付已完成 6 个候选，将跳过并原样并入交付
-  [4/8] idx=480842 state=measured_exit 110.35s rpc=104
-  [7/8] idx=491410 state=measured_exit 114.47s rpc=105
-
--> runs/v119_20260911T233131Z-546793/parallel_resume1.json
--> runs/v119_20260911T233131Z-546793/parallel_resume1.evidence.jsonl  (687 条证据)

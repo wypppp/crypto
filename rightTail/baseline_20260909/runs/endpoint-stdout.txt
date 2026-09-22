@@ -1,9 +1,0 @@
-[PASS] T1 Chain and finalized snapshot
-[PASS] T2 Actual cohort-window historical registry
-[PASS] T3 First Mint with one-block event cross-check
-[PASS] T4 Observable historical overrides and isolation
-[PASS] T5.buy Actual token balance delta in one execution
-[PASS] T5.sell Actual exit cash delta with reconstructed balance
-[PASS] T6 Controlled taxes and environment/restriction failures
-[PASS] T7 Historical block hash consistency
-{"counts": {"PASS": 8, "FAIL": 0, "UNRUN": 0}, "capability_gate": {"passed": true, "blocking_ids": []}, "baseline_ready": false, "log": "runs/endpoint-verification.json"}

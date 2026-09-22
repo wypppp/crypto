@@ -1,7 +1,0 @@
-fake_launch: tag=serial_resume1 action=measure
-chain_id=1  finalized 快照 25900000  0x0000000000000000…
-续跑：检查点已有 2 条尝试，可交付已完成 1 个候选，将跳过并原样并入交付
-  [1/2] idx=1 state=measured_exit 1.18s rpc=74
-
--> ../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/serial_resume1.json
--> ../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/serial_resume1.evidence.jsonl  (256 条证据)

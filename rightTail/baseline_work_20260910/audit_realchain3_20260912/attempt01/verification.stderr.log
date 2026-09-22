@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/home/ancillary/rightTail/baseline_work_20260910/audit_realchain3_20260912/verify_delivery.py", line 61, in <module>
-    assert manifest[-1]['compare_exit']==0 and manifest[-1]['last_exit']=={'serial':0,'parallel':0}
-KeyError: 'last_exit'

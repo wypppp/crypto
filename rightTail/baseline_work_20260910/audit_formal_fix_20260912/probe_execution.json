@@ -1,8 +1,0 @@
-{
-  "argv": [
-    "/home/claude/miniconda3/bin/python3",
-    "-B",
-    "/home/ancillary/rightTail/baseline_work_20260910/audit_formal_fix_20260912/probe.py"
-  ],
-  "exit": 0
-}

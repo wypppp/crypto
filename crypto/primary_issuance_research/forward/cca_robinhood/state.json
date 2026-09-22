@@ -1,9 +1,0 @@
-{
-  "auction_count": 4,
-  "freeze_block": 48165507,
-  "initialized_at": "2026-08-28T08:44:03.741722+00:00",
-  "last_run_at": "2026-08-28T11:47:24.512970+00:00",
-  "last_safe_head": 48274648,
-  "last_scanned_block": 48274648,
-  "runs": 72
-}

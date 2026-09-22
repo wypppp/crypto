@@ -5,15 +5,18 @@
 /.pytest_cache
 /.venv
 /.env
-/crypto/prediction_market_research/data/shadow/*.gz
+.env
 /1.md
+__pycache__/
+node_modules/
+# 付费原始数据：不进 git，备份在 D:\ancillary_backup\
 RT/case_timing/raw/full24h_*.jsonl.gz
 RT/case_timing/raw/pf_coin_*.json
 RT/case_timing/raw/failed24h_*.jsonl.gz
-RT/case_timing/__pycache__/
 RT/case_timing/raw/ext_*.jsonl.gz
-__pycache__/
-node_modules/
-audits/RT_20260920/snapshot/
+# MELT 数据包（>100MB，超出 GitHub 上限）：只留在本地和仓库外备份
+RT/dq10/raw/melt_bundle/bundle.zip
 RT/dq10/raw/melt_bundle/bundle/first_sig_signer.jsonl
 RT/dq10/raw/melt_bundle/bundle/bundle2sig_filtered.pkl
+# 审计快照可由 git 历史重建，不再提交
+RT/audits/RT_20260920/snapshot/

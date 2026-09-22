@@ -1,9 +1,0 @@
-chain_id=1  finalized 快照 25957718  0x2ff001c72249fe7a…
-续跑：检查点已有 15 条尝试，可交付已完成 11 个候选，将跳过并原样并入交付
-  [1/15] idx=484611 state=measured_exit 135.95s rpc=104
-  [2/15] idx=485028 state=measured_exit 131.69s rpc=103
-  [13/15] idx=491895 state=execution_reverted_unknown 138.9s rpc=106
-  [14/15] idx=491900 state=measured_exit 135.77s rpc=103
-
--> runs/formal_sub02_20260912T011723Z-17018c/serial_resume1.json
--> runs/formal_sub02_20260912T011723Z-17018c/serial_resume1.evidence.jsonl  (1354 条证据)

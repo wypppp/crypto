@@ -1,7 +1,0 @@
-fake_launch: tag=serial action=flaky
-chain_id=1  finalized 快照 25900000  0x0000000000000000…
-  [1/2] idx=1 state=data_missing 1.07s rpc=49
-  [2/2] idx=2 state=measured_exit 0.97s rpc=50
-
--> ../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/serial.json
--> ../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/serial.evidence.jsonl  (372 条证据)

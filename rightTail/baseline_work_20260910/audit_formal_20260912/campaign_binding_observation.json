@@ -1,7 +1,0 @@
-{
-  "main_batches_reported_passed": 1,
-  "actual_sample": "subset_pair_01.json",
-  "actual_candidates": 15,
-  "declared_main_batch_size": 20,
-  "note": "Controlled folder copy only; no original run or manifest was altered."
-}

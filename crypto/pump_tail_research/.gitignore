@@ -1,5 +1,0 @@
-__pycache__/
-.env
-data/*.parquet
-data/dune_token_metrics.csv
-output/

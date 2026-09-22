@@ -1,8 +1,0 @@
-{"case": "baseline", "exit": 0, "state": "measured_exit", "validation_status": "passed", "validation_passed": true, "evidence_complete": true}
-{"case": "sides_then_transport", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
-{"case": "restore_dirty_then_budget", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
-{"case": "entry_dirty_then_budget", "exit": 1, "state": "state_validation_failed", "validation_status": "failed", "validation_passed": false, "evidence_complete": true}
-Traceback (most recent call last):
-  File "probe.py", line 36, in <module>
-    binding_ok,detail=C._run_binding_ok(rr,doc['run_id'],h,doc,binding)
-TypeError: _run_binding_ok() takes 4 positional arguments but 5 were given

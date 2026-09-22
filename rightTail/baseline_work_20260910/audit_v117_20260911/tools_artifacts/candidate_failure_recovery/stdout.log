@@ -1,5 +1,0 @@
-{"tag": "serial", "parallel": 1, "exit": 1, "wall_s": 2.6}
-{"tag": "serial_resume1", "parallel": 1, "exit": 0, "wall_s": 1.8}
-{"tag": "parallel", "parallel": 2, "exit": 0, "wall_s": 3.1}
-{"passed": true, "failed": [], "required_absent": [], "n_checks": 41}
-{"run_dir": "../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4", "this_call_exit": {"serial": 0, "parallel": 0}, "last_exit_per_side": {"serial": 0, "parallel": 0}, "compare_exit": 0, "driver_exit": 0}

@@ -1,9 +1,0 @@
-{
-  "aggregator_rpc": 1766,
-  "evidence_rpc": 2464,
-  "missing_rpc": 698,
-  "aggregator_etherscan": 19,
-  "evidence_etherscan": 29,
-  "manifest_rows": 3,
-  "note": "Evidence for a started, not yet manifest-recorded child is omitted from the cumulative total."
-}

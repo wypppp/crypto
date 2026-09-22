@@ -1,8 +1,0 @@
-{
-  "snapshot_at": "2026-08-27T09:19:32.281529+00:00",
-  "complete_launches": 22,
-  "min_accepted_usd": 10000.0,
-  "successful_market_queries": 22,
-  "failed_market_queries": {},
-  "complete": true
-}

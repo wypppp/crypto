@@ -1,7 +1,0 @@
-fake_launch: tag=parallel action=measure
-chain_id=1  finalized 快照 25900000  0x0000000000000000…
-  [2/2] idx=2 state=measured_exit 2.19s rpc=73
-  [1/2] idx=1 state=measured_exit 2.26s rpc=71
-
--> ../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/parallel.json
--> ../../../../tmp/rta-v117-tools-audit/candidate_failure_recovery/runs/offline_20260911T064429Z-78ded4/parallel.evidence.jsonl  (488 条证据)

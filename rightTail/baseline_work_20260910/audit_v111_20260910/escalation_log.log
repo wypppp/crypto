@@ -1,2 +1,0 @@
-停机后仍有 1 个在途请求关不掉，强制退出（退出码 3）。证据保留到已 fsync 的前缀。
-{"callback_entered": true, "writer_lock_held": true, "exit_attempted_while_lock_held": false, "callback_blocked": true, "exit_after_lock_released": [3]}

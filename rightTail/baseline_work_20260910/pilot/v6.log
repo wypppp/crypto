@@ -1,6 +1,0 @@
-chain_id=1  finalized 快照 25943726  0x0ea22700eb4f8f7d…
-  [1/1] idx=478595 state=decode_error 10.49s rpc=2
-状态校验未通过 1 个：[478595] —— 必需检查失败或无法完成，验收不通过
-
--> pilot/v6_one.json
--> pilot/v6_one.evidence.jsonl  (21 条证据)

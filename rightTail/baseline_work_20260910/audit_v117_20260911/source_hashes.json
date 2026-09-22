@@ -1,9 +1,0 @@
-{
-  "pilot_measure.py": "d9dfb8f098a4d42792a9cf55dac6601a475ad1b8e7bf4a175a36ff695b7e2db9",
-  "evidence.py": "1fe5c43c57420b1213c7f272619f844469bc95a8c39f196d236ef2e9f5f7420d",
-  "realchain_tools/compare_runs.py": "c09b69093a9baa56fd9c5fa8de0bb0f3b60ee24757525bd31ee6a058dee3111a",
-  "realchain_tools/run_compare.py": "eb6c2c50f93fdc02a1710d656b65b0e330aa7dac862cc376ff20bbc7326a147d",
-  "realchain_tools/fake_launch.py": "4922371e62a123cf73ab206f6a81210c32b5253531664d566875b3028589e71f",
-  "MEASUREMENT_SPEC.v1.17.md": "7cf15793c7626ce725c133ce748920998083bb46b32ef6913f17604a1ada3542",
-  "MEASUREMENT_SPEC.v1.16.md": "2a6c5dcf613d263f8ec9067b047805e0c675a6b6df159896414b0bde4b756606"
-}

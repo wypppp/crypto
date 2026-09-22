@@ -2,7 +2,7 @@
 
 > **2026-09-21 执行方更新：请运行 v1，不运行 v0。**先运行 [V_failed_evt_check_20260601.sql](V_failed_evt_check_20260601.sql)，结果为"失败组 0 笔、对照组 10 笔"才运行 `H1_S0_v1_<day>.sql`。绑定证据、v1 的 5 处改动、本地 DuckDB 逻辑核验和运行顺序见 [S0_v1_核验.md](S0_v1_核验.md)。下文是 v0 原说明，保留作为记录；其中"表列待核实"已由核验文档回答。
 
-[H1_S0_2026-06-01.sql](H1_S0_2026-06-01.sql) 只枚举 6 月 1 日创建队列中的首个合格事件，不计算收益。规格见[H1 执行规格](../../../audits/RT_20260921/ignition_review/H1_执行规格_v0.md)。
+[H1_S0_2026-06-01.sql](H1_S0_2026-06-01.sql) 只枚举 6 月 1 日创建队列中的首个合格事件，不计算收益。规格见[H1 执行规格](../../audits/RT_20260921/ignition_review/H1_执行规格_v0.md)。
 
 **状态：本地 Trino 方言语法检查通过，未在 Dune 执行，未验证实际 schema/执行计划。**需要核实 DepositEvent、WithdrawEvent 两张 decoded 表，以及 BuyEvent 的 `quote_amount_in_with_lp_fee` 列。其名称来自本地 IDL 和项目已有命名，不能把本地 IDL 当成 Dune 表已存在的证据；Dune 编辑器绑定检查未通过时不启动扫描。既有四张主要表的字段沿用 F2/F3，但本查询没有复用其收益输出。
 
@@ -24,7 +24,7 @@
 | `5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump` | 06-03 06:21:28 | 4889866666 | 0 |
 | `BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump` | 06-06 22:55:54 | 4406666666 | 2.190296023 |
 
-单日 6 月 1 日草稿应覆盖 B1C2 和其对照。其余两行属于不同创建日，不要求它们出现在这条结果中。旧 `quote_amount_in − protocol_fee − coin_creator_fee` 在 B1C2 首单与实际池余额不符，不能用作本查询默认净流入。更广的本地金额对账仍有少量差额/缺失，见[解码记录](../../../audits/RT_20260921/ignition_review/EVENT_DECODE_RESULTS.md)；上述对账不是声称所有交易都已正确解码。
+单日 6 月 1 日草稿应覆盖 B1C2 和其对照。其余两行属于不同创建日，不要求它们出现在这条结果中。旧 `quote_amount_in − protocol_fee − coin_creator_fee` 在 B1C2 首单与实际池余额不符，不能用作本查询默认净流入。更广的本地金额对账仍有少量差额/缺失，见[解码记录](../../audits/RT_20260921/ignition_review/EVENT_DECODE_RESULTS.md)；上述对账不是声称所有交易都已正确解码。
 
 ## 执行顺序与费用
 

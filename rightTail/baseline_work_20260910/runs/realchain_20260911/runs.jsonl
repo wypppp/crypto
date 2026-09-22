@@ -1,3 +1,0 @@
-{"tag":"serial","parallel":1,"exit":1,"wall_s":870.4,"checkpoint":"runs/realchain_20260911/serial.checkpoint.jsonl"}
-{"tag":"parallel","parallel":2,"exit":1,"wall_s":2.5,"checkpoint":"runs/realchain_20260911/parallel.checkpoint.jsonl"}
-{"tag":"resume_serial","parallel":1,"exit":1,"wall_s":2.5,"checkpoint":"runs/realchain_20260911/serial.checkpoint.jsonl"}

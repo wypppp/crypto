@@ -1,3 +1,0 @@
-requests>=2.28,<3
-# Required before the 14-day experiment; REST polling is smoke-test only.
-websocket-client>=1.8,<2

@@ -1,4 +1,0 @@
-exit=0
-Source hashes match final files.
-Offline recheck of saved live responses: 34 unique events, indices 521010..521043, correct range and boundary counts.
-No attribution or coverage report created.
