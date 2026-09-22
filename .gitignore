@@ -9,14 +9,14 @@
 /1.md
 __pycache__/
 node_modules/
-# 付费原始数据：不进 git，备份在 D:\ancillary_backup\
-RT/case_timing/raw/full24h_*.jsonl.gz
-RT/case_timing/raw/pf_coin_*.json
-RT/case_timing/raw/failed24h_*.jsonl.gz
-RT/case_timing/raw/ext_*.jsonl.gz
+# 付费原始数据（Helius 逐笔）：不进 git，备份在 D:\ancillary_backup\
+**/raw/full24h_*.jsonl.gz
+**/raw/pf_coin_*.json
+**/raw/failed24h_*.jsonl.gz
+**/raw/ext_*.jsonl.gz
 # MELT 数据包（>100MB，超出 GitHub 上限）：只留在本地和仓库外备份
-RT/dq10/raw/melt_bundle/bundle.zip
-RT/dq10/raw/melt_bundle/bundle/first_sig_signer.jsonl
-RT/dq10/raw/melt_bundle/bundle/bundle2sig_filtered.pkl
+**/melt_bundle/bundle.zip
+**/melt_bundle/bundle/first_sig_signer.jsonl
+**/melt_bundle/bundle/bundle2sig_filtered.pkl
 # 审计快照可由 git 历史重建，不再提交
-RT/audits/RT_20260920/snapshot/
+RT/3_审计/2026-09-20_研究与决策审计/snapshot/
