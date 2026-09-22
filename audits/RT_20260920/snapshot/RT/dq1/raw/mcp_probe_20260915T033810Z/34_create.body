@@ -1,4 +1,0 @@
-event: message
-id: 658fb33a-3ec6-4db5-a486-232053920642
-data: {"result":{"content":[{"type":"text","text":"Your account is read-only. Upgrade to create content or run queries."}],"isError":true},"jsonrpc":"2.0","id":204}
-

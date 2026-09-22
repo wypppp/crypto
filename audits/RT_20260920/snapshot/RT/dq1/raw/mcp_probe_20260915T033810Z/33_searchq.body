@@ -1,4 +1,0 @@
-event: message
-id: b443006d-e7b1-4311-80e9-77e9f3034af4
-data: {"result":{"content":[{"type":"text","text":"MCP error -32602: Output validation error: Invalid structured content for tool searchDuneQueries: Too small: expected number to be >=0 at results[8].owner.id"}],"isError":true},"jsonrpc":"2.0","id":203}
-

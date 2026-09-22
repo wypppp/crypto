@@ -1,8 +1,0 @@
-{
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "@meteora-ag/dynamic-bonding-curve-sdk": "1.5.12",
-    "@meteora-ag/cp-amm-sdk": "latest"
-  }
-}

@@ -1,7 +1,0 @@
-day,mints_union,mints_createevent,mints_createcall,event_only,call_only,via_create_only,via_create_v2_only,mints_with_dup_createevent,mints_no_trade_day_or_next,mints_with_trade,first_trade_not_after_create_time,trades_per_traded_mint_p50,n_create_vsr,n_create_vqr,n_create_quote_mint,create_vsr_min_div1e9,create_vsr_p50_div1e9,create_vsr_max_div1e9,create_vtr_p50_div1e6,create_rtr_p50_div1e6,create_supply_p50_div1e6,create_vqr_p50_raw,create_quote_mints,token_programs
-2024-03-01,22,0,22,0,22,22,0,0,20,2,0,6,0,0,0,,,,,,,,,
-2024-09-01,5906,5906,5906,0,0,5906,0,0,0,5906,5905,20,0,0,0,,,,,,,,,
-2025-03-01,20188,20188,20188,0,0,20188,0,0,30,20158,20082,17,0,0,0,,,,,,,,,
-2025-09-01,18334,18334,18334,0,0,18334,0,0,24,18310,18172,16,0,0,0,,,,,,,,,
-2026-03-01,26003,26003,365,25638,0,365,0,0,901,25102,24826,12,26003,0,0,30,30,30,1073000000,793100000,1000000000,,,
-2026-09-01,36202,36202,36202,0,0,120,36082,0,2914,33288,32579,19,36202,36202,36202,4.292,30,30,1073000000,793100000,1000000000,30000000000,"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v,11111111111111111111111111111111","TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA,TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"

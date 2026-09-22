@@ -1,4 +1,0 @@
-event: message
-id: 7fbb0b12-203c-4512-8265-7a9506888049
-data: {"result":{"content":[{"type":"text","text":"MCP error -32602: Input validation error: Invalid arguments for tool searchDuneQueries: Invalid input: expected string, received undefined at search_string"}],"isError":true},"jsonrpc":"2.0","id":16}
-

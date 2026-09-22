@@ -1,6 +1,0 @@
-day,completed_mints,completed_dup_rows,with_migrate_call,with_canonical_createpool,with_migration_event,with_no_pumpswap_evidence,createpool_pool_eq_call_pool,createpool_pool_eq_event_pool,multi_pool_mints,createpool_before_complete,lag_complete_to_pool_s_p50,lag_complete_to_pool_s_p90,lag_complete_to_pool_s_max,migrate_via_values,complete_quote_mints
-2024-09-01,71,0,0,0,0,71,0,0,0,0,,,,,
-2025-03-01,141,0,0,0,0,141,0,0,0,0,,,,,
-2025-09-01,139,0,0,135,0,4,0,0,0,0,0,1,1,,
-2026-03-01,258,0,258,228,258,0,228,228,0,0,0,1,2,migrate,
-2026-09-01,1209,0,1209,1194,1209,0,1194,1194,0,0,1,2,22,"migrate_v2,migrate","11111111111111111111111111111111,EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"

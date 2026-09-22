@@ -1,4 +1,0 @@
-event: message
-id: b23876dc-c2cd-4f66-91f1-cc6cdc326f8a
-data: {"result":{"protocolVersion":"2025-03-26","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true}},"serverInfo":{"name":"dune","version":"1.0.0"}},"jsonrpc":"2.0","id":11}
-

@@ -1,5 +1,0 @@
-{
- "endpoint": "GET https://api.dune.com/api/v1/query/4900691/results?limit=5",
- "http": "200",
- "note": "public query from dune.com/atmday/pumpfun-pumpswap; key read from /home/ancillary/.env, not logged"
-}
