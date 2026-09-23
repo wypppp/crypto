@@ -1,0 +1,46 @@
+{
+ "execution_id": "01M361N45SBHF8W0NZPDB4WVJD",
+ "query_id": 8813422,
+ "is_execution_finished": true,
+ "state": "QUERY_STATE_COMPLETED",
+ "submitted_at": "2026-09-23T02:31:28.186543Z",
+ "expires_at": "2026-12-22T02:35:40.831996Z",
+ "execution_started_at": "2026-09-23T02:34:38.50581807Z",
+ "execution_ended_at": "2026-09-23T02:35:40.831983458Z",
+ "result_metadata": {
+  "column_names": [
+   "kind",
+   "k",
+   "key",
+   "n",
+   "s_slot",
+   "v1",
+   "v2",
+   "v3",
+   "v4",
+   "v5",
+   "v6"
+  ],
+  "column_types": [
+   "varchar(4)",
+   "integer",
+   "varchar",
+   "varchar",
+   "varchar",
+   "varchar",
+   "varchar",
+   "varchar",
+   "varchar",
+   "varchar",
+   "varchar"
+  ],
+  "row_count": 1433,
+  "result_set_bytes": 174692,
+  "total_row_count": 1433,
+  "total_result_set_bytes": 174692,
+  "datapoint_count": 15763,
+  "pending_time_millis": 190319,
+  "execution_time_millis": 62326
+ },
+ "execution_cost_credits": 41.0425
+}

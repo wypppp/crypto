@@ -7,7 +7,7 @@ raw/dune/<name>_status.json (state, row count, bytes, execution cost if reported
 import json, re, sys, urllib.request
 from pathlib import Path
 
-HERE = Path(__file__).parent
+HERE = Path(__file__).resolve().parent
 KEY = re.search(r"^\s*DUNE_API_KEY\s*=\s*['\"]?([^'\"\s]+)", (HERE.parents[2] / ".env").read_text(), re.M).group(1)
 API = "https://api.dune.com/api/v1"
 
@@ -30,12 +30,14 @@ def main():
         sys.exit("not completed")
     if size is None or size > cap * 1e6:
         sys.exit(f"result size {size} bytes exceeds cap {cap} MB (or unknown): not downloading")
-    parts, off, page = [], 0, 30000
+    import csv                                            # JSON endpoint (the CSV endpoint returns 402 on this plan)
+    recs, cols, off, page = [], None, 0, 500          # large pages return 402 on this plan
     while off < rows:
-        b = get(f"/execution/{eid}/results/csv?limit={page}&offset={off}", raw=True).decode()
-        parts.append(b if off == 0 else b.split("\n", 1)[1])
-        off += page
-    (out / f"{name}.csv").write_text("".join(parts))
+        d = get(f"/execution/{eid}/results?limit={page}&offset={off}")
+        cols = d["result"]["metadata"]["column_names"]
+        recs += d["result"]["rows"]; off += page
+    with open(out / f"{name}.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=cols); w.writeheader(); w.writerows(recs)
     print("saved", out / f"{name}.csv")
 
 if __name__ == "__main__":
