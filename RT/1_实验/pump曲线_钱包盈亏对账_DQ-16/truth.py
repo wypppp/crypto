@@ -1,9 +1,17 @@
-"""DQ-16 §4: ground-truth per-transaction ledger for each sampled wallet from Helius full transactions.
+"""DQ-16 §4 (r1): ground-truth ledger for each sampled wallet from Helius full transactions.
 
-Per (wallet, tx):  F = total lamport change of the wallet plus every token account it owns (rent stays an
-asset, wSOL counts as SOL); fee (if fee payer); tip (lamports gained by Jito tip accounts); rent (lamports
-locked in the wallet's token accounts, wSOL amount excluded); program class; per-mint token delta.
-Outputs results/truth_tx.csv and results/truth_tok.csv (one row per wallet, tx, mint with delta != 0).
+results/truth_tx.csv  one row per (wallet, tx):
+  in_signers / fee_payer   the wallet is among the tx signers / is the fee payer (first account key)
+  fee_paid                 meta.fee if fee payer, else 0
+  tip                      lamports gained by Jito tip accounts, if the wallet signed
+  d_wallet                 lamport change of the wallet account
+  d_lam_tok, d_lam_wsol    lamport change of wallet-owned token accounts (non-wSOL = rent; wSOL = rent + wrapped SOL)
+  d_wsol_raw               wrapped-SOL amount change in wallet-owned wSOL accounts
+  F                        d_wallet + d_lam_tok + d_lam_wsol  (all value held by the wallet and its token accounts)
+  pump, amm, other_dex     programs invoked anywhere in the tx (other_dex: a fixed list of Solana DEX/aggregator ids)
+  touched                  any wallet-owned SOL/token balance or token-account lamports changed
+results/truth_tok.csv one row per (wallet, tx, mint != wSOL) where a wallet-owned token account of that mint appears:
+  pre_raw, post_raw, decimals (summed over the wallet's accounts of that mint)
 """
 import csv, gzip, json
 from collections import defaultdict
@@ -17,6 +25,16 @@ TIPS = {"HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe", "3AVi9Tg9Uo68tJfuvoKvqKN
         "96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5", "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
         "ADaUMid9yfUytqMBgopwjb2DTLSokTSzL1zt6iGPaS49", "ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt",
         "DttWaMuVvTiduZRnguLF7jNxTgiMBZ1hyAumKUiL2KRL", "DfXygSm4jCyNCybVYYK6DwvWqjKee8pbDmJGcLWNDXjh"}   # Jito getTipAccounts, 09-23
+OTHER_DEX = {"675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",   # Raydium AMM v4
+             "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",   # Raydium CPMM
+             "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",   # Raydium CLMM
+             "LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj",    # Raydium LaunchLab
+             "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",    # Meteora DLMM
+             "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB",   # Meteora DAMM v1
+             "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",    # Meteora DAMM v2
+             "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",    # Meteora DBC
+             "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",    # Orca Whirlpool
+             "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"}    # Jupiter v6
 
 def keys_of(t):
     la = t["meta"].get("loadedAddresses") or {}
@@ -24,59 +42,57 @@ def keys_of(t):
 
 def programs(t, keys):
     msg, m = t["transaction"]["message"], t["meta"]
-    top = [keys[i["programIdIndex"]] for i in msg["instructions"]]
-    inner = [keys[i["programIdIndex"]] for g in (m.get("innerInstructions") or []) for i in g["instructions"]]
-    return top, set(top) | set(inner)
+    return {keys[i["programIdIndex"]] for i in msg["instructions"]} | \
+           {keys[i["programIdIndex"]] for g in (m.get("innerInstructions") or []) for i in g["instructions"]}
 
-def one(wallet, t):
+def one(k, wallet, t):
     m, keys = t["meta"], keys_of(t)
     pre, post = m["preBalances"], m["postBalances"]
     nsig = t["transaction"]["message"]["header"]["numRequiredSignatures"]
-    tb = defaultdict(dict)                                   # accountIndex -> {"pre":, "post":, "mint":, "owner":}
+    tb = defaultdict(dict)
     for side, lst in (("pre", m["preTokenBalances"]), ("post", m["postTokenBalances"])):
         for x in lst:
+            if x.get("owner") != wallet:
+                continue
             d = tb[x["accountIndex"]]
-            d[side] = int(x["uiTokenAmount"]["amount"]); d["mint"] = x["mint"]; d["owner"] = x.get("owner")
-    own = {i: d for i, d in tb.items() if d.get("owner") == wallet}
-    widx = [i for i, k in enumerate(keys) if k == wallet]
-    d_wallet = sum(post[i] - pre[i] for i in widx)
-    rent = dwsol = 0
-    tok = defaultdict(int)
-    for i, d in own.items():
-        dam = d.get("post", 0) - d.get("pre", 0)
+            d[side] = int(x["uiTokenAmount"]["amount"]); d["mint"] = x["mint"]; d["dec"] = x["uiTokenAmount"]["decimals"]
+    d_wallet = sum(post[i] - pre[i] for i, key in enumerate(keys) if key == wallet)
+    d_lam_tok = d_lam_wsol = d_wsol_raw = 0
+    mints = defaultdict(lambda: {"pre_raw": 0, "post_raw": 0, "decimals": None})
+    for i, d in tb.items():
         dl = post[i] - pre[i]
         if d["mint"] == WSOL:
-            dwsol += dam; rent += dl - dam
+            d_lam_wsol += dl; d_wsol_raw += d.get("post", 0) - d.get("pre", 0)
         else:
-            rent += dl
-            if dam:
-                tok[d["mint"]] += dam
-    F = d_wallet + rent + dwsol
-    signer = wallet in keys[:nsig]
-    tip = sum(post[i] - pre[i] for i, k in enumerate(keys) if k in TIPS) if signer else 0
-    top, allp = programs(t, keys)
-    cls = "pump" if PUMP in allp else "amm" if AMM in allp else ("transfer_only" if not signer else "other")
-    return dict(wallet=wallet, sig=t["transaction"]["signatures"][0], slot=t["slot"], txi=t.get("transactionIndex"),
-                ts=t["blockTime"], ok=m["err"] is None, fee_payer=keys[0] == wallet, signer=signer,
-                fee=m["fee"] if keys[0] == wallet else 0, tip=tip, rent=rent, dwsol=dwsol, d_wallet=d_wallet, F=F,
-                cls=cls, n_mints=len(tok), top=";".join(sorted(set(top)))), tok
+            d_lam_tok += dl
+            r = mints[d["mint"]]
+            r["pre_raw"] += d.get("pre", 0); r["post_raw"] += d.get("post", 0); r["decimals"] = d["dec"]
+    in_signers = wallet in keys[:nsig]
+    progs = programs(t, keys)
+    touched = bool(d_wallet or d_lam_tok or d_lam_wsol or any(r["pre_raw"] != r["post_raw"] for r in mints.values()))
+    row = dict(k=k, wallet=wallet, sig=t["transaction"]["signatures"][0], slot=t["slot"], txi=t.get("transactionIndex"),
+               ok=m["err"] is None, in_signers=in_signers, fee_payer=keys[0] == wallet,
+               fee_paid=m["fee"] if keys[0] == wallet else 0,
+               tip=sum(post[i] - pre[i] for i, key in enumerate(keys) if key in TIPS) if in_signers else 0,
+               d_wallet=d_wallet, d_lam_tok=d_lam_tok, d_lam_wsol=d_lam_wsol, d_wsol_raw=d_wsol_raw,
+               F=d_wallet + d_lam_tok + d_lam_wsol,
+               pump=PUMP in progs, amm=AMM in progs, other_dex=bool(progs & OTHER_DEX), touched=touched)
+    return row, mints
 
 def main():
+    ks = {r["wallet"]: int(r["k"]) for r in csv.DictReader(open(HERE / "raw" / "sample.csv"))}
     txrows, tokrows = [], []
     for f in sorted((HERE / "raw" / "helius").glob("*.jsonl.gz")):
         w = f.name.split(".")[0]
         for line in gzip.open(f, "rt"):
-            t = json.loads(line)
-            r, tok = one(w, t)
+            r, mints = one(ks[w], w, json.loads(line))
             txrows.append(r)
-            for mint, dam in tok.items():
-                tokrows.append(dict(wallet=w, sig=r["sig"], slot=r["slot"], txi=r["txi"], mint=mint, d_tok=dam,
-                                    ok=r["ok"], cls=r["cls"]))
-    out = HERE / "results"
+            for mint, v in mints.items():
+                tokrows.append(dict(k=r["k"], sig=r["sig"], slot=r["slot"], txi=r["txi"], mint=mint, **v))
     for name, rows in (("truth_tx.csv", txrows), ("truth_tok.csv", tokrows)):
-        with open(out / name, "w", newline="") as fh:
+        with open(HERE / "results" / name, "w", newline="") as fh:
             wr = csv.DictWriter(fh, fieldnames=list(rows[0].keys())); wr.writeheader(); wr.writerows(rows)
-    print(len(txrows), "tx rows;", len(tokrows), "token rows")
+    print(len({r['k'] for r in txrows}), "wallets;", len(txrows), "tx rows;", len(tokrows), "token rows")
 
 if __name__ == "__main__":
     main()
