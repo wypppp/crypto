@@ -68,7 +68,7 @@
 | `helius.py` | Helius 调用（从 H1 复制，`.env` 按键名正则读取） |
 | `sample.py`、`raw/sample.csv`、`raw/sample_draws.csv` | 抽样脚本、冻结名单、全部抽取记录 |
 | `fetch.py`、`raw/fetch_log.csv` | 取 30 个地址 06-07 全部交易；`raw/helius/` 原始返回不进 git |
-| `truth.py` → `results/truth_tx.csv`、`truth_tok.csv` | 真值账本 |
+| `truth.py` → `results/truth_tx.csv`、`truth_tok.csv` | 真值账本（30 个地址 66,863 笔交易，其中失败 4,245 笔、非本地址付费 13,487 笔；两文件共约 27 MB，不进 git，由 `truth.py` 从 `raw/helius/` 重建）。Helius 实耗约 8 千 credits |
 | `make_sql.py` → `sql/Q1_events_transfers.sql`、`sql/Q2_transactions.sql` | Dune 查询（汇总输出） |
 | `dune_get.py` | 下载 Dune 结果：先读大小，>1.5 MB 拒绝下载，记录执行扣费 |
 | `reconcile.py`、`test_reconcile.py` | 对账；模拟测试（用真值按 SQL 口径造“完美 Dune 结果”，应判能测，注入错误应被抓出） |

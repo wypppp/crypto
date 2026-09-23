@@ -116,6 +116,7 @@ def main():
     out["C2c 他人签名交易的 SOL 变化一致的地址（容差 1000/笔）"] = f"{c2c.ok.sum()}/{len(c2c)}"; fails["C2c"] = (~c2c.ok).sum()
     tt_tok = tk[~tk.fee_payer].assign(d=lambda x: x.post_raw - x.pre_raw).groupby(["k", "mint"]).d.sum().reset_index()
     tt_tok = tt_tok[tt_tok.d != 0]
+    tt_tok["d"] = [Dec(int(v)) for v in tt_tok.d]                 # exact: raw amounts exceed 2**53, outer join would cast to float
     dtok = tch[~tch.mint.isin(["null", WSOL])].groupby(["k", "mint"]).net.sum().reset_index()
     dtok = dtok[dtok.net != 0]                                    # symmetric with the truth side (net != 0 only)
     j = outer(tt_tok, dtok, ["k", "mint"])

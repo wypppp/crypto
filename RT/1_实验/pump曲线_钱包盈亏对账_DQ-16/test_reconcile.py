@@ -33,7 +33,9 @@ tn = tk[~tk.fee_payer].assign(d=lambda x: x.post_raw - x.pre_raw)
 for (k, m), g in tn.groupby(["k", "mint"]):
     q1.append(dict(kind="touch", k=k, key=f"{m}|spl_token", v1=g.d.clip(lower=0).sum(), v2=(-g.d.clip(upper=0)).sum()))
 cols = ["kind", "k", "key", "n", "s_slot", "v1", "v2", "v3", "v4", "v5", "v6"]
-Q1, Q2 = pd.DataFrame(q1).reindex(columns=cols), pd.DataFrame(q2).reindex(columns=cols)
+strs = lambda rows: [{c: (None if v is None else str(int(v)) if hasattr(v, "__int__") and not isinstance(v, (str, float)) else v)
+                      for c, v in r.items()} for r in rows]                 # keep integers exact (no float round-trip)
+Q1, Q2 = pd.DataFrame(strs(q1), dtype=object).reindex(columns=cols), pd.DataFrame(strs(q2), dtype=object).reindex(columns=cols)
 
 def run(q1, q2, label):
     d = Path(tempfile.mkdtemp()); (d / "dune").mkdir(); (d / "res").mkdir()
