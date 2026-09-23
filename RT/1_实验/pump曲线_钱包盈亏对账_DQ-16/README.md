@@ -89,5 +89,5 @@
 |---|---|
 | Helius | 30/30 个地址取全；`getTransactionsForAddress` 762 次（按 10 credits/次计 7,620），另 getBlock、getBlockTime 等约 350 次 |
 | Dune Q1 | query 8813378，execution `01M361GJY81114T6FN5SN7YTZE`，**7.2579** credits，1,665 行、157,551 字节、18,315 个数据点 |
-| Dune Q2 | query 8813422，execution `01M361N45SBHF8W0NZPDB4WVJD`，**41.0425** credits，1,433 行、174,692 字节、15,763 个数据点。卡定单次上限 20，用户运行时设 50；按卡定上限的结论应是“这版查询在 20 预算下跑不完”。规模含义：签名集扫描一天约 41 credits，A/B 两周仅这一项就约 575 |
+| Dune Q2 | query 8813422，execution `01M361N45SBHF8W0NZPDB4WVJD`，**41.0425** credits，1,433 行、174,692 字节、15,763 个数据点。卡定单次上限 20，用户运行时设 50；按卡定上限的结论应是“这版查询在 20 预算下跑不完”。规模含义：签名集扫描一天约 41 credits，按此外推 A/B 两周仅这一项约 575（估算） |
 | 下载 | 最终由用户从 Dune 网页导出（`raw/events_transfers.csv`、`raw/Q2_transactions.csv`，行数与执行记录一致），控制台总用量 851.028。此前：CSV 接口返回 402；JSON 接口小请求可用（试探共取约 1,100 个数据点），整页请求返回 402：“This api request would exceed your configured datapoint limit per billing cycle.” 即账户设置的 API 数据点上限不够。**未绕过该上限**，待用户在 Dune 订阅设置里调整，或从网页导出后放到 `raw/dune/Q1.csv`、`Q2.csv` |
