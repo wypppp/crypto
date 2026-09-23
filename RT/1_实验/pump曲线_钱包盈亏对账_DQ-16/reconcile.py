@@ -17,6 +17,7 @@ R = Path(sys.argv[2]) if len(sys.argv) > 2 else HERE / "results"
 sys.path.insert(0, str(HERE))
 TOL = 1000
 WSOL = "So11111111111111111111111111111111111111112"
+NATIVE = "So11111111111111111111111111111111111111111"   # tokens_solana.transfers: native SOL (token_version native)
 B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 def b58(b):
@@ -26,18 +27,20 @@ def b58(b):
     return "1" * (len(b) - len(b.lstrip(b"\0"))) + s
 
 def pool_mints(pools):
-    """PumpSwap Pool account: base_mint at byte offset 43 (checked on Fkt8xV… -> BUvu…)."""
-    cache = R / "pool_mint.csv"
-    m = pd.read_csv(cache).set_index("pool").mint.to_dict() if cache.exists() else {}
+    """PumpSwap Pool account: base_mint at byte offset 43, quote_mint at 75 (checked on Fkt8xV… -> BUvu…/wSOL).
+    r3: 355/507 pools on 06-07 have base = wSOL, so map each pool to its non-wSOL side and flag reversed pools."""
+    cache = R / "pool_mint2.csv"
+    m = pd.read_csv(cache).set_index("pool")[["base", "quote"]].to_dict("index") if cache.exists() else {}
     todo = [p for p in pools if p not in m]
     if todo:
         import helius as H
         for i in range(0, len(todo), 100):
             vals = H.rpc("getMultipleAccounts", [todo[i:i + 100], {"encoding": "base64"}])["value"]
             for p, v in zip(todo[i:i + 100], vals):
-                m[p] = b58(base64.b64decode(v["data"][0])[43:75]) if v else None
-        pd.Series(m, name="mint").rename_axis("pool").to_csv(cache)
-    return m
+                raw = base64.b64decode(v["data"][0]) if v else None
+                m[p] = {"base": b58(raw[43:75]) if raw else None, "quote": b58(raw[75:107]) if raw else None}
+        pd.DataFrame.from_dict(m, orient="index").rename_axis("pool").to_csv(cache)
+    return {p: (d["quote"] if d["base"] == WSOL else d["base"], d["base"] == WSOL) for p, d in m.items()}
 
 def D(x):
     return Dec(str(x)) if pd.notna(x) and str(x) not in ("", "nan", "None") else Dec(0)
@@ -74,7 +77,11 @@ def main():
     a = trade.groupby(["k", "mint"]).agg(n=("sig", "nunique"), s_slot=("slot", "sum")).reset_index()
     ev = q1[q1.kind == "ev"].copy()
     pm = pool_mints(sorted(ev[ev.v1 == "amm"].key.unique()))
-    ev["mint"] = [key if v == "curve" else pm.get(key) for key, v in zip(ev.key, ev.v1)]
+    ev["mint"] = [key if v == "curve" else pm.get(key, (None, False))[0] for key, v in zip(ev.key, ev.v1)]
+    ev["reversed"] = [v == "amm" and pm.get(key, (None, False))[1] for key, v in zip(ev.key, ev.v1)]
+    # user-side SOL: normal pools use v5 (user quote in/out); base=wSOL pools: wSOL received on buys - paid on sells
+    ev["sol"] = [D(b) - D(sl) if r else D(x) for r, b, sl, x in zip(ev.reversed, ev.v3, ev.v4, ev.v5)]
+    out["C1c 其中 base=wSOL 的反向池（池数/总池数）"] = f"{sum(r for _, r in pm.values())}/{len(pm)}"
     ev[["n", "s_slot"]] = ev[["n", "s_slot"]].astype(float)
     d = ev.groupby(["k", "mint"]).agg(n=("n", "sum"), s_slot=("s_slot", "sum")).reset_index()
     j = outer(a, d, ["k", "mint"])
@@ -105,7 +112,7 @@ def main():
     tch = q1[q1.kind == "touch"].copy()
     tch["mint"] = tch.key.str.split("|").str[0]
     tch["net"] = [D(i) - D(o) for i, o in zip(tch.v1, tch.v2)]
-    nat = tch[tch.mint.isin(["null", WSOL])].groupby("k").net.sum()
+    nat = tch[tch.mint.isin(["null", WSOL, NATIVE])].groupby("k").net.sum()
     tt_t = T.groupby("k").F.sum(); ntouch = T.groupby("k").size()
     c2c = pd.DataFrame({"k": ks})
     c2c["truth"] = [int(tt_t.get(k, 0)) for k in ks]
@@ -117,7 +124,7 @@ def main():
     tt_tok = tk[~tk.fee_payer].assign(d=lambda x: x.post_raw - x.pre_raw).groupby(["k", "mint"]).d.sum().reset_index()
     tt_tok = tt_tok[tt_tok.d != 0]
     tt_tok["d"] = [Dec(int(v)) for v in tt_tok.d]                 # exact: raw amounts exceed 2**53, outer join would cast to float
-    dtok = tch[~tch.mint.isin(["null", WSOL])].groupby(["k", "mint"]).net.sum().reset_index()
+    dtok = tch[~tch.mint.isin(["null", WSOL, NATIVE])].groupby(["k", "mint"]).net.sum().reset_index()
     dtok = dtok[dtok.net != 0]                                    # symmetric with the truth side (net != 0 only)
     j = outer(tt_tok, dtok, ["k", "mint"])
     j["ok"] = [D(a_) == D(b_) and m == "both" for a_, b_, m in zip(j.d, j.net, j._merge)]
@@ -144,8 +151,8 @@ def main():
     c4["failfee_ok"] = [abs(int(ffail_t.get(k, 0)) - int(D(w.v3.get(k)))) <= TOL and int(nfail_t.get(k, 0)) == int(D(w.v1.get(k)))
                         for k in ks]
     c4["tip_ok"] = [abs(int(tip_t.get(k, 0)) - int(D(tip_d.get(k)))) <= TOL for k in ks]
-    evsol = ev.assign(s=[D(x) for x in ev.v5]).groupby("k").s.sum()
-    evvol = ev.assign(s=[abs(D(x)) for x in ev.v5]).groupby("k").s.sum()
+    evsol = ev.groupby("k").sol.sum()
+    evvol = ev.assign(s=[abs(x) for x in ev.sol]).groupby("k").s.sum()
     c4["resid"] = [int(Dec(int(tot_t.get(k, 0))) + nat.get(k, Dec(0)) - evsol.get(k, Dec(0))
                        + int(fee_t.get(k, 0)) + int(tip_t.get(k, 0))) for k in ks]
     c4["trade_vol"] = [int(evvol.get(k, Dec(0))) for k in ks]
