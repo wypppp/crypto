@@ -10,6 +10,8 @@ import re
 import sys
 import time
 import urllib.request
+import urllib.error
+import http.client
 from pathlib import Path
 
 
@@ -29,11 +31,12 @@ def get(path: str) -> dict:
     req = urllib.request.Request(
         API + path, headers={"X-Dune-API-Key": KEY}
     )
-    for attempt in range(4):
+    for attempt in range(8):
         try:
             with urllib.request.urlopen(req, timeout=90) as response:
                 return json.load(response)
-        except (ConnectionError, TimeoutError) as exc:
+        except (ConnectionError, TimeoutError, OSError, http.client.HTTPException,
+                urllib.error.HTTPError) as exc:
             if attempt == 3:
                 raise
             time.sleep(1 + attempt * 2)
