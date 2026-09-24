@@ -1,0 +1,48 @@
+{
+  "execution_id": "01M394P2WPPA6DPXQH1GT0R3DD",
+  "query_id": 8825854,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-24T07:22:08.662713Z",
+  "expires_at": "2026-12-23T07:23:14.314711Z",
+  "execution_started_at": "2026-09-24T07:22:10.187423217Z",
+  "execution_ended_at": "2026-09-24T07:23:14.314696711Z",
+  "result_metadata": {
+    "column_names": [
+      "mint",
+      "hour_start",
+      "project",
+      "pool_id",
+      "quote_mint",
+      "pool_rank",
+      "n_valid_trades",
+      "valid_usd_volume",
+      "share_of_valid_usd_volume",
+      "pool_vwap_cap_usd",
+      "last_trade_at",
+      "last_tx_id"
+    ],
+    "column_types": [
+      "varchar(44)",
+      "timestamp(0)",
+      "varchar",
+      "varchar",
+      "varchar",
+      "bigint",
+      "bigint",
+      "double",
+      "double",
+      "double",
+      "timestamp(3) with time zone",
+      "varchar"
+    ],
+    "row_count": 15,
+    "result_set_bytes": 4236,
+    "total_row_count": 15,
+    "total_result_set_bytes": 4236,
+    "datapoint_count": 180,
+    "pending_time_millis": 1524,
+    "execution_time_millis": 64127
+  },
+  "execution_cost_credits": 12.879423077
+}
