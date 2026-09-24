@@ -268,7 +268,7 @@ WITH sig AS (
       AND minute >= TIMESTAMP '2026-07-01 00:00:00' AND minute < TIMESTAMP '2026-10-01 00:00:00'
     GROUP BY minute
 ), tr AS (
-    SELECT t.block_time, t.tx_id, t.project_program_id AS pool, leg.mint,
+    SELECT t.block_time, t.tx_id, t.project_program_id AS pool, t.project, t.version, leg.mint,
            IF(t.token_bought_mint_address = leg.mint, t.token_sold_mint_address,
               t.token_bought_mint_address) AS quote_mint,
            IF(t.token_bought_mint_address = leg.mint, t.token_bought_amount,
@@ -284,116 +284,132 @@ WITH sig AS (
       AND t.token_bought_mint_address <> t.token_sold_mint_address
 ), p1v AS (
     SELECT tr.mint, tr.block_time, tr.tx_id, tr.pool,
+           (tr.project = 'pumpswap' OR (tr.project = 'raydium' AND tr.version IN (4, 5))) AS is_cp,
            CASE WHEN tr.quote_mint = 'So11111111111111111111111111111111111111112' THEN tr.quote_amount * s.sol_usd
                 ELSE tr.quote_amount END AS quote_usd,
-           tr.token_amount,
-           1e9 * (CASE WHEN tr.quote_mint = 'So11111111111111111111111111111111111111112' THEN tr.quote_amount * s.sol_usd
-                       ELSE tr.quote_amount END) / tr.token_amount AS cap
+           tr.token_amount
     FROM tr
     LEFT JOIN sol_minute s
       ON tr.quote_mint = 'So11111111111111111111111111111111111111112' AND s.minute = date_trunc('minute', tr.block_time)
     WHERE tr.token_amount > 0
       AND ((tr.quote_mint = 'So11111111111111111111111111111111111111112' AND tr.quote_amount >= 0.001 AND s.sol_usd > 0)
         OR (tr.quote_mint IN ('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB') AND tr.quote_amount >= 0.10))
-), hp AS (
-    SELECT mint, date_trunc('hour', block_time) AS h, pool, SUM(quote_usd) AS usd
+), ph AS (
+    SELECT mint, pool, date_trunc('hour', block_time) AS h, bool_or(is_cp) AS is_cp,
+           SUM(quote_usd) AS usd, SUM(token_amount) AS tok, COUNT(*) AS n,
+           MIN_BY(1e9 * quote_usd / token_amount, block_time) AS f_cap,
+           MIN(block_time) AS f_time, MIN_BY(tx_id, block_time) AS f_tx,
+           MIN_BY(1e9 * quote_usd / token_amount, block_time)
+               FILTER (WHERE block_time >= date_trunc('hour', block_time) + INTERVAL '10' SECOND) AS f10_cap,
+           MIN(block_time) FILTER (WHERE block_time >= date_trunc('hour', block_time) + INTERVAL '10' SECOND) AS f10_time,
+           MIN_BY(tx_id, block_time)
+               FILTER (WHERE block_time >= date_trunc('hour', block_time) + INTERVAL '10' SECOND) AS f10_tx,
+           MIN_BY(1e9 * quote_usd / token_amount, block_time)
+               FILTER (WHERE block_time >= date_trunc('hour', block_time) + INTERVAL '5' MINUTE) AS f5_cap,
+           MIN(block_time) FILTER (WHERE block_time >= date_trunc('hour', block_time) + INTERVAL '5' MINUTE) AS f5_time,
+           MIN_BY(tx_id, block_time)
+               FILTER (WHERE block_time >= date_trunc('hour', block_time) + INTERVAL '5' MINUTE) AS f5_tx
     FROM p1v GROUP BY 1, 2, 3
-), mainpool AS (
-    SELECT mint, h, MAX_BY(pool, usd) AS pool FROM hp GROUP BY 1, 2
-), hourly AS (
-    SELECT mint, date_trunc('hour', block_time) AS h,
-           1e9 * SUM(quote_usd) / SUM(token_amount) AS c, COUNT(*) AS n
-    FROM p1v GROUP BY 1, 2
-), pf AS (
-    SELECT mint, pool, date_trunc('hour', block_time) AS h,
-           MIN_BY(cap, block_time) AS fcap, MIN(block_time) AS ftime,
-           MIN_BY(tx_id, block_time) AS ftx
-    FROM p1v GROUP BY 1, 2, 3
-), pn AS (
-    SELECT mint, pool, h,
-           LEAD(fcap) OVER (PARTITION BY mint, pool ORDER BY h) AS ncap,
-           LEAD(ftime) OVER (PARTITION BY mint, pool ORDER BY h) AS ntime,
-           LEAD(ftx) OVER (PARTITION BY mint, pool ORDER BY h) AS ntx
-    FROM pf
-), path AS (
-    SELECT s.mint, s.tier, s.signal_time, hr.h, hr.c, hr.n
-    FROM sig s JOIN hourly hr ON hr.mint = s.mint
-    WHERE hr.h >= s.signal_time AND hr.h < s.signal_time + INTERVAL '180' DAY
+), ph2 AS (
+    SELECT *,
+           SUM(usd) OVER (PARTITION BY mint, h) AS h_usd,
+           SUM(tok) OVER (PARTITION BY mint, h) AS h_tok,
+           SUM(n) OVER (PARTITION BY mint, h) AS h_n,
+           ROW_NUMBER() OVER (PARTITION BY mint, h ORDER BY is_cp DESC, usd DESC, pool) AS prk,
+           LEAD(h, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS h1,
+           LEAD(f_cap, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_cap,
+           LEAD(f_time, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_time,
+           LEAD(f_tx, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_tx,
+           LEAD(f10_cap, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_10_cap,
+           LEAD(f10_time, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_10_time,
+           LEAD(f10_tx, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_10_tx,
+           LEAD(f5_cap, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_5_cap,
+           LEAD(f5_time, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_5_time,
+           LEAD(f5_tx, 1) OVER (PARTITION BY mint, pool ORDER BY h) AS n1_5_tx,
+           LEAD(f_cap, 2) OVER (PARTITION BY mint, pool ORDER BY h) AS n2_cap,
+           LEAD(f_time, 2) OVER (PARTITION BY mint, pool ORDER BY h) AS n2_time,
+           LEAD(f_tx, 2) OVER (PARTITION BY mint, pool ORDER BY h) AS n2_tx
+    FROM ph
+), hm AS (
+    SELECT mint, h, pool, is_cp, h_n, h_usd, 1e9 * h_usd / h_tok AS c,
+           (h_n >= 5 AND h_usd >= 100.0) AS valid,
+           -- 下一小时起点（h+1h）之后，本池第一笔：路径行的退出成交（延迟≈10 秒）
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN COALESCE(n1_10_cap, n2_cap) ELSE n1_cap END AS x_cap,
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN COALESCE(n1_10_time, n2_time) ELSE n1_time END AS x_time,
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN COALESCE(n1_10_tx, n2_tx) ELSE n1_tx END AS x_tx,
+           -- 入场：本行若是穿越小时（h = t_s - 1h），t_s = h + 1h
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN COALESCE(n1_5_cap, n2_cap) ELSE n1_cap END AS e5_cap,
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN COALESCE(n1_5_time, n2_time) ELSE n1_time END AS e5_time,
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN COALESCE(n1_5_tx, n2_tx) ELSE n1_tx END AS e5_tx,
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN n2_cap ELSE n1_cap END AS e60_cap,
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN n2_time ELSE n1_time END AS e60_time,
+           CASE WHEN h1 = h + INTERVAL '1' HOUR THEN n2_tx ELSE n1_tx END AS e60_tx
+    FROM ph2 WHERE prk = 1
+), j AS (
+    SELECT s.mint, s.tier, s.signal_time, m.*,
+           m.h = s.signal_time - INTERVAL '1' HOUR AS is_entry,
+           m.h >= s.signal_time AND m.valid AS is_path
+    FROM sig s JOIN hm m
+      ON m.mint = s.mint
+     AND m.h >= s.signal_time - INTERVAL '1' HOUR
+     AND m.h < s.signal_time + INTERVAL '180' DAY
+    WHERE m.h = s.signal_time - INTERVAL '1' HOUR OR (m.h >= s.signal_time AND m.valid)
 ), b1 AS (
     SELECT *,
-           FIRST_VALUE(c) OVER (PARTITION BY mint, tier ORDER BY h
-                                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS c0
-    FROM path
+           FIRST_VALUE(c) OVER (PARTITION BY mint, tier, is_path ORDER BY h
+                                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS c0,
+           LEAD(h) OVER (PARTITION BY mint, tier, is_path ORDER BY h) AS next_h,
+           MAX(c) OVER (PARTITION BY mint, tier, is_path) AS maxc,
+           MAX_BY(h, c) OVER (PARTITION BY mint, tier, is_path) AS maxh,
+           COUNT(*) OVER (PARTITION BY mint, tier, is_path) AS nh
+    FROM j
 ), b2 AS (
     SELECT *, CAST(floor(ln(c / c0) / ln(1.02)) AS BIGINT) AS hb FROM b1
 ), b3 AS (
-    SELECT *, COALESCE(MAX(hb) OVER (PARTITION BY mint, tier ORDER BY h
+    SELECT *, COALESCE(MAX(hb) OVER (PARTITION BY mint, tier, is_path ORDER BY h
                         ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), -1000000) AS prev_hb
     FROM b2
 ), b4 AS (
     SELECT *, SUM(CASE WHEN hb > prev_hb THEN 1 ELSE 0 END)
-                OVER (PARTITION BY mint, tier ORDER BY h ROWS UNBOUNDED PRECEDING) AS seg,
+                OVER (PARTITION BY mint, tier, is_path ORDER BY h ROWS UNBOUNDED PRECEDING) AS seg,
               hb > prev_hb AS is_hi
     FROM b3
 ), b5 AS (
-    SELECT *, MAX(c) OVER (PARTITION BY mint, tier, seg ORDER BY h
+    SELECT *, MAX(c) OVER (PARTITION BY mint, tier, is_path, seg ORDER BY h
                            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS segmax
     FROM b4
 ), b6 AS (
     SELECT *, CAST(floor(ln(c / segmax) / ln(0.98)) AS BIGINT) AS lb FROM b5
 ), b7 AS (
-    SELECT *, COALESCE(MAX(lb) OVER (PARTITION BY mint, tier, seg ORDER BY h
+    SELECT *, COALESCE(MAX(lb) OVER (PARTITION BY mint, tier, is_path, seg ORDER BY h
                         ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), 0) AS prev_lb,
               MIN(CASE WHEN c <= 0.5 * segmax THEN h END)
-                OVER (PARTITION BY mint, tier) AS certain_h
+                OVER (PARTITION BY mint, tier, is_path) AS certain_h,
+              concat_ws(',',
+                IF(h + INTERVAL '1' HOUR <= signal_time + INTERVAL '1' DAY
+                   AND (next_h IS NULL OR next_h + INTERVAL '1' HOUR > signal_time + INTERVAL '1' DAY), 'D1', NULL),
+                IF(h + INTERVAL '1' HOUR <= signal_time + INTERVAL '7' DAY
+                   AND (next_h IS NULL OR next_h + INTERVAL '1' HOUR > signal_time + INTERVAL '7' DAY), 'D7', NULL),
+                IF(h + INTERVAL '1' HOUR <= signal_time + INTERVAL '30' DAY
+                   AND (next_h IS NULL OR next_h + INTERVAL '1' HOUR > signal_time + INTERVAL '30' DAY), 'D30', NULL),
+                IF(h + INTERVAL '1' HOUR <= signal_time + INTERVAL '90' DAY
+                   AND (next_h IS NULL OR next_h + INTERVAL '1' HOUR > signal_time + INTERVAL '90' DAY), 'D90', NULL),
+                IF(h + INTERVAL '1' HOUR <= signal_time + INTERVAL '180' DAY
+                   AND (next_h IS NULL OR next_h + INTERVAL '1' HOUR > signal_time + INTERVAL '180' DAY), 'D180', NULL)
+              ) AS hz
     FROM b6
-), prow AS (
-    SELECT b.mint, b.tier, b.signal_time, b.h, b.c, b.segmax, b.n,
-           CASE WHEN b.is_hi THEN 'hi' WHEN b.c <= 0.5 * b.segmax THEN 'dd50' ELSE 'lo' END AS kind,
-           x.ncap, x.ntime, x.ntx, m.pool
-    FROM b7 b
-    LEFT JOIN mainpool m ON m.mint = b.mint AND m.h = b.h
-    LEFT JOIN pn x ON x.mint = b.mint AND x.pool = m.pool AND x.h = b.h
-    WHERE (b.certain_h IS NULL OR b.h <= b.certain_h)
-      AND (b.is_hi OR (b.lb > b.prev_lb AND b.lb >= 1))
-), lags(lag_label, lag_s) AS (
-    VALUES ('L10s', 10), ('L5m', 300), ('L60m', 3600)
-), ent AS (
-    SELECT s.mint, s.tier, s.signal_time, l.lag_label,
-           MIN_BY(p.cap, p.block_time) AS ecap, MIN(p.block_time) AS etime,
-           MIN_BY(p.tx_id, p.block_time) AS etx, MIN(m.pool) AS pool
-    FROM sig s
-    CROSS JOIN lags l
-    JOIN mainpool m ON m.mint = s.mint AND m.h = s.signal_time - INTERVAL '1' HOUR
-    JOIN p1v p ON p.mint = s.mint AND p.pool = m.pool
-     AND p.block_time >= s.signal_time + l.lag_s * INTERVAL '1' SECOND
-     AND p.block_time < s.signal_time + l.lag_s * INTERVAL '1' SECOND + INTERVAL '24' HOUR
-    GROUP BY 1, 2, 3, 4
-), hz(hz_label, hz_d) AS (
-    VALUES ('D1', 1), ('D7', 7), ('D30', 30), ('D90', 90), ('D180', 180)
-), hzr AS (
-    SELECT p.mint, p.tier, p.signal_time, z.hz_label,
-           MAX_BY(p.c, p.h) AS hc, MAX(p.h) AS hh
-    FROM path p CROSS JOIN hz z
-    WHERE p.h + INTERVAL '1' HOUR <= p.signal_time + z.hz_d * INTERVAL '1' DAY
-      AND p.signal_time + z.hz_d * INTERVAL '1' DAY >= TIMESTAMP '2026-07-01 00:00:00'
-      AND p.signal_time + z.hz_d * INTERVAL '1' DAY < TIMESTAMP '2026-10-01 00:00:00'
-    GROUP BY 1, 2, 3, 4
-), summ AS (
-    SELECT mint, tier, signal_time, MAX(c) AS maxc, MAX_BY(h, c) AS maxh,
-           MAX_BY(c, h) AS lastc, MAX(h) AS lasth, COUNT(*) AS nh
-    FROM path GROUP BY 1, 2, 3
 )
-SELECT 'P' AS rt, mint, tier, signal_time, h AS t, kind AS k, c AS x1, segmax AS x2,
-       ncap AS x3, ntime AS t2, ntx AS s1, pool AS s2, n AS i1
-FROM prow
-UNION ALL
-SELECT 'E', mint, tier, signal_time, etime, lag_label, ecap, NULL, NULL, NULL, etx, pool, NULL
-FROM ent
-UNION ALL
-SELECT 'H', mint, tier, signal_time, hh, hz_label, hc, NULL, NULL, NULL, NULL, NULL, NULL
-FROM hzr
-UNION ALL
-SELECT 'S', mint, tier, signal_time, maxh, 'sum', maxc, lastc, NULL, lasth, NULL, NULL, nh
-FROM summ
-ORDER BY 2, 3, 4, 1, 5
+SELECT CASE WHEN is_entry THEN 'E' ELSE 'P' END AS rt,
+       mint, tier, signal_time, h, pool, is_cp, h_n, h_usd, c,
+       CASE WHEN is_entry THEN 'entry' WHEN is_hi THEN 'hi' WHEN c <= 0.5 * segmax THEN 'dd50'
+            WHEN lb > prev_lb AND lb >= 1 THEN 'lo' ELSE 'keep' END AS kind,
+       segmax, CASE WHEN is_entry THEN '' ELSE hz END AS hz,
+       CASE WHEN is_entry THEN FALSE ELSE next_h IS NULL END AS is_last, maxc, maxh, nh,
+       x_cap, x_time, x_tx,
+       e5_cap, e5_time, e5_tx, e60_cap, e60_time, e60_tx
+FROM b7
+WHERE is_entry
+   OR (is_path AND (
+          ((certain_h IS NULL OR h <= certain_h) AND (is_hi OR (lb > prev_lb AND lb >= 1)))
+          OR hz <> '' OR next_h IS NULL))
+ORDER BY mint, tier, h

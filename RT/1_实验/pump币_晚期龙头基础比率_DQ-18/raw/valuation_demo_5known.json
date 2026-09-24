@@ -1,0 +1,72 @@
+[
+ {
+  "coin": "FARTCOIN",
+  "venue": "raydium_v4",
+  "time": "2024-10-19T18:00:01",
+  "pool_sol": 2013.7,
+  "marginal_cap_musd": 16.585,
+  "fee_side": 0.0025,
+  "buy1400_avg_cap_musd": 16.7,
+  "buy1400_cost_vs_marginal_pct": 0.697,
+  "roundtrip_1400_loss_pct": 0.499,
+  "cap5_buy_usd": 7751,
+  "cap5_sell_usd": 7564,
+  "reserves_match_step1": true
+ },
+ {
+  "coin": "GOAT",
+  "venue": "raydium_v4",
+  "time": "2024-10-13T02:00:00",
+  "pool_sol": 3189.11,
+  "marginal_cap_musd": 28.38,
+  "fee_side": 0.0025,
+  "buy1400_avg_cap_musd": 28.537,
+  "buy1400_cost_vs_marginal_pct": 0.551,
+  "roundtrip_1400_loss_pct": 0.499,
+  "cap5_buy_usd": 11503,
+  "cap5_sell_usd": 11226,
+  "reserves_match_step1": true
+ },
+ {
+  "coin": "PNUT",
+  "venue": "raydium_v4",
+  "time": "2024-11-02T17:00:00",
+  "pool_sol": 4576.6,
+  "marginal_cap_musd": 63.083,
+  "fee_side": 0.0025,
+  "buy1400_avg_cap_musd": 63.359,
+  "buy1400_cost_vs_marginal_pct": 0.437,
+  "roundtrip_1400_loss_pct": 0.499,
+  "cap5_buy_usd": 18530,
+  "cap5_sell_usd": 18083,
+  "reserves_match_step1": true
+ },
+ {
+  "coin": "PENGUIN",
+  "venue": "pumpswap",
+  "time": "2026-01-23T23:00:00",
+  "pool_sol": 2690.44,
+  "marginal_cap_musd": 30.703,
+  "fee_side": 0.003,
+  "buy1400_avg_cap_musd": 30.921,
+  "buy1400_cost_vs_marginal_pct": 0.71,
+  "roundtrip_1400_loss_pct": 0.599,
+  "cap5_buy_usd": 8457,
+  "cap5_sell_usd": 8253,
+  "reserves_match_step1": true
+ },
+ {
+  "coin": "WHITEWHALE",
+  "venue": "pumpswap",
+  "time": "2025-12-26T23:00:00",
+  "pool_sol": 2524.25,
+  "marginal_cap_musd": 20.506,
+  "fee_side": 0.003,
+  "buy1400_avg_cap_musd": 20.661,
+  "buy1400_cost_vs_marginal_pct": 0.755,
+  "roundtrip_1400_loss_pct": 0.599,
+  "cap5_buy_usd": 7617,
+  "cap5_sell_usd": 7433,
+  "reserves_match_step1": true
+ }
+]
