@@ -1,0 +1,137 @@
+{
+  "execution_id": "01M396DYECQAH3PWHWBXRQ6ASJ",
+  "rows": [
+    {
+      "completed_at": "2024-04-30 00:59:26.000 UTC",
+      "created_at": "2024-04-30 00:57:38.000 UTC",
+      "hour_start": "2024-04-30 01:00:00.000 UTC",
+      "mint": "2JcXacFwt9mVAwBQ5nZkYwCyXQkRcdsYrDXn6hj22SbP",
+      "n_p1_valid": 10435,
+      "p1_median_cap_usd": 2259121.7290135515,
+      "p1_usd_volume": 7163206.100160052,
+      "p1_vwap_cap_usd": 1368331.4678455954,
+      "signal_time": "2024-04-30 02:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-27 18:41:55.000 UTC",
+      "created_at": "2024-04-27 18:40:14.000 UTC",
+      "hour_start": "2024-04-27 19:00:00.000 UTC",
+      "mint": "6pxT5UmTumQXBknjwSzLePRwBA5k8VGs68LiZwncC2mB",
+      "n_p1_valid": 10469,
+      "p1_median_cap_usd": 1667537.0510038019,
+      "p1_usd_volume": 3693511.3988813343,
+      "p1_vwap_cap_usd": 1559637.0692250493,
+      "signal_time": "2024-04-27 20:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-29 19:31:29.000 UTC",
+      "created_at": "2024-04-29 19:31:23.000 UTC",
+      "hour_start": "2024-04-29 21:00:00.000 UTC",
+      "mint": "7YbHBageaxpyR8jBFtzCqofTetZkZjouQPhgVPKJ8Fwx",
+      "n_p1_valid": 2713,
+      "p1_median_cap_usd": 2602959.2038378683,
+      "p1_usd_volume": 1846040.5120316206,
+      "p1_vwap_cap_usd": 2692447.3800380924,
+      "signal_time": "2024-04-29 22:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-28 15:07:50.000 UTC",
+      "created_at": "2024-04-28 15:01:39.000 UTC",
+      "hour_start": "2024-04-28 16:00:00.000 UTC",
+      "mint": "89KX9c3rNoW5sVnwMQvPPFgYKxpABupCSqXUtB1CW5J2",
+      "n_p1_valid": 10536,
+      "p1_median_cap_usd": 1190484.2830936816,
+      "p1_usd_volume": 3550089.3608879875,
+      "p1_vwap_cap_usd": 1136738.252305094,
+      "signal_time": "2024-04-28 17:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-27 04:21:11.000 UTC",
+      "created_at": "2024-04-27 04:15:01.000 UTC",
+      "hour_start": "2024-04-27 05:00:00.000 UTC",
+      "mint": "8ULCkCTUa3XXrNXaDVzPcja2tdJtRdxRr8T4eZjVKqk",
+      "n_p1_valid": 8862,
+      "p1_median_cap_usd": 1260666.8702580272,
+      "p1_usd_volume": 2640570.49695643,
+      "p1_vwap_cap_usd": 1055743.7544538926,
+      "signal_time": "2024-04-27 06:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-27 22:31:15.000 UTC",
+      "created_at": "2024-04-27 21:31:30.000 UTC",
+      "hour_start": "2024-04-28 23:00:00.000 UTC",
+      "mint": "9bxaVJmUwSc71j8Z2pvUL3UAr1s5fCnwUpvYhqV9jtmw",
+      "n_p1_valid": 922,
+      "p1_median_cap_usd": 1364707.8712177353,
+      "p1_usd_volume": 444163.7851673588,
+      "p1_vwap_cap_usd": 1255119.9674316247,
+      "signal_time": "2024-04-29 00:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-30 02:49:42.000 UTC",
+      "created_at": "2024-04-30 01:28:04.000 UTC",
+      "hour_start": "2024-04-30 14:00:00.000 UTC",
+      "mint": "9oUXhgFmW2HWqWHds1NoV3DKLY3AAtNevA3dP7PtyEbr",
+      "n_p1_valid": 1557,
+      "p1_median_cap_usd": 1018268.9774927953,
+      "p1_usd_volume": 309487.8015415391,
+      "p1_vwap_cap_usd": 1044915.320535511,
+      "signal_time": "2024-04-30 15:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-26 17:20:45.000 UTC",
+      "created_at": "2024-04-26 17:17:19.000 UTC",
+      "hour_start": "2024-04-27 22:00:00.000 UTC",
+      "mint": "EBCrGLbRaDnmpDPv2qUvbHUEnhzdjTGL2BU1Xce9ReNo",
+      "n_p1_valid": 102,
+      "p1_median_cap_usd": 1043967.8186602432,
+      "p1_usd_volume": 18239.655456363544,
+      "p1_vwap_cap_usd": 1022850.7754612183,
+      "signal_time": "2024-04-27 23:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-30 19:08:32.000 UTC",
+      "created_at": "2024-04-30 19:04:08.000 UTC",
+      "hour_start": "2024-04-30 20:00:00.000 UTC",
+      "mint": "EZYKNGjYv3A1VJDb17bCtVDApabBYoMPHMS6BAuqqYqM",
+      "n_p1_valid": 17305,
+      "p1_median_cap_usd": 1486816.4745543366,
+      "p1_usd_volume": 8229746.938783004,
+      "p1_vwap_cap_usd": 1562374.7357616874,
+      "signal_time": "2024-04-30 21:00:00.000 UTC",
+      "threshold_usd": "1000000.0"
+    },
+    {
+      "completed_at": "2024-04-27 04:21:11.000 UTC",
+      "created_at": "2024-04-27 04:15:01.000 UTC",
+      "hour_start": "2024-04-27 07:00:00.000 UTC",
+      "mint": "8ULCkCTUa3XXrNXaDVzPcja2tdJtRdxRr8T4eZjVKqk",
+      "n_p1_valid": 11108,
+      "p1_median_cap_usd": 6361429.851503694,
+      "p1_usd_volume": 5003988.601853883,
+      "p1_vwap_cap_usd": 6280668.320807469,
+      "signal_time": "2024-04-27 08:00:00.000 UTC",
+      "threshold_usd": "5000000.0"
+    },
+    {
+      "completed_at": "2024-04-27 22:31:15.000 UTC",
+      "created_at": "2024-04-27 21:31:30.000 UTC",
+      "hour_start": "2024-04-29 14:00:00.000 UTC",
+      "mint": "9bxaVJmUwSc71j8Z2pvUL3UAr1s5fCnwUpvYhqV9jtmw",
+      "n_p1_valid": 1178,
+      "p1_median_cap_usd": 5273266.4596588,
+      "p1_usd_volume": 662769.2530327594,
+      "p1_vwap_cap_usd": 5114166.282103277,
+      "signal_time": "2024-04-29 15:00:00.000 UTC",
+      "threshold_usd": "5000000.0"
+    }
+  ]
+}

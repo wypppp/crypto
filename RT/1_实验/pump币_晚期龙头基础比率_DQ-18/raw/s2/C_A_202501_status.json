@@ -1,0 +1,44 @@
+{
+  "execution_id": "01M396MNRDNK2N154Y6J2BCANG",
+  "query_id": 8826259,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-24T07:56:19.598085Z",
+  "expires_at": "2026-12-23T08:06:59.450003Z",
+  "execution_started_at": "2026-09-24T08:02:26.482402728Z",
+  "execution_ended_at": "2026-09-24T08:06:59.449993161Z",
+  "result_metadata": {
+    "column_names": [
+      "mint",
+      "threshold_usd",
+      "created_at",
+      "completed_at",
+      "hour_start",
+      "signal_time",
+      "n_p1_valid",
+      "p1_usd_volume",
+      "p1_vwap_cap_usd",
+      "p1_median_cap_usd"
+    ],
+    "column_types": [
+      "varchar",
+      "decimal(10, 1)",
+      "timestamp(3) with time zone",
+      "timestamp(3) with time zone",
+      "timestamp(3) with time zone",
+      "timestamp(3) with time zone",
+      "bigint",
+      "double",
+      "double",
+      "double"
+    ],
+    "row_count": 3023,
+    "result_set_bytes": 374559,
+    "total_row_count": 3023,
+    "total_result_set_bytes": 374559,
+    "datapoint_count": 30230,
+    "pending_time_millis": 366884,
+    "execution_time_millis": 272967
+  },
+  "execution_cost_credits": 37.839423077
+}
