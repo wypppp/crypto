@@ -1,0 +1,33 @@
+state QUERY_STATE_COMPLETED rows 37261 bytes 17796226 execution_cost_credits 26.153269231
+Traceback (most recent call last):
+  File "/home/claude/miniconda3/lib/python3.8/http/client.py", line 556, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+  File "/home/claude/miniconda3/lib/python3.8/http/client.py", line 523, in _read_next_chunk_size
+    return int(line, 16)
+ValueError: invalid literal for int() with base 16: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/claude/miniconda3/lib/python3.8/http/client.py", line 573, in _readall_chunked
+    chunk_left = self._get_chunk_left()
+  File "/home/claude/miniconda3/lib/python3.8/http/client.py", line 558, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "get_s2_dune.py", line 98, in <module>
+    main()
+  File "get_s2_dune.py", line 81, in main
+    page = get(f"/execution/{execution_id}/results?limit={page_size}&offset={offset}")
+  File "get_s2_dune.py", line 35, in get
+    return json.load(response)
+  File "/home/claude/miniconda3/lib/python3.8/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/home/claude/miniconda3/lib/python3.8/http/client.py", line 466, in read
+    return self._readall_chunked()
+  File "/home/claude/miniconda3/lib/python3.8/http/client.py", line 580, in _readall_chunked
+    raise IncompleteRead(b''.join(value))
+http.client.IncompleteRead: IncompleteRead(3566 bytes read)

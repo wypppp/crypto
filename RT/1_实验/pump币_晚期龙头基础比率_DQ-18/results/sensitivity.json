@@ -1,0 +1,72 @@
+{
+ "oracle_replayTrue_b50onlyFalse": {
+  "k": 2,
+  "net_gain_rmb": 420872323,
+  "trades": 1786
+ },
+ "oracle_replayTrue_b50onlyTrue": {
+  "k": 2,
+  "net_gain_rmb": 101024132,
+  "trades": 748
+ },
+ "oracle_replayFalse_b50onlyFalse": {
+  "k": 2,
+  "net_gain_rmb": 214312517,
+  "trades": 922
+ },
+ "oracle_replayFalse_b50onlyTrue": {
+  "k": 2,
+  "net_gain_rmb": 51247302,
+  "trades": 385
+ },
+ "entry_delay_b50_marginal": {
+  "1000000_L10s": {
+   "n": 1314,
+   "wmean": 0.7882
+  },
+  "1000000_L5m": {
+   "n": 1314,
+   "wmean": 0.7983
+  },
+  "1000000_L60m": {
+   "n": 1312,
+   "wmean": 0.8899
+  },
+  "5000000_L10s": {
+   "n": 1062,
+   "wmean": 0.7317
+  },
+  "5000000_L5m": {
+   "n": 1062,
+   "wmean": 0.7498
+  },
+  "5000000_L60m": {
+   "n": 1060,
+   "wmean": 0.8554
+  },
+  "20000000_L10s": {
+   "n": 809,
+   "wmean": 0.6421
+  },
+  "20000000_L5m": {
+   "n": 809,
+   "wmean": 0.6673
+  },
+  "20000000_L60m": {
+   "n": 808,
+   "wmean": 0.7736
+  },
+  "100000000_L10s": {
+   "n": 185,
+   "wmean": 0.428
+  },
+  "100000000_L5m": {
+   "n": 185,
+   "wmean": 0.4477
+  },
+  "100000000_L60m": {
+   "n": 184,
+   "wmean": 0.6452
+  }
+ }
+}

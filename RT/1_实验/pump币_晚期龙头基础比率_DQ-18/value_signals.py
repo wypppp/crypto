@@ -7,6 +7,8 @@
 """
 import csv
 import json
+import os
+import re
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -20,6 +22,8 @@ import valuation as V
 ROOT = Path(__file__).resolve().parent
 CACHE = ROOT / "raw" / "d" / "rpc"
 RPC = "https://api.mainnet-beta.solana.com"
+if os.environ.get("DQ18_RPC") == "helius":  # 用户 09-24 同意改用 Helius；按键名读取，不打印
+    RPC = re.search(r"^\s*helius_RPC_URL\s*=\s*['\"]?([^'\"\s]+)", (ROOT.parents[2] / ".env").read_text(), re.M).group(1)
 
 
 def fetch_one(sig):
@@ -54,7 +58,7 @@ def fetch():
     todo = [s for s in sigs if not (CACHE / (s + ".json")).exists()]
     print("need", len(sigs), "todo", len(todo), flush=True)
     stats = {}
-    with ThreadPoolExecutor(4) as ex:
+    with ThreadPoolExecutor(8 if os.environ.get("DQ18_RPC") == "helius" else 4) as ex:
         for i, res in enumerate(ex.map(fetch_one, todo)):
             stats[res] = stats.get(res, 0) + 1
             if i % 200 == 0:

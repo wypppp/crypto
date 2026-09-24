@@ -3,3 +3,4 @@ raw/d/*.json
 !raw/d/*_status.json
 !raw/d/valuation_check_*.json
 raw/d/*_pages/
+raw/d/rpc/
