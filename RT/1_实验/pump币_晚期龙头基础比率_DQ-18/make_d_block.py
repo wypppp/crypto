@@ -88,7 +88,7 @@ CORE = """p1v AS (
            CASE WHEN h1 = h + INTERVAL '1' HOUR THEN n2_tx ELSE n1_tx END AS e60_tx
     FROM ph2 WHERE prk = 1
 ), j AS (
-    SELECT s.mint, s.tier, s.signal_time, m.*,
+    SELECT s.tier, s.signal_time, m.*,
            m.h = s.signal_time - INTERVAL '1' HOUR AS is_entry,
            m.h >= s.signal_time AND m.valid AS is_path
     FROM sig s JOIN hm m
