@@ -1,1 +1,5 @@
 raw/s2/*_pages/
+raw/d/*.json
+!raw/d/*_status.json
+!raw/d/valuation_check_*.json
+raw/d/*_pages/
