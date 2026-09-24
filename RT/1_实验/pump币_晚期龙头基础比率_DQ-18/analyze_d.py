@@ -9,6 +9,11 @@
 - 全买账户：分层插补蒙特卡洛 1,000 次；f = 2%/5%/10%；链上成本 0.002/0.005/0.01 SOL/笔。
 - 完美选币上界：只用样本；k = 2/3/10/100 取最好；退出规则在 b50 与固定时点中事后取最好（固定时点按路径价 + 费率 + 按池深缩放的冲击，代理）。
 - 三年：窗口按原顺序循环重放至 36 个月。
+
+09-24 独立复核后修订（审计：RT/3_审计/2026-09-24_DQ18结果独立复核.md）：
+- 两种账户都执行 README §3.5“同一个币同一时刻只持一个仓位”（旧版漏了）；
+- 期末未平仓单列：结论对谁不利就用哪一版——全买用“含未平仓按日后卖出所得”，上界用“只计已平仓现金”；
+- 另报：各半年起点跑 12 个月、不含 Mayhem 版（raw/d/mayhem.json）、S1/S5 按币重抽的区间、上界路径前 3 个币的贡献。
 """
 import csv
 import json
@@ -172,26 +177,32 @@ def frame_opps(val):
         own = by_key.get(k)
         s = sample.get(r["mint"])
         use_own = own is not None and s is not None and s["stratum"] != "V_only"
-        opps.append({"st": ts(r["signal_time"]), "tier": k[1], "stratum": strat[top[r["mint"]]],
+        opps.append({"st": ts(r["signal_time"]), "tier": k[1], "stratum": strat[top[r["mint"]]], "mint": r["mint"],
                      "own": own if use_own else None})
     return sorted(opps, key=lambda o: o["st"])
 
 
-def simulate(opps, dn, frac, chain_sol, rng, cycles_days=365.25 * 3):
-    """全买账户：按时间顺序；每笔投入 min(现金×frac, 入场容量)；退出时回笼。循环重放到 36 个月。"""
+def simulate(opps, dn, frac, chain_sol, rng, start=W0, days=365.25 * 3, replay=True):
+    """全买账户：按时间顺序；每笔投入 min(现金×frac, 入场容量)；退出时回笼；同币同时只持一仓。
+    replay=True 时循环重放到 start+days。返回（期末现金, 期末未平仓的日后卖出所得, 笔数）。"""
     cash = START_USD
     open_pos = []  # (exit_time, proceeds)
-    end = W0 + timedelta(days=cycles_days)
+    held = {}  # mint -> 退出时间
+    end = start + timedelta(days=days)
     shift = timedelta(days=WINDOW_DAYS)
     k = 0
     n_trades = 0
     while True:
         for o in opps:
             t = o["st"] + shift * k
+            if t < start:
+                continue
             if t >= end:
                 break
             while open_pos and open_pos[0][0] <= t:
                 cash += heapq.heappop(open_pos)[1]
+            if held.get(o["mint"], t) > t:
+                continue
             r = o["own"]
             if r is None:
                 pool = dn.get((o["stratum"], o["tier"], half(o["st"])))
@@ -209,27 +220,27 @@ def simulate(opps, dn, frac, chain_sol, rng, cycles_days=365.25 * 3):
             cash -= usd
             hold = (r["et"] - r["st"]) if r["et"] and r["st"] else timedelta(days=180)
             heapq.heappush(open_pos, (t + hold, usd * max(m, 0.0)))
+            held[o["mint"]] = t + hold
             n_trades += 1
-        else:
-            k += 1
-            if W0 + shift * k >= end:
-                break
-            continue
-        break
-    for _, p in open_pos:
-        cash += p
-    return cash, n_trades
+        k += 1
+        if not replay or W0 + shift * k >= end:
+            break
+    return cash, sum(p for _, p in open_pos), n_trades
 
 
-def oracle(val, chain_sol=0.005):
-    """完美选币上界（只用样本）：事后只买 k 倍以上的机会，退出在 b50 与固定时点中取最好。"""
-    rows = [r for r in val if r["est"] and r["ok"] and r["cap5_buy_usd"] is not None]
+def oracle(val, chain_sol=0.005, replay=True, b50_only=False, start=W0, days=365.25 * 3, exclude=frozenset()):
+    """完美选币上界（只用样本）：事后只买 k 倍以上的机会，退出在 b50 与固定时点中取最好；同币同时只持一仓。
+    报告只计已平仓现金的净收益（未平仓单列），并给出路径上贡献最大的 3 个币。"""
+    rows = sorted([r for r in val if r["est"] and r["ok"] and r["cap5_buy_usd"] is not None
+                   and r["mint"] not in exclude], key=lambda r: r["st"])
 
     def best_mult(r, usd):
         cands = []
         m = mult_for(r, usd, chain_sol)
         if m is not None:
             cands.append((m, r["et"]))
+        if b50_only:
+            return max(cands) if cands else (None, None)
         for h, d in (("D1", 1), ("D7", 7), ("D30", 30), ("D90", 90), ("D180", 180)):
             c = r["c_" + h]
             if c and r["entry_marg_cap"] and r["entry_x"]:
@@ -243,19 +254,21 @@ def oracle(val, chain_sol=0.005):
         return max(cands) if cands else (None, None)
 
     best = None
+    end = start + timedelta(days=days)
+    shift = timedelta(days=WINDOW_DAYS)
     for k in (2, 3, 10, 100):
-        cash, open_pos, trades = START_USD, [], 0
-        end = W0 + timedelta(days=365.25 * 3)
-        shift = timedelta(days=WINDOW_DAYS)
-        cyc = 0
-        opps = sorted(rows, key=lambda r: r["st"])
-        while W0 + shift * cyc < end:
-            for r in opps:
+        cash, open_pos, held, gains, trades, cyc = START_USD, [], {}, defaultdict(float), 0, 0
+        while True:
+            for r in rows:
                 t = r["st"] + shift * cyc
+                if t < start:
+                    continue
                 if t >= end:
                     break
                 while open_pos and open_pos[0][0] <= t:
                     cash += heapq.heappop(open_pos)[1]
+                if held.get(r["mint"], t) > t:
+                    continue
                 usd = min(cash, r["cap5_buy_usd"])
                 if usd < 5:
                     continue
@@ -264,33 +277,95 @@ def oracle(val, chain_sol=0.005):
                     continue
                 cash -= usd
                 heapq.heappush(open_pos, (xt + shift * cyc, usd * m))
+                held[r["mint"]] = xt + shift * cyc
+                gains[r["mint"]] += usd * (m - 1)
                 trades += 1
             cyc += 1
-        final = cash + sum(p for _, p in open_pos)
-        res = {"k": k, "final_usd": round(final), "net_gain_rmb": round((final - START_USD) * RMB_PER_USD), "trades": trades}
-        if best is None or final > best["final_usd"]:
+            if not replay or W0 + shift * cyc >= end:
+                break
+        open_usd = sum(p for _, p in open_pos)
+        tot = sum(g for g in gains.values() if g > 0) or 1
+        top = sorted(gains.items(), key=lambda kv: -kv[1])[:3]
+        res = {"k": k, "net_gain_rmb": round((cash - START_USD) * RMB_PER_USD),
+               "open_at_end_rmb": round(open_usd * RMB_PER_USD), "trades": trades,
+               "top3": [{"mint": mt, "share_of_gains": round(g / tot, 4)} for mt, g in top]}
+        if best is None or res["net_gain_rmb"] > best["net_gain_rmb"]:
             best = res
     return best
+
+
+def bootstrap(val, reps=1000, seed=20260924):
+    """S1、S5 两层按币有放回重抽（S100、S20 全取，固定），给出每档均值与机会密度的 2.5%～97.5% 区间。"""
+    rng = random.Random(seed)
+    years = WINDOW_DAYS / 365.25
+    est = [r for r in val if r["est"] and r["ok"]]
+    for r in est:
+        r["m1400"] = r["mult_1400"] if r["mult_1400"] is not None else r["mult_marginal"]
+    by = defaultdict(lambda: defaultdict(list))
+    for r in est:
+        by[r["stratum"]][r["mint"]].append(r)
+    fixed = [r for s in ("S100", "S20") for rs in by[s].values() for r in rs]
+    draws = defaultdict(list)
+    for _ in range(reps):
+        rows = list(fixed)
+        for s in ("S5", "S1"):
+            mints = list(by[s])
+            for mt in (rng.choice(mints) for _ in mints):
+                rows += by[s][mt]
+        for tier in (1_000_000, 5_000_000, 20_000_000, 100_000_000):
+            rs = [r for r in rows if r["tier"] == tier]
+            tw = sum(r["weight"] for r in rs)
+            draws[(tier, "mean")].append(sum(r["m1400"] * r["weight"] for r in rs) / tw)
+            draws[(tier, "ge10_cap1400_per_year")].append(
+                sum(r["weight"] for r in rs if r["m1400"] >= 10 and (r["cap5_buy_usd"] or 0) >= 1400) / years)
+            draws[(tier, "hit100k_per_year")].append(sum(r["weight"] for r in rs if r.get("hit100k")) / years)
+    q = lambda xs, p: sorted(xs)[int(p * (len(xs) - 1))]
+    return {f"{t}_{m}": [round(q(xs, .025), 4), round(q(xs, .975), 4)] for (t, m), xs in draws.items()}
 
 
 def main():
     val = load()
     summary = {"describe": describe(val)}
+    for r in val:  # 单次命中标记（describe 的口径），供重抽用
+        r["hit100k"] = False
+        if r["est"] and r["ok"] and r["cap5_buy_usd"] is not None:
+            usd = min(1400.0, r["cap5_buy_usd"])
+            m = mult_for(r, usd, 0.005)
+            r["hit100k"] = m is not None and usd * (m - 1) * RMB_PER_USD >= 100_000
+    summary["bootstrap_S1S5_by_coin"] = bootstrap(val)
     dn = donors(val)
     opps = frame_opps(val)
     rng = random.Random(20260924)
     acc = {}
     for frac in (0.02, 0.05, 0.10):
         for chain in (0.002, 0.005, 0.01):
-            finals = sorted(simulate(opps, dn, frac, chain, rng)[0] for _ in range(REPS))
+            res = [simulate(opps, dn, frac, chain, rng) for _ in range(REPS)]
+            finals = sorted(c + o for c, o, _ in res)  # 含未平仓（对全买有利）
             q = lambda p: round((finals[int(p * (len(finals) - 1))] - START_USD) * RMB_PER_USD)
             acc[f"f{frac}_c{chain}"] = {"p10_gain_rmb": q(0.1), "p50_gain_rmb": q(0.5), "p90_gain_rmb": q(0.9),
-                                        "share_gain_pos": round(sum(x > START_USD for x in finals) / len(finals), 3)}
+                                        "share_gain_pos": round(sum(x > START_USD for x in finals) / len(finals), 3),
+                                        "median_open_at_end_rmb": round(sorted(o for _, o, _ in res)[len(res) // 2] * RMB_PER_USD)}
     summary["all_buy_account_3y"] = acc
+    # 各半年起点跑 12 个月（不重放；2025-07 起点只有 8.5 个月数据，截断）
+    h12 = {}
+    for st in (datetime(2024, 6, 1), datetime(2024, 7, 1), datetime(2025, 1, 1), datetime(2025, 7, 1)):
+        res = sorted(sum(simulate(opps, dn, 0.05, 0.005, rng, start=st, days=365, replay=False)[:2]) for _ in range(max(50, REPS // 5)))
+        h12[st.date().isoformat()] = {
+            "all_buy_f5_c005_p50_gain_rmb": round((res[len(res) // 2] - START_USD) * RMB_PER_USD),
+            "all_buy_share_gain_pos": round(sum(x > START_USD for x in res) / len(res), 3),
+            "oracle_b50only": oracle(val, replay=False, b50_only=True, start=st, days=365),
+            "oracle_main": oracle(val, replay=False, start=st, days=365)}
+    summary["start_each_half_12m"] = h12
     summary["oracle_3y_sample_lower_bound_of_bound"] = oracle(val)
+    mayhem = {m for m, v in json.loads((ROOT / "raw" / "d" / "mayhem.json").read_text()).items() if v["mayhem"]}
+    summary["mayhem_coins_in_sample"] = sorted(mayhem)
+    summary["oracle_3y_excl_mayhem"] = oracle(val, exclude=frozenset(mayhem))
+    summary["mean_excl_mayhem"] = {str(t): wstats([dict(r, m1400=r["mult_1400"] if r["mult_1400"] is not None else r["mult_marginal"])
+                                                   for r in val if r["est"] and r["ok"] and r["tier"] == t and r["mint"] not in mayhem], "m1400").get("mean")
+                                   for t in (1_000_000, 5_000_000, 20_000_000, 100_000_000)}
     (ROOT / "results").mkdir(exist_ok=True)
     (ROOT / "results" / "summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False, default=str))
-    print(json.dumps(summary, indent=1, ensure_ascii=False, default=str)[:6000])
+    print(json.dumps({k: v for k, v in summary.items() if k != "describe"}, indent=1, ensure_ascii=False, default=str)[:8000])
 
 
 if __name__ == "__main__":

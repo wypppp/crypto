@@ -2,7 +2,9 @@
 
 先 python value_signals.py fetch   # 并发取 raw/d/need_tx.txt 的原件（缓存 raw/d/rpc/）
 再 python value_signals.py value   # 输出 raw/d/valued.csv
-倍数以美元计（SOL/USD 由同一笔的打印价与池内比值反推）。费率见 valuation.fee_side。
+倍数以美元计。SOL/USD 用独立源（Coinbase 小时收盘，取决策时刻前最后一根已收盘的 K 线，raw/d/coinbase_sol_usd_1h.json）；
+09-24 独立复核后改：旧版由同一笔的打印价与池内比值反推，池配对出错时会反推出荒谬的 SOL 价。
+打印价反推值只作诊断（sol_dev = 反推 ÷ 独立 − 1），不进估值。费率见 valuation.fee_side。
 链上固定成本不在此扣，留给账户模拟（0.002/0.005/0.01 SOL 三档）。
 """
 import csv
@@ -66,6 +68,18 @@ def fetch():
     print("done", stats, flush=True)
 
 
+SOL_1H = {int(k): v for k, v in json.loads((ROOT / "raw" / "d" / "coinbase_sol_usd_1h.json").read_text()).items()}
+
+
+def sol_usd(when):
+    """when（UTC naive）之前最后一根已收盘小时 K 线的收盘价。"""
+    t = int((when - datetime(1970, 1, 1)).total_seconds()) // 3600 * 3600 - 3600
+    for back in range(0, 48 * 3600, 3600):
+        if t - back in SOL_1H:
+            return SOL_1H[t - back]
+    raise KeyError(when)
+
+
 def state(sig, mint, pool):
     p = CACHE / (sig + ".json")
     if not sig or not p.exists():
@@ -98,21 +112,23 @@ def value():
         o["entry_known"] = bool(e)
         o["exit_known"] = bool(x)
         ecp, xcp = fnum(r.get("entry_cap_print")), fnum(r.get("exit_cap_print"))
-        if e and ecp:
+        if e:
             fe = V.fee_side(e["venue"], e["when"], e["x"] / e["y"] * 1e9)
-            sol_e = ecp / (e["x"] / e["y"] * 1e9)
+            sol_e = sol_usd(e["when"])
             o.update({"entry_x": e["x"], "entry_y": e["y"], "entry_when": e["when"].isoformat(),
                       "entry_venue": e["venue"], "entry_fee": fe, "entry_sol_usd": sol_e,
+                      "entry_sol_dev": ecp / (e["x"] / e["y"] * 1e9) / sol_e - 1 if ecp else "",
                       "entry_marg_cap": e["x"] / e["y"] * 1e9 * sol_e,
                       "cap5_buy_usd": V.cap5_buy_sol(e["x"]) * sol_e})
-        if x and xcp:
+        if x:
             fx = V.fee_side(x["venue"], x["when"], x["x"] / x["y"] * 1e9)
-            sol_x = xcp / (x["x"] / x["y"] * 1e9)
+            sol_x = sol_usd(x["when"])
             o.update({"exit_x": x["x"], "exit_y": x["y"], "exit_when": x["when"].isoformat(),
                       "exit_venue": x["venue"], "exit_fee": fx, "exit_sol_usd": sol_x,
+                      "exit_sol_dev": xcp / (x["x"] / x["y"] * 1e9) / sol_x - 1 if xcp else "",
                       "exit_marg_cap": x["x"] / x["y"] * 1e9 * sol_x,
                       "cap5_sell_usd": V.cap5_sell_sol(x["x"]) * sol_x})
-        if e and x and ecp and xcp:
+        if e and x:
             # 零规模倍数（美元）：边际价比 × 两次费率
             o["mult_marginal"] = (o["exit_marg_cap"] / o["entry_marg_cap"]) * (1 - fe) * (1 - fx)
             # $1,400 仓位：按入场池状态买入，按退出池状态卖出
@@ -121,7 +137,7 @@ def value():
             proceeds_sol = V.sell(x["x"], x["y"], tok, fx)
             o["mult_1400"] = proceeds_sol * sol_x / 1400
             o["tok_1400"] = tok
-        elif e and ecp and r.get("exit_proxy_c"):
+        elif e and r.get("exit_proxy_c"):
             # 退出成交缺失：用下一条路径小时 VWAP 作代理（第一层性质），单独标记
             o["mult_marginal"] = fnum(r["exit_proxy_c"]) / o["entry_marg_cap"] * (1 - fe) ** 2
             o["exit_is_proxy"] = True

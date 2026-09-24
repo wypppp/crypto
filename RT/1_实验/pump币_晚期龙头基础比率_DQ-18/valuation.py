@@ -42,23 +42,43 @@ def fee_side(project, when, sol_mcap):
     raise ValueError("unsupported venue " + project)
 
 
-def pool_reserves(tx, mint, pool=None):
-    """交易前的池储备（代币, SOL）与场所。按 vault 所有者识别：PumpSwap=池地址，Raydium=固定 authority。"""
+RAYDIUM_PROGRAMS = {"675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8": ("raydium_v4", RAYDIUM_V4_AUTH),
+                    "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C": ("raydium_cpmm", RAYDIUM_CPMM_AUTH)}
+
+
+def pool_reserves(tx, mint, pool):
+    """交易前的池储备（代币, SOL）与场所，只认目标池自己的 vault。
+
+    PumpSwap：vault 的 owner 就是池地址，唯一。
+    Raydium v4/CPMM：vault 的 owner 是全局 authority，多池路由时同一 owner 下有多个 vault（09-24 独立复核发现，
+    旧版取“最后一个”会串池）。改为：只看 Raydium 程序的、账户列表含目标池地址的指令（外层或内层），
+    在这些指令的账户里找该 authority 名下的目标代币 vault 与 SOL vault，各须恰好一个，否则记未知。
+    """
     meta = tx["meta"]
-    keys = tx["transaction"]["message"]["accountKeys"]
-    addr = lambda i: keys[i]["pubkey"] if isinstance(keys[i], dict) else keys[i]
+    msg = tx["transaction"]["message"]
+    keys = [k["pubkey"] if isinstance(k, dict) else k for k in msg["accountKeys"]]
+    la = meta.get("loadedAddresses") or {}
+    keys += la.get("writable", []) + la.get("readonly", [])
     pre = {x["accountIndex"]: x for x in meta["preTokenBalances"]}
-    found = {}
-    for i, b in pre.items():
-        owner = b.get("owner")
-        venue = ("pumpswap" if pool and owner == pool else
-                 "raydium_v4" if owner == RAYDIUM_V4_AUTH else
-                 "raydium_cpmm" if owner == RAYDIUM_CPMM_AUTH else None)
-        if venue and b["mint"] in (mint, SOL):
-            found.setdefault(venue, {})[b["mint"]] = float(b["uiTokenAmount"]["uiAmountString"])
-    for venue, v in found.items():
-        if mint in v and SOL in v:
-            return v[mint], v[SOL], venue
+    amt = lambda b: float(b["uiTokenAmount"]["uiAmountString"])
+    pp = {b["mint"]: amt(b) for b in pre.values() if b.get("owner") == pool and b["mint"] in (mint, SOL)}
+    if mint in pp and SOL in pp:
+        return pp[mint], pp[SOL], "pumpswap"
+    if pool not in keys:
+        raise ValueError("pool not in tx")
+    pidx = keys.index(pool)
+    ins = list(msg["instructions"]) + [i for g in meta.get("innerInstructions") or [] for i in g["instructions"]]
+    for prog, (venue, auth) in RAYDIUM_PROGRAMS.items():
+        accts = {a for i in ins if keys[i["programIdIndex"]] == prog and pidx in i["accounts"] for a in i["accounts"]}
+        vaults = {}
+        for a in accts:
+            b = pre.get(a)
+            if b and b.get("owner") == auth and b["mint"] in (mint, SOL):
+                vaults.setdefault(b["mint"], set()).add(a)
+        if vaults:
+            if len(vaults.get(mint, ())) != 1 or len(vaults.get(SOL, ())) != 1:
+                raise ValueError("ambiguous raydium vaults")
+            return amt(pre[next(iter(vaults[mint]))]), amt(pre[next(iter(vaults[SOL]))]), venue
     raise ValueError("no constant-product vault pair in tx")
 
 

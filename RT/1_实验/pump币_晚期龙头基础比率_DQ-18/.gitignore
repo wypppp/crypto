@@ -4,3 +4,5 @@ raw/d/*.json
 !raw/d/valuation_check_*.json
 raw/d/*_pages/
 raw/d/rpc/
+!raw/d/coinbase_sol_usd_1h.json
+!raw/d/mayhem.json

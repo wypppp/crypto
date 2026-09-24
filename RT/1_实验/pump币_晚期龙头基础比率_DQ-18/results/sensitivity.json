@@ -1,72 +1,157 @@
 {
  "oracle_replayTrue_b50onlyFalse": {
   "k": 2,
-  "net_gain_rmb": 420872323,
-  "trades": 1786
+  "net_gain_rmb": 208574398,
+  "open_at_end_rmb": 1819332,
+  "trades": 1005,
+  "top3": [
+   {
+    "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+    "share_of_gains": 0.0572
+   },
+   {
+    "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+    "share_of_gains": 0.0382
+   },
+   {
+    "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+    "share_of_gains": 0.0323
+   }
+  ]
  },
  "oracle_replayTrue_b50onlyTrue": {
   "k": 2,
-  "net_gain_rmb": 101024132,
-  "trades": 748
+  "net_gain_rmb": 71256567,
+  "open_at_end_rmb": 227141,
+  "trades": 566,
+  "top3": [
+   {
+    "mint": "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump",
+    "share_of_gains": 0.0497
+   },
+   {
+    "mint": "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump",
+    "share_of_gains": 0.032
+   },
+   {
+    "mint": "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY",
+    "share_of_gains": 0.0318
+   }
+  ]
  },
  "oracle_replayFalse_b50onlyFalse": {
   "k": 2,
-  "net_gain_rmb": 214312517,
-  "trades": 922
+  "net_gain_rmb": 107692550,
+  "open_at_end_rmb": 75460,
+  "trades": 522,
+  "top3": [
+   {
+    "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+    "share_of_gains": 0.0558
+   },
+   {
+    "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+    "share_of_gains": 0.0373
+   },
+   {
+    "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+    "share_of_gains": 0.0315
+   }
+  ]
  },
  "oracle_replayFalse_b50onlyTrue": {
   "k": 2,
-  "net_gain_rmb": 51247302,
-  "trades": 385
+  "net_gain_rmb": 36353694,
+  "open_at_end_rmb": 71126,
+  "trades": 293,
+  "top3": [
+   {
+    "mint": "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump",
+    "share_of_gains": 0.0488
+   },
+   {
+    "mint": "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump",
+    "share_of_gains": 0.0314
+   },
+   {
+    "mint": "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY",
+    "share_of_gains": 0.0312
+   }
+  ]
+ },
+ "unresolved_entry_mints": [
+  "3Jjt8QhbqNoYfSQYHWf8ZsTJwE2CyvmUrzgzJD5Jpump",
+  "3S8qX1MsMqRbiwKg2cQyx7nis1oHMgaCuc9c4VfvVdPN",
+  "F6ExBzKdLRcJkCAknQgfbhRXX78EhqoNxPnegJWPpump"
+ ],
+ "oracle_most_conservative_excl_unresolved": {
+  "k": 2,
+  "net_gain_rmb": 36327711,
+  "open_at_end_rmb": 71126,
+  "trades": 292,
+  "top3": [
+   {
+    "mint": "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump",
+    "share_of_gains": 0.0488
+   },
+   {
+    "mint": "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump",
+    "share_of_gains": 0.0314
+   },
+   {
+    "mint": "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY",
+    "share_of_gains": 0.0312
+   }
+  ]
  },
  "entry_delay_b50_marginal": {
   "1000000_L10s": {
    "n": 1314,
-   "wmean": 0.7882
+   "wmean": 0.7873
   },
   "1000000_L5m": {
    "n": 1314,
-   "wmean": 0.7983
+   "wmean": 0.7976
   },
   "1000000_L60m": {
    "n": 1312,
-   "wmean": 0.8899
+   "wmean": 0.8889
   },
   "5000000_L10s": {
    "n": 1062,
-   "wmean": 0.7317
+   "wmean": 0.7314
   },
   "5000000_L5m": {
    "n": 1062,
-   "wmean": 0.7498
+   "wmean": 0.7494
   },
   "5000000_L60m": {
    "n": 1060,
-   "wmean": 0.8554
+   "wmean": 0.8551
   },
   "20000000_L10s": {
    "n": 809,
-   "wmean": 0.6421
+   "wmean": 0.6419
   },
   "20000000_L5m": {
    "n": 809,
-   "wmean": 0.6673
+   "wmean": 0.667
   },
   "20000000_L60m": {
    "n": 808,
-   "wmean": 0.7736
+   "wmean": 0.7739
   },
   "100000000_L10s": {
    "n": 185,
-   "wmean": 0.428
+   "wmean": 0.4279
   },
   "100000000_L5m": {
    "n": 185,
-   "wmean": 0.4477
+   "wmean": 0.4476
   },
   "100000000_L60m": {
    "n": 184,
-   "wmean": 0.6452
+   "wmean": 0.6422
   }
  }
 }
