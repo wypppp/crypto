@@ -1,0 +1,48 @@
+{
+  "source": "Solana mainnet public RPC getTransaction",
+  "signature": "2wVRodX6E6GRNeszfDLHstVyMYxqmkU2px12HHpgnVamgVLMH4CpYxixUK3keX6CfjrKnM9T2CPowBpPHdnrMaK3",
+  "mint": "21GP6Ay2R7UjuhqMX4DkA2tca6YMWVtmYgUDMxkhpump",
+  "slot": 384429141,
+  "blockTime": 1764854187,
+  "transaction_error": null,
+  "preTokenBalances": [
+    {
+      "accountIndex": 5,
+      "mint": "21GP6Ay2R7UjuhqMX4DkA2tca6YMWVtmYgUDMxkhpump",
+      "owner": "AqPY2tH6wHDEw2a5uDPwCw7DnEownQoLJcAehG8r9vsp",
+      "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "uiTokenAmount": {
+        "amount": "966547484935898",
+        "decimals": 6,
+        "uiAmount": 966547484.935898,
+        "uiAmountString": "966547484.935898"
+      }
+    }
+  ],
+  "postTokenBalances": [
+    {
+      "accountIndex": 2,
+      "mint": "21GP6Ay2R7UjuhqMX4DkA2tca6YMWVtmYgUDMxkhpump",
+      "owner": "Ajb2D3H7J1RZ4AMgGH55XgYQUqBp4Jfpa2QJcCWyPpZg",
+      "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "uiTokenAmount": {
+        "amount": "1",
+        "decimals": 6,
+        "uiAmount": 1e-06,
+        "uiAmountString": "0.000001"
+      }
+    },
+    {
+      "accountIndex": 5,
+      "mint": "21GP6Ay2R7UjuhqMX4DkA2tca6YMWVtmYgUDMxkhpump",
+      "owner": "AqPY2tH6wHDEw2a5uDPwCw7DnEownQoLJcAehG8r9vsp",
+      "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "uiTokenAmount": {
+        "amount": "966547484935897",
+        "decimals": 6,
+        "uiAmount": 966547484.935897,
+        "uiAmountString": "966547484.935897"
+      }
+    }
+  ]
+}
