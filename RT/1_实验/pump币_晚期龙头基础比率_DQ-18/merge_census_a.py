@@ -12,12 +12,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 RAW = ROOT / "raw" / "s2"
-MISSING = ["2025-04", "2025-05"]  # 2025-04～05 合并查询超时，改为单月重跑
+MISSING = []  # 2025-04、05 已单月补跑（09-24）
 
 
 def rows():
     for f in sorted(glob.glob(str(RAW / "C_A_*.json"))):
-        if f.endswith("_status.json"):
+        if f.endswith("_status.json") or "diag" in f:
             continue
         for r in json.load(open(f))["rows"]:
             yield Path(f).stem, r
