@@ -1,0 +1,114 @@
+{
+  "execution_id": "01M38JSRPD1T28A8HHY2EHY8WT",
+  "query_id": 8824616,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-24T02:09:34.92735Z",
+  "expires_at": "2026-12-23T02:09:41.649028Z",
+  "execution_started_at": "2026-09-24T02:09:34.929657Z",
+  "execution_ended_at": "2026-09-24T02:09:41.649019Z",
+  "result": {
+    "rows": [
+      {
+        "create_tx": "3pMFUaD2UCvtty2RhXeyxq4r3WtuZyTiR4DgGv6smt5rdSthbVRXDsMqcm3fhdLtZd5uSy9PUFtCw6AVAGGKF1vV",
+        "created_at": "2024-10-10 21:08:26.000 UTC",
+        "created_date": "2024-10-10",
+        "creator": null,
+        "is_mayhem_mode": null,
+        "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+        "name": "Goatseus Maximus",
+        "quote_mint": null,
+        "symbol": "GOAT",
+        "token_program": null,
+        "token_total_supply": null
+      },
+      {
+        "create_tx": "4x9KdECQzU8cuRjoa3SZch2aqK3PiSYKYAomPmQrYSFgwbnKeN2LV64VPAy46Xezm21oZSg7pPJHC7YS4hGVqz9S",
+        "created_at": "2024-10-18 06:05:05.000 UTC",
+        "created_date": "2024-10-18",
+        "creator": null,
+        "is_mayhem_mode": null,
+        "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+        "name": "Fartcoin ",
+        "quote_mint": null,
+        "symbol": "Fartcoin ",
+        "token_program": null,
+        "token_total_supply": null
+      },
+      {
+        "create_tx": "2Av1bHTDCSc9hU5nNHfFmn2xUuJftEV4HcwSszU6v5Axrf46vaGWbLjmTYysHkcv9ajsUpzWjF61VZaQE1EUWWme",
+        "created_at": "2024-10-31 14:21:40.000 UTC",
+        "created_date": "2024-10-31",
+        "creator": null,
+        "is_mayhem_mode": null,
+        "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+        "name": "Peanut the Squirrel ",
+        "quote_mint": null,
+        "symbol": "Pnut ",
+        "token_program": null,
+        "token_total_supply": null
+      },
+      {
+        "create_tx": "41tkN7GcRuSDRYGHnj7CiZTg6mq1WZQF5zD3rnog6tHZAWXbMTTqe8z5SNUCuSV4BnkEEyZmAGEB4jcTzMPg3BH1",
+        "created_at": "2025-10-13 01:41:42.000 UTC",
+        "created_date": "2025-10-13",
+        "creator": null,
+        "is_mayhem_mode": null,
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "name": "The White Whale",
+        "quote_mint": null,
+        "symbol": "WhiteWhale",
+        "token_program": null,
+        "token_total_supply": null
+      },
+      {
+        "create_tx": "3qcAkmobNq59k2pZYgEfCP273VwTXTs3qaQ99g51kLt4U8GA2NcNEhK9cbHsiA587EM9RoUC84gsRsbm8U6nADpM",
+        "created_at": "2026-01-16 18:23:15.000 UTC",
+        "created_date": "2026-01-16",
+        "creator": "EYfdt8cNFyyTEJKp18dcoVbgUHDnM1SK3bT2uKj9XXHc",
+        "is_mayhem_mode": null,
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "name": "Nietzschean Penguin",
+        "quote_mint": null,
+        "symbol": "PENGUIN",
+        "token_program": null,
+        "token_total_supply": "1000000000000000"
+      }
+    ],
+    "metadata": {
+      "column_names": [
+        "mint",
+        "name",
+        "symbol",
+        "created_at",
+        "created_date",
+        "create_tx",
+        "creator",
+        "token_program",
+        "is_mayhem_mode",
+        "token_total_supply",
+        "quote_mint"
+      ],
+      "column_types": [
+        "varchar",
+        "varchar",
+        "varchar",
+        "timestamp(3) with time zone",
+        "date",
+        "varchar",
+        "varchar",
+        "varchar",
+        "boolean",
+        "uint256",
+        "varchar"
+      ],
+      "row_count": 5,
+      "result_set_bytes": 1372,
+      "total_row_count": 5,
+      "total_result_set_bytes": 932,
+      "datapoint_count": 55,
+      "pending_time_millis": 2,
+      "execution_time_millis": 6719
+    }
+  }
+}

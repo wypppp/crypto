@@ -1,0 +1,265 @@
+{
+  "execution_id": "01M38SP7PXR3VCDG6SJ96TZAG1",
+  "query_id": 8824616,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-24T04:09:59.262034Z",
+  "expires_at": "2026-12-23T04:10:15.226058Z",
+  "execution_started_at": "2026-09-24T04:09:59.538402Z",
+  "execution_ended_at": "2026-09-24T04:10:15.226041Z",
+  "result": {
+    "rows": [
+      {
+        "hour_start": "2026-01-23 21:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 32,
+        "n_trades": 32,
+        "priced_token_volume": 0,
+        "quote_mint": "2fy3QceaT4KEjQh1RKxiTzd2q9yBdXTFoebzgyPyx7VH",
+        "raw_quote_volume": 22319.178373423005,
+        "raw_token_volume": 1556.610616,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2026-01-23 21:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 0,
+        "n_trades": 1036,
+        "priced_token_volume": 13088784.714018993,
+        "quote_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "raw_quote_volume": 243996.88917300012,
+        "raw_token_volume": 13088784.714018993,
+        "usd_volume": 244063.1438936429
+      },
+      {
+        "hour_start": "2026-01-23 21:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 0,
+        "n_trades": 78,
+        "priced_token_volume": 24389.531136000005,
+        "quote_mint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+        "raw_quote_volume": 1450.1954559999997,
+        "raw_token_volume": 24389.531136000005,
+        "usd_volume": 392.38419245658804
+      },
+      {
+        "hour_start": "2026-01-23 21:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 0,
+        "n_trades": 6297,
+        "priced_token_volume": 108223760.13274601,
+        "quote_mint": "So11111111111111111111111111111111111111112",
+        "raw_quote_volume": 14720.629687134999,
+        "raw_token_volume": 108223760.13274601,
+        "usd_volume": 1872760.9836391977
+      },
+      {
+        "hour_start": "2026-01-23 21:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 1,
+        "n_trades": 1,
+        "priced_token_volume": 0,
+        "quote_mint": "ppPaBdccmWsVPa4UsZAZhwU4h3zND4RRt8RviZq24JU",
+        "raw_quote_volume": 55807.081000042,
+        "raw_token_volume": 1.792764,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2026-01-23 22:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 65,
+        "n_trades": 65,
+        "priced_token_volume": 0,
+        "quote_mint": "2fy3QceaT4KEjQh1RKxiTzd2q9yBdXTFoebzgyPyx7VH",
+        "raw_quote_volume": 37665.869655924995,
+        "raw_token_volume": 1734.2040930000005,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2026-01-23 22:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 1,
+        "n_trades": 1,
+        "priced_token_volume": 0,
+        "quote_mint": "5555oWiSYAbou17HKfw8fwkFx71yfXpesVnh3exHFwU8",
+        "raw_quote_volume": 263.016927409,
+        "raw_token_volume": 21.931713,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2026-01-23 22:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 0,
+        "n_trades": 2677,
+        "priced_token_volume": 18602952.53211699,
+        "quote_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "raw_quote_volume": 402009.2189550002,
+        "raw_token_volume": 18602952.53211699,
+        "usd_volume": 402121.90531178314
+      },
+      {
+        "hour_start": "2026-01-23 22:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 9,
+        "n_trades": 9,
+        "priced_token_volume": 0,
+        "quote_mint": "HygNWegGFjQqNMCsQmXbFgr3ViybkEN6fQtmvLXVXJmd",
+        "raw_quote_volume": 110438.924302192,
+        "raw_token_volume": 62.359761000000006,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2026-01-23 22:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 0,
+        "n_trades": 75,
+        "priced_token_volume": 5749.627269000001,
+        "quote_mint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+        "raw_quote_volume": 552.083682,
+        "raw_token_volume": 5749.627269000001,
+        "usd_volume": 149.691834978913
+      },
+      {
+        "hour_start": "2026-01-23 22:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 0,
+        "n_trades": 24406,
+        "priced_token_volume": 281880606.2262378,
+        "quote_mint": "So11111111111111111111111111111111111111112",
+        "raw_quote_volume": 55821.126724184986,
+        "raw_token_volume": 281880606.2262378,
+        "usd_volume": 7120031.061150316
+      },
+      {
+        "hour_start": "2026-01-23 22:00:00.000 UTC",
+        "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+        "n_bad_price": 4,
+        "n_trades": 4,
+        "priced_token_volume": 0,
+        "quote_mint": "ppPaBdccmWsVPa4UsZAZhwU4h3zND4RRt8RviZq24JU",
+        "raw_quote_volume": 156800.812282187,
+        "raw_token_volume": 3.8497400000000006,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2025-12-26 21:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 36,
+        "n_trades": 36,
+        "priced_token_volume": 0,
+        "quote_mint": "44sHXMkPeciUpqhecfCysVs7RcaxeM24VPMauQouBREV",
+        "raw_quote_volume": 206235.24914279403,
+        "raw_token_volume": 1940.2633909999997,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2025-12-26 21:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 114,
+        "n_trades": 114,
+        "priced_token_volume": 0,
+        "quote_mint": "Ax8PSfCXxmxb8C8kYTzN5CPpTe6PyeZfFf8rrXNCjupx",
+        "raw_quote_volume": 2300033.7717979997,
+        "raw_token_volume": 42109.82911199999,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2025-12-26 21:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 0,
+        "n_trades": 1004,
+        "priced_token_volume": 6720335.272402004,
+        "quote_mint": "So11111111111111111111111111111111111111112",
+        "raw_quote_volume": 1062.694860868,
+        "raw_token_volume": 6720335.272402004,
+        "usd_volume": 130000.21612778043
+      },
+      {
+        "hour_start": "2025-12-26 21:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 6,
+        "n_trades": 6,
+        "priced_token_volume": 0,
+        "quote_mint": "oppVJLf5VEevoDHLGuHdyhb5iiNM6tiRXUYuZ7ygqNA",
+        "raw_quote_volume": 835571.4799344309,
+        "raw_token_volume": 28.652421,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2025-12-26 22:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 30,
+        "n_trades": 30,
+        "priced_token_volume": 0,
+        "quote_mint": "44sHXMkPeciUpqhecfCysVs7RcaxeM24VPMauQouBREV",
+        "raw_quote_volume": 142855.638688112,
+        "raw_token_volume": 1269.251635,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2025-12-26 22:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 99,
+        "n_trades": 99,
+        "priced_token_volume": 0,
+        "quote_mint": "Ax8PSfCXxmxb8C8kYTzN5CPpTe6PyeZfFf8rrXNCjupx",
+        "raw_quote_volume": 4169732.3784290003,
+        "raw_token_volume": 72771.88891000001,
+        "usd_volume": 0
+      },
+      {
+        "hour_start": "2025-12-26 22:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 0,
+        "n_trades": 1285,
+        "priced_token_volume": 8911004.496871999,
+        "quote_mint": "So11111111111111111111111111111111111111112",
+        "raw_quote_volume": 1493.853233200999,
+        "raw_token_volume": 8911004.496871999,
+        "usd_volume": 182310.49290315347
+      },
+      {
+        "hour_start": "2025-12-26 22:00:00.000 UTC",
+        "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+        "n_bad_price": 1,
+        "n_trades": 1,
+        "priced_token_volume": 0,
+        "quote_mint": "oppVJLf5VEevoDHLGuHdyhb5iiNM6tiRXUYuZ7ygqNA",
+        "raw_quote_volume": 239104.622483009,
+        "raw_token_volume": 7.624268,
+        "usd_volume": 0
+      }
+    ],
+    "metadata": {
+      "column_names": [
+        "mint",
+        "hour_start",
+        "quote_mint",
+        "n_trades",
+        "n_bad_price",
+        "usd_volume",
+        "priced_token_volume",
+        "raw_quote_volume",
+        "raw_token_volume"
+      ],
+      "column_types": [
+        "varchar(44)",
+        "timestamp(3) with time zone",
+        "varchar",
+        "bigint",
+        "bigint",
+        "double",
+        "double",
+        "double",
+        "double"
+      ],
+      "row_count": 20,
+      "result_set_bytes": 3739,
+      "total_row_count": 20,
+      "total_result_set_bytes": 2862,
+      "datapoint_count": 180,
+      "pending_time_millis": 276,
+      "execution_time_millis": 15687
+    }
+  }
+}

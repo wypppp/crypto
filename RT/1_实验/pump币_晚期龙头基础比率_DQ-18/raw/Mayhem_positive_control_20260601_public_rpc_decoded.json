@@ -1,0 +1,34 @@
+[
+  {
+    "ix": 3,
+    "fields": [
+      [
+        "name",
+        "The Official Dat Bih Gah Coin"
+      ],
+      [
+        "symbol",
+        "DATBIHGAH"
+      ],
+      [
+        "uri",
+        "https://metadata.j7tracker.io/metadata/Ebe3aHCWd1.json"
+      ]
+    ],
+    "is_mayhem_mode": true,
+    "signature": "KCxcXMgnSXkLS4q1ejpz839TVL6e3xCdssVFwuo1dZKec8H8erY8E3bNFpnizFSUKgU2GfzKJQT3kfhuYnXzSNY",
+    "slot": 423485608,
+    "block_time": 1780274653,
+    "idl_address": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+    "idl_discriminator": [
+      214,
+      144,
+      76,
+      236,
+      95,
+      139,
+      49,
+      180
+    ]
+  }
+]

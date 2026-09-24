@@ -1,0 +1,58 @@
+[
+  {
+    "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+    "variant": "first",
+    "tx_id": "Y23TyU8g5yH4rKaamnxmMkhF3AhrJGt8aVrVFds2z1Lj7zTgxvBa198onnfhfS6xkVuBr4GQ5rJJFh5xky7452a",
+    "pool_id_dune": "Bzc9NZfMqkXR6fz1DBph7BDf9BroyEf6pnzESP7v5iiw",
+    "target_vault_owner": "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1",
+    "pool_program_in_logs": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+    "target_pre_raw": 18924517520310,
+    "target_post_raw": 18925055257981,
+    "quote_pre_raw": 2013697372755,
+    "quote_post_raw": 2013640298475,
+    "implied_fee_bps": 25.000063757971702,
+    "other_dex_program_in_same_tx": false
+  },
+  {
+    "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+    "variant": "first_at_least_50_usd",
+    "tx_id": "66y8AqTXThKfK1EjAYgs9fTh3UjSuouUzzwT2hZWTYhoXkMZ4isRqpFUJ5YM58hBihH5hMn7zmS12BVpiJUynrqV",
+    "pool_id_dune": "Bzc9NZfMqkXR6fz1DBph7BDf9BroyEf6pnzESP7v5iiw",
+    "target_vault_owner": "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1",
+    "pool_program_in_logs": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+    "target_pre_raw": 18925055257981,
+    "target_post_raw": 18843891445362,
+    "quote_pre_raw": 2013640298475,
+    "quote_post_raw": 2022335123278,
+    "implied_fee_bps": 25.00000121276491,
+    "other_dex_program_in_same_tx": false
+  },
+  {
+    "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+    "variant": "first",
+    "tx_id": "4uGsYXYcqYMi4QDjhQP3AgVcv4pL5dR8A8xu491y8vZMU7LrUvVTaSj46Xea4WaVLSq31eUGyVKn2ZB13qoTvFBX",
+    "pool_id_dune": "9Tb2ohu5P16BpBarqd3N27WnkF51Ukfs8Z1GzzLDxVZW",
+    "target_vault_owner": "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1",
+    "pool_program_in_logs": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+    "target_pre_raw": 16412965566314,
+    "target_post_raw": 16408426155463,
+    "quote_pre_raw": 3189109540213,
+    "quote_post_raw": 3189994022413,
+    "implied_fee_bps": 25.000007227773402,
+    "other_dex_program_in_same_tx": false
+  },
+  {
+    "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+    "variant": "first",
+    "tx_id": "xcq633BDZeTkLLvtcYppDw4y3Bt4EJgHMyUZHDQ5Vg2syYio78ziY9itLHu36FGbuDevT5Lw6pkcxLh8THbbK5p",
+    "pool_id_dune": "4AZRPNEfCJ7iw28rJu5aUyeQhYcvdcNm8cswyL51AY9i",
+    "target_vault_owner": "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1",
+    "pool_program_in_logs": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+    "target_pre_raw": 11894399123289,
+    "target_post_raw": 11850645925703,
+    "quote_pre_raw": 4576604320836,
+    "quote_post_raw": 4593542169422,
+    "implied_fee_bps": 24.08143214242986,
+    "other_dex_program_in_same_tx": true
+  }
+]

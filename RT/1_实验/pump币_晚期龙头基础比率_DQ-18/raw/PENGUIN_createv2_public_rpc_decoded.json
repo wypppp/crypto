@@ -1,0 +1,34 @@
+[
+  {
+    "ix": 2,
+    "fields": [
+      [
+        "name",
+        "Nietzschean Penguin"
+      ],
+      [
+        "symbol",
+        "PENGUIN"
+      ],
+      [
+        "uri",
+        "https://ipfs.io/ipfs/bafkreicacw76igmnqi5qd5i7ho7dd2mkhvu76uhokik7nv4qxrizf53d7a"
+      ]
+    ],
+    "is_mayhem_mode": false,
+    "signature": "3qcAkmobNq59k2pZYgEfCP273VwTXTs3qaQ99g51kLt4U8GA2NcNEhK9cbHsiA587EM9RoUC84gsRsbm8U6nADpM",
+    "slot": 393934815,
+    "block_time": 1768587795,
+    "idl_address": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+    "idl_discriminator": [
+      214,
+      144,
+      76,
+      236,
+      95,
+      139,
+      49,
+      180
+    ]
+  }
+]

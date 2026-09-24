@@ -1,0 +1,95 @@
+{
+  "execution_id": "01M38KD8F1G2AZN9E9KAAXGVCA",
+  "query_id": 8824616,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-24T02:20:13.666573Z",
+  "expires_at": "2026-12-23T02:20:25.425925Z",
+  "execution_started_at": "2026-09-24T02:20:13.865286Z",
+  "execution_ended_at": "2026-09-24T02:20:25.425912Z",
+  "result": {
+    "rows": [
+      {
+        "first_qualifying_hour_start": "2024-11-01 20:00:00.000 UTC",
+        "first_signal_time": "2024-11-01 21:00:00.000 UTC",
+        "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+        "n_all_trades": 7553,
+        "n_bad_price_trades": 0,
+        "n_pools": 4,
+        "n_price_trades": 7553,
+        "platform_marketcap_usd": 2832963.5392354545,
+        "threshold_usd": "1000000.0",
+        "valid_usd_volume": 4361488.282480156
+      },
+      {
+        "first_qualifying_hour_start": "2024-11-01 21:00:00.000 UTC",
+        "first_signal_time": "2024-11-01 22:00:00.000 UTC",
+        "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+        "n_all_trades": 15955,
+        "n_bad_price_trades": 0,
+        "n_pools": 5,
+        "n_price_trades": 15955,
+        "platform_marketcap_usd": 7303380.649414516,
+        "threshold_usd": "5000000.0",
+        "valid_usd_volume": 12986879.991234776
+      },
+      {
+        "first_qualifying_hour_start": "2024-11-02 16:00:00.000 UTC",
+        "first_signal_time": "2024-11-02 17:00:00.000 UTC",
+        "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+        "n_all_trades": 32199,
+        "n_bad_price_trades": 13,
+        "n_pools": 12,
+        "n_price_trades": 32186,
+        "platform_marketcap_usd": 43605963.427514404,
+        "threshold_usd": "20000000.0",
+        "valid_usd_volume": 55506895.871545576
+      },
+      {
+        "first_qualifying_hour_start": "2024-11-02 23:00:00.000 UTC",
+        "first_signal_time": "2024-11-03 00:00:00.000 UTC",
+        "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+        "n_all_trades": 14569,
+        "n_bad_price_trades": 88,
+        "n_pools": 20,
+        "n_price_trades": 14481,
+        "platform_marketcap_usd": 101985100.09665295,
+        "threshold_usd": "100000000.0",
+        "valid_usd_volume": 21623858.426866982
+      }
+    ],
+    "metadata": {
+      "column_names": [
+        "mint",
+        "threshold_usd",
+        "first_qualifying_hour_start",
+        "first_signal_time",
+        "platform_marketcap_usd",
+        "n_all_trades",
+        "n_price_trades",
+        "n_bad_price_trades",
+        "n_pools",
+        "valid_usd_volume"
+      ],
+      "column_types": [
+        "varchar(44)",
+        "decimal(10, 1)",
+        "timestamp(3) with time zone",
+        "timestamp(3) with time zone",
+        "double",
+        "bigint",
+        "bigint",
+        "bigint",
+        "bigint",
+        "double"
+      ],
+      "row_count": 4,
+      "result_set_bytes": 877,
+      "total_row_count": 4,
+      "total_result_set_bytes": 496,
+      "datapoint_count": 40,
+      "pending_time_millis": 198,
+      "execution_time_millis": 11560
+    }
+  }
+}
