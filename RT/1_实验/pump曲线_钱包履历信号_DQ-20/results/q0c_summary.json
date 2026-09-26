@@ -1,0 +1,160 @@
+{
+ "rows": 74334,
+ "wallets_weighted": 211242.0,
+ "label_check": {
+  "sum_obs_a_dune": 19772,
+  "sum_obs_a_f3": 19266,
+  "f3_winners": 96,
+  "f3_in_dune_winner_union": 83,
+  "dune_winner_union": 294
+ },
+ "obs_total": 55639.0,
+ "exp_total": 55109.0,
+ "activity_factor": {
+  "[3.0, 5.0)": 0.587,
+  "[5.0, 10.0)": 0.58,
+  "[10.0, 30.0)": 0.941,
+  "[30.0, 100.0)": 1.036,
+  "[100.0, 300.0)": 1.149,
+  "[300.0, 1000000000.0)": 1.201
+ },
+ "excess_state_only": {
+  "0.05": {
+   "observed": 2651.0,
+   "null": 4112.6,
+   "ratio": 0.645
+  },
+  "0.01": {
+   "observed": 587.0,
+   "null": 559.3,
+   "ratio": 1.05
+  },
+  "0.001": {
+   "observed": 85.0,
+   "null": 64.9,
+   "ratio": 1.311
+  },
+  "0.0001": {
+   "observed": 21.0,
+   "null": 5.6,
+   "ratio": 3.747
+  }
+ },
+ "excess_activity_adjusted": {
+  "0.05": {
+   "observed": 3687.0,
+   "null": 4123.3,
+   "ratio": 0.894
+  },
+  "0.01": {
+   "observed": 577.0,
+   "null": 532.4,
+   "ratio": 1.084
+  },
+  "0.001": {
+   "observed": 83.0,
+   "null": 60.1,
+   "ratio": 1.38
+  },
+  "0.0001": {
+   "observed": 11.0,
+   "null": 5.4,
+   "ratio": 2.024
+  }
+ },
+ "qualified_v2_state_only": 21,
+ "qualified_activity_adjusted": 10,
+ "qualified_activity_adjusted_list": [
+  {
+   "usr": "7r2mbmfUsxGqTkDZctEmdvq2ZrkdShW4ehsr4N8QNC5t",
+   "n_coins": 117,
+   "obs": 8,
+   "expct": 0.958686,
+   "p2": 2e-05,
+   "n_age_lt2s": 5,
+   "n_days": 16
+  },
+  {
+   "usr": "BwrUsUUMoFFpYY4pf3eXLwxi3foecucjBH3Gzn1693Qb",
+   "n_coins": 178,
+   "obs": 9,
+   "expct": 1.338944,
+   "p2": 3.4e-05,
+   "n_age_lt2s": 1,
+   "n_days": 17
+  },
+  {
+   "usr": "7jvgMTjDM6Tzu5daNVrK1RkRpv7HQMX63RdFSB1rnnkq",
+   "n_coins": 40,
+   "obs": 5,
+   "expct": 0.349722,
+   "p2": 3.8e-05,
+   "n_age_lt2s": 0,
+   "n_days": 13
+  },
+  {
+   "usr": "FHVBANvGDmgcCxqJxc9wQ7M6VGURZuUJtEyvKvcaM4Q6",
+   "n_coins": 5,
+   "obs": 3,
+   "expct": 0.107439,
+   "p2": 3.9e-05,
+   "n_age_lt2s": 0,
+   "n_days": 2
+  },
+  {
+   "usr": "CCnFjFovBp8mfHbAhWWFNh6CSWsdMRvAhcKRUdgpPZm5",
+   "n_coins": 28,
+   "obs": 4,
+   "expct": 0.195179,
+   "p2": 4.1e-05,
+   "n_age_lt2s": 5,
+   "n_days": 5
+  },
+  {
+   "usr": "HrQnXknU7odiKPcZMw6V52wrzJFsGYRowhR9oyagSunU",
+   "n_coins": 18,
+   "obs": 5,
+   "expct": 0.390855,
+   "p2": 4.1e-05,
+   "n_age_lt2s": 0,
+   "n_days": 6
+  },
+  {
+   "usr": "FK5z4HVnGCLbMNATcAVm81551Ng6NZU6uRFezzMKdF3k",
+   "n_coins": 180,
+   "obs": 9,
+   "expct": 1.395852,
+   "p2": 4.6e-05,
+   "n_age_lt2s": 1,
+   "n_days": 17
+  },
+  {
+   "usr": "2p2mgFLmzN82sShZeAaBGmj9zFpam4xu8g4g3wqx2ks6",
+   "n_coins": 185,
+   "obs": 9,
+   "expct": 1.497576,
+   "p2": 7.9e-05,
+   "n_age_lt2s": 1,
+   "n_days": 17
+  },
+  {
+   "usr": "CVmALeGQhYJ5BP2q6CkK4nNc4sWLts8xW1yfP3QLWzsX",
+   "n_coins": 36,
+   "obs": 6,
+   "expct": 0.673018,
+   "p2": 8.8e-05,
+   "n_age_lt2s": 0,
+   "n_days": 6
+  },
+  {
+   "usr": "5i8rFRKn3TEWHTPC9JH7B6QQSNRmBx5TgUGiub1kAbJA",
+   "n_coins": 4294,
+   "obs": 51,
+   "expct": 23.721275,
+   "p2": 9.1e-05,
+   "n_age_lt2s": 220,
+   "n_days": 17
+  }
+ ],
+ "qualified_activity_adjusted_distinct_hitsets": 10
+}
