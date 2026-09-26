@@ -1,0 +1,3 @@
+raw/dune/*_pages/
+raw/dune/*.json
+!raw/dune/*_status.json

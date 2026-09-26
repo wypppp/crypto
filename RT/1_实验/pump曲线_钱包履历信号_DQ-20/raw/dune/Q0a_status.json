@@ -1,0 +1,48 @@
+{
+  "execution_id": "01M3DNW2ADZ15NGWYBYP163KCA",
+  "query_id": 8838908,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-26T01:39:28.206189Z",
+  "expires_at": "2026-12-25T01:39:50.992747Z",
+  "execution_started_at": "2026-09-26T01:39:29.546380559Z",
+  "execution_ended_at": "2026-09-26T01:39:50.99273278Z",
+  "result_metadata": {
+    "column_names": [
+      "usr",
+      "n_coins",
+      "obs",
+      "expct",
+      "sol_total",
+      "n_age_lt2s",
+      "n_create_slot",
+      "n_days",
+      "first_ts",
+      "last_ts",
+      "hit_mints",
+      "min_cell_n"
+    ],
+    "column_types": [
+      "varchar",
+      "bigint",
+      "bigint",
+      "double",
+      "double",
+      "bigint",
+      "bigint",
+      "bigint",
+      "timestamp(3) with time zone",
+      "timestamp(3) with time zone",
+      "varchar",
+      "bigint"
+    ],
+    "row_count": 32437,
+    "result_set_bytes": 4873772,
+    "total_row_count": 32437,
+    "total_result_set_bytes": 4873772,
+    "datapoint_count": 389244,
+    "pending_time_millis": 1340,
+    "execution_time_millis": 21446
+  },
+  "execution_cost_credits": 2.568653847
+}

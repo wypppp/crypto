@@ -1,0 +1,43 @@
+{
+ "rows": 32437,
+ "wallets_weighted": 93892.0,
+ "qualified": 4,
+ "expected_lucky_qualified": 2.22,
+ "qualified_obs_dist": {
+  "7": 1,
+  "14": 3
+ },
+ "qualified_n_coins_quantiles": {
+  "0.0": 68.0,
+  "0.25": 350.8,
+  "0.5": 445.0,
+  "0.75": 445.0,
+  "1.0": 445.0
+ },
+ "qualified_sniper_share_median": 0.034,
+ "qualified_create_slot_share_median": 0.0,
+ "qualified_distinct_hitsets": 4,
+ "winners_covered_by_qualified": 19,
+ "top_hitsets": {
+  "5VQL7aJcjfWWHbmhW25AKxMZ8ErPETRR8uTnPeDDpump,DpPowzjETiU6421ReuwBB8XmDB7sMyB2JGzFLssYpump,B7MJFpekGZRfsqQJh48ciaA27rA7SoC8cLYkShzCpump,HrkKpjDdgMGCA16LsgkK2a4kQYznv8Sjx5LM5Ad3pump,AyLn7YdHqh3pGSNC1YrdEtEdSCVjG7BxQedxBvkTpump,FZ8a7XbvtWKKJV5uJk3DYjnEgLN54EKwrHsrWCttpump,Cxtd4j9mVysEoE8JRiiyhPoqa59mfU6JW58jy34GPump,FDVu3VmwoeF2rymVkkmptNBAZxmBLqpjRBcGfZ4npump,AKUYQxitb6GqqJnoSbwgzJJphRW5emgn2ykEiPpKpump,F1nRpCjND1FjQtgVScRhgEgLp95Q3z4vDDhe8fgKpump,HAJAeRURXJrniiEcsVU3Y7VBXi7zxB5k5AiYyNpqpump,3ghKZfLZJawWRWhSvgreiTDeyFPS4Kriy6v4Fbk3pump,FUXKe7MFMjBgRU9P6zdNKowSuEwgHh2nC5jtfh43CB8q,C3x6wHmu4kJ1HrLj2ueUzHndTS7cQTDvBbAUDetGpump": 1,
+  "DpPowzjETiU6421ReuwBB8XmDB7sMyB2JGzFLssYpump,B7MJFpekGZRfsqQJh48ciaA27rA7SoC8cLYkShzCpump,5VQL7aJcjfWWHbmhW25AKxMZ8ErPETRR8uTnPeDDpump,3ghKZfLZJawWRWhSvgreiTDeyFPS4Kriy6v4Fbk3pump,FUXKe7MFMjBgRU9P6zdNKowSuEwgHh2nC5jtfh43CB8q,C3x6wHmu4kJ1HrLj2ueUzHndTS7cQTDvBbAUDetGpump,HrkKpjDdgMGCA16LsgkK2a4kQYznv8Sjx5LM5Ad3pump,AyLn7YdHqh3pGSNC1YrdEtEdSCVjG7BxQedxBvkTpump,FZ8a7XbvtWKKJV5uJk3DYjnEgLN54EKwrHsrWCttpump,Cxtd4j9mVysEoE8JRiiyhPoqa59mfU6JW58jy34GPump,FDVu3VmwoeF2rymVkkmptNBAZxmBLqpjRBcGfZ4npump,AKUYQxitb6GqqJnoSbwgzJJphRW5emgn2ykEiPpKpump,F1nRpCjND1FjQtgVScRhgEgLp95Q3z4vDDhe8fgKpump,HAJAeRURXJrniiEcsVU3Y7VBXi7zxB5k5AiYyNpqpump": 1,
+  "DpPowzjETiU6421ReuwBB8XmDB7sMyB2JGzFLssYpump,B7MJFpekGZRfsqQJh48ciaA27rA7SoC8cLYkShzCpump,5VQL7aJcjfWWHbmhW25AKxMZ8ErPETRR8uTnPeDDpump,3ghKZfLZJawWRWhSvgreiTDeyFPS4Kriy6v4Fbk3pump,FUXKe7MFMjBgRU9P6zdNKowSuEwgHh2nC5jtfh43CB8q,HrkKpjDdgMGCA16LsgkK2a4kQYznv8Sjx5LM5Ad3pump,AyLn7YdHqh3pGSNC1YrdEtEdSCVjG7BxQedxBvkTpump,FZ8a7XbvtWKKJV5uJk3DYjnEgLN54EKwrHsrWCttpump,Cxtd4j9mVysEoE8JRiiyhPoqa59mfU6JW58jy34GPump,FDVu3VmwoeF2rymVkkmptNBAZxmBLqpjRBcGfZ4npump,AKUYQxitb6GqqJnoSbwgzJJphRW5emgn2ykEiPpKpump,F1nRpCjND1FjQtgVScRhgEgLp95Q3z4vDDhe8fgKpump,HAJAeRURXJrniiEcsVU3Y7VBXi7zxB5k5AiYyNpqpump,C3x6wHmu4kJ1HrLj2ueUzHndTS7cQTDvBbAUDetGpump": 1,
+  "7AyGRkob1epwwqutVomL9EYCdfZ4KYHSwbyfYQyEpump,EGcyghBEZ3A1t32FkcPzbKnMjE9UpBgK7789rq1W4JcR,3to2HzpTG49t1saZCtTgUMRTkXg9MaPEP1Rdyvnwpump,2Cn914VFmRasAJyhEQrjuxXoLqTR6b66Cx6vcDWwpump,B7MJFpekGZRfsqQJh48ciaA27rA7SoC8cLYkShzCpump,FUXKe7MFMjBgRU9P6zdNKowSuEwgHh2nC5jtfh43CB8q,hMZnN3vvdWHiWbBsGaqVVRSxrXAPPXUr7VH8QB1pump": 1
+ },
+ "placebo_match_cells": {
+  "[100.0, inf)|[3.0, inf)": [
+   3,
+   80
+  ],
+  "[30.0, 100.0)|[1.0, 3.0)": [
+   1,
+   253
+  ]
+ },
+ "cell_n_min_among_qualified": 1122,
+ "q0b_wallets": {
+  "fixture": 695,
+  "placebo": 110,
+  "qualified": 4
+ }
+}
