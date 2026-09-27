@@ -47,8 +47,9 @@ def main():
         raise RuntimeError("empty S0 result")
     required = {
         "mint", "created_at", "eligible", "tail10_exec", "early_crash", "r0_seen",
-        "mint_hash", "inclusion_probability", "n_all", "n_eligible", "n_tail10_exec",
-        "n_early_crash", "n_random_2pct", "t3_s", "e5_x", "e5_y", "max_sell_30d",
+        "mint_hash", "objective_inclusion_probability", "n_all", "n_eligible", "n_tail10_exec",
+        "n_early_crash", "n_random_2pct", "n_mapped_reverse_pool", "t3_s", "e5_x", "e5_y",
+        "max_sell_30d", "max_sell_30d_e30", "max_sell_30d_e120",
     }
     missing = required - set(rows[0])
     if missing:
@@ -57,7 +58,10 @@ def main():
         raise RuntimeError("duplicate mint rows")
 
     constants = {}
-    for name in ("n_all", "n_eligible", "n_tail10_exec", "n_early_crash", "n_random_2pct"):
+    for name in (
+        "n_all", "n_eligible", "n_tail10_exec", "n_early_crash", "n_random_2pct",
+        "n_mapped_reverse_pool",
+    ):
         vals = {int(float(r[name])) for r in rows}
         if len(vals) != 1:
             raise RuntimeError(f"nonconstant {name}: {vals}")
@@ -80,17 +84,15 @@ def main():
     if random_rows != constants["n_random_2pct"]:
         raise RuntimeError(f"random cohort incomplete: downloaded {random_rows}, expected {constants['n_random_2pct']}")
 
-    # R0-only QA rows were selected deliberately and have no sampling weight.
-    # R0 rows that independently enter the all-tail census or fixed hash cohort
-    # retain those objective inclusion probabilities.
-    r0_only_eligible = sum(
-        b(r, "r0_seen") and b(r, "eligible") and not b(r, "tail10_exec")
-        and int(r["mint_hash"]) % 10000 >= 200 for r in rows
-    )
-    eligible_denominator = constants["n_eligible"] - r0_only_eligible
+    # All 105 R0 QA mints were already inspected. Exclude every eligible R0 mint
+    # from the main estimates, including any that independently enter the tail
+    # census or fixed hash cohort. Exact all-cohort counts remain untouched.
+    r0_eligible = sum(b(r, "r0_seen") and b(r, "eligible") for r in rows)
+    eligible_denominator = constants["n_eligible"] - r0_eligible
     primary = [
         r for r in rows
-        if b(r, "eligible") and (b(r, "tail10_exec") or int(r["mint_hash"]) % 10000 < 200)
+        if not b(r, "r0_seen") and b(r, "eligible")
+        and (b(r, "tail10_exec") or int(r["mint_hash"]) % 10000 < 200)
     ]
     weighted = []
     for r in primary:
@@ -145,7 +147,7 @@ def main():
         "downloaded_rows": len(rows),
         "exact_counts": constants,
         "r0_qa_rows": sum(b(r, "r0_seen") for r in rows),
-        "r0_only_eligible_excluded_from_weighted_estimates": r0_only_eligible,
+        "r0_eligible_excluded_from_weighted_estimates": r0_eligible,
         "weighted_target_n": eligible_denominator,
         "downloaded_tail_rows": tail_rows,
         "downloaded_random_rows": random_rows,
@@ -158,6 +160,8 @@ def main():
             "t3_s_p10_p50_p90": [weighted_quantile(t3, q) for q in (0.1, 0.5, 0.9)],
             "capacity_5pct_sol_p10_p50_p90": [weighted_quantile(cap, q) for q in (0.1, 0.5, 0.9)],
             "mean_max_sell_30d": ht_mean("max_sell_30d"),
+            "mean_max_sell_30d_e30": ht_mean("max_sell_30d_e30"),
+            "mean_max_sell_30d_e120": ht_mean("max_sell_30d_e120"),
         },
     }
     if any(anomalies.values()):
