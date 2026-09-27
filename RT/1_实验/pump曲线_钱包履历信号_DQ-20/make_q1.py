@@ -1,4 +1,5 @@
-"""DQ-20 第 1 段 Q1（卡片 v3 §6）：历史窗口 + B 周一次扫描，按 B 周币汇总买家构成、合格钱包与安慰剂买入。
+"""DQ-20 第 1 段 Q1（卡片 v3.1 §6）：历史窗口 + B 周一次扫描，按 B 周币汇总买家构成；履历钱包（W_final，唯一地址）只作描述。
+v3.1：删除安慰剂表连接（外部复核 09-27：重复地址会复制买入行、累加 SOL）。
 
 python make_q1.py → sql/Q1_B_signals.sql
 """
@@ -9,14 +10,13 @@ import pandas as pd
 H = Path(__file__).resolve().parent
 PUMP = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 W = pd.read_csv(H / "raw" / "W_final.csv").usr.tolist()
-P = pd.read_csv(H / "raw" / "placebo_draws.csv")
 wvals = ",\n        ".join(f"('{u}', {i})" for i, u in enumerate(W))
-pvals = ",\n        ".join(f"('{r.usr}', {int(r.w_idx)}, {int(r.draw)})" for r in P.itertuples())
 
-SQL = f"""/* DQ-20 第 1 段 Q1（卡片_v3.md）。生成：make_q1.py。平台单次费用上限：40 credits（请在 Dune 网页设置）。
+SQL = f"""/* DQ-20 第 1 段 Q1（卡片_v3.1.md）。生成：make_q1.py。平台单次费用上限：40 credits（请在 Dune 网页设置）。
    历史窗口：2026-05-21 00:00 至 06-06 23:29:59 创建；B 周：06-08 00:00 至 06-14 23:59:59 创建（SOL 币）。
    早买 = 创建后 30 分钟内、≥0.1 SOL、非创建者（曲线 + pump 创建的 PumpSwap 池）；每个（钱包, 币）取第一笔。
    h(w) = 钱包在历史窗口早买过的不同币数（只用 B 周之前的数据）。输出：每个有早买的 B 周币一行。
+   连接的钱包名单 wl 地址唯一，不会复制买入行；金额在每个（钱包, 币）第一笔上汇总。
    重扫描链：tradeevent 与 buyevent 各扫描一次（05-21 至 06-15）；扫描 06-15 只为覆盖 06-14 深夜创建的币，结果只含 B 周币。 */
 WITH
 cohort AS (
@@ -45,11 +45,6 @@ wl AS (
     SELECT usr, w_idx FROM (VALUES
         {wvals}
     ) AS v(usr, w_idx)
-),
-pl AS (
-    SELECT usr, w_idx, draw FROM (VALUES
-        {pvals}
-    ) AS v(usr, w_idx, draw)
 ),
 buys AS (
     SELECT t.mint, t.evt_block_time AS ts, t.evt_block_slot AS slot, t.evt_tx_index AS txi,
@@ -81,10 +76,9 @@ hist AS (
 ),
 bw AS (
     SELECT x.mint, x.usr, x.ts, x.slot, x.sol_amt, x.h, x.created_at,
-           w.w_idx AS w_idx, p.draw AS pdraw
+           w.w_idx AS w_idx
     FROM hist x
     LEFT JOIN wl w ON w.usr = x.usr
-    LEFT JOIN pl p ON p.usr = x.usr
     WHERE x.period = 'B'
 )
 SELECT mint,
@@ -96,8 +90,7 @@ SELECT mint,
        count(DISTINCT CASE WHEN h = 0 THEN usr END) AS n_new,
        sum(CASE WHEN h >= 30 THEN sol_amt ELSE 0 END) AS sol_hi30,
        array_join(array_distinct(array_agg(CAST(w_idx AS varchar)) FILTER (WHERE w_idx IS NOT NULL)), ',') AS w_idx_list,
-       min(CASE WHEN w_idx IS NOT NULL THEN ts END) AS w_first_ts,
-       array_join(array_distinct(array_agg(CAST(pdraw AS varchar)) FILTER (WHERE pdraw IS NOT NULL)), ',') AS placebo_draws
+       min(CASE WHEN w_idx IS NOT NULL THEN ts END) AS w_first_ts
 FROM bw
 GROUP BY 1
 """
