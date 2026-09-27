@@ -13,7 +13,7 @@
 | [check_buyers.py](check_buyers.py) | R0a 条件 1：Helius 重建早买名单并与 Dune 比对 |
 | [build_r0.py](build_r0.py) | 钱包出资状态、主出资方、V1–V3、前 K 覆盖 → `results/` |
 | [audit_sample.py](audit_sample.py) | 来源归因核验（分层抽样，jsonParsed 独立判断） |
-| [Q_daily.sql](Q_daily.sql)、[make_q_daily.py](make_q_daily.py) | 持续索引成本估算用的每日新钱包数 |
+| [Q_daily.sql](Q_daily.sql)、[make_q_daily.py](make_q_daily.py) | 持续索引成本估算用的每日新钱包数（09-27 修正版；Dune query 8843858 改存此 SQL，execution `01M3GFDG1D2P6KYV2D8DR30YM3`，2.6979 credits，保存的 SQL 与本地一致）→ `raw/dune/Q_daily.csv.gz` |
 | [过程/](过程/) | R0a 结果与核验、R0b 的 K/P/预算/服务规则 |
 
 ## 1. 问什么

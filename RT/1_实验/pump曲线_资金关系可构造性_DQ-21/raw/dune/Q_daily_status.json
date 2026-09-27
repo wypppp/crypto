@@ -1,0 +1,40 @@
+{
+  "execution_id": "01M3GFDG1D2P6KYV2D8DR30YM3",
+  "query_id": 8843858,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-27T03:44:22.574372Z",
+  "expires_at": "2026-12-26T03:44:33.691624Z",
+  "execution_started_at": "2026-09-27T03:44:23.917092402Z",
+  "execution_ended_at": "2026-09-27T03:44:33.691612113Z",
+  "result_metadata": {
+    "column_names": [
+      "d",
+      "n_pairs",
+      "n_wallets",
+      "n_pairs_k30",
+      "n_wallets_k30",
+      "n_new_7d_k30",
+      "n_back_1d_k30",
+      "n_back_2to7d_k30"
+    ],
+    "column_types": [
+      "date",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint"
+    ],
+    "row_count": 7,
+    "result_set_bytes": 420,
+    "total_row_count": 7,
+    "total_result_set_bytes": 420,
+    "datapoint_count": 56,
+    "pending_time_millis": 1342,
+    "execution_time_millis": 9774
+  },
+  "execution_cost_credits": 2.697884616
+}
