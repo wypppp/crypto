@@ -1,0 +1,27 @@
+{
+  "query_id": 8844536,
+  "execution_id": "01M3JFENWNXN6HMBK95AJ96JTZ",
+  "rows": 1312,
+  "columns": [
+    "mint",
+    "mint_hash_exact",
+    "r0_seen",
+    "eligible",
+    "tail10_exec",
+    "tail420_candidate",
+    "t3_s",
+    "e5_x",
+    "e5_y",
+    "e5_fee_bps",
+    "n_all",
+    "n_eligible",
+    "n_tail10_exec",
+    "n_tail420_candidate",
+    "n_random_2pct",
+    "n_migration_event",
+    "n_amm_mapped",
+    "n_migration_unmapped"
+  ],
+  "sum_result_set_bytes": 218618,
+  "conservative_export_upper_bound_credits": 4.37236
+}

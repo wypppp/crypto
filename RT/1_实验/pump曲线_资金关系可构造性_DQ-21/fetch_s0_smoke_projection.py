@@ -20,18 +20,27 @@ COLS = [
     "n_migration_event", "n_amm_mapped", "n_migration_unmapped",
     "n_mapped_reverse_pool",
 ]
+TWO_DAY_COLS = [
+    "mint", "mint_hash_exact", "r0_seen", "eligible", "tail10_exec",
+    "tail420_candidate", "t3_s", "e5_x", "e5_y", "e5_fee_bps",
+    "n_all", "n_eligible", "n_tail10_exec", "n_tail420_candidate",
+    "n_random_2pct", "n_migration_event", "n_amm_mapped",
+    "n_migration_unmapped",
+]
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("label", choices=("v1_2", "v1_3", "cost_30d_v1_3"))
+    ap.add_argument("label", choices=("v1_2", "v1_3", "cost_30d_v1_3", "cost_2day_30d_v1_3"))
     args = ap.parse_args()
     settings = {
         "v1_2": (8844536, "01M3HD97S93VA2NYMN67NBRT0B", 773),
         "v1_3": (8844536, "01M3HEM7GYH70ZJ4KXKCNR8CQY", 685),
         "cost_30d_v1_3": (8844536, "01M3JEYDWQM6J893T6CPN1CPG6", 695),
+        "cost_2day_30d_v1_3": (8844536, "01M3JFENWNXN6HMBK95AJ96JTZ", 1312),
     }
     query_id, execution_id, row_count = settings[args.label]
+    cols = TWO_DAY_COLS if args.label == "cost_2day_30d_v1_3" else COLS
     key = api_key()
     rows = []
     bytes_fetched = 0
@@ -39,7 +48,7 @@ def main():
         q = urllib.parse.urlencode({
             "limit": min(PAGE_SIZE, row_count - offset),
             "offset": offset,
-            "columns": ",".join(COLS),
+            "columns": ",".join(cols),
         })
         response = get(f"/query/{query_id}/results?{q}", key)
         if response.get("execution_id") != execution_id:
@@ -48,7 +57,7 @@ def main():
         page = result.get("rows") or []
         if len(page) != min(PAGE_SIZE, row_count - offset):
             raise RuntimeError(f"short page at {offset}: {len(page)}")
-        if any(set(row) != set(COLS) for row in page):
+        if any(set(row) != set(cols) for row in page):
             raise RuntimeError("column mismatch")
         page_bytes = int((result.get("metadata") or {}).get("result_set_bytes") or 0)
         if not page_bytes or bytes_fetched + page_bytes > MAX_BYTES:
@@ -61,14 +70,14 @@ def main():
         raise RuntimeError("missing or duplicate rows")
     out = Path(__file__).resolve().parent / f"raw/s0/S0_SMOKE_{args.label}_audit_columns.csv.gz"
     with gzip.open(out, "wt", newline="") as dst:
-        writer = csv.DictWriter(dst, fieldnames=COLS)
+        writer = csv.DictWriter(dst, fieldnames=cols)
         writer.writeheader()
         writer.writerows(rows)
     meta = {
         "query_id": query_id,
         "execution_id": execution_id,
         "rows": len(rows),
-        "columns": COLS,
+        "columns": cols,
         "sum_result_set_bytes": bytes_fetched,
         "conservative_export_upper_bound_credits": bytes_fetched * 20 / 1_000_000,
     }

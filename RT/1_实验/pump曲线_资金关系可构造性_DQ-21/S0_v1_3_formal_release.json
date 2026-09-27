@@ -1,0 +1,14 @@
+{
+  "released_at": "2026-09-28",
+  "parent": "S0_v1_3_freeze.json",
+  "scope": "one formal A/B S0 census execution; no relationship or return test",
+  "query_execution_platform_cap_credits": 100,
+  "s0_total_cap_credits": 245,
+  "execution_credits_spent_before_release": 56.061730772,
+  "conservative_prior_retrieval_upper_credits": 17.32708,
+  "required_before_download": "Read execution cost, rows, columns and bytes; recompute remaining S0 budget and project only necessary columns.",
+  "files_sha256": {
+    "sql/S0_AB_事件时点机会普查_v1_3_运行版.sql": "63e30f30cda4d0204ab80b6c0e337baf55b7e878db64722eea2d706e740fa0ea",
+    "过程/S0_v1.3_两日成本校准与正式执行.md": "d80d369e0b2a1c3674e4ad00eaed775724523571cff8e40886f46ce348b87a73"
+  }
+}

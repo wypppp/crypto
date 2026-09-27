@@ -1,0 +1,27 @@
+{
+  "one_day_rows_retained": 695,
+  "two_day_rows": 1312,
+  "exact_counts": {
+    "n_all": 56134,
+    "n_eligible": 21162,
+    "n_tail10_exec": 248,
+    "n_tail420_candidate": 898,
+    "n_random_2pct": 420,
+    "n_migration_event": 410,
+    "n_amm_mapped": 410,
+    "n_migration_unmapped": 0
+  },
+  "hashes_checked": 1312,
+  "one_day_fields_unchanged": [
+    "mint_hash_exact",
+    "r0_seen",
+    "eligible",
+    "tail10_exec",
+    "tail420_candidate",
+    "t3_s",
+    "e5_x",
+    "e5_y",
+    "e5_fee_bps"
+  ],
+  "verdict": "PASS_TECHNICAL_COST_CALIBRATION"
+}
