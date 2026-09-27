@@ -1,0 +1,29 @@
+{
+  "frozen_at": "2026-09-27",
+  "status": "pre-v1.3-smoke-execution",
+  "scope": "DQ-21 S0 v1.3 single-day cost and semantic smoke",
+  "supersedes": "S0 v1.2 for future execution; v1.2 smoke remains archived",
+  "changes_from_v1_2": [
+    "Replace the reverse-ordered future price maximum with a forward-running minimum over eligible early states; preserve the existence test for a later >=8x price.",
+    "Require event row number at or after the third qualified buyer, preventing same-second pre-signal states from entering the case oversample.",
+    "Do not change the population, entry sizes, delay arms, hash cohort, old executable 10x oversample, or outcome permissions."
+  ],
+  "budgets_credits": {
+    "v1_1_smoke_execution_actual": 5.365576924,
+    "v1_2_smoke_execution_actual": 18.233269231,
+    "v1_3_smoke_execution_gate": 10,
+    "v1_3_smoke_retrieval_cap": 5,
+    "production_execution_cap": 115,
+    "production_retrieval_cap": 100,
+    "s0_all_versions_total_cap": 245
+  },
+  "files_sha256": {
+    "sql/S0_AB_事件时点机会普查_v1_3.sql": "a75d3b0d87a6be7d53510249b0bd6e336cc30d391975f3a07fda286415fa6d60",
+    "sql/S0_AB_事件时点机会普查_v1_3_运行版.sql": "63e30f30cda4d0204ab80b6c0e337baf55b7e878db64722eea2d706e740fa0ea",
+    "sql/S0_SMOKE_v1_3_20260601.sql": "a344c31e119fe68f8866f67de7a7d7b886b3884caadc7b5e84a9c6b95a73dd7b",
+    "make_s0_sql_v1_3.py": "af8c8200232b6fbf28c06a6918df61ae211213fa29fbb04947e3699e78ef269c",
+    "make_s0_smoke_v1_3.py": "0807d9562a936ac6314183bf60d5a1b1d55b5a62a933b29788743f2cfbe927e6",
+    "test_s0_v1_3.py": "de3729175d68ddc4851a37ec94404c633b208f1c84c82945db5510c216eed99e",
+    "过程/S0_v1.3_执行规格.md": "f27af37eacc79f3f01e3c87b993d3677592c795647656ba5323038f3cc675ce6"
+  }
+}
