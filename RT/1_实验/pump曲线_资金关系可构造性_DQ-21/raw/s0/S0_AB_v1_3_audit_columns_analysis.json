@@ -1,0 +1,83 @@
+{
+  "source": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/s0/S0_AB_v1_3_audit_columns.csv.gz",
+  "downloaded_rows": 10565,
+  "exact_counts": {
+    "n_all": 371312,
+    "n_eligible": 137181,
+    "n_tail10_exec": 1782,
+    "n_tail420_candidate": 7848,
+    "n_tail10_outside_tail420": 0,
+    "n_early_crash": 40324,
+    "n_random_2pct": 2808,
+    "n_migration_event": 2725,
+    "n_amm_mapped": 2725,
+    "n_migration_unmapped": 0,
+    "n_mapped_reverse_pool": 0
+  },
+  "r0_qa_rows": 105,
+  "r0_eligible_excluded_from_weighted_estimates": 73,
+  "weighted_target_n": 137108,
+  "downloaded_tail10_rows": 1782,
+  "downloaded_tail420_rows": 7848,
+  "downloaded_random_rows": 2808,
+  "exact_hashes_recomputed": 10565,
+  "anomalies": {
+    "eligible_without_t3": 0,
+    "eligible_bad_t3": 0,
+    "eligible_missing_entry_state": 0,
+    "nonpositive_entry_reserve": 0,
+    "tail_missing_recovery": 0,
+    "tail10_outside_tail420": 0
+  },
+  "mapping_counts": {
+    "migration_event": 2725,
+    "amm_mapped": 2725,
+    "migration_unmapped": 0,
+    "mapped_reverse_pool": 0
+  },
+  "weighted_estimates": {
+    "exact_week_n_all_n_eligible": {
+      "A": [
+        183962,
+        68529
+      ],
+      "B": [
+        187350,
+        68652
+      ]
+    },
+    "exact_observed_t3_strata": {
+      "A/000_005": 42921,
+      "A/016_030": 7988,
+      "A/031_060": 4515,
+      "A/006_015": 10117,
+      "A/061_120": 2004,
+      "A/121_300": 984,
+      "A/not_eligible": 0,
+      "B/000_005": 41270,
+      "B/006_015": 11067,
+      "B/061_120": 1951,
+      "B/016_030": 8660,
+      "B/031_060": 4688,
+      "B/121_300": 1016,
+      "B/not_eligible": 0
+    },
+    "tail_share": 0.012770954284213905,
+    "tail420_candidate_share": 0.05693322052688392,
+    "early_crash_share": 0.31176882457624644,
+    "t3_s_p10_p50_p90": [
+      0.0,
+      2.0,
+      35.0
+    ],
+    "capacity_5pct_sol_p10_p50_p90": [
+      0.43074129258318283,
+      0.8498839798309978,
+      1.387519777705581
+    ],
+    "mean_max_sell_30d": 1.90147307866064,
+    "mean_max_sell_30d_e30": 1.588605481554749,
+    "mean_max_sell_30d_e120": 1.3267423178069941
+  },
+  "verdict": "READY_FOR_MANUAL_QA"
+}

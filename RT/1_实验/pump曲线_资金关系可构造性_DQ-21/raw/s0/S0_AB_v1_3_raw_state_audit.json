@@ -1,0 +1,176 @@
+{
+  "checked": 10,
+  "states": [
+    {
+      "mint": "5eyrv3Wuc8GLMnLM3RGLAgahaAEv3bvUzWFczp8gpump",
+      "source": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/helius/coin__5eyrv3Wuc8GLMnLM3RGLAgahaAEv3bvUzWFczp8gpump__1781026430.jsonl.gz",
+      "cutoff_unix": 1781026600,
+      "last_trade_unix": 1781026596,
+      "last_event_key": [
+        425374013,
+        431,
+        1,
+        6
+      ],
+      "venue": 0,
+      "reserve_sol": 32.817349971,
+      "reserve_token": 980883588.417326,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "AomvUWpEPZYw4FNNVJH3gfzJvVtJx37LFWcdGYEpump",
+      "source": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/helius/coin__AomvUWpEPZYw4FNNVJH3gfzJvVtJx37LFWcdGYEpump__1781275498.jsonl.gz",
+      "cutoff_unix": 1781275505,
+      "last_trade_unix": 1781275505,
+      "last_event_key": [
+        426001900,
+        1360,
+        3,
+        7
+      ],
+      "venue": 0,
+      "reserve_sol": 42.402064278,
+      "reserve_token": 759161152.876684,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "12JPYuF5tvXbCPy7KLmEoqB53Mbpxre2L6yCteXEpump",
+      "source": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/helius/coin__12JPYuF5tvXbCPy7KLmEoqB53Mbpxre2L6yCteXEpump__1780777318.jsonl.gz",
+      "cutoff_unix": 1780777323,
+      "last_trade_unix": 1780777323,
+      "last_event_key": [
+        424748290,
+        963,
+        6,
+        6
+      ],
+      "venue": 1,
+      "reserve_sol": 146.332578558,
+      "reserve_token": 120235522.079543,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "MBVyDu7GddjEZ9zNBHWBTqJkhU6Fv4g4VUNGZUnpump",
+      "source": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/helius/coin__MBVyDu7GddjEZ9zNBHWBTqJkhU6Fv4g4VUNGZUnpump__1780471666.jsonl.gz",
+      "cutoff_unix": 1780471718,
+      "last_trade_unix": 1780471713,
+      "last_event_key": [
+        423981480,
+        1126,
+        4,
+        6
+      ],
+      "venue": 0,
+      "reserve_sol": 33.515329342,
+      "reserve_token": 960456025.22703,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "DioWcz9RdEHNPQZiiRDLyHvqJB3j88CduS3LepNGpump",
+      "source": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/helius/coin__DioWcz9RdEHNPQZiiRDLyHvqJB3j88CduS3LepNGpump__1781222146.jsonl.gz",
+      "cutoff_unix": 1781222172,
+      "last_trade_unix": 1781222167,
+      "last_event_key": [
+        425867549,
+        523,
+        3,
+        2
+      ],
+      "venue": 0,
+      "reserve_sol": 31.141307012,
+      "reserve_token": 1033675304.405534,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump",
+      "source": "RT/1_实验/pump曲线_案例时序与点火跟随_H1/raw/full24h_BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump.jsonl.gz",
+      "cutoff_unix": 1780782474,
+      "last_trade_unix": 1780782472,
+      "last_event_key": [
+        424761209,
+        709,
+        3,
+        7
+      ],
+      "venue": 0,
+      "reserve_sol": 70.993476438,
+      "reserve_token": 453421942.692828,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump",
+      "source": "RT/1_实验/pump曲线_案例时序与点火跟随_H1/raw/full24h_FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump.jsonl.gz",
+      "cutoff_unix": 1780730637,
+      "last_trade_unix": 1780730632,
+      "last_event_key": [
+        424631208,
+        893,
+        3,
+        6
+      ],
+      "venue": 0,
+      "reserve_sol": 31.241750676,
+      "reserve_token": 1030351990.776481,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump",
+      "source": "RT/1_实验/pump曲线_案例时序与点火跟随_H1/raw/full24h_B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump.jsonl.gz",
+      "cutoff_unix": 1780333642,
+      "last_trade_unix": 1780333642,
+      "last_event_key": [
+        423634074,
+        1095,
+        2,
+        2
+      ],
+      "venue": 0,
+      "reserve_sol": 93.828266767,
+      "reserve_token": 343073586.635474,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump",
+      "source": "RT/1_实验/pump曲线_案例时序与点火跟随_H1/raw/full24h_6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump.jsonl.gz",
+      "cutoff_unix": 1780465655,
+      "last_trade_unix": 1780465655,
+      "last_event_key": [
+        423966223,
+        428,
+        2,
+        4
+      ],
+      "venue": 0,
+      "reserve_sol": 19.266054346,
+      "reserve_token": 992263453.046157,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    },
+    {
+      "mint": "YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump",
+      "source": "RT/1_实验/pump曲线_案例时序与点火跟随_H1/raw/full24h_YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump.jsonl.gz",
+      "cutoff_unix": 1780278360,
+      "last_trade_unix": 1780278360,
+      "last_event_key": [
+        423494905,
+        771,
+        1,
+        11
+      ],
+      "venue": 0,
+      "reserve_sol": 35.842646065,
+      "reserve_token": 898092176.104895,
+      "abs_error_sol": 0.0,
+      "abs_error_token": 0.0
+    }
+  ],
+  "verdict": "PASS_RAW_ENTRY_STATES"
+}
