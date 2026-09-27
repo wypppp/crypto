@@ -1,0 +1,310 @@
+{
+ "week": "B",
+ "smoke": false,
+ "N_panel": 14909,
+ "N_elig": 7654,
+ "no_q1_row": 2438,
+ "all_elig_R0": {
+  "n": 7654,
+  "E": 0.9319,
+  "median": 0.9028,
+  "share_gt1": 0.0959,
+  "E_drop_top1": 0.9275,
+  "max_single_share_of_pos": 0.0437,
+  "E_cost_0.01": 0.9219,
+  "E_cost_0.02": 0.9119,
+  "n_ge10x": 150,
+  "n_ge100x": 10
+ },
+ "S_C_share_ge_0.5": {
+  "R0": {
+   "n": 6207,
+   "E": 0.9334,
+   "median": 0.9076,
+   "share_gt1": 0.0883,
+   "E_drop_top1": 0.9279,
+   "max_single_share_of_pos": 0.0588,
+   "E_cost_0.01": 0.9234,
+   "E_cost_0.02": 0.9134,
+   "n_ge10x": 112,
+   "n_ge100x": 9
+  },
+  "R_entry+5m": {
+   "n": 6207,
+   "E": 0.9376,
+   "median": 0.9142,
+   "share_gt1": 0.0815,
+   "E_drop_top1": 0.9317,
+   "max_single_share_of_pos": 0.0665,
+   "E_cost_0.01": 0.9276,
+   "E_cost_0.02": 0.9176,
+   "n_ge10x": 112,
+   "n_ge100x": 9
+  },
+  "R_entry+15m": {
+   "n": 6207,
+   "E": 0.9409,
+   "median": 0.9214,
+   "share_gt1": 0.0762,
+   "E_drop_top1": 0.9349,
+   "max_single_share_of_pos": 0.0721,
+   "E_cost_0.01": 0.9309,
+   "E_cost_0.02": 0.9209,
+   "n_ge10x": 112,
+   "n_ge100x": 9
+  },
+  "control": {
+   "mean": 0.9457,
+   "p95": 0.9665,
+   "signal_pctile": 0.145
+  },
+  "lift_ge100x": 1.11,
+  "lift_ge10x": 0.921,
+  "gates": {
+   "E_ge1": false,
+   "drop_top1_ge1": false,
+   "n_ge20": true,
+   "above_control_p95": false
+  },
+  "verdict": "不通过"
+ },
+ "S_C_share_ge_0.3": {
+  "R0": {
+   "n": 7093,
+   "E": 0.929,
+   "median": 0.9041,
+   "share_gt1": 0.0909,
+   "E_drop_top1": 0.9243,
+   "max_single_share_of_pos": 0.0497,
+   "E_cost_0.01": 0.919,
+   "E_cost_0.02": 0.909,
+   "n_ge10x": 131,
+   "n_ge100x": 10
+  },
+  "R_entry+5m": {
+   "n": 7093,
+   "E": 0.932,
+   "median": 0.9114,
+   "share_gt1": 0.0844,
+   "E_drop_top1": 0.9267,
+   "max_single_share_of_pos": 0.0567,
+   "E_cost_0.01": 0.922,
+   "E_cost_0.02": 0.912,
+   "n_ge10x": 131,
+   "n_ge100x": 10
+  },
+  "R_entry+15m": {
+   "n": 7093,
+   "E": 0.937,
+   "median": 0.9186,
+   "share_gt1": 0.078,
+   "E_drop_top1": 0.9317,
+   "max_single_share_of_pos": 0.06,
+   "E_cost_0.01": 0.927,
+   "E_cost_0.02": 0.917,
+   "n_ge10x": 131,
+   "n_ge100x": 10
+  },
+  "control": {
+   "mean": 0.9057,
+   "p95": 0.9134,
+   "signal_pctile": 1.0
+  },
+  "lift_ge100x": 1.079,
+  "lift_ge10x": 0.942
+ },
+ "S_C_share_ge_0.7": {
+  "R0": {
+   "n": 2767,
+   "E": 0.9308,
+   "median": 0.9206,
+   "share_gt1": 0.06,
+   "E_drop_top1": 0.9271,
+   "max_single_share_of_pos": 0.0719,
+   "E_cost_0.01": 0.9208,
+   "E_cost_0.02": 0.9108,
+   "n_ge10x": 20,
+   "n_ge100x": 1
+  },
+  "R_entry+5m": {
+   "n": 2767,
+   "E": 0.9299,
+   "median": 0.9269,
+   "share_gt1": 0.0549,
+   "E_drop_top1": 0.9271,
+   "max_single_share_of_pos": 0.0632,
+   "E_cost_0.01": 0.9199,
+   "E_cost_0.02": 0.9099,
+   "n_ge10x": 20,
+   "n_ge100x": 1
+  },
+  "R_entry+15m": {
+   "n": 2767,
+   "E": 0.9333,
+   "median": 0.9372,
+   "share_gt1": 0.052,
+   "E_drop_top1": 0.9305,
+   "max_single_share_of_pos": 0.0688,
+   "E_cost_0.01": 0.9233,
+   "E_cost_0.02": 0.9133,
+   "n_ge10x": 20,
+   "n_ge100x": 1
+  },
+  "control": {
+   "mean": 0.9947,
+   "p95": 1.0375,
+   "signal_pctile": 0.001
+  },
+  "lift_ge100x": 0.277,
+  "lift_ge10x": 0.369
+ },
+ "S_W_descriptive": {
+  "R0": {
+   "n": 993,
+   "E": 0.932,
+   "median": 0.8564,
+   "share_gt1": 0.1269,
+   "E_drop_top1": 0.9222,
+   "max_single_share_of_pos": 0.0679,
+   "E_cost_0.01": 0.922,
+   "E_cost_0.02": 0.912,
+   "n_ge10x": 26,
+   "n_ge100x": 2
+  },
+  "R_entry+5m": {
+   "n": 993,
+   "E": 0.9133,
+   "median": 0.866,
+   "share_gt1": 0.1098,
+   "E_drop_top1": 0.9059,
+   "max_single_share_of_pos": 0.0618,
+   "E_cost_0.01": 0.9033,
+   "E_cost_0.02": 0.8933,
+   "n_ge10x": 26,
+   "n_ge100x": 2
+  },
+  "R_entry+15m": {
+   "n": 993,
+   "E": 0.9193,
+   "median": 0.8828,
+   "share_gt1": 0.0987,
+   "E_drop_top1": 0.9101,
+   "max_single_share_of_pos": 0.0824,
+   "E_cost_0.01": 0.9093,
+   "E_cost_0.02": 0.8993,
+   "n_ge10x": 26,
+   "n_ge100x": 2
+  },
+  "control": {
+   "mean": 0.9094,
+   "p95": 0.9599,
+   "signal_pctile": 0.801
+  },
+  "lift_ge100x": 1.542,
+  "lift_ge10x": 1.336,
+  "by_w_idx": {
+   "0": {
+    "n": 932,
+    "E": 0.9334,
+    "median": 0.8598,
+    "share_gt1": 0.1223,
+    "E_drop_top1": 0.9229,
+    "max_single_share_of_pos": 0.0727,
+    "E_cost_0.01": 0.9234,
+    "E_cost_0.02": 0.9134,
+    "n_ge10x": 24,
+    "n_ge100x": 2
+   },
+   "1": {
+    "n": 45,
+    "E": 0.8857,
+    "median": 0.7694,
+    "share_gt1": 0.2,
+    "E_drop_top1": 0.8441,
+    "max_single_share_of_pos": 0.2847,
+    "E_cost_0.01": 0.8757,
+    "E_cost_0.02": 0.8657,
+    "n_ge10x": 1,
+    "n_ge100x": 0
+   },
+   "2": {
+    "n": 45,
+    "E": 0.8857,
+    "median": 0.7694,
+    "share_gt1": 0.2,
+    "E_drop_top1": 0.8441,
+    "max_single_share_of_pos": 0.2847,
+    "E_cost_0.01": 0.8757,
+    "E_cost_0.02": 0.8657,
+    "n_ge10x": 1,
+    "n_ge100x": 0
+   },
+   "3": {
+    "n": 48,
+    "E": 0.8686,
+    "median": 0.7664,
+    "share_gt1": 0.1875,
+    "E_drop_top1": 0.8294,
+    "max_single_share_of_pos": 0.2847,
+    "E_cost_0.01": 0.8586,
+    "E_cost_0.02": 0.8486,
+    "n_ge10x": 1,
+    "n_ge100x": 0
+   },
+   "4": {
+    "n": 23,
+    "E": 0.869,
+    "median": 0.8372,
+    "share_gt1": 0.1304,
+    "E_drop_top1": 0.8056,
+    "max_single_share_of_pos": 0.7043,
+    "E_cost_0.01": 0.859,
+    "E_cost_0.02": 0.849,
+    "n_ge10x": 1,
+    "n_ge100x": 0
+   },
+   "5": {
+    "n": 0
+   },
+   "6": {
+    "n": 11,
+    "E": 1.0176,
+    "median": 0.8751,
+    "share_gt1": 0.2727,
+    "E_drop_top1": 0.8467,
+    "max_single_share_of_pos": 0.7363,
+    "E_cost_0.01": 1.0076,
+    "E_cost_0.02": 0.9976,
+    "n_ge10x": 0,
+    "n_ge100x": 0
+   },
+   "7": {
+    "n": 8,
+    "E": 0.6563,
+    "median": 0.5526,
+    "share_gt1": 0.125,
+    "E_drop_top1": 0.5625,
+    "max_single_share_of_pos": 1.0,
+    "E_cost_0.01": 0.6463,
+    "E_cost_0.02": 0.6363,
+    "n_ge10x": 1,
+    "n_ge100x": 0
+   },
+   "8": {
+    "n": 1,
+    "E": 3.0364,
+    "median": 3.0364,
+    "share_gt1": 1.0,
+    "E_drop_top1": null,
+    "max_single_share_of_pos": 1.0,
+    "E_cost_0.01": 3.0264,
+    "E_cost_0.02": 3.0164,
+    "n_ge10x": 0,
+    "n_ge100x": 0
+   },
+   "9": {
+    "n": 0
+   }
+  }
+ }
+}
