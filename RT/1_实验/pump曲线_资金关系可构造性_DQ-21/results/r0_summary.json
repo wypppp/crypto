@@ -1,0 +1,158 @@
+{
+ "strata": {
+  "matched": {
+   "coins": 30,
+   "applicable": 27,
+   "wallet_status": {
+    "partial_no_candidate": 262,
+    "resolved_complete": 213,
+    "partial_with_candidate": 138,
+    "nonunique_complete": 69,
+    "no_inflow_complete": 3,
+    "program_account": 3
+   },
+   "resolved_complete_sol_share_median_applicable": 0.2510671047317809,
+   "triggers_strict": 14,
+   "trigger_share_strict": 0.4667,
+   "wilson_lower_strict": 0.3023,
+   "implied_triggers_in_panel_strict": 8775,
+   "V1_pos_strict": 11,
+   "V2_pos_strict": 10,
+   "triggers_lenient": 10,
+   "trigger_share_lenient": 0.3333,
+   "wilson_lower_lenient": 0.1923,
+   "implied_triggers_in_panel_lenient": 5581,
+   "V1_pos_lenient": 8,
+   "V2_pos_lenient": 6,
+   "triggers_obs_strict": 18,
+   "trigger_share_obs_strict": 0.6,
+   "wilson_lower_obs_strict": 0.4232,
+   "implied_triggers_in_panel_obs_strict": 12283,
+   "V1_pos_obs_strict": 11,
+   "V2_pos_obs_strict": 16,
+   "triggers_obs_lenient": 13,
+   "trigger_share_obs_lenient": 0.4333,
+   "wilson_lower_obs_lenient": 0.2738,
+   "implied_triggers_in_panel_obs_lenient": 7946,
+   "V1_pos_obs_lenient": 8,
+   "V2_pos_obs_lenient": 10
+  },
+  "random": {
+   "coins": 40,
+   "applicable": 16,
+   "wallet_status": {
+    "partial_no_candidate": 141,
+    "resolved_complete": 100,
+    "partial_with_candidate": 75,
+    "nonunique_complete": 28,
+    "program_account": 15,
+    "no_inflow_complete": 1
+   },
+   "resolved_complete_sol_share_median_applicable": 0.2853221678092329,
+   "triggers_strict": 9,
+   "trigger_share_strict": 0.225,
+   "wilson_lower_strict": 0.1232,
+   "implied_triggers_in_panel_strict": 3575,
+   "V1_pos_strict": 6,
+   "V2_pos_strict": 7,
+   "triggers_lenient": 6,
+   "trigger_share_lenient": 0.15,
+   "wilson_lower_lenient": 0.0706,
+   "implied_triggers_in_panel_lenient": 2049,
+   "V1_pos_lenient": 3,
+   "V2_pos_lenient": 5,
+   "triggers_obs_strict": 11,
+   "trigger_share_obs_strict": 0.275,
+   "wilson_lower_obs_strict": 0.1611,
+   "implied_triggers_in_panel_obs_strict": 4675,
+   "V1_pos_obs_strict": 6,
+   "V2_pos_obs_strict": 9,
+   "triggers_obs_lenient": 7,
+   "trigger_share_obs_lenient": 0.175,
+   "wilson_lower_obs_lenient": 0.0875,
+   "implied_triggers_in_panel_obs_lenient": 2538,
+   "V1_pos_obs_lenient": 3,
+   "V2_pos_obs_lenient": 6
+  },
+  "winner": {
+   "coins": 30,
+   "applicable": 28,
+   "wallet_status": {
+    "partial_no_candidate": 295,
+    "resolved_complete": 178,
+    "partial_with_candidate": 134,
+    "nonunique_complete": 75,
+    "program_account": 5,
+    "no_inflow_complete": 5
+   },
+   "resolved_complete_sol_share_median_applicable": 0.2638941520398137,
+   "triggers_strict": 16,
+   "trigger_share_strict": 0.5333,
+   "wilson_lower_strict": 0.3614,
+   "implied_triggers_in_panel_strict": 10490,
+   "V1_pos_strict": 7,
+   "V2_pos_strict": 12,
+   "triggers_lenient": 10,
+   "trigger_share_lenient": 0.3333,
+   "wilson_lower_lenient": 0.1923,
+   "implied_triggers_in_panel_lenient": 5581,
+   "V1_pos_lenient": 7,
+   "V2_pos_lenient": 4,
+   "triggers_obs_strict": 19,
+   "trigger_share_obs_strict": 0.6333,
+   "wilson_lower_obs_strict": 0.4551,
+   "implied_triggers_in_panel_obs_strict": 13210,
+   "V1_pos_obs_strict": 8,
+   "V2_pos_obs_strict": 15,
+   "triggers_obs_lenient": 14,
+   "trigger_share_obs_lenient": 0.4667,
+   "wilson_lower_obs_lenient": 0.3023,
+   "implied_triggers_in_panel_obs_lenient": 8775,
+   "V1_pos_obs_lenient": 8,
+   "V2_pos_obs_lenient": 8
+  }
+ },
+ "cost": {
+  "mean_calls_per_applicable_coin": 98.8,
+  "mean_pages_per_cold_walk": 3.98
+ },
+ "gates": {
+  "1_triggers": {
+   "strict": true,
+   "lenient": true
+  },
+  "2_audit_zero_error": true,
+  "2_audit_n": 78,
+  "3_share_coins_ready_before_30min": 1.0,
+  "3_pass": true,
+  "4_historical": {
+   "strict": {
+    "M_coins_needed": 8117,
+    "exceeds_panel": false,
+    "historical_credits": 8017558
+   },
+   "lenient": {
+    "M_coins_needed": 14164,
+    "exceeds_panel": false,
+    "historical_credits": 13990980
+   }
+  },
+  "4_forward": {
+   "daily_credits": 2401468,
+   "pairs_k30_per_day": 128466,
+   "new_wallets_per_day": 10494,
+   "intra_day_repeats": 106074,
+   "inc_pages_intra_1d_4d": [
+    1.53,
+    2.7,
+    3.55
+   ],
+   "days_to_N_R1_strict": 3.9,
+   "total_credits_strict": 9402361,
+   "affordable_le_1M_strict": false,
+   "days_to_N_R1_lenient": 6.8,
+   "total_credits_lenient": 16407519,
+   "affordable_le_1M_lenient": false
+  }
+ }
+}

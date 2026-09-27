@@ -11,6 +11,7 @@ W 的 SOL = 原生 SOL + W 名下代币账户（按 pre/postTokenBalances 的 ow
   付费方先加回手续费；只有一个非 PDA 所有者的净减少 >= W 净增加的 95%，并且它是该交易的签名者 → unique；
   它不是签名者（钱由别人控制的账户转出）或不止一个 → multiple；没有非 PDA、但有 PDA 满足 → program；都没有 → payer_only。
 09-27 R0a 核验第 1 轮后修改（过程/R0a_归因核验.md）：原版未解码 nonce 提款，按余额把来源记成 nonce 账户本身（应为授权人）。
+09-27 R0b 后：系统指令的证据标签细分为 sys（转账）/ sys_create / sys_seed / nonce，归因不变，用于报告漏边率。
 09-27 R0a 复核后修改：第 1 轮修改时把 SPL 转账与关闭账户的来源也改成了授权人，这超出了发现的错误；
   委托转账中授权人可能只是代理或终端。改回资产所有者为来源，授权人另存（control）。
 只有 unique 进入 V1–V3；付费方与签名者另存，不默认等于出资方。每个（交易, 来源）累计 >= 0.05 SOL 才记。
@@ -101,7 +102,8 @@ def decode_moves(x, v):
                 src, dst, amt = acc[0], acc[1], _u64(d, 44 + n)
             else:
                 continue
-            out.append(("sys", v["keys"][src], v["keys"][src], v["owner"](dst), amt, WSOL))
+            kind = {2: "sys", 0: "sys_create", 3: "sys_create", 11: "sys_seed", 5: "nonce"}[tag]   # 只细分证据标签
+            out.append((kind, v["keys"][src], v["keys"][src], v["owner"](dst), amt, WSOL))
         elif prog in TOKEN_PROGS and d:
             tag = d[0]
             if tag == 3 and len(acc) >= 3 and len(d) >= 9:      # transfer：source, dest, authority（签名）
@@ -130,14 +132,14 @@ def wallet_flows(x, W):
     for kind, s, ctl, d, amt, mt in moves:
         if s == d:
             continue
-        if d == W and kind in ("sys", "wsol", "close"):
+        if d == W and kind in ("sys", "sys_create", "sys_seed", "nonce", "wsol", "close"):
             k = by_src.setdefault(s, {"amount": 0, "ev": set(), "ctl": set()})
             k["amount"] += amt
             k["ev"].add(kind)
             k["ctl"].add(ctl)
         if W in (s, d):
             cp = d if s == W else s
-            if on_curve(cp) and (kind == "token" or s == W):
+            if on_curve(cp) and (kind == "token" or s == W):   # SOL 转出（任何 sys 类）与代币往来
                 links.append({**base, "dir": "out" if s == W else "in", "cp": cp, "kind": kind, "mint": mt, "amount": amt})
     inflows = []
     for s, k in by_src.items():

@@ -1,2 +1,3 @@
 *.npy
 raw/helius/
+results/*_inflows.csv.gz

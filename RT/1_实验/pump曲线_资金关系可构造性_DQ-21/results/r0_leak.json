@@ -1,0 +1,28 @@
+{
+ "sol_share_not_visible_to_L": 0.5574,
+ "count_share_not_visible": 0.3377,
+ "pf_mismatch_share_under_L": 0.2092,
+ "n_buyers_nonservice_pf": 435,
+ "by_evidence": [
+  {
+   "evidence": "nonce",
+   "size": 998,
+   "sum": 6815.404
+  },
+  {
+   "evidence": "sys",
+   "size": 1971,
+   "sum": 5417.821
+  },
+  {
+   "evidence": "sys_create+wsol",
+   "size": 3,
+   "sum": 7.157
+  },
+  {
+   "evidence": "balance",
+   "size": 4,
+   "sum": 1.872
+  }
+ ]
+}

@@ -1,4 +1,4 @@
-> **状态：执行中（用户 09-27 批准 v1.2）。R0a 三条技术条件通过（条件 1 限前 K 与覆盖范围；09-27 复核后更正截断状态与 SPL 来源口径，见 [过程/R0a_归因核验.md](过程/R0a_归因核验.md) §6），R0b 取数中（[过程/R0b_预算与门槛.md](过程/R0b_预算与门槛.md)）；最终构造与 R0 判定在修正后的代码上用缓存原件重算**。第三轮复核的非阻塞补充已写入（§10）｜早买名单：Dune query 8843858，execution `01M3GC7R9XE4VZM6WVPY56YKEK`，1.8487 credits，保存的 SQL 与本地版本一致，19,062 行（105 个创建记录，93 个币有早买者）｜起草：Claude（上位模型）｜v1、v1.1 经另一模型两轮复核修订（[3_审计/2026-09-27_DQ21提案复核.md](../../3_审计/2026-09-27_DQ21提案复核.md)），修改对照见 §10｜依据：F101（点火由创建者或其关联钱包群发起）、F107（直接转账看不到大量流入）、F113（履历与构成两层已测、不通过）、三段式（R0 可构造性 → R1 开发期经济检验 → R2 封存确认）｜现状以[总入口](../../00_总入口.md)为准
+> **状态：R0 完成（09-27），见 [结果.md](结果.md)：第 1～3 条满足，第 4 条（成本）不满足；“按 credit 重建/轮询”这一实现停止，资金关系方向未关闭，待用户裁决。**过程见 [过程/R0a_归因核验.md](过程/R0a_归因核验.md)、[过程/R0b_预算与门槛.md](过程/R0b_预算与门槛.md)｜早买名单：Dune query 8843858，execution `01M3GC7R9XE4VZM6WVPY56YKEK`，1.8487 credits，保存的 SQL 与本地版本一致，19,062 行（105 个创建记录，93 个币有早买者）｜起草：Claude（上位模型）｜v1、v1.1 经另一模型两轮复核修订（[3_审计/2026-09-27_DQ21提案复核.md](../../3_审计/2026-09-27_DQ21提案复核.md)），修改对照见 §10｜依据：F101（点火由创建者或其关联钱包群发起）、F107（直接转账看不到大量流入）、F113（履历与构成两层已测、不通过）、三段式（R0 可构造性 → R1 开发期经济检验 → R2 封存确认）｜现状以[总入口](../../00_总入口.md)为准
 
 ## 0. 文件
 
@@ -9,10 +9,14 @@
 | [dune_get.py](dune_get.py) | 核对 Dune 上保存的 SQL 并下载结果 |
 | [helius.py](helius.py)、[fetch_r0.py](fetch_r0.py) | Helius 取数（预算硬上限、断点续跑）；完整交易存 `raw/helius/`（不提交），索引 `raw/helius_index.csv` |
 | [flows.py](flows.py)、[evt_decode.py](evt_decode.py) | 来源归因（§4）与 pump 事件解码；R0a 取数前冻结 |
+| [结果.md](结果.md) | **R0 结果与判定** |
 | [n_r1_power.py](n_r1_power.py) | N_R1 功效计算（§8 附） |
 | [check_buyers.py](check_buyers.py) | R0a 条件 1：Helius 重建早买名单并与 Dune 比对 |
 | [build_r0.py](build_r0.py) | 钱包出资状态、主出资方、V1–V3、前 K 覆盖 → `results/` |
 | [audit_sample.py](audit_sample.py) | 来源归因核验（分层抽样，jsonParsed 独立判断） |
+| [profile_funders.py](profile_funders.py)、[services.csv](services.csv) | 服务节点画像与判定 |
+| [analyze_r0.py](analyze_r0.py) | 进入 R1 条件的汇总 → `results/r0_summary.json` |
+| [make_q_labels.py](make_q_labels.py)、[Q_labels.sql](Q_labels.sql) | 严格服务判定的 Dune 标签查询（待运行） |
 | [Q_daily.sql](Q_daily.sql)、[make_q_daily.py](make_q_daily.py) | 持续索引成本估算用的每日新钱包数（09-27 修正版；Dune query 8843858 改存此 SQL，execution `01M3GFDG1D2P6KYV2D8DR30YM3`，2.6979 credits，保存的 SQL 与本地一致）→ `raw/dune/Q_daily.csv.gz` |
 | [过程/](过程/) | R0a 结果与核验、R0b 的 K/P/预算/服务规则 |
 

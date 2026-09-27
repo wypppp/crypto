@@ -22,7 +22,7 @@ import flows as F
 import helius as HL
 
 H = Path(__file__).resolve().parent
-SEEDS = {1: 20260929, 2: 20260930, 3: 20261001}
+SEEDS = {1: 20260929, 2: 20260930, 3: 20261001, 4: 20261002, 5: 20261003}
 
 
 def owners_parsed(tx):
@@ -87,17 +87,20 @@ def main():
     ap.add_argument("--round", type=int, default=1)
     ap.add_argument("--cap", type=int, default=1000)
     ap.add_argument("--n", type=int, default=60)
+    ap.add_argument("--only-unique", action="store_true", help="补抽：只抽唯一可归因（各证据层均衡）")
     a = ap.parse_args()
     HL.STATE["cap"] = a.cap
     inf = pd.read_csv(H / "results" / f"{a.stage}_inflows.csv.gz")
     inf = inf[inf.role == "buyer"]
     prev = set()
-    for r in range(1, a.round):
-        f = H / "results" / f"{a.stage}_audit{r}.csv"
-        if f.exists():
-            prev |= set(pd.read_csv(f).sig + "|" + pd.read_csv(f).W)
+    for f in (H / "results").glob("*_audit*.csv"):      # 排除之前各轮（任何阶段）已抽的
+        d = pd.read_csv(f)
+        prev |= set(d.sig + "|" + d.W)
     inf = inf[~(inf.sig + "|" + inf.W).isin(prev)]
     inf["layer"] = inf.status + "/" + inf.evidence
+    if a.only_unique:
+        # 补抽：只抽进入 V1–V3 的流入（唯一可归因、买家不是程序账户）
+        inf = inf[(inf.status == "unique") & inf.W.map(F.on_curve)]
     seed = SEEDS[a.round]
     parts = [g.sample(min(len(g), 10), random_state=seed) for _, g in inf.groupby("layer")]
     samp = pd.concat(parts)
