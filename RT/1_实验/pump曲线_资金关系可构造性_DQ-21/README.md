@@ -1,4 +1,4 @@
-> **状态：R0 完成（09-27），见 [结果.md](结果.md)：第 1～3 条满足，第 4 条（成本）不满足；现有 Helius 套餐下“按 credit 重建/轮询”不可行（换成钱约几十美元），资金关系方向未关闭；R1a 提案待用户裁决。**过程见 [过程/R0a_归因核验.md](过程/R0a_归因核验.md)、[过程/R0b_预算与门槛.md](过程/R0b_预算与门槛.md)｜早买名单：Dune query 8843858，execution `01M3GC7R9XE4VZM6WVPY56YKEK`，1.8487 credits，保存的 SQL 与本地版本一致，19,062 行（105 个创建记录，93 个币有早买者）｜起草：Claude（上位模型）｜v1、v1.1 经另一模型两轮复核修订（[3_审计/2026-09-27_DQ21提案复核.md](../../3_审计/2026-09-27_DQ21提案复核.md)），修改对照见 §10｜依据：F101（点火由创建者或其关联钱包群发起）、F107（直接转账看不到大量流入）、F113（履历与构成两层已测、不通过）、三段式（R0 可构造性 → R1 开发期经济检验 → R2 封存确认）｜现状以[总入口](../../00_总入口.md)为准
+> **状态：R0 完成（09-27），见 [结果.md](结果.md)：第 1～3 条满足，第 4 条（成本）不满足；现有 Helius 套餐下“按 credit 重建/轮询”不可行（换成钱约几十美元），资金关系方向未关闭；R1a 提案 09-27 退回（决策时刻错位），待用户选定决策时刻。**过程见 [过程/R0a_归因核验.md](过程/R0a_归因核验.md)、[过程/R0b_预算与门槛.md](过程/R0b_预算与门槛.md)｜早买名单：Dune query 8843858，execution `01M3GC7R9XE4VZM6WVPY56YKEK`，1.8487 credits，保存的 SQL 与本地版本一致，19,062 行（105 个创建记录，93 个币有早买者）｜起草：Claude（上位模型）｜v1、v1.1 经另一模型两轮复核修订（[3_审计/2026-09-27_DQ21提案复核.md](../../3_审计/2026-09-27_DQ21提案复核.md)），修改对照见 §10｜依据：F101（点火由创建者或其关联钱包群发起）、F107（直接转账看不到大量流入）、F113（履历与构成两层已测、不通过）、三段式（R0 可构造性 → R1 开发期经济检验 → R2 封存确认）｜现状以[总入口](../../00_总入口.md)为准
 
 ## 0. 文件
 
@@ -10,7 +10,7 @@
 | [helius.py](helius.py)、[fetch_r0.py](fetch_r0.py) | Helius 取数（预算硬上限、断点续跑）；完整交易存 `raw/helius/`（不提交），索引 `raw/helius_index.csv` |
 | [flows.py](flows.py)、[evt_decode.py](evt_decode.py) | 来源归因（§4）与 pump 事件解码；R0a 取数前冻结 |
 | [结果.md](结果.md) | **R0 结果与判定** |
-| [卡片_R1a.md](卡片_R1a.md)、[Q_cex_all.sql](Q_cex_all.sql) | R1a 提案（317 对开发筛，待裁决）与交易所地址全表查询 |
+| [卡片_R1a.md](卡片_R1a.md)、[Q_cex_all.sql](Q_cex_all.sql) | R1a 提案（317 对开发筛；09-27 退回，待用户选定决策时刻后重写）与交易所地址全表查询（query 8844536，0.0513 credits，166 个地址，`raw/dune/Q_cex_all.csv.gz`） |
 | [concentration_r0.py](concentration_r0.py) | 触发集中度与首次可观察时刻 |
 | [n_r1_power.py](n_r1_power.py) | N_R1 功效计算（§8 附） |
 | [check_buyers.py](check_buyers.py) | R0a 条件 1：Helius 重建早买名单并与 Dune 比对 |
@@ -18,7 +18,7 @@
 | [audit_sample.py](audit_sample.py) | 来源归因核验（分层抽样，jsonParsed 独立判断） |
 | [profile_funders.py](profile_funders.py)、[services.csv](services.csv) | 服务节点画像与判定 |
 | [analyze_r0.py](analyze_r0.py) | 进入 R1 条件的汇总 → `results/r0_summary.json` |
-| [make_q_labels.py](make_q_labels.py)、[Q_labels.sql](Q_labels.sql) | 严格服务判定的 Dune 标签查询（待运行） |
+| [make_q_labels.py](make_q_labels.py)、[Q_labels.sql](Q_labels.sql) | 严格服务判定的 Dune 标签查询（已运行，0.0526 credits） |
 | [Q_daily.sql](Q_daily.sql)、[make_q_daily.py](make_q_daily.py) | 持续索引成本估算用的每日新钱包数（09-27 修正版；Dune query 8843858 改存此 SQL，execution `01M3GFDG1D2P6KYV2D8DR30YM3`，2.6979 credits，保存的 SQL 与本地一致）→ `raw/dune/Q_daily.csv.gz` |
 | [过程/](过程/) | R0a 结果与核验、R0b 的 K/P/预算/服务规则 |
 
