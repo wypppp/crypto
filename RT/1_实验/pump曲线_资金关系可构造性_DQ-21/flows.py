@@ -2,11 +2,13 @@
 
 W 的 SOL = 原生 SOL + W 名下代币账户（按 pre/postTokenBalances 的 owner 合并）。
 每笔流入记录一行（交易 × 来源），证据与状态：
-- 指令证据（含内层指令）：系统转账 / 带种子转账 / 建账户注资（sys）、wSOL 代币转账（wsol）、关闭账户把余额转给 W（close）。
-  这些指令都要求转出方或被关闭账户的所有者签名；转出方是非 PDA 地址 → unique，是 PDA → program。
+- 指令证据（含内层指令）：系统转账 / 建账户注资 / 带种子建账户（sys）、带种子转账（来源记 base 签名者）、
+  nonce 账户提款（来源记 nonce 授权人）、wSOL 代币转账（wsol，来源记授权人）、关闭账户把余额转给 W（close，来源记授权人）。
+  来源都是指令要求签名的控制者；控制者是非 PDA 地址 → unique，是 PDA → program。
 - 余额证据：该交易没有任何指向 W 的指令流入，而 W 按所有者合并后净增加 >= 0.05 SOL 时才用。
-  付费方先加回手续费；只有一个非 PDA 所有者的净减少 >= W 净增加的 95% → unique；
-  不止一个 → multiple；没有非 PDA、但有 PDA 满足 → program；都没有 → payer_only。
+  付费方先加回手续费；只有一个非 PDA 所有者的净减少 >= W 净增加的 95%，并且它是该交易的签名者 → unique；
+  它不是签名者（钱由别人控制的账户转出）或不止一个 → multiple；没有非 PDA、但有 PDA 满足 → program；都没有 → payer_only。
+09-27 R0a 核验第 1 轮后修改（过程/R0a_归因核验.md）：原版未解码 nonce 提款，按余额把来源记成 nonce 账户本身（应为授权人）。
 只有 unique 进入 V1–V3；付费方与签名者另存，不默认等于出资方。每个（交易, 来源）累计 >= 0.05 SOL 才记。
 另记 W 与非 PDA 地址之间的 SOL 转出、以及任何代币的转入/转出（links），用于创建者往来（V1 ①）。
 """
@@ -81,25 +83,33 @@ def decode_moves(x, v):
             continue
         if prog == SYS and len(d) >= 12:
             tag = int.from_bytes(d[:4], "little")
-            if tag in (0, 2):          # create_account / transfer：from = a0, to = a1
+            amt = _u64(d, 4)
+            if tag in (0, 2):          # create_account / transfer：from = a0（签名），to = a1
                 src, dst = acc[0], acc[1]
-            elif tag == 11 and len(acc) >= 3:   # transfer_with_seed：from = a0, to = a2
-                src, dst = acc[0], acc[2]
+            elif tag == 11 and len(acc) >= 3:   # transfer_with_seed：from = a0（派生），base = a1（签名），to = a2
+                src, dst = acc[1], acc[2]
+            elif tag == 5 and len(acc) >= 5:    # withdraw_nonce_account：nonce = a0，to = a1，authority = a4（签名）
+                src, dst = acc[4], acc[1]
+            elif tag == 3 and len(acc) >= 2 and len(d) >= 44:   # create_account_with_seed：from = a0（签名），to = a1
+                n = _u64(d, 36)
+                if len(d) < 44 + n + 8:
+                    continue
+                src, dst, amt = acc[0], acc[1], _u64(d, 44 + n)
             else:
                 continue
-            out.append(("sys", v["owner"](src), v["owner"](dst), _u64(d, 4), WSOL))
+            out.append(("sys", v["keys"][src], v["owner"](dst), amt, WSOL))
         elif prog in TOKEN_PROGS and d:
             tag = d[0]
-            if tag == 3 and len(acc) >= 3 and len(d) >= 9:
-                src, dst, mt = acc[0], acc[1], v["mint"].get(acc[0]) or v["mint"].get(acc[1])
-            elif tag == 12 and len(acc) >= 4 and len(d) >= 9:
-                src, dst, mt = acc[0], acc[2], v["keys"][acc[1]]
-            elif tag == 9 and len(acc) >= 3:   # close：账户余额（lamports）转给 destination
-                out.append(("close", v["owner"](acc[0]), v["owner"](acc[1]), v["pre"][acc[0]], WSOL))
+            if tag == 3 and len(acc) >= 3 and len(d) >= 9:      # transfer：source, dest, authority（签名）
+                auth, dst, mt = acc[2], acc[1], v["mint"].get(acc[0]) or v["mint"].get(acc[1])
+            elif tag == 12 and len(acc) >= 4 and len(d) >= 9:   # transfer_checked：source, mint, dest, authority
+                auth, dst, mt = acc[3], acc[2], v["keys"][acc[1]]
+            elif tag == 9 and len(acc) >= 3:   # close：account, destination, authority；账户余额（lamports）转给 destination
+                out.append(("close", v["keys"][acc[2]], v["owner"](acc[1]), v["pre"][acc[0]], WSOL))
                 continue
             else:
                 continue
-            out.append(("wsol" if mt == WSOL else "token", v["owner"](src), v["owner"](dst), _u64(d, 1), mt))
+            out.append(("wsol" if mt == WSOL else "token", v["keys"][auth], v["owner"](dst), _u64(d, 1), mt))
     return out
 
 
@@ -134,9 +144,12 @@ def wallet_flows(x, W):
             neg = {o: a for o, a in v["agg"].items() if o != W and a < 0}
             full = [o for o, a in neg.items() if a <= -0.95 * dW]      # 单独就能覆盖 W 的净增加
             full_on = [o for o in full if on_curve(o)]
+            signed = set(v["signers"])
             part_on = [o for o in neg if on_curve(o) and neg[o] <= -MIN_LAMPORTS]
-            if len(full_on) == 1:
+            if len(full_on) == 1 and full_on[0] in signed:
                 st, src = "unique", full_on[0]
+            elif len(full_on) == 1:                                     # 余额从非签名账户转出，控制者不明
+                st, src = "multiple", "|".join([full_on[0]] + sorted(signed - {W}))
             elif len(full_on) > 1:
                 st, src = "multiple", "|".join(sorted(full_on))
             elif full:                                                  # 只有 PDA 能覆盖

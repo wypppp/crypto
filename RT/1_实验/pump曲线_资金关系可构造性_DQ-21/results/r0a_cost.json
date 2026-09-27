@@ -1,0 +1,23 @@
+{
+ "pairs": 214,
+ "distinct_wallets": 205,
+ "walks_back": 230,
+ "pages_back": 612,
+ "pages_fwd": 33,
+ "pages_coin": 57,
+ "audit_calls": 132,
+ "calls_total": 834,
+ "credits_at_10": 8340,
+ "back_truncated_share": 0.622,
+ "empty_second_pages_saved_by_early_stop": 78,
+ "wall_s_per_back_walk_p50_p90": [
+  6.8149999999999995,
+  9.533
+ ],
+ "status": {
+  "resolved": 102,
+  "truncated": 91,
+  "nonunique_only": 15,
+  "program_account": 6
+ }
+}

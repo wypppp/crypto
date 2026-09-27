@@ -1,0 +1,189 @@
+{
+ "by_coin": [
+  {
+   "mint": "fgLjT6mAQJosXq6oz8Zk96zcnEpbV6wV5SUSK3Dpump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 1,
+   "compared_n": 1,
+   "matched_wallet": 1,
+   "matched_sig": 1,
+   "amount_ok": 1,
+   "helius_only": 0
+  },
+  {
+   "mint": "2qhwsQpTspqfdtTa2Yrox98kwam7vkbZNUabsLZ5pump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 1,
+   "compared_n": 1,
+   "matched_wallet": 1,
+   "matched_sig": 1,
+   "amount_ok": 1,
+   "helius_only": 0
+  },
+  {
+   "mint": "MBVyDu7GddjEZ9zNBHWBTqJkhU6Fv4g4VUNGZUnpump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 4,
+   "compared_n": 4,
+   "matched_wallet": 4,
+   "matched_sig": 4,
+   "amount_ok": 4,
+   "helius_only": 0
+  },
+  {
+   "mint": "5eyrv3Wuc8GLMnLM3RGLAgahaAEv3bvUzWFczp8gpump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 15,
+   "compared_n": 15,
+   "matched_wallet": 15,
+   "matched_sig": 15,
+   "amount_ok": 15,
+   "helius_only": 0
+  },
+  {
+   "mint": "AomvUWpEPZYw4FNNVJH3gfzJvVtJx37LFWcdGYEpump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 214,
+   "compared_n": 214,
+   "matched_wallet": 214,
+   "matched_sig": 214,
+   "amount_ok": 214,
+   "helius_only": 0
+  },
+  {
+   "mint": "12JPYuF5tvXbCPy7KLmEoqB53Mbpxre2L6yCteXEpump",
+   "source": "helius",
+   "coin_walk_complete": false,
+   "dune_n": 736,
+   "compared_n": 428,
+   "matched_wallet": 428,
+   "matched_sig": 428,
+   "amount_ok": 428,
+   "helius_only": 0
+  },
+  {
+   "mint": "DioWcz9RdEHNPQZiiRDLyHvqJB3j88CduS3LepNGpump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 3,
+   "compared_n": 3,
+   "matched_wallet": 3,
+   "matched_sig": 3,
+   "amount_ok": 3,
+   "helius_only": 0
+  },
+  {
+   "mint": "GUsV1iB83HJTcdFnqRtRSKoXcrWZfcDBSnnsb4Dxpump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 0,
+   "compared_n": 0,
+   "matched_wallet": 0,
+   "matched_sig": 0,
+   "amount_ok": 0,
+   "helius_only": 0
+  },
+  {
+   "mint": "4sEPTyzdj2At9X2gSPg5HKfEAnD9hSqv5DqiY6E7pump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 2,
+   "compared_n": 2,
+   "matched_wallet": 2,
+   "matched_sig": 2,
+   "amount_ok": 2,
+   "helius_only": 0
+  },
+  {
+   "mint": "kGCE3FqVUwg2Rp7fgGLi2x6v1dvJnbttJhCyvpxpump",
+   "source": "helius",
+   "coin_walk_complete": true,
+   "dune_n": 0,
+   "compared_n": 0,
+   "matched_wallet": 0,
+   "matched_sig": 0,
+   "amount_ok": 0,
+   "helius_only": 0
+  },
+  {
+   "mint": "5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump",
+   "source": "h1_local",
+   "coin_walk_complete": true,
+   "dune_n": 7,
+   "compared_n": 7,
+   "matched_wallet": 7,
+   "matched_sig": 7,
+   "amount_ok": 7,
+   "helius_only": 0
+  },
+  {
+   "mint": "6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump",
+   "source": "h1_local",
+   "coin_walk_complete": true,
+   "dune_n": 8,
+   "compared_n": 8,
+   "matched_wallet": 8,
+   "matched_sig": 8,
+   "amount_ok": 8,
+   "helius_only": 0
+  },
+  {
+   "mint": "B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump",
+   "source": "h1_local",
+   "coin_walk_complete": true,
+   "dune_n": 304,
+   "compared_n": 304,
+   "matched_wallet": 304,
+   "matched_sig": 304,
+   "amount_ok": 304,
+   "helius_only": 0
+  },
+  {
+   "mint": "BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump",
+   "source": "h1_local",
+   "coin_walk_complete": true,
+   "dune_n": 23,
+   "compared_n": 23,
+   "matched_wallet": 23,
+   "matched_sig": 23,
+   "amount_ok": 23,
+   "helius_only": 0
+  },
+  {
+   "mint": "FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump",
+   "source": "h1_local",
+   "coin_walk_complete": true,
+   "dune_n": 48,
+   "compared_n": 48,
+   "matched_wallet": 48,
+   "matched_sig": 48,
+   "amount_ok": 48,
+   "helius_only": 0
+  },
+  {
+   "mint": "YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump",
+   "source": "h1_local",
+   "coin_walk_complete": true,
+   "dune_n": 351,
+   "compared_n": 351,
+   "matched_wallet": 351,
+   "matched_sig": 351,
+   "amount_ok": 351,
+   "helius_only": 0
+  }
+ ],
+ "total": {
+  "dune": 1409,
+  "matched_wallet": 1409,
+  "matched_sig": 1409,
+  "amount_ok": 1409,
+  "helius_only": 0,
+  "match_rate": 1.0
+ },
+ "gate_ge_0.99": true
+}
