@@ -1,0 +1,50 @@
+{
+  "execution_id": "01M3GC7R9XE4VZM6WVPY56YKEK",
+  "query_id": 8843858,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-27T02:48:48.702425Z",
+  "expires_at": "2026-12-26T02:49:03.017324Z",
+  "execution_started_at": "2026-09-27T02:48:50.113911742Z",
+  "execution_ended_at": "2026-09-27T02:49:03.017312302Z",
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "mint",
+      "usr",
+      "ts",
+      "slot",
+      "txi",
+      "iix",
+      "tx_id",
+      "sol_amt",
+      "venue",
+      "price",
+      "buyer_rank",
+      "n_early"
+    ],
+    "column_types": [
+      "varchar(6)",
+      "varchar",
+      "varchar",
+      "timestamp(3) with time zone",
+      "bigint",
+      "bigint",
+      "bigint",
+      "varchar",
+      "double",
+      "varchar",
+      "double",
+      "bigint",
+      "bigint"
+    ],
+    "row_count": 19062,
+    "result_set_bytes": 4744588,
+    "total_row_count": 19062,
+    "total_result_set_bytes": 4744588,
+    "datapoint_count": 247806,
+    "pending_time_millis": 1411,
+    "execution_time_millis": 12903
+  },
+  "execution_cost_credits": 1.848653847
+}
