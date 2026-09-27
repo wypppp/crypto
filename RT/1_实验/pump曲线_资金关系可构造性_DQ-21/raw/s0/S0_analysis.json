@@ -1,0 +1,57 @@
+{
+  "source": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/s0/S0_SMOKE_v1_1_localhash.csv.gz",
+  "downloaded_rows": 352,
+  "exact_counts": {
+    "n_all": 28845,
+    "n_eligible": 11068,
+    "n_tail10_exec": 122,
+    "n_early_crash": 2845,
+    "n_random_2pct": 220,
+    "n_mapped_reverse_pool": 0
+  },
+  "r0_qa_rows": 15,
+  "r0_eligible_excluded_from_weighted_estimates": 13,
+  "weighted_target_n": 11055,
+  "downloaded_tail_rows": 122,
+  "downloaded_random_rows": 220,
+  "anomalies": {
+    "eligible_without_t3": 0,
+    "eligible_bad_t3": 0,
+    "eligible_missing_entry_state": 0,
+    "nonpositive_entry_reserve": 0,
+    "tail_missing_recovery": 0
+  },
+  "weighted_estimates": {
+    "exact_week_n_all_n_eligible": {
+      "A": [
+        28845,
+        11068
+      ]
+    },
+    "exact_observed_t3_strata": {
+      "A/000_005": 7818,
+      "A/016_030": 931,
+      "A/031_060": 569,
+      "A/006_015": 1346,
+      "A/061_120": 259,
+      "A/121_300": 145,
+      "A/not_eligible": 0
+    },
+    "tail_share": 0.01076436001809136,
+    "early_crash_share": 0.2939846223428313,
+    "t3_s_p10_p50_p90": [
+      0.0,
+      0.0,
+      30.0
+    ],
+    "capacity_5pct_sol_p10_p50_p90": [
+      0.6863454686403212,
+      0.8429804985937203,
+      1.324175540759257
+    ],
+    "mean_max_sell_30d": 1.662699264310046,
+    "mean_max_sell_30d_e30": 1.418851199937887,
+    "mean_max_sell_30d_e120": 1.2520488558416163
+  },
+  "verdict": "REVIEW_R0_COVERAGE"
+}
