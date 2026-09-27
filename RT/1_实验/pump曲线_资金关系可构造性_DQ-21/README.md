@@ -13,6 +13,7 @@
 | [卡片_R1a.md](卡片_R1a.md)、[Q_cex_all.sql](Q_cex_all.sql) | R1a 提案（317 对开发筛；09-27 退回，待用户选定决策时刻后重写）与交易所地址全表查询（query 8844536，0.0513 credits，166 个地址，`raw/dune/Q_cex_all.csv.gz`） |
 | [卡片_S0_事件时点机会普查_v1.md](卡片_S0_事件时点机会普查_v1.md)、[sql/S0_AB_事件时点机会普查.sql](sql/S0_AB_事件时点机会普查.sql) | 用户批准的事件时点改版：先建立全新币早期机会总体与固定病例队列抽样框；关系信号的实际触发时点留到 R1a |
 | [make_s0_sql.py](make_s0_sql.py)、[fetch_s0.py](fetch_s0.py)、[analyze_s0.py](analyze_s0.py) | 生成含 105 个 R0 核验币的运行版 SQL、安全下载小结果、核对样本与总体计数 |
+| [make_s0_smoke.py](make_s0_smoke.py)、[sql/S0_SMOKE_20260601.sql](sql/S0_SMOKE_20260601.sql)、[过程/S0_smoke_既有对账基准.md](过程/S0_smoke_既有对账基准.md) | 从冻结运行版机械派生的单日诊断查询；先验对账 13 个 R0 样本的 `t3_s`，只验语义、扫描与费用，不把结果当研究证据 |
 | [concentration_r0.py](concentration_r0.py) | 触发集中度与首次可观察时刻 |
 | [n_r1_power.py](n_r1_power.py) | N_R1 功效计算（§8 附） |
 | [check_buyers.py](check_buyers.py) | R0a 条件 1：Helius 重建早买名单并与 Dune 比对 |
