@@ -133,7 +133,11 @@ def main():
 
     anomalies = {
         "eligible_without_t3": sum(b(r, "eligible") and f(r, "t3_s") is None for r in rows),
-        "eligible_bad_t3": sum(b(r, "eligible") and not (0 <= f(r, "t3_s") <= 300) for r in rows),
+        "eligible_bad_t3": sum(
+            b(r, "eligible") and f(r, "t3_s") is not None
+            and not (0 <= f(r, "t3_s") <= 300)
+            for r in rows
+        ),
         "eligible_missing_entry_state": sum(
             b(r, "eligible") and (f(r, "e5_x") is None or f(r, "e5_y") is None) for r in rows
         ),

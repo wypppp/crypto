@@ -1,0 +1,27 @@
+{
+  "frozen_at": "2026-09-27T16:05:00+08:00",
+  "status": "pre-execution",
+  "scope": "DQ-21 S0 v1.1 event-time opportunity census before any S0 Dune execution",
+  "supersedes": "S0_freeze.json (v1; never executed)",
+  "budgets_credits": {
+    "smoke_execution": 5,
+    "smoke_retrieval": 5,
+    "production_execution": 115,
+    "production_retrieval": 100,
+    "s0_total": 225
+  },
+  "files": {
+    "卡片_S0_事件时点机会普查_v1.md": "0d60fc48fdd5649f9500bf7adb8fa6a0ce7fdf306980c161c30cdd257e4235be",
+    "过程/S0_v1.1_执行更正.md": "4ef31bf37b7308f727169a184aedf5da259ddc708c31363a36947ae7272cbe0b",
+    "过程/S0_smoke_既有对账基准.md": "fd3ab967d47cada3850ecc36d6c178f73dbddcc76e62a7d95274566e10b2c89d",
+    "sql/S0_AB_事件时点机会普查_v1_1.sql": "8310930a29bc54a751395c19da6e8ee988c58240a99b5f57fd23335f170cca8e",
+    "sql/S0_AB_事件时点机会普查_v1_1_运行版.sql": "a0547e0a022ac90def5027a2d6837af2e1e8c26284090b15760be397ce26496c",
+    "sql/S0_SMOKE_v1_1_20260601.sql": "43194cef85b04183a4712c2efd06007bf557e4410dfd4b2e7b567dea0ea67aea",
+    "make_s0_sql_v1_1.py": "45cbd312e8d00f97baa784399ded94685632292706b4f26fedff13f8a1e2e958",
+    "make_s0_smoke_v1_1.py": "6281b4e736156099abbeee656f8caca15d11bc372d182c6090b405cbbe92d31e",
+    "fetch_s0_v1_1.py": "cac12038b9877ade9f6537f3820012f24d725f2a8bc1bf0041f926f01e09db7f",
+    "analyze_s0.py": "76ba3d2f4255bb31af88912e6ec6cb64fa31f5ae47a12208943d1e6d5c66f2ac",
+    "test_s0_v1_1.py": "626a88dfe984cf7bd950fc74325d26b3db4c8c7df32a3f4a2312f0cd04716ab6",
+    "sample.csv": "862443b0c02fbf5e536ced07285f6ea8e40a96b8bc8fc351a8b77a86d47bb2e5"
+  }
+}

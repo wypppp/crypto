@@ -23,6 +23,14 @@ def main():
     assert sell_event(False, 100, 1000, 10, 100, 1) == (91, 1100, False, 10)
     assert sell_event(True, 100, 1000, 100, 10, 10) == (110, 910, True, 10)
 
+    # B1C2 raw-chain fixture: the pool's SOL increase equals the event's
+    # quote_amount_in_with_lp_fee exactly.  Subtracting protocol/creator fees
+    # would understate both the buyer's spend and the post-trade reserve.
+    b1c2_sol_pre = 17_904_184_167
+    b1c2_quote_in_with_lp = 26_113_797_485
+    b1c2_sol_post = 44_017_981_652
+    assert b1c2_sol_pre + b1c2_quote_in_with_lp == b1c2_sol_post
+
     # Curve overlay: buying q from (x,y), then immediately selling q from the
     # adjusted state recovers the net input before the exit fee.
     x, y, net_in = 30.0, 1_000_000_000.0, 0.49375
@@ -39,6 +47,8 @@ def main():
     assert "ORDER BY s.ts, s.venue" not in sql
     assert "max(s.ts) OVER" in sql
     assert "max_sell_30d_e30" in sql and "max_sell_30d_e120" in sql
+    assert "objective_inclusion_probability" in sql
+    assert "max(CASE WHEN rn >= e5_rn THEN pm END) OVER" in sql
     assert sql.count("\nstates AS (") == 1
     assert sql.count("\namm_states AS (") == 1
     print("S0 v1.1 semantic invariants: OK")

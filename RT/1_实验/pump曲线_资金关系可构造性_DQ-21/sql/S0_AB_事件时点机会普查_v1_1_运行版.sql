@@ -388,7 +388,9 @@ s10 AS (
             END,
             COALESCE(IF(venue = 0, xr + 0.5 * (1 - e120_fee_bps / 1e4), 1e18))
         ) / 0.5 END AS sell_multiple_e120,
-        max(CASE WHEN rn >= e5_rn THEN pm END) OVER (PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS runmax_pm
+        max(CASE WHEN rn >= e5_rn THEN pm END) OVER (
+            PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS runmax_pm
     FROM s9
 ),
 coin_path AS (

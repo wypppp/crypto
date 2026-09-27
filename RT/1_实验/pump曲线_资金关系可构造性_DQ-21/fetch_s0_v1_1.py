@@ -65,9 +65,15 @@ def main() -> None:
     (raw_dir / "S0_v1_1_status.json").write_text(json.dumps(status, ensure_ascii=False, indent=2))
     meta = status.get("result_metadata") or {}
     rows = int(meta.get("total_row_count") or meta.get("row_count") or 0)
-    size = int(meta.get("result_set_bytes") or 0)
+    size = int(meta.get("total_result_set_bytes") or meta.get("result_set_bytes") or 0)
     cols = column_count(meta)
-    points = max(rows * cols, math.ceil(size / 100)) if rows and cols and size else 0
+    direct_points = int(meta.get("datapoint_count") or 0)
+    point_bounds = [direct_points]
+    if rows and cols:
+        point_bounds.append(rows * cols)
+    if size:
+        point_bounds.append(math.ceil(size / 100))
+    points = max(point_bounds)
     report = {
         "state": status.get("state"),
         "rows": rows,
