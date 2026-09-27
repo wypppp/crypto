@@ -86,12 +86,20 @@ def main():
     per_coin = float(cp.reindex(ap).fillna(0).mean() + cre.reindex(ap).fillna(0).mean())
     out["cost"] = {"mean_calls_per_applicable_coin": round(per_coin, 1),
                    "mean_pages_per_cold_walk": round(float(W.pages.mean()), 2)}
+    # 09-27 复核后：只处理适用币（成交事件可便宜地排除不适用币），用主样本的适用率与每个适用随机币的调用数
+    rc = C[C.mint.isin(S[S.stratum == "random"].mint)]
+    a_rnd = float(rc.applicable.mean())
+    apr = rc[rc.applicable]
+    per_rnd = float(np.mean([cp.get(r.mint, 0) + cre.get(r.mint, 0) for r in apr.itertuples()]))
+    out["cost"].update({"random_applicable_share": a_rnd, "calls_per_applicable_random_coin": round(per_rnd, 1)})
     res = {}
     for cb in ("strict", "lenient"):
         pl = rnd[f"wilson_lower_{cb}"]
         M = N_R1 / pl if pl > 0 else float("inf")
+        cr_ = None if M == float("inf") else round(M * a_rnd * per_rnd * 10)
         res[cb] = {"M_coins_needed": None if M == float("inf") else round(M), "exceeds_panel": M > PANEL,
-                   "historical_credits": None if M == float("inf") else round(M * per_coin * 10)}
+                   "applicable_coins_to_process": None if M == float("inf") else round(M * a_rnd),
+                   "historical_credits": cr_, "usd_at_5_per_million": None if cr_ is None else round(cr_ / 1e6 * 5)}
     # 持续索引（前向收集）：每日成本
     Qd = pd.read_csv(H / "raw" / "dune" / "Q_daily.csv.gz")
     day = Qd.drop(columns="d").mean()
@@ -117,6 +125,7 @@ def main():
         fwd[f"days_to_N_R1_{cb}"] = None if days == float("inf") else round(days, 1)
         fwd[f"total_credits_{cb}"] = None if days == float("inf") else round(days * daily)
         fwd[f"affordable_le_1M_{cb}"] = bool(days * daily <= 1_000_000) if days != float("inf") else False
+        fwd[f"usd_at_5_per_million_{cb}"] = None if days == float("inf") else round(days * daily / 1e6 * 5)
     out["gates"] = {"1_triggers": g1, "2_audit_zero_error": g2, "2_audit_n": int(len(after_fix)),
                     "3_share_coins_ready_before_30min": round(g3_share, 3), "3_pass": g3_share >= 0.95,
                     "4_historical": res, "4_forward": fwd}

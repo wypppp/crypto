@@ -1,0 +1,34 @@
+{
+  "execution_id": "01M3GN9PED2PNAAPZ2JTJF16AZ",
+  "query_id": 8844415,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-27T05:27:09.518581Z",
+  "expires_at": "2026-12-26T05:27:10.34802Z",
+  "execution_started_at": "2026-09-27T05:27:09.813058223Z",
+  "execution_ended_at": "2026-09-27T05:27:10.34792364Z",
+  "result_metadata": {
+    "column_names": [
+      "address",
+      "cex_name",
+      "distinct_name",
+      "added_by",
+      "added_date"
+    ],
+    "column_types": [
+      "varchar(44)",
+      "varchar(10)",
+      "varchar(12)",
+      "varchar(8)",
+      "date"
+    ],
+    "row_count": 9,
+    "result_set_bytes": 649,
+    "total_row_count": 9,
+    "total_result_set_bytes": 649,
+    "datapoint_count": 45,
+    "pending_time_millis": 294,
+    "execution_time_millis": 534
+  },
+  "execution_cost_credits": 0.052614309
+}
