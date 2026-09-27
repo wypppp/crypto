@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Fetch only S0 v1.2 smoke audit fields, within a 5-credit export cap."""
+"""Fetch S0 smoke audit fields only, within a 5-credit export cap."""
+import argparse
 import csv
 import gzip
 import json
@@ -8,9 +9,6 @@ from pathlib import Path
 
 from fetch_s0_v1_2 import api_key, get
 
-QUERY_ID = 8844536
-EXECUTION_ID = "01M3HD97S93VA2NYMN67NBRT0B"
-ROW_COUNT = 773
 MAX_BYTES = 250_000  # 5 credits at the conservative old rate of 20 credits/MB.
 PAGE_SIZE = 50
 COLS = [
@@ -25,21 +23,29 @@ COLS = [
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("label", choices=("v1_2", "v1_3"))
+    args = ap.parse_args()
+    settings = {
+        "v1_2": (8844536, "01M3HD97S93VA2NYMN67NBRT0B", 773),
+        "v1_3": (8844536, "01M3HEM7GYH70ZJ4KXKCNR8CQY", 685),
+    }
+    query_id, execution_id, row_count = settings[args.label]
     key = api_key()
     rows = []
     bytes_fetched = 0
-    for offset in range(0, ROW_COUNT, PAGE_SIZE):
+    for offset in range(0, row_count, PAGE_SIZE):
         q = urllib.parse.urlencode({
-            "limit": min(PAGE_SIZE, ROW_COUNT - offset),
+            "limit": min(PAGE_SIZE, row_count - offset),
             "offset": offset,
             "columns": ",".join(COLS),
         })
-        response = get(f"/query/{QUERY_ID}/results?{q}", key)
-        if response.get("execution_id") != EXECUTION_ID:
+        response = get(f"/query/{query_id}/results?{q}", key)
+        if response.get("execution_id") != execution_id:
             raise RuntimeError("latest query execution changed; stop")
         result = response.get("result") or {}
         page = result.get("rows") or []
-        if len(page) != min(PAGE_SIZE, ROW_COUNT - offset):
+        if len(page) != min(PAGE_SIZE, row_count - offset):
             raise RuntimeError(f"short page at {offset}: {len(page)}")
         if any(set(row) != set(COLS) for row in page):
             raise RuntimeError("column mismatch")
@@ -50,22 +56,22 @@ def main():
         rows.extend(page)
         print(f"offset={offset} fetched={len(rows)} bytes={bytes_fetched}", flush=True)
 
-    if len(rows) != ROW_COUNT or len({row["mint"] for row in rows}) != ROW_COUNT:
+    if len(rows) != row_count or len({row["mint"] for row in rows}) != row_count:
         raise RuntimeError("missing or duplicate rows")
-    out = Path(__file__).resolve().parent / "raw/s0/S0_SMOKE_v1_2_audit_columns.csv.gz"
+    out = Path(__file__).resolve().parent / f"raw/s0/S0_SMOKE_{args.label}_audit_columns.csv.gz"
     with gzip.open(out, "wt", newline="") as dst:
         writer = csv.DictWriter(dst, fieldnames=COLS)
         writer.writeheader()
         writer.writerows(rows)
     meta = {
-        "query_id": QUERY_ID,
-        "execution_id": EXECUTION_ID,
+        "query_id": query_id,
+        "execution_id": execution_id,
         "rows": len(rows),
         "columns": COLS,
         "sum_result_set_bytes": bytes_fetched,
         "conservative_export_upper_bound_credits": bytes_fetched * 20 / 1_000_000,
     }
-    out.with_name("S0_SMOKE_v1_2_audit_columns_meta.json").write_text(
+    out.with_name(f"S0_SMOKE_{args.label}_audit_columns_meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2) + "\n"
     )
     print("saved", out, flush=True)

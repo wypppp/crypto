@@ -1,0 +1,22 @@
+{
+  "source": "raw/s0/S0_SMOKE_v1_3_audit_columns.csv.gz",
+  "rows": 685,
+  "counts": {
+    "n_all": 28845,
+    "n_eligible": 11068,
+    "n_tail10_exec": 122,
+    "n_tail420_candidate": 466,
+    "n_tail10_outside_tail420": 0,
+    "n_random_2pct": 220,
+    "n_migration_event": 210,
+    "n_amm_mapped": 210,
+    "n_migration_unmapped": 0,
+    "n_mapped_reverse_pool": 0
+  },
+  "exact_hashes_checked": 685,
+  "prior_t3_checked": 13,
+  "b1c2_events": 7771,
+  "r0_qa_rows": 15,
+  "data_verdict": "PASS",
+  "execution_cost_verdict": "PASS_10_CREDIT_CAP"
+}

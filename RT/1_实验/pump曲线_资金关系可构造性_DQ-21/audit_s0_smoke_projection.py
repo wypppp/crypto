@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Audit the cost-bounded S0 v1.2 smoke projection without outcome inference."""
+"""Audit cost-bounded S0 smoke projections without outcome inference."""
+import argparse
 import csv
 import gzip
 import json
@@ -8,7 +9,6 @@ from pathlib import Path
 from xxhash64_local import dune_mint_hash
 
 H = Path(__file__).resolve().parent
-SOURCE = H / "raw/s0/S0_SMOKE_v1_2_audit_columns.csv.gz"
 EXPECTED_T3 = {
     "9RWbXv3hCdmEpkqwb659JCvnVes6XLhvpXB7oYxjpump": 0,
     "2r9x15QN6obFdUPGKmv98x99N4PAYKsL7xg8Ug2Spump": 0,
@@ -31,10 +31,16 @@ def yes(value):
 
 
 def main():
-    with gzip.open(SOURCE, "rt", newline="") as src:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("label", choices=("v1_2", "v1_3"))
+    args = ap.parse_args()
+    source = H / f"raw/s0/S0_SMOKE_{args.label}_audit_columns.csv.gz"
+    with gzip.open(source, "rt", newline="") as src:
         rows = list(csv.DictReader(src))
     by_mint = {r["mint"]: r for r in rows}
-    assert len(rows) == len(by_mint) == 773
+    expected_rows = {"v1_2": 773, "v1_3": 685}[args.label]
+    expected_tail420 = {"v1_2": 557, "v1_3": 466}[args.label]
+    assert len(rows) == len(by_mint) == expected_rows
     counts = {}
     for key in (
         "n_all", "n_eligible", "n_tail10_exec", "n_tail420_candidate",
@@ -46,12 +52,12 @@ def main():
         counts[key] = values.pop()
     assert counts == {
         "n_all": 28845, "n_eligible": 11068, "n_tail10_exec": 122,
-        "n_tail420_candidate": 557, "n_tail10_outside_tail420": 0,
+        "n_tail420_candidate": expected_tail420, "n_tail10_outside_tail420": 0,
         "n_random_2pct": 220, "n_migration_event": 210,
         "n_amm_mapped": 210, "n_migration_unmapped": 0,
         "n_mapped_reverse_pool": 0,
     }
-    assert sum(yes(r["tail420_candidate"]) for r in rows) == 557
+    assert sum(yes(r["tail420_candidate"]) for r in rows) == expected_tail420
     assert sum(yes(r["tail10_exec"]) for r in rows) == 122
     assert sum(yes(r["eligible"]) and int(r["mint_hash_exact"]) % 10000 < 200 for r in rows) == 220
     for r in rows:
@@ -73,13 +79,13 @@ def main():
     assert yes(b1["has_migration_event"]) and yes(b1["amm_mapped"])
     assert sum(yes(r["r0_seen"]) for r in rows) == 15
     result = {
-        "source": str(SOURCE.relative_to(H)), "rows": len(rows),
+        "source": str(source.relative_to(H)), "rows": len(rows),
         "counts": counts, "exact_hashes_checked": len(rows),
         "prior_t3_checked": len(EXPECTED_T3), "b1c2_events": b1_events,
         "r0_qa_rows": 15, "data_verdict": "PASS",
-        "execution_cost_verdict": "FAIL_10_CREDIT_CAP",
+        "execution_cost_verdict": "FAIL_10_CREDIT_CAP" if args.label == "v1_2" else "PASS_10_CREDIT_CAP",
     }
-    dest = H / "raw/s0/S0_SMOKE_v1_2_projection_audit.json"
+    dest = H / f"raw/s0/S0_SMOKE_{args.label}_projection_audit.json"
     dest.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

@@ -1,0 +1,13 @@
+{
+  "frozen_at": "2026-09-28",
+  "status": "pre-full-horizon-cost-pilot",
+  "parent": "S0_v1_3_freeze.json",
+  "scope": "one creation day with a full 30-day path; cost diagnosis only",
+  "query_execution_cap_suggested_credits": 50,
+  "user_per_query_ceiling_credits": 100,
+  "files_sha256": {
+    "make_s0_cost_pilot_v1_3.py": "e302dd6577c5bc34453f74cde1a7a565d2c3038ddae60149f838487e8e51e00c",
+    "sql/S0_COST_30D_v1_3_20260601.sql": "30f6d6b7fbd9af005937ca8a33c27993407ae5b7b7c352ef5025a2052986332a",
+    "过程/S0_v1.3_全期限成本试跑.md": "6e2703d65825c908d90e7c326c2d5b4d2f9e0eb81e0d902b020ffe583d42ee33"
+  }
+}
