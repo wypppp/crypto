@@ -374,7 +374,7 @@ s10 AS (
                 WHEN venue = 0 THEN NULL
                 ELSE (x - x * y / (y + entry_tokens)) * (1 - fee_bps / 1e4)
             END,
-            COALESCE(IF(venue = 0, xr + 0.5 * (1 - e5_fee_bps / 1e4), 1e18))
+            IF(venue = 0, xr + 0.5 * (1 - e5_fee_bps / 1e4), 1e18)
         ) / 0.5 AS sell_multiple,
         CASE WHEN rn >= e30_rn THEN LEAST(
             CASE
@@ -382,7 +382,7 @@ s10 AS (
                 WHEN venue = 0 THEN NULL
                 ELSE (x - x * y / (y + entry_tokens_e30)) * (1 - fee_bps / 1e4)
             END,
-            COALESCE(IF(venue = 0, xr + 0.5 * (1 - e30_fee_bps / 1e4), 1e18))
+            IF(venue = 0, xr + 0.5 * (1 - e30_fee_bps / 1e4), 1e18)
         ) / 0.5 END AS sell_multiple_e30,
         CASE WHEN rn >= e120_rn THEN LEAST(
             CASE
@@ -390,7 +390,7 @@ s10 AS (
                 WHEN venue = 0 THEN NULL
                 ELSE (x - x * y / (y + entry_tokens_e120)) * (1 - fee_bps / 1e4)
             END,
-            COALESCE(IF(venue = 0, xr + 0.5 * (1 - e120_fee_bps / 1e4), 1e18))
+            IF(venue = 0, xr + 0.5 * (1 - e120_fee_bps / 1e4), 1e18)
         ) / 0.5 END AS sell_multiple_e120,
         max(CASE WHEN rn >= e5_rn THEN pm END) OVER (
             PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW

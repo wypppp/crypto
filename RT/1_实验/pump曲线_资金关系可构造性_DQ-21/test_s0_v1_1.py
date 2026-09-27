@@ -49,6 +49,7 @@ def main():
     assert "max_sell_30d_e30" in sql and "max_sell_30d_e120" in sql
     assert "objective_inclusion_probability" in sql
     assert "max(CASE WHEN rn >= e5_rn THEN pm END) OVER" in sql
+    assert "COALESCE(IF(" not in sql
     assert sql.count("\nstates AS (") == 1
     assert sql.count("\namm_states AS (") == 1
     print("S0 v1.1 semantic invariants: OK")
