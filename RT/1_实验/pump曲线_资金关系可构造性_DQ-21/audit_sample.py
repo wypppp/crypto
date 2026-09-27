@@ -2,8 +2,9 @@
 
 1. 从 results/{stage}_inflows.csv.gz 按（状态 × 证据）分层抽样：每层最多 10 笔，合计不足 50 时从 unique 各层补足；种子固定。
 2. 每笔用 Helius getTransaction（jsonParsed，RPC 自带解析，与本项目的解码不共用代码）重取，独立判断：
-   - 指令证据：解析后的系统转账/建账户、SPL transfer/transferChecked、closeAccount 中，
-     是否有目标为 W（或 W 名下代币账户）、转出方/授权人/被关闭账户所有者 = 记录的来源、金额合计 >= 记录金额的指令；
+   - 指令证据：解析后的系统转账/建账户/nonce 提款、SPL transfer/transferChecked、closeAccount 中，
+     是否有目标为 W（或 W 名下代币账户）、来源 = 记录的来源（系统账户为转出方，带种子为 base，nonce 为授权人，
+     SPL 与关闭账户为源/被关闭代币账户的资产所有者）、金额合计 >= 记录金额的指令；
    - 余额证据：按解析后的账户与代币余额所有者合并，来源的净减少是否 >= W 净增加的 95%，且没有第二个非 PDA 地址满足。
 3. unique 必须 supported；非 unique 只检查是否本应能唯一归因（漏判不算错判，但记录）。
 存 results/{stage}_audit{round}.csv 与原始交易 raw/helius/audit/，逐笔判读理由写在 过程/ 中。
@@ -55,13 +56,14 @@ def check(tx, W, source, amount, evidence):
                 src = info.get("nonceAuthority") or info.get("sourceBase") or info.get("source")
                 dst, amt = info.get("destination") or info.get("newAccount"), int(info["lamports"])
             elif t in ("transfer", "transferChecked") and ("amount" in info or "tokenAmount" in info):
-                src = info.get("authority") or info.get("multisigAuthority") or ow(info.get("source"))
+                # 来源 = 源代币账户的资产所有者（09-27 复核后）；缺失时退回授权人
+                src = own.get(info.get("source")) or info.get("authority") or info.get("multisigAuthority")
                 dst = info.get("destination")
                 amt = int(info.get("amount") or info["tokenAmount"]["amount"])
                 if (info.get("mint") or mint.get(info.get("source")) or mint.get(dst)) != F.WSOL:
                     continue
             elif t == "closeAccount":
-                src, dst = info.get("owner") or ow(info.get("account")), info.get("destination")
+                src, dst = own.get(info.get("account")) or info.get("owner"), info.get("destination")
                 amt = tx["meta"]["preBalances"][keys.index(info["account"])] if info.get("account") in keys else 0
             else:
                 continue

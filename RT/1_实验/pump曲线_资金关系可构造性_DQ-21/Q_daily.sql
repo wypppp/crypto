@@ -1,5 +1,6 @@
 /* DQ-21 持续索引成本估算（过程/R0b_预算与门槛.md）。生成：make_q_daily.py。平台单次费用上限：5 credits（请在 Dune 网页设置）。
-   B 周（06-08～06-14 创建）每天的早买钱包数与“7 天内首次出现”的钱包数；05-31～06-07 只作回看。不触碰封存周。 */
+   B 周（06-08～06-14 创建）每天的早买钱包数，以及前 30 名中“此前 7 天从未进入前 30 名”的钱包数；05-31～06-07 只作回看。
+   09-27 复核后修正：新旧按前 30 名的历史判断（原版按全部排名，会低估冷启动）。每个重 CTE 只引用一次。不触碰封存周。 */
 WITH
 cohort AS (
     SELECT mint, min(evt_block_time) AS created_at, max(CAST("user" AS varchar)) AS dev, max(quote_mint) AS quote_mint
@@ -49,22 +50,24 @@ firsts AS (
     WHERE rn = 1
 ),
 wd AS (
-    SELECT usr, d, min(buyer_rank) AS best_rank, count(*) AS n_pairs, sum(CASE WHEN buyer_rank <= 30 THEN 1 ELSE 0 END) AS n_pairs_k30
+    SELECT usr, d, count(*) AS n_pairs, sum(CASE WHEN buyer_rank <= 30 THEN 1 ELSE 0 END) AS n_pairs_k30
     FROM firsts
     GROUP BY 1, 2
 ),
 hist AS (
     SELECT w.*,
-           max(d) OVER (PARTITION BY usr ORDER BY d ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS prev_d
+           max(CASE WHEN n_pairs_k30 > 0 THEN d END)
+               OVER (PARTITION BY usr ORDER BY d ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS prev_d_k30
     FROM wd w
 )
 SELECT d,
        sum(n_pairs) AS n_pairs,
-       sum(n_pairs_k30) AS n_pairs_k30,
        count(*) AS n_wallets,
-       sum(CASE WHEN best_rank <= 30 THEN 1 ELSE 0 END) AS n_wallets_k30,
-       sum(CASE WHEN prev_d IS NULL OR prev_d < d - INTERVAL '7' DAY THEN 1 ELSE 0 END) AS n_new_7d,
-       sum(CASE WHEN best_rank <= 30 AND (prev_d IS NULL OR prev_d < d - INTERVAL '7' DAY) THEN 1 ELSE 0 END) AS n_new_7d_k30
+       sum(n_pairs_k30) AS n_pairs_k30,
+       sum(CASE WHEN n_pairs_k30 > 0 THEN 1 ELSE 0 END) AS n_wallets_k30,
+       sum(CASE WHEN n_pairs_k30 > 0 AND (prev_d_k30 IS NULL OR prev_d_k30 < d - INTERVAL '7' DAY) THEN 1 ELSE 0 END) AS n_new_7d_k30,
+       sum(CASE WHEN n_pairs_k30 > 0 AND prev_d_k30 = d - INTERVAL '1' DAY THEN 1 ELSE 0 END) AS n_back_1d_k30,
+       sum(CASE WHEN n_pairs_k30 > 0 AND prev_d_k30 < d - INTERVAL '1' DAY AND prev_d_k30 >= d - INTERVAL '7' DAY THEN 1 ELSE 0 END) AS n_back_2to7d_k30
 FROM hist
 WHERE d BETWEEN DATE '2026-06-08' AND DATE '2026-06-14'
 GROUP BY 1

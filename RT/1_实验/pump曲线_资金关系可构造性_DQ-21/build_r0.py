@@ -122,7 +122,14 @@ def main():
         f_inf, f_lk = wallet_record(C, [x for x in (cf or []) if t0 <= (x.get("blockTime") or 0) < t_dec], None, None)
         for r in c_inf:
             all_inf.append({**r, "W": C, "mint": mint, "role": "creator"})
-        pf_c = {m: primary_funder(c_inf, services[m])[0] for m in services}
+        c_meta = walk_meta(idx, kb, reuse)
+        c_complete = c_meta is not None and str(c_meta["complete"]) == "True"
+        # 创建者主出资方：主口径只在 7 天窗口翻完时成立；obs 为观察到的窗口内
+        pf_c = {}
+        for m in services:
+            p = primary_funder(c_inf, services[m])[0]
+            pf_c[m] = p if c_complete else None
+            pf_c["obs_" + m] = p
         c_links = {(l["cp"], l["ts"]) for l in c_lk + f_lk} | {(r["source"], r["ts"]) for r in c_inf + f_inf}
         wrows = []
         for r in b.itertuples():
@@ -139,10 +146,14 @@ def main():
                 all_inf.append({**x, "W": r.usr, "mint": mint, "role": "buyer"})
             complete = str(m["complete"]) == "True" if m is not None else False
             u = [x for x in inf if x["status"] == "unique"]
-            # 优先级：唯一可归因 > 截断（没翻到 7 天前，出资段可能在更早处）> 只有非唯一流入 > 无流入
-            status = "resolved" if u else ("truncated" if not complete else ("nonunique_only" if inf else "no_inflow"))
-            if not F.on_curve(r.usr):      # 买家本身是程序账户（PDA），出资方无意义
+            # 状态（09-27 复核后）：窗口是否翻完 × 是否看到唯一可归因来源；程序账户买家单列
+            if not F.on_curve(r.usr):
                 status, u = "program_account", []
+            elif complete:
+                status = "resolved_complete" if u else ("nonunique_complete" if inf else "no_inflow_complete")
+            else:
+                status = "partial_with_candidate" if u else "partial_no_candidate"
+            # 与创建者的直接往来是观察到的事实，截断窗口里看到的也算
             direct = [l for l in lk if l["cp"] == C] + [x for x in u if x["source"] == C]
             post = [ts for (cp, ts) in c_links if cp == r.usr and ts is not None and ts < t_dec
                     and ts >= int(r.t) - WEEK]
@@ -153,7 +164,9 @@ def main():
                    "direct_creator_link": link_ts is not None, "link_ts": link_ts,
                    "evidence_paths": "|".join(sorted({x["evidence"] for x in u}))}
             for mode in services:
-                row[f"pf_{mode}"], row[f"pf_amt_{mode}"] = primary_funder(inf, services[mode]) if status != "program_account" else (None, 0.0)
+                p, amt = primary_funder(u, services[mode]) if status != "program_account" else (None, 0.0)
+                row[f"pf_{mode}"], row[f"pf_amt_{mode}"] = (p, amt) if status == "resolved_complete" else (None, 0.0)
+                row[f"pf_obs_{mode}"] = p      # 观察到的窗口内（完整或截断），不是 7 天口径
             wrows.append(row)
         Wd = pd.DataFrame(wrows)
         W_rows += wrows
@@ -163,33 +176,38 @@ def main():
                "kth_buy_s": int(b.t.max() - t0) if len(b) else None,
                "cov_count": len(b) / n_all if n_all else None,
                "cov_sol": b.sol_amt.sum() / allb.sol_amt.sum() if n_all else None,
-               "creator_back_complete": str(walk_meta(idx, kb, reuse)["complete"]) == "True" if kb in idx.index else None}
-        for mode in services:
-            rec[f"creator_pf_{mode}"] = pf_c[mode]
+               "creator_back_complete": c_complete}
+        for k, v in pf_c.items():
+            rec[f"creator_pf_{k}"] = v
         if len(Wd) and "pf_strict" in Wd:
             sol_all = Wd.sol.sum()
-            res = Wd[Wd.status == "resolved"]
-            rec["n_resolved"] = len(res)
+            for st in ("resolved_complete", "partial_with_candidate", "partial_no_candidate", "no_inflow_complete",
+                       "nonunique_complete", "program_account"):
+                rec[f"n_{st}"] = int((Wd.status == st).sum())
+            res = Wd[Wd.status == "resolved_complete"]
             rec["resolved_sol_share"] = res.sol.sum() / sol_all if sol_all else None
-            for mode in services:
-                pf, cpf = Wd[f"pf_{mode}"], pf_c[mode]
+            for var in [m for m in services] + ["obs_" + m for m in services]:
+                pf, cpf = Wd[f"pf_{var}"], pf_c[var]
+                resolved = Wd[pf.notna()]
                 linked = Wd.direct_creator_link | (pf == C) | ((pf == cpf) & pf.notna() & (cpf not in (None, "service")))
-                rec[f"V1_{mode}"] = Wd.sol[linked].sum() / sol_all if sol_all else 0.0
-                rec[f"V1n_{mode}"] = int(linked.sum())
-                grp = Wd[pf.notna() & (pf != "service")].groupby(f"pf_{mode}")
+                rec[f"V1_{var}"] = Wd.sol[linked].sum() / sol_all if sol_all else 0.0
+                rec[f"V1n_{var}"] = int(linked.sum())
+                grp = Wd[pf.notna() & (pf != "service")].groupby(f"pf_{var}")
                 sizes = grp.size()
                 big = sizes[sizes >= 2]
-                rec[f"V2_{mode}"] = max((grp.get_group(f).sol.sum() for f in big.index), default=0.0) / sol_all if sol_all else 0.0
-                rec[f"V2n_{mode}"] = int(big.max()) if len(big) else 0
+                rec[f"V2_{var}"] = max((grp.get_group(f).sol.sum() for f in big.index), default=0.0) / sol_all if sol_all else 0.0
+                rec[f"V2n_{var}"] = int(big.max()) if len(big) else 0
                 nsvc = int((pf == "service").sum())
-                rec[f"V3_{mode}"] = (pf[pf.notna() & (pf != "service")].nunique() + nsvc) / len(res) if len(res) else np.nan
-                rec[f"trigger_{mode}"] = bool(rec[f"V1_{mode}"] > 0 or rec[f"V2n_{mode}"] >= 2)
-                # 首次可观察：V1 为关联买家的 max(买入, 直接往来) 最早者；V2 为某主出资方第二个买家的买入时刻
-                tl = [max(x.t_buy, x.link_ts) if x.direct_creator_link and pd.notna(x.link_ts) else x.t_buy
+                rec[f"V3_{var}"] = (pf[pf.notna() & (pf != "service")].nunique() + nsvc) / len(resolved) if len(resolved) else np.nan
+                rec[f"trigger_{var}"] = bool(rec[f"V1_{var}"] > 0 or rec[f"V2n_{var}"] >= 2)
+                # 首次可观察：V1 为关联买家 max(买入, 直接往来) 的最早者；V2 为某主出资方第二个买家的买入时刻；另记当时价格倍数
+                tl = [(max(x.t_buy, x.link_ts) if x.direct_creator_link and pd.notna(x.link_ts) else x.t_buy, x.price)
                       for x in Wd[linked].itertuples()]
-                rec[f"V1_first_s_{mode}"] = min(tl) - t0 if tl else None
-                t2 = [grp.get_group(f).t_buy.sort_values().iloc[1] for f in big.index]
-                rec[f"V2_first_s_{mode}"] = min(t2) - t0 if t2 else None
+                rec[f"V1_first_s_{var}"] = min(tl)[0] - t0 if tl else None
+                rec[f"V1_first_px_{var}"] = min(tl)[1] / PRICE0 if tl and pd.notna(min(tl)[1]) else None
+                t2 = [tuple(grp.get_group(f).sort_values("t_buy")[["t_buy", "price"]].iloc[1]) for f in big.index]
+                rec[f"V2_first_s_{var}"] = min(t2)[0] - t0 if t2 else None
+                rec[f"V2_first_px_{var}"] = min(t2)[1] / PRICE0 if t2 and pd.notna(min(t2)[1]) else None
             rec["price_mult_at_kth"] = float(b.price.iloc[-1] / PRICE0) if len(b) and pd.notna(b.price.iloc[-1]) else None
         C_rows.append(rec)
     out = H / "results"
@@ -198,7 +216,9 @@ def main():
     Cd = pd.DataFrame(C_rows)
     Cd.to_csv(out / f"{a.stage}_coins.csv", index=False)
     pd.DataFrame(all_inf).to_csv(out / f"{a.stage}_inflows.csv.gz", index=False)
-    print(Cd.drop(columns=["creator"]).to_string(max_colwidth=12))
+    keep = ["mint", "n_early", "applicable", "creator_back_complete", "n_resolved_complete", "n_partial_with_candidate",
+            "n_partial_no_candidate", "trigger_strict", "V1n_strict", "V2n_strict", "trigger_obs_strict", "V1n_obs_strict", "V2n_obs_strict"]
+    print(Cd[[c for c in keep if c in Cd]].to_string(max_colwidth=12))
 
 
 if __name__ == "__main__":

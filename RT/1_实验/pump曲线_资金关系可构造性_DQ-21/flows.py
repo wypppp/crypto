@@ -3,12 +3,16 @@
 W 的 SOL = 原生 SOL + W 名下代币账户（按 pre/postTokenBalances 的 owner 合并）。
 每笔流入记录一行（交易 × 来源），证据与状态：
 - 指令证据（含内层指令）：系统转账 / 建账户注资 / 带种子建账户（sys）、带种子转账（来源记 base 签名者）、
-  nonce 账户提款（来源记 nonce 授权人）、wSOL 代币转账（wsol，来源记授权人）、关闭账户把余额转给 W（close，来源记授权人）。
-  来源都是指令要求签名的控制者；控制者是非 PDA 地址 → unique，是 PDA → program。
+  nonce 账户提款（来源记 nonce 授权人）、wSOL 代币转账（wsol）、关闭账户把余额转给 W（close）。
+  来源（source）= 资产的经济所有者：系统账户是转出方本身；带种子账户是 base；nonce 账户是授权人；
+  SPL 转账与关闭账户是源代币账户 / 被关闭账户的 owner（取自 pre/postTokenBalances，缺失时退回授权人）。
+  指令的签名授权人另存为 control，只用于控制关系与服务节点诊断。来源是非 PDA → unique，是 PDA → program。
 - 余额证据：该交易没有任何指向 W 的指令流入，而 W 按所有者合并后净增加 >= 0.05 SOL 时才用。
   付费方先加回手续费；只有一个非 PDA 所有者的净减少 >= W 净增加的 95%，并且它是该交易的签名者 → unique；
   它不是签名者（钱由别人控制的账户转出）或不止一个 → multiple；没有非 PDA、但有 PDA 满足 → program；都没有 → payer_only。
 09-27 R0a 核验第 1 轮后修改（过程/R0a_归因核验.md）：原版未解码 nonce 提款，按余额把来源记成 nonce 账户本身（应为授权人）。
+09-27 R0a 复核后修改：第 1 轮修改时把 SPL 转账与关闭账户的来源也改成了授权人，这超出了发现的错误；
+  委托转账中授权人可能只是代理或终端。改回资产所有者为来源，授权人另存（control）。
 只有 unique 进入 V1–V3；付费方与签名者另存，不默认等于出资方。每个（交易, 来源）累计 >= 0.05 SOL 才记。
 另记 W 与非 PDA 地址之间的 SOL 转出、以及任何代币的转入/转出（links），用于创建者往来（V1 ①）。
 """
@@ -70,11 +74,11 @@ def tx_view(x):
         d = post[i] - pre[i] + (x["meta"]["fee"] if i == 0 else 0)
         agg[o] = agg.get(o, 0) + d
     return {"keys": keys, "signers": keys[:hdr["numRequiredSignatures"]], "payer": keys[0],
-            "owner": lambda i: owner.get(i) or keys[i], "mint": mint, "pre": pre, "agg": agg}
+            "owner": lambda i: owner.get(i) or keys[i], "tok_owner": owner, "mint": mint, "pre": pre, "agg": agg}
 
 
 def decode_moves(x, v):
-    """解码 SOL 与代币移动：(kind, src_owner, dst_owner, amount, mint)。"""
+    """解码 SOL 与代币移动：(kind, 来源=经济所有者, 控制者=签名授权人, dst_owner, amount, mint)。"""
     out = []
     for prog, acc, data in _instructions(x):
         try:
@@ -97,19 +101,21 @@ def decode_moves(x, v):
                 src, dst, amt = acc[0], acc[1], _u64(d, 44 + n)
             else:
                 continue
-            out.append(("sys", v["keys"][src], v["owner"](dst), amt, WSOL))
+            out.append(("sys", v["keys"][src], v["keys"][src], v["owner"](dst), amt, WSOL))
         elif prog in TOKEN_PROGS and d:
             tag = d[0]
             if tag == 3 and len(acc) >= 3 and len(d) >= 9:      # transfer：source, dest, authority（签名）
-                auth, dst, mt = acc[2], acc[1], v["mint"].get(acc[0]) or v["mint"].get(acc[1])
+                srcacc, auth, dst, mt = acc[0], acc[2], acc[1], v["mint"].get(acc[0]) or v["mint"].get(acc[1])
             elif tag == 12 and len(acc) >= 4 and len(d) >= 9:   # transfer_checked：source, mint, dest, authority
-                auth, dst, mt = acc[3], acc[2], v["keys"][acc[1]]
+                srcacc, auth, dst, mt = acc[0], acc[3], acc[2], v["keys"][acc[1]]
             elif tag == 9 and len(acc) >= 3:   # close：account, destination, authority；账户余额（lamports）转给 destination
-                out.append(("close", v["keys"][acc[2]], v["owner"](acc[1]), v["pre"][acc[0]], WSOL))
+                econ = v["tok_owner"].get(acc[0]) or v["keys"][acc[2]]
+                out.append(("close", econ, v["keys"][acc[2]], v["owner"](acc[1]), v["pre"][acc[0]], WSOL))
                 continue
             else:
                 continue
-            out.append(("wsol" if mt == WSOL else "token", v["keys"][auth], v["owner"](dst), _u64(d, 1), mt))
+            econ = v["tok_owner"].get(srcacc) or v["keys"][auth]
+            out.append(("wsol" if mt == WSOL else "token", econ, v["keys"][auth], v["owner"](dst), _u64(d, 1), mt))
     return out
 
 
@@ -121,13 +127,14 @@ def wallet_flows(x, W):
             "w_signed": W in v["signers"]}
     moves = decode_moves(x, v)
     by_src, links = {}, []
-    for kind, s, d, amt, mt in moves:
+    for kind, s, ctl, d, amt, mt in moves:
         if s == d:
             continue
         if d == W and kind in ("sys", "wsol", "close"):
-            k = by_src.setdefault(s, {"amount": 0, "ev": set()})
+            k = by_src.setdefault(s, {"amount": 0, "ev": set(), "ctl": set()})
             k["amount"] += amt
             k["ev"].add(kind)
+            k["ctl"].add(ctl)
         if W in (s, d):
             cp = d if s == W else s
             if on_curve(cp) and (kind == "token" or s == W):
@@ -136,8 +143,8 @@ def wallet_flows(x, W):
     for s, k in by_src.items():
         if k["amount"] < MIN_LAMPORTS:
             continue
-        inflows.append({**base, "source": s, "amount": k["amount"], "evidence": "+".join(sorted(k["ev"])),
-                        "status": "unique" if on_curve(s) else "program"})
+        inflows.append({**base, "source": s, "control": "|".join(sorted(k["ctl"])), "amount": k["amount"],
+                        "evidence": "+".join(sorted(k["ev"])), "status": "unique" if on_curve(s) else "program"})
     if not by_src:
         dW = v["agg"].get(W, 0)
         if dW >= MIN_LAMPORTS:
@@ -160,5 +167,5 @@ def wallet_flows(x, W):
                 st, src = "program", "|".join(sorted(neg))
             else:
                 st, src = "payer_only", v["payer"]
-            inflows.append({**base, "source": src, "amount": dW, "evidence": "balance", "status": st})
+            inflows.append({**base, "source": src, "control": src, "amount": dW, "evidence": "balance", "status": st})
     return inflows, links

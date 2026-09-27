@@ -38,7 +38,7 @@ def profile(addr, first_ts):
     for x in txs:
         v = F.tx_view(x)
         payer += v["payer"] == addr
-        for kind, s, d, amt, mt in F.decode_moves(x, v):
+        for kind, s, _ctl, d, amt, mt in F.decode_moves(x, v):
             if s == addr and d != addr and kind in ("sys", "wsol") and amt >= 10_000_000:
                 outs.append((d, round(amt / 1e9, 3)))
     rec = Counter(d for d, _ in outs)
