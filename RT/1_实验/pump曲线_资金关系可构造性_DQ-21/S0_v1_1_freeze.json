@@ -1,9 +1,12 @@
 {
-  "frozen_at": "2026-09-27T16:20:00+08:00",
+  "frozen_at": "2026-09-27T16:35:00+08:00",
   "status": "pre-successful-execution",
-  "scope": "DQ-21 S0 v1.1 event-time opportunity census; re-frozen after compile-only COALESCE hotfix",
-  "supersedes": "S0_freeze.json (v1; never executed) and ac29110b manifest (v1.1 compile error; no result)",
-  "syntax_hotfix": "Removed three redundant one-argument COALESCE wrappers around complete IF expressions; research semantics unchanged.",
+  "scope": "DQ-21 S0 v1.1 event-time opportunity census; re-frozen after two compile-only hotfixes",
+  "supersedes": "S0_freeze.json (v1; never executed), ac29110b manifest, and 7af80b82 manifest (compile errors; no result)",
+  "syntax_hotfixes": [
+    "Removed three redundant one-argument COALESCE wrappers around complete IF expressions.",
+    "Replaced seven unsupported FILTER-on-window counts with equivalent SUM(CASE...) window expressions."
+  ],
   "budgets_credits": {
     "smoke_execution": 5,
     "smoke_retrieval": 5,
@@ -13,16 +16,16 @@
   },
   "files": {
     "卡片_S0_事件时点机会普查_v1.md": "0d60fc48fdd5649f9500bf7adb8fa6a0ce7fdf306980c161c30cdd257e4235be",
-    "过程/S0_v1.1_执行更正.md": "24280f9202d2a19bd5501e2cc6adc72baa802c2bc4113d917e75c42a9d92ee86",
+    "过程/S0_v1.1_执行更正.md": "971406b030f9c748f272c4f285a000529fe3c79744bac6b3e33aa896257d70d4",
     "过程/S0_smoke_既有对账基准.md": "fd3ab967d47cada3850ecc36d6c178f73dbddcc76e62a7d95274566e10b2c89d",
-    "sql/S0_AB_事件时点机会普查_v1_1.sql": "c81dc9e052663bea7ecf2c66828f50acbbb5cb8da8bf6e51b790557ff30a5314",
-    "sql/S0_AB_事件时点机会普查_v1_1_运行版.sql": "a656038235c1c7c1cfbaf385efb37f43708d5d0b2a81f7749fbee936940cec52",
-    "sql/S0_SMOKE_v1_1_20260601.sql": "4ed01e269a340b781524edc3d2b8f5bc705088d5a4d72270d4d94891debb1a85",
+    "sql/S0_AB_事件时点机会普查_v1_1.sql": "5a51314041dd45679b249e7b7d6631e6106eb6198c13470c9710ee59b2885c89",
+    "sql/S0_AB_事件时点机会普查_v1_1_运行版.sql": "ebc1c8a58980423c79a34d931b0d063b3dec741d181199d82accb65f18284af0",
+    "sql/S0_SMOKE_v1_1_20260601.sql": "d8d6aca7169620a61e35c92cd4487cbd4969ce7b3c8ecbeb067dcf7cecc4d57e",
     "make_s0_sql_v1_1.py": "45cbd312e8d00f97baa784399ded94685632292706b4f26fedff13f8a1e2e958",
     "make_s0_smoke_v1_1.py": "6281b4e736156099abbeee656f8caca15d11bc372d182c6090b405cbbe92d31e",
     "fetch_s0_v1_1.py": "cac12038b9877ade9f6537f3820012f24d725f2a8bc1bf0041f926f01e09db7f",
     "analyze_s0.py": "76ba3d2f4255bb31af88912e6ec6cb64fa31f5ae47a12208943d1e6d5c66f2ac",
-    "test_s0_v1_1.py": "26f6ab706c7e99427a8c9856faf7dda6c7d795a385fb23af43f3f95817365807",
+    "test_s0_v1_1.py": "b4f210f4009ba2573a4596020495f71f53db3bf8d64c5cc594562860043408b7",
     "sample.csv": "862443b0c02fbf5e536ced07285f6ea8e40a96b8bc8fc351a8b77a86d47bb2e5"
   }
 }

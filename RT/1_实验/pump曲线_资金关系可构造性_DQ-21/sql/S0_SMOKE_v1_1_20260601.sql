@@ -482,14 +482,14 @@ with_counts AS (
     SELECT
         *,
         count(*) OVER () AS n_all,
-        count(*) FILTER (WHERE eligible) OVER () AS n_eligible,
-        count(*) FILTER (WHERE eligible AND tail10_exec) OVER () AS n_tail10_exec,
-        count(*) FILTER (WHERE eligible AND early_crash) OVER () AS n_early_crash,
-        count(*) FILTER (WHERE eligible AND mod(mint_hash, 10000) < 200) OVER () AS n_random_2pct,
-        count(*) FILTER (WHERE mapped_pool_reversed) OVER () AS n_mapped_reverse_pool,
+        sum(CASE WHEN eligible THEN 1 ELSE 0 END) OVER () AS n_eligible,
+        sum(CASE WHEN eligible AND tail10_exec THEN 1 ELSE 0 END) OVER () AS n_tail10_exec,
+        sum(CASE WHEN eligible AND early_crash THEN 1 ELSE 0 END) OVER () AS n_early_crash,
+        sum(CASE WHEN eligible AND mod(mint_hash, 10000) < 200 THEN 1 ELSE 0 END) OVER () AS n_random_2pct,
+        sum(CASE WHEN mapped_pool_reversed THEN 1 ELSE 0 END) OVER () AS n_mapped_reverse_pool,
         count(*) OVER (PARTITION BY cohort_week) AS n_all_week,
-        count(*) FILTER (WHERE eligible) OVER (PARTITION BY cohort_week) AS n_eligible_week,
-        count(*) FILTER (WHERE eligible) OVER (PARTITION BY cohort_week, t3_bucket) AS n_eligible_week_t3_bucket
+        sum(CASE WHEN eligible THEN 1 ELSE 0 END) OVER (PARTITION BY cohort_week) AS n_eligible_week,
+        sum(CASE WHEN eligible THEN 1 ELSE 0 END) OVER (PARTITION BY cohort_week, t3_bucket) AS n_eligible_week_t3_bucket
     FROM all_coins
 )
 SELECT

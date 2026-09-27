@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Small invariant tests for S0 v1.1's PumpSwap orientation normalization."""
+"""Small invariant tests for S0 v1.1's semantics and DuneSQL compatibility."""
 from pathlib import Path
+import re
 
 H = Path(__file__).resolve().parent
 
@@ -50,6 +51,8 @@ def main():
     assert "objective_inclusion_probability" in sql
     assert "max(CASE WHEN rn >= e5_rn THEN pm END) OVER" in sql
     assert "COALESCE(IF(" not in sql
+    assert not re.search(r"FILTER\s*\([^)]*\)\s*OVER", sql, re.S | re.I)
+    assert "sum(CASE WHEN eligible THEN 1 ELSE 0 END) OVER" in sql
     assert sql.count("\nstates AS (") == 1
     assert sql.count("\namm_states AS (") == 1
     print("S0 v1.1 semantic invariants: OK")
