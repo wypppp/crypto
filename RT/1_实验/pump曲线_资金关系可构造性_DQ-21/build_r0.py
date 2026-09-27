@@ -22,11 +22,29 @@ PRICE0 = 30 / 1.073e9          # pump 曲线初始价格（SOL/枚，按初始�
 
 
 def load_walk(key, reuse):
+    """走查的完整交易；有续翻（__ext，R0a 中 P=3 截断后续翻到 P）时合并，按签名去重。"""
     k = reuse.get(key, key)
     f = RAW / f"{k}.jsonl.gz"
     if not f.exists():
         return None
-    return [json.loads(l) for l in gzip.open(f, "rt")]
+    txs = [json.loads(l) for l in gzip.open(f, "rt")]
+    fe = RAW / f"{k}__ext.jsonl.gz"
+    if fe.exists():
+        seen = {x["transaction"]["signatures"][0] for x in txs}
+        txs += [x for x in (json.loads(l) for l in gzip.open(fe, "rt")) if x["transaction"]["signatures"][0] not in seen]
+    return txs
+
+
+def walk_meta(idx, key, reuse):
+    """走查的页数与是否翻完（有续翻时以续翻为准，页数相加）。"""
+    k = reuse.get(key, key)
+    if k not in idx.index:
+        return None
+    m = idx.loc[k].to_dict()
+    if f"{k}__ext" in idx.index:
+        e = idx.loc[f"{k}__ext"]
+        m["complete"], m["pages"], m["n_tx"] = e["complete"], m["pages"] + e["pages"], m["n_tx"] + e["n_tx"]
+    return m
 
 
 def before_anchor(txs, slot, txi, sig, gte):
@@ -110,7 +128,7 @@ def main():
         for r in b.itertuples():
             key = f"back__{r.usr}__{int(r.t)}"
             txs = load_walk(key, reuse)
-            m = idx.loc[reuse.get(key, key)] if reuse.get(key, key) in idx.index else None
+            m = walk_meta(idx, key, reuse)
             if txs is None:
                 wrows.append({"mint": mint, "W": r.usr, "rank": r.buyer_rank, "sol": r.sol_amt, "t_buy": int(r.t),
                               "status": "not_fetched"})
@@ -119,7 +137,7 @@ def main():
             inf, lk = wallet_record(r.usr, win, m, int(r.t) - WEEK)
             for x in inf:
                 all_inf.append({**x, "W": r.usr, "mint": mint, "role": "buyer"})
-            complete = bool(m["complete"]) if m is not None else False
+            complete = str(m["complete"]) == "True" if m is not None else False
             u = [x for x in inf if x["status"] == "unique"]
             # 优先级：唯一可归因 > 截断（没翻到 7 天前，出资段可能在更早处）> 只有非唯一流入 > 无流入
             status = "resolved" if u else ("truncated" if not complete else ("nonunique_only" if inf else "no_inflow"))
@@ -145,7 +163,7 @@ def main():
                "kth_buy_s": int(b.t.max() - t0) if len(b) else None,
                "cov_count": len(b) / n_all if n_all else None,
                "cov_sol": b.sol_amt.sum() / allb.sol_amt.sum() if n_all else None,
-               "creator_back_complete": bool(idx.loc[kb, "complete"]) if kb in idx.index else None}
+               "creator_back_complete": str(walk_meta(idx, kb, reuse)["complete"]) == "True" if kb in idx.index else None}
         for mode in services:
             rec[f"creator_pf_{mode}"] = pf_c[mode]
         if len(Wd) and "pf_strict" in Wd:
