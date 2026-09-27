@@ -1,0 +1,13 @@
+{
+  "frozen_at": "2026-09-28",
+  "status": "pre-two-day-cost-calibration",
+  "parent": "S0_v1_3_freeze.json",
+  "scope": "two creation days, 30-day paths, cost calibration only",
+  "query_execution_cap_suggested_credits": 40,
+  "user_per_query_ceiling_credits": 100,
+  "files_sha256": {
+    "make_s0_cost_2day_v1_3.py": "5fa7c9fd0985fc9ea3528b7df1a769ffe5de241407be9b6a4f73331ba96e2183",
+    "sql/S0_COST_2DAY_30D_v1_3_20260601_02.sql": "f93de6cf8f00f440902ae10bc8cd030a161060e35ff9e9dffb024fb4d54216e9",
+    "过程/S0_v1.3_30天单日试跑结果与两日校准.md": "f53c7072fbfbc0823fe186dc4b48086f9aa667c3ae477df9b52bf2ad8e7ccf37"
+  }
+}

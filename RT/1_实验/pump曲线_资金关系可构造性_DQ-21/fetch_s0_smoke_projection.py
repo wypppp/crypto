@@ -24,11 +24,12 @@ COLS = [
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("label", choices=("v1_2", "v1_3"))
+    ap.add_argument("label", choices=("v1_2", "v1_3", "cost_30d_v1_3"))
     args = ap.parse_args()
     settings = {
         "v1_2": (8844536, "01M3HD97S93VA2NYMN67NBRT0B", 773),
         "v1_3": (8844536, "01M3HEM7GYH70ZJ4KXKCNR8CQY", 685),
+        "cost_30d_v1_3": (8844536, "01M3JEYDWQM6J893T6CPN1CPG6", 695),
     }
     query_id, execution_id, row_count = settings[args.label]
     key = api_key()

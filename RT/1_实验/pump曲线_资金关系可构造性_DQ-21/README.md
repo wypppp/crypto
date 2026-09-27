@@ -1,4 +1,4 @@
-> **状态：R0 完成（09-27），见 [结果.md](结果.md)；原 R1a 因 +30 分钟决策时刻错位退回。S0 v1.2 单日数据核验通过但成本不通过；v1.3 单日数据与成本均通过（5.2640 credits）。当前只运行一个创建日的完整 30 天路径成本试跑，正式两周 S0 尚未放行。**研究规格见 [S0 冻结卡](卡片_S0_事件时点机会普查_v1.md)，当前执行见 [成本试跑规格](过程/S0_v1.3_全期限成本试跑.md)。S0 只用 A/B 开发期，不开封存周。现状以[总入口](../../00_总入口.md)为准。
+> **状态：R0 完成（09-27），见 [结果.md](结果.md)；原 R1a 因 +30 分钟决策时刻错位退回。S0 v1.2 单日数据核验通过但成本不通过；v1.3 单日冒烟通过。一个创建日的完整 30 天路径试跑也已通过（14.7533 credits），当前只运行两日 cohort 成本校准，正式两周 S0 尚未放行。**研究规格见 [S0 冻结卡](卡片_S0_事件时点机会普查_v1.md)，当前执行见 [两日校准规格](过程/S0_v1.3_30天单日试跑结果与两日校准.md)。S0 只用 A/B 开发期，不开封存周。现状以[总入口](../../00_总入口.md)为准。
 
 ## 0. 文件
 
@@ -21,7 +21,8 @@
 | [过程/S0_v1.2_执行规格.md](过程/S0_v1.2_执行规格.md)、[过程/S0_v1.2_冒烟结果.md](过程/S0_v1.2_冒烟结果.md)、[sql/S0_SMOKE_v1_2_20260601.sql](sql/S0_SMOKE_v1_2_20260601.sql) | v1.2 冒烟证据：数据验收通过，执行成本不通过；正式 v1.2 禁用 |
 | [make_s0_sql_v1_2.py](make_s0_sql_v1_2.py)、[make_s0_smoke_v1_2.py](make_s0_smoke_v1_2.py)、[fetch_s0_v1_2.py](fetch_s0_v1_2.py)、[analyze_s0_v1_2.py](analyze_s0_v1_2.py)、[test_s0_v1_2.py](test_s0_v1_2.py)、[xxhash64_local.py](xxhash64_local.py)、[S0_v1_2_freeze.json](S0_v1_2_freeze.json) | v1.2 生成、安全取回、分析、静态语义测试、精确 xxHash64 复算与冻结清单 |
 | [过程/S0_v1.3_执行规格.md](过程/S0_v1.3_执行规格.md)、[过程/S0_v1.3_冒烟结果.md](过程/S0_v1.3_冒烟结果.md)、[sql/S0_SMOKE_v1_3_20260601.sql](sql/S0_SMOKE_v1_3_20260601.sql)、[test_s0_v1_3.py](test_s0_v1_3.py) | v1.3 单日冒烟已通过：数据对账和 10-credit 费用闸门都满足 |
-| [过程/S0_v1.3_全期限成本试跑.md](过程/S0_v1.3_全期限成本试跑.md)、[sql/S0_COST_30D_v1_3_20260601.sql](sql/S0_COST_30D_v1_3_20260601.sql)、[S0_v1_3_cost_pilot_freeze.json](S0_v1_3_cost_pilot_freeze.json) | **当前唯一待运行查询**：06-01 创建币的完整 30 天路径，建议单次 50-credit 上限，只做成本诊断 |
+| [过程/S0_v1.3_全期限成本试跑.md](过程/S0_v1.3_全期限成本试跑.md)、[sql/S0_COST_30D_v1_3_20260601.sql](sql/S0_COST_30D_v1_3_20260601.sql)、[S0_v1_3_cost_pilot_freeze.json](S0_v1_3_cost_pilot_freeze.json) | 已执行：06-01 创建币的完整 30 天路径，执行 14.7533 credits，技术对账通过 |
+| [过程/S0_v1.3_30天单日试跑结果与两日校准.md](过程/S0_v1.3_30天单日试跑结果与两日校准.md)、[sql/S0_COST_2DAY_30D_v1_3_20260601_02.sql](sql/S0_COST_2DAY_30D_v1_3_20260601_02.sql)、[S0_v1_3_2day_cost_freeze.json](S0_v1_3_2day_cost_freeze.json) | **当前唯一待运行查询**：06-01～02 创建币、各完整 30 天路径，建议单次 40-credit 上限，只校准两周正式成本 |
 | [concentration_r0.py](concentration_r0.py) | 触发集中度与首次可观察时刻 |
 | [n_r1_power.py](n_r1_power.py) | N_R1 功效计算（§8 附） |
 | [check_buyers.py](check_buyers.py) | R0a 条件 1：Helius 重建早买名单并与 Dune 比对 |
