@@ -12,25 +12,25 @@
   "budgets_credits": {
     "v1_1_smoke_execution_actual": 5.365576924,
     "v1_1_smoke_retrieval_cap": 5,
-    "v1_2_smoke_execution": 6,
+    "v1_2_smoke_execution": 10,
     "v1_2_smoke_retrieval": 5,
     "production_execution": 115,
     "production_retrieval": 100,
-    "s0_all_versions_total": 240
+    "s0_all_versions_total": 245
   },
   "files": {
     "卡片_S0_事件时点机会普查_v1.md": "0d60fc48fdd5649f9500bf7adb8fa6a0ce7fdf306980c161c30cdd257e4235be",
-    "过程/S0_v1.2_执行规格.md": "ace02692027f0155e78ca07b6aaff84ed15c6c695f83eced637f87412b76ce6c",
+    "过程/S0_v1.2_执行规格.md": "d33043863b8ca3e084f286f84e017ccc8bb853deb9cde8866d3186fea5c28f36",
     "过程/S0_smoke_既有对账基准.md": "fd3ab967d47cada3850ecc36d6c178f73dbddcc76e62a7d95274566e10b2c89d",
     "过程/S0_v1.1_冒烟结果.md": "c7763ce127d283b9e34b60284f5539f68901863af3f8207ddc36f032d923e4b9",
     "sql/S0_AB_事件时点机会普查_v1_2.sql": "d88413a8491d989092c96d289b9cc778d8a7702ba96a19fb9cc9a9fec32beda0",
     "sql/S0_AB_事件时点机会普查_v1_2_运行版.sql": "f200c657ebbd16f6a4b42cf13e419ad9c3e48081f29c26523694ec5bf1807a33",
-    "sql/S0_SMOKE_v1_2_20260601.sql": "d08ee13ac7d52d227191057733bb425539e43683c433847fd2bfa22bf16bf854",
+    "sql/S0_SMOKE_v1_2_20260601.sql": "04135e1c1369c7686c818383afee3b69139ee94518e5aedea441913e036c7a9b",
     "make_s0_sql_v1_2.py": "6bf3ec7f7f94118b644c86f4f77a0f308f04c6f04e36b5df035207a9ba13fd99",
-    "make_s0_smoke_v1_2.py": "fce916c9a47647ee9d36847a91379c3c02151aa9f103b8af36b9a8c839d5dbff",
+    "make_s0_smoke_v1_2.py": "d43a3edeb5b0e37d51f114e86d3872f5640e45172917fcc7619d535ba6fc0427",
     "fetch_s0_v1_2.py": "d2c0dbf01f27cab45e32d9ead8b4864a3a4ab437ce02f82026c7a10f79f95ab3",
     "analyze_s0_v1_2.py": "b203e17aeba87bc62f187b35be090a69ba95153c5854324beb296a45169361ce",
-    "test_s0_v1_2.py": "7a971c0ac210476c467f95a1b219d7539decb4ce2a9d01b3206b5442723a5588",
+    "test_s0_v1_2.py": "2164ec2d36a5077aff9748bd3b776ee8acaa14a0bb9ba47672ea35d64f8cce49",
     "xxhash64_local.py": "937378cc9d61c6c5814d8dc1d1133aa9fa66536a85b5261a0329f854cb5a4bed",
     "sample.csv": "862443b0c02fbf5e536ced07285f6ea8e40a96b8bc8fc351a8b77a86d47bb2e5"
   }

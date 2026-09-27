@@ -1,7 +1,7 @@
 /* DIAGNOSTIC ONLY: S0 v1.2, one creation day and one-day path.
    Column names ending 30d retain the production schema but contain only this
    smoke's one-day path. Do not use any outcome count as evidence.
-   Platform execution cap: 6 credits. */
+   Platform execution cap: 10 credits. */
 /* DQ-21 S0 v1.2 — A/B 开发期事件时点机会普查。
    v1.2 保留 v1.1 的成交、状态、时钟和三档延迟口径；只修订抽样与验收：
    (1) 全量纳入 t3 后至创建后 420 秒内任一可观察状态仍有未来 8x 价格空间的病例超集；

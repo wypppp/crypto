@@ -17,7 +17,7 @@ text = text.replace(old_horizon, "INTERVAL '1' DAY")
 text = """/* DIAGNOSTIC ONLY: S0 v1.2, one creation day and one-day path.
    Column names ending 30d retain the production schema but contain only this
    smoke's one-day path. Do not use any outcome count as evidence.
-   Platform execution cap: 6 credits. */\n""" + text
+   Platform execution cap: 10 credits. */\n""" + text
 out = H / "sql" / "S0_SMOKE_v1_2_20260601.sql"
 out.write_text(text)
 print(out)

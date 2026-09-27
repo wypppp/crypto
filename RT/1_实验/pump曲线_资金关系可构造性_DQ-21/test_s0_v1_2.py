@@ -42,7 +42,7 @@ def main():
     assert smoke.count("BETWEEN DATE '2026-06-01' AND DATE '2026-06-01'") == 1
     assert smoke.count("BETWEEN DATE '2026-06-01' AND DATE '2026-06-02'") == 5
     assert "INTERVAL '1' DAY" in smoke
-    assert "Platform execution cap: 6 credits" in smoke
+    assert "Platform execution cap: 10 credits" in smoke
     print("S0 v1.2 invariants: OK")
 
 
