@@ -1,0 +1,12 @@
+{
+  "frozen_at": "2026-09-27T15:25:00+08:00",
+  "scope": "DQ-21 S0 event-time opportunity census before any S0 Dune execution",
+  "files": {
+    "卡片_S0_事件时点机会普查_v1.md": "0d60fc48fdd5649f9500bf7adb8fa6a0ce7fdf306980c161c30cdd257e4235be",
+    "sql/S0_AB_事件时点机会普查.sql": "ae61931fb37fc6ee531bb8ed8da9c536c6a59b9792e5212b29213a39952d83bb",
+    "sql/S0_AB_事件时点机会普查_运行版.sql": "8372bd4a92d609099f29d053b2e4daebc912b659368db1aaee0098a54a943cdb",
+    "make_s0_sql.py": "8795a1ee698a739210fc89d51f7959ea5275586c497542a753c92912bf1a65f7",
+    "fetch_s0.py": "f9f2af7ef8633f52896c8d4b25bb5c5fb2a357e3e1096362e413af9fca648331",
+    "analyze_s0.py": "c6a9e5470b057cd3edcd808849a33d24940ccf8b75d1aa3d9d57892487e6ffdf"
+  }
+}
