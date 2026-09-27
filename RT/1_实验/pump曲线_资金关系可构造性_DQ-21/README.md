@@ -1,4 +1,4 @@
-> **状态：R0 完成（09-27），见 [结果.md](结果.md)；原 R1a 因 +30 分钟决策时刻错位退回。用户 09-27 批准改走事件时点方案，当前执行 S0 v1.1，只用 A/B 开发期，不开封存周。**研究规格见 [S0 冻结卡](卡片_S0_事件时点机会普查_v1.md)，执行版与预算见 [v1.1 更正](过程/S0_v1.1_执行更正.md)；v1 从未执行且已禁用。现状以[总入口](../../00_总入口.md)为准。
+> **状态：R0 完成（09-27），见 [结果.md](结果.md)；原 R1a 因 +30 分钟决策时刻错位退回。用户 09-27 批准改走事件时点方案。S0 v1.1 单日冒烟已通过核心路径，但暴露出 API 哈希舍入和迁移映射验收缺口；正式 v1.1 禁止运行，当前只运行 v1.2 单日冒烟。**研究规格见 [S0 冻结卡](卡片_S0_事件时点机会普查_v1.md)，执行版与预算见 [v1.2 规格](过程/S0_v1.2_执行规格.md)。S0 只用 A/B 开发期，不开封存周。现状以[总入口](../../00_总入口.md)为准。
 
 ## 0. 文件
 
@@ -14,9 +14,12 @@
 | [卡片_S0_事件时点机会普查_v1.md](卡片_S0_事件时点机会普查_v1.md)、[sql/S0_AB_事件时点机会普查.sql](sql/S0_AB_事件时点机会普查.sql) | 用户批准的事件时点改版：先建立全新币早期机会总体与固定病例队列抽样框；关系信号的实际触发时点留到 R1a |
 | [make_s0_sql.py](make_s0_sql.py)、[fetch_s0.py](fetch_s0.py)、[analyze_s0.py](analyze_s0.py) | 生成含 105 个 R0 核验币的运行版 SQL、安全下载小结果、核对样本与总体计数 |
 | [make_s0_smoke.py](make_s0_smoke.py)、[sql/S0_SMOKE_20260601.sql](sql/S0_SMOKE_20260601.sql)、[过程/S0_smoke_既有对账基准.md](过程/S0_smoke_既有对账基准.md) | 从冻结运行版机械派生的单日诊断查询；先验对账 13 个 R0 样本的 `t3_s`，只验语义、扫描与费用，不把结果当研究证据 |
-| [过程/S0_v1.1_执行更正.md](过程/S0_v1.1_执行更正.md)、[sql/S0_AB_事件时点机会普查_v1_1.sql](sql/S0_AB_事件时点机会普查_v1_1.sql)、[sql/S0_AB_事件时点机会普查_v1_1_运行版.sql](sql/S0_AB_事件时点机会普查_v1_1_运行版.sql) | **当前唯一可运行版**：补反向池、正确 AMM 金额/状态、单调事件时钟、三档延迟可兑现空间和取回预算 |
+| [过程/S0_v1.1_执行更正.md](过程/S0_v1.1_执行更正.md)、[sql/S0_AB_事件时点机会普查_v1_1.sql](sql/S0_AB_事件时点机会普查_v1_1.sql)、[sql/S0_AB_事件时点机会普查_v1_1_运行版.sql](sql/S0_AB_事件时点机会普查_v1_1_运行版.sql) | 已执行单日冒烟并保留证据；正式 v1.1 因输出验收缺口禁用 |
 | [make_s0_sql_v1_1.py](make_s0_sql_v1_1.py)、[make_s0_smoke_v1_1.py](make_s0_smoke_v1_1.py)、[sql/S0_SMOKE_v1_1_20260601.sql](sql/S0_SMOKE_v1_1_20260601.sql) | 生成 v1.1 运行版与单日冒烟；旧生成器和 v1 SQL 仅作审计留档 |
 | [fetch_s0_v1_1.py](fetch_s0_v1_1.py)、[test_s0_v1_1.py](test_s0_v1_1.py)、[S0_v1_1_freeze.json](S0_v1_1_freeze.json) | 先估导出费用再取回；语义不变量测试与冻结哈希 |
+| [过程/S0_v1.1_冒烟结果.md](过程/S0_v1.1_冒烟结果.md)、[raw/s0/](raw/s0/) | query `8844536` 的执行元数据、原始结果、本地精确哈希修复和分析；只作技术验收，不作研究证据 |
+| [过程/S0_v1.2_执行规格.md](过程/S0_v1.2_执行规格.md)、[sql/S0_AB_事件时点机会普查_v1_2.sql](sql/S0_AB_事件时点机会普查_v1_2.sql)、[sql/S0_SMOKE_v1_2_20260601.sql](sql/S0_SMOKE_v1_2_20260601.sql) | **当前唯一可运行版**：扩大病例过抽到 420 秒窗口、精确字符串哈希、迁移映射完整性；先只跑单日冒烟 |
+| [make_s0_sql_v1_2.py](make_s0_sql_v1_2.py)、[make_s0_smoke_v1_2.py](make_s0_smoke_v1_2.py)、[fetch_s0_v1_2.py](fetch_s0_v1_2.py)、[analyze_s0_v1_2.py](analyze_s0_v1_2.py)、[test_s0_v1_2.py](test_s0_v1_2.py)、[xxhash64_local.py](xxhash64_local.py)、[S0_v1_2_freeze.json](S0_v1_2_freeze.json) | v1.2 生成、安全取回、分析、静态语义测试、精确 xxHash64 复算与冻结清单 |
 | [concentration_r0.py](concentration_r0.py) | 触发集中度与首次可观察时刻 |
 | [n_r1_power.py](n_r1_power.py) | N_R1 功效计算（§8 附） |
 | [check_buyers.py](check_buyers.py) | R0a 条件 1：Helius 重建早买名单并与 Dune 比对 |

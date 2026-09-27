@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""Audit DQ-21 S0 v1.2 case-cohort output and exact sample identity."""
+from __future__ import annotations
+
+import csv
+import gzip
+import json
+import math
+import sys
+from pathlib import Path
+
+from xxhash64_local import dune_mint_hash
+
+
+def open_text(path: Path):
+    return gzip.open(path, "rt", newline="") if path.suffix == ".gz" else path.open(newline="")
+
+
+def f(row, name):
+    v = row.get(name, "")
+    return None if v in (None, "") else float(v)
+
+
+def b(row, name):
+    return str(row.get(name, "")).lower() in {"true", "1"}
+
+
+def weighted_quantile(pairs, q):
+    pairs = sorted((x, w) for x, w in pairs if x is not None and math.isfinite(x) and w > 0)
+    total = sum(w for _, w in pairs)
+    if not pairs or total <= 0:
+        return None
+    target = q * total
+    acc = 0.0
+    for x, w in pairs:
+        acc += w
+        if acc >= target:
+            return x
+    return pairs[-1][0]
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: analyze_s0_v1_2.py PATH.csv[.gz]")
+    path = Path(sys.argv[1])
+    with open_text(path) as src:
+        rows = list(csv.DictReader(src))
+    if not rows:
+        raise RuntimeError("empty S0 result")
+    required = {
+        "mint", "created_at", "eligible", "tail10_exec", "early_crash", "r0_seen",
+        "mint_hash_exact", "objective_inclusion_probability", "n_all", "n_eligible", "n_tail10_exec",
+        "tail420_candidate", "n_tail420_candidate", "n_tail10_outside_tail420",
+        "n_early_crash", "n_random_2pct", "has_migration_event", "amm_mapped",
+        "n_migration_event", "n_amm_mapped", "n_migration_unmapped",
+        "n_mapped_reverse_pool", "t3_s", "e5_x", "e5_y",
+        "e5_fee_bps", "cohort_week", "t3_bucket", "n_all_week",
+        "n_eligible_week", "n_eligible_week_t3_bucket",
+        "max_sell_30d", "max_sell_30d_e30", "max_sell_30d_e120",
+    }
+    missing = required - set(rows[0])
+    if missing:
+        raise RuntimeError(f"missing columns: {sorted(missing)}")
+    if len({r["mint"] for r in rows}) != len(rows):
+        raise RuntimeError("duplicate mint rows")
+
+    constants = {}
+    for name in (
+        "n_all", "n_eligible", "n_tail10_exec", "n_tail420_candidate",
+        "n_tail10_outside_tail420", "n_early_crash", "n_random_2pct",
+        "n_migration_event", "n_amm_mapped", "n_migration_unmapped",
+        "n_mapped_reverse_pool",
+    ):
+        vals = {int(float(r[name])) for r in rows}
+        if len(vals) != 1:
+            raise RuntimeError(f"nonconstant {name}: {vals}")
+        constants[name] = vals.pop()
+
+    bad_hash = []
+    bad_selection = []
+    for r in rows:
+        exact_hash = int(r["mint_hash_exact"])
+        local_hash = dune_mint_hash(r["mint"])
+        if exact_hash != local_hash:
+            bad_hash.append((r["mint"], exact_hash, local_hash))
+        case = b(r, "eligible") and (b(r, "tail420_candidate") or b(r, "tail10_exec"))
+        selected = b(r, "r0_seen") or case or (
+            b(r, "eligible") and exact_hash % 10000 < 200
+        )
+        if not selected:
+            bad_selection.append(r["mint"])
+    if bad_hash:
+        raise RuntimeError(f"exact hash mismatch: {bad_hash[:3]}")
+    if bad_selection:
+        raise RuntimeError(f"rows outside frozen selection: {bad_selection[:5]}")
+
+    tail10_rows = sum(b(r, "eligible") and b(r, "tail10_exec") for r in rows)
+    tail420_rows = sum(b(r, "eligible") and b(r, "tail420_candidate") for r in rows)
+    random_rows = sum(b(r, "eligible") and int(r["mint_hash_exact"]) % 10000 < 200 for r in rows)
+    if tail10_rows != constants["n_tail10_exec"]:
+        raise RuntimeError(f"10x tail census incomplete: downloaded {tail10_rows}, expected {constants['n_tail10_exec']}")
+    if tail420_rows != constants["n_tail420_candidate"]:
+        raise RuntimeError(f"420s case census incomplete: downloaded {tail420_rows}, expected {constants['n_tail420_candidate']}")
+    if random_rows != constants["n_random_2pct"]:
+        raise RuntimeError(f"random cohort incomplete: downloaded {random_rows}, expected {constants['n_random_2pct']}")
+
+    # All 105 R0 QA mints were already inspected. Exclude every eligible R0 mint
+    # from the main estimates, including any that independently enter the tail
+    # census or fixed hash cohort. Exact all-cohort counts remain untouched.
+    r0_eligible = sum(b(r, "r0_seen") and b(r, "eligible") for r in rows)
+    eligible_denominator = constants["n_eligible"] - r0_eligible
+    primary = [
+        r for r in rows
+        if not b(r, "r0_seen") and b(r, "eligible")
+        and (b(r, "tail420_candidate") or b(r, "tail10_exec")
+             or int(r["mint_hash_exact"]) % 10000 < 200)
+    ]
+    weighted = []
+    for r in primary:
+        if not b(r, "eligible"):
+            continue
+        # All oversampled cases have p=1; other rows enter via the fixed 2% cohort.
+        w = 1.0 if (b(r, "tail420_candidate") or b(r, "tail10_exec")) else 50.0
+        weighted.append((r, w))
+
+    def ht_mean(name):
+        vals = [(f(r, name), w) for r, w in weighted if f(r, name) is not None]
+        return None if not vals else sum(x * w for x, w in vals) / eligible_denominator
+
+    def ht_share(pred):
+        return sum(w for r, w in weighted if pred(r)) / eligible_denominator
+
+    t3 = [(f(r, "t3_s"), w) for r, w in weighted]
+    cap = []
+    for r, w in weighted:
+        x, fee = f(r, "e5_x"), f(r, "e5_fee_bps")
+        if x is not None and fee is not None and fee < 10000:
+            cap.append((x * (math.sqrt(1.05) - 1) / (1 - fee / 10000), w))
+
+    by_week = {}
+    by_week_t3 = {}
+    for r in rows:
+        week = r.get("cohort_week")
+        if week:
+            pair = (int(float(r["n_all_week"])), int(float(r["n_eligible_week"])))
+            if week in by_week and by_week[week] != pair:
+                raise RuntimeError(f"inconsistent exact week counts for {week}")
+            by_week[week] = pair
+            key = (week, r.get("t3_bucket"))
+            n = int(float(r["n_eligible_week_t3_bucket"]))
+            if key in by_week_t3 and by_week_t3[key] != n:
+                raise RuntimeError(f"inconsistent t3 stratum count for {key}")
+            by_week_t3[key] = n
+
+    anomalies = {
+        "eligible_without_t3": sum(b(r, "eligible") and f(r, "t3_s") is None for r in rows),
+        "eligible_bad_t3": sum(
+            b(r, "eligible") and f(r, "t3_s") is not None
+            and not (0 <= f(r, "t3_s") <= 300)
+            for r in rows
+        ),
+        "eligible_missing_entry_state": sum(
+            b(r, "eligible") and (f(r, "e5_x") is None or f(r, "e5_y") is None) for r in rows
+        ),
+        "nonpositive_entry_reserve": sum(
+            b(r, "eligible") and ((f(r, "e5_x") or 0) <= 0 or (f(r, "e5_y") or 0) <= 0) for r in rows
+        ),
+        "tail_missing_recovery": sum(b(r, "tail10_exec") and f(r, "max_sell_30d") is None for r in rows),
+        "tail10_outside_tail420": constants["n_tail10_outside_tail420"],
+    }
+    out = {
+        "source": str(path),
+        "downloaded_rows": len(rows),
+        "exact_counts": constants,
+        "r0_qa_rows": sum(b(r, "r0_seen") for r in rows),
+        "r0_eligible_excluded_from_weighted_estimates": r0_eligible,
+        "weighted_target_n": eligible_denominator,
+        "downloaded_tail10_rows": tail10_rows,
+        "downloaded_tail420_rows": tail420_rows,
+        "downloaded_random_rows": random_rows,
+        "exact_hashes_recomputed": len(rows),
+        "anomalies": anomalies,
+        "mapping_counts": {
+            "migration_event": constants["n_migration_event"],
+            "amm_mapped": constants["n_amm_mapped"],
+            "migration_unmapped": constants["n_migration_unmapped"],
+            "mapped_reverse_pool": constants["n_mapped_reverse_pool"],
+        },
+        "weighted_estimates": {
+            "exact_week_n_all_n_eligible": by_week,
+            "exact_observed_t3_strata": {"/".join(k): v for k, v in by_week_t3.items()},
+            "tail_share": ht_share(lambda r: b(r, "tail10_exec")),
+            "tail420_candidate_share": ht_share(lambda r: b(r, "tail420_candidate")),
+            "early_crash_share": ht_share(lambda r: b(r, "early_crash")),
+            "t3_s_p10_p50_p90": [weighted_quantile(t3, q) for q in (0.1, 0.5, 0.9)],
+            "capacity_5pct_sol_p10_p50_p90": [weighted_quantile(cap, q) for q in (0.1, 0.5, 0.9)],
+            "mean_max_sell_30d": ht_mean("max_sell_30d"),
+            "mean_max_sell_30d_e30": ht_mean("max_sell_30d_e30"),
+            "mean_max_sell_30d_e120": ht_mean("max_sell_30d_e120"),
+        },
+    }
+    if any(anomalies.values()):
+        out["verdict"] = "FAIL_DATA_INVARIANTS"
+    elif out["r0_qa_rows"] < 100:
+        out["verdict"] = "REVIEW_R0_COVERAGE"
+    else:
+        out["verdict"] = "READY_FOR_MANUAL_QA"
+    label = path.name
+    for suffix in (".gz", ".csv"):
+        if label.endswith(suffix):
+            label = label[:-len(suffix)]
+    target = path.with_name(f"{label}_analysis.json")
+    target.write_text(json.dumps(out, ensure_ascii=False, indent=2))
+    print(json.dumps(out, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
