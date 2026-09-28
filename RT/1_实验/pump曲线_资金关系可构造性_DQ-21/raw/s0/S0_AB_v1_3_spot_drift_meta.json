@@ -1,0 +1,17 @@
+{
+  "query_id": 8844536,
+  "execution_id": "01M3JFX2HT1ZJJ25S4TDKAFC2J",
+  "rows": 10565,
+  "columns": [
+    "mint",
+    "price_pm_30s",
+    "price_pm_120s",
+    "buy_sol_t3",
+    "dev_buy_sol_t3",
+    "qbuyers_5s",
+    "qbuyers_30s"
+  ],
+  "sum_result_set_bytes": 1226911,
+  "conservative_legacy_export_proxy_credits": 24.53822,
+  "interpretation": "Pool spot-price ratios, not model sale proceeds or net returns"
+}

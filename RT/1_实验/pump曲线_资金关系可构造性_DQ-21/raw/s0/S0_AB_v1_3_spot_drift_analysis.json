@@ -1,0 +1,196 @@
+{
+  "definition": "S0 pool spot-price ratio at t3+30/120 seconds versus pool spot at t3+5 seconds. No hypothetical sale order, fees, landing delay, or fixed holding period is applied.",
+  "source_execution_id": "01M3JFX2HT1ZJJ25S4TDKAFC2J",
+  "primary_sample_rows": 10460,
+  "weighted_primary_rows": 140506,
+  "ratios": {
+    "price_pm_30s": {
+      "weighted_valid_n": 140506,
+      "weighted_total_n": 140506,
+      "weighted_missing_n": 0,
+      "weighted_p10": 0.37817743033064316,
+      "weighted_p50": 0.9263188963966072,
+      "weighted_p90": 1.2942928867931163,
+      "weighted_share_spot_ratio_gt_1": 0.2697749562296272,
+      "weighted_mean_spot_ratio": 0.9460637906138548
+    },
+    "price_pm_120s": {
+      "weighted_valid_n": 140506,
+      "weighted_total_n": 140506,
+      "weighted_missing_n": 0,
+      "weighted_p10": 0.19342502315882779,
+      "weighted_p50": 0.7869080342623777,
+      "weighted_p90": 1.1785509347478864,
+      "weighted_share_spot_ratio_gt_1": 0.16506768394232274,
+      "weighted_mean_spot_ratio": 0.900494862294649
+    }
+  },
+  "strata": [
+    {
+      "population_eligible": 42921,
+      "r0_excluded": 34,
+      "sample_noncase": 839,
+      "sample_case": 1331,
+      "week": "A",
+      "t3_bucket": "000_005",
+      "ht_noncase": 41950,
+      "sample_noncase_effective_n": 839,
+      "noncase_population_exact_excluding_r0": 41556,
+      "calibrated_noncase_weight": 49.530393325387365
+    },
+    {
+      "population_eligible": 10117,
+      "r0_excluded": 3,
+      "sample_noncase": 185,
+      "sample_case": 800,
+      "week": "A",
+      "t3_bucket": "006_015",
+      "ht_noncase": 9250,
+      "sample_noncase_effective_n": 185,
+      "noncase_population_exact_excluding_r0": 9314,
+      "calibrated_noncase_weight": 50.34594594594594
+    },
+    {
+      "population_eligible": 7988,
+      "r0_excluded": 3,
+      "sample_noncase": 155,
+      "sample_case": 807,
+      "week": "A",
+      "t3_bucket": "016_030",
+      "ht_noncase": 7750,
+      "sample_noncase_effective_n": 155,
+      "noncase_population_exact_excluding_r0": 7178,
+      "calibrated_noncase_weight": 46.30967741935484
+    },
+    {
+      "population_eligible": 4515,
+      "r0_excluded": 3,
+      "sample_noncase": 93,
+      "sample_case": 479,
+      "week": "A",
+      "t3_bucket": "031_060",
+      "ht_noncase": 4650,
+      "sample_noncase_effective_n": 93,
+      "noncase_population_exact_excluding_r0": 4033,
+      "calibrated_noncase_weight": 43.365591397849464
+    },
+    {
+      "population_eligible": 2004,
+      "r0_excluded": 0,
+      "sample_noncase": 44,
+      "sample_case": 197,
+      "week": "A",
+      "t3_bucket": "061_120",
+      "ht_noncase": 2200,
+      "sample_noncase_effective_n": 44,
+      "noncase_population_exact_excluding_r0": 1807,
+      "calibrated_noncase_weight": 41.06818181818182
+    },
+    {
+      "population_eligible": 984,
+      "r0_excluded": 2,
+      "sample_noncase": 10,
+      "sample_case": 58,
+      "week": "A",
+      "t3_bucket": "121_300",
+      "ht_noncase": 500,
+      "sample_noncase_effective_n": 10,
+      "noncase_population_exact_excluding_r0": 924,
+      "calibrated_noncase_weight": 92.4
+    },
+    {
+      "population_eligible": 41270,
+      "r0_excluded": 19,
+      "sample_noncase": 817,
+      "sample_case": 1508,
+      "week": "B",
+      "t3_bucket": "000_005",
+      "ht_noncase": 40850,
+      "sample_noncase_effective_n": 817,
+      "noncase_population_exact_excluding_r0": 39743,
+      "calibrated_noncase_weight": 48.645042839657286
+    },
+    {
+      "population_eligible": 11067,
+      "r0_excluded": 1,
+      "sample_noncase": 205,
+      "sample_case": 999,
+      "week": "B",
+      "t3_bucket": "006_015",
+      "ht_noncase": 10250,
+      "sample_noncase_effective_n": 205,
+      "noncase_population_exact_excluding_r0": 10067,
+      "calibrated_noncase_weight": 49.107317073170734
+    },
+    {
+      "population_eligible": 8660,
+      "r0_excluded": 4,
+      "sample_noncase": 146,
+      "sample_case": 870,
+      "week": "B",
+      "t3_bucket": "016_030",
+      "ht_noncase": 7300,
+      "sample_noncase_effective_n": 146,
+      "noncase_population_exact_excluding_r0": 7786,
+      "calibrated_noncase_weight": 53.32876712328767
+    },
+    {
+      "population_eligible": 4688,
+      "r0_excluded": 2,
+      "sample_noncase": 99,
+      "sample_case": 531,
+      "week": "B",
+      "t3_bucket": "031_060",
+      "ht_noncase": 4950,
+      "sample_noncase_effective_n": 99,
+      "noncase_population_exact_excluding_r0": 4155,
+      "calibrated_noncase_weight": 41.96969696969697
+    },
+    {
+      "population_eligible": 1951,
+      "r0_excluded": 0,
+      "sample_noncase": 42,
+      "sample_case": 157,
+      "week": "B",
+      "t3_bucket": "061_120",
+      "ht_noncase": 2100,
+      "sample_noncase_effective_n": 42,
+      "noncase_population_exact_excluding_r0": 1794,
+      "calibrated_noncase_weight": 42.714285714285715
+    },
+    {
+      "population_eligible": 1016,
+      "r0_excluded": 2,
+      "sample_noncase": 19,
+      "sample_case": 69,
+      "week": "B",
+      "t3_bucket": "121_300",
+      "ht_noncase": 950,
+      "sample_noncase_effective_n": 19,
+      "noncase_population_exact_excluding_r0": 945,
+      "calibrated_noncase_weight": 49.73684210526316
+    }
+  ],
+  "calibrated_ratios": {
+    "price_pm_30s": {
+      "weighted_valid_n": 137108.0,
+      "weighted_total_n": 137108.0,
+      "weighted_missing_n": 0.0,
+      "weighted_p10": 0.37966492175583105,
+      "weighted_p50": 0.9258715214370167,
+      "weighted_p90": 1.2950973134924417,
+      "weighted_share_spot_ratio_gt_1": 0.26979090671695505,
+      "weighted_mean_spot_ratio": 0.9474701282190156
+    },
+    "price_pm_120s": {
+      "weighted_valid_n": 137108.0,
+      "weighted_total_n": 137108.0,
+      "weighted_missing_n": 0.0,
+      "weighted_p10": 0.19342502315882779,
+      "weighted_p50": 0.7861262044328924,
+      "weighted_p90": 1.1799533479048077,
+      "weighted_share_spot_ratio_gt_1": 0.16513918628655602,
+      "weighted_mean_spot_ratio": 0.9039062239677786
+    }
+  }
+}

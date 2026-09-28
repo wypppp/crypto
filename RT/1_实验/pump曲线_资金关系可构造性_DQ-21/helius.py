@@ -1,5 +1,8 @@
-"""DQ-21 Helius 客户端（参照 DQ-16 helius.py）：按键名用正则读 .env 中的 helius_RPC_URL，不打印、不写出。
-每次 getTransactionsForAddress 计 10 credits（F101 实测口径），记录耗时；超过上限就拒绝调用。"""
+"""DQ-21 Helius 客户端：不打印或写出 RPC URL。
+
+预算采用 Helius 当前公开价目中的方法级费用；账户实际扣费仍需从
+控制台核对。历史脚本按 getTransactionsForAddress=10 估算，不能沿用。
+"""
 import json
 import re
 import threading
@@ -10,7 +13,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]          # /home/ancillary
 _m = re.search(r"^\s*helius_RPC_URL\s*=\s*['\"]?([^'\"\s]+)", (ROOT / ".env").read_text(), re.M)
 URL = _m.group(1)
-CREDITS_PER_CALL = 10
+CREDITS_PER_CALL = 100  # gtfa; https://www.helius.dev/blog/introducing-gettransactionsforaddress
+# fetch_r0.py also uses CREDITS_PER_CALL for its page budget.
+DEFAULT_CREDITS_PER_CALL = 10
 _lock = threading.Lock()
 STATE = {"calls": 0, "credits": 0, "cap": 0, "lat": []}
 
@@ -20,13 +25,15 @@ class BudgetExceeded(RuntimeError):
 
 
 def rpc(method, params, retries=5):
-    with _lock:
-        if STATE["credits"] + CREDITS_PER_CALL > STATE["cap"]:
-            raise BudgetExceeded(f"credits {STATE['credits']} + {CREDITS_PER_CALL} > cap {STATE['cap']}")
-        STATE["calls"] += 1
-        STATE["credits"] += CREDITS_PER_CALL
+    cost = CREDITS_PER_CALL if method == "getTransactionsForAddress" else DEFAULT_CREDITS_PER_CALL
     body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params}).encode()
     for i in range(retries):
+        # Each retry is another billable request; reserve it before sending.
+        with _lock:
+            if STATE["credits"] + cost > STATE["cap"]:
+                raise BudgetExceeded(f"credits {STATE['credits']} + {cost} > cap {STATE['cap']}")
+            STATE["calls"] += 1
+            STATE["credits"] += cost
         t0 = time.time()
         try:
             req = urllib.request.Request(URL, data=body, headers={"Content-Type": "application/json"})
