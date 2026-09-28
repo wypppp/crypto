@@ -1,0 +1,55 @@
+{
+  "scope": "R0 cached complete-window buyers; V2 shared-primary-funder only",
+  "interpretation": "Deleting nonce-authority edges is a sensitivity analysis; it is not proof that non-nonce funders are economic owners.",
+  "pf_reproduction": {
+    "buyers_checked": 540,
+    "creators_checked": 70
+  },
+  "nonce_in_saved_primary": {
+    "buyers_with_nonservice_primary": 497,
+    "buyers_with_nonce_primary": 91,
+    "buyers_nonce_only_primary": 91
+  },
+  "v2_by_stratum": {
+    "f101_control": {
+      "applicable": 3,
+      "old_v2": 1,
+      "without_nonce_v2": 1,
+      "lost_v2": 0,
+      "gained_v2": 0
+    },
+    "f101_winner": {
+      "applicable": 3,
+      "old_v2": 0,
+      "without_nonce_v2": 0,
+      "lost_v2": 0,
+      "gained_v2": 0
+    },
+    "matched": {
+      "applicable": 27,
+      "old_v2": 9,
+      "without_nonce_v2": 9,
+      "lost_v2": 0,
+      "gained_v2": 0
+    },
+    "random": {
+      "applicable": 16,
+      "old_v2": 5,
+      "without_nonce_v2": 5,
+      "lost_v2": 0,
+      "gained_v2": 0
+    },
+    "winner": {
+      "applicable": 27,
+      "old_v2": 8,
+      "without_nonce_v2": 8,
+      "lost_v2": 0,
+      "gained_v2": 0
+    }
+  },
+  "changed_mints": [],
+  "v2_intensity_changed_n": 0,
+  "v2_intensity_changes": [],
+  "v1_changes_keeping_saved_direct_links": [],
+  "v1_direct_links_with_nonce_source_creator": 0
+}

@@ -1,0 +1,78 @@
+{
+  "scope": "R0 cached first full-transaction page (up to 100 transactions), same service labels; funder identity and V2 only. Complete-wallet version holds the original eligible wallet set fixed; all-wallet version adds previously truncated wallets.",
+  "limitations": "No V1 direct-link replay, no signal-time freshness, no end-to-end execution latency, and incomplete 7-day truth for truncated wallets.",
+  "buyers": {
+    "cached_wallet_coin": 1812,
+    "seven_day_resolved": 540,
+    "same_primary_as_7day": 391,
+    "onepage_service_only": 33,
+    "onepage_no_unique_source": 114
+  },
+  "creators": {
+    "cached_creator": 105,
+    "seven_day_complete": 70,
+    "same_primary_as_7day": 64
+  },
+  "v2_by_stratum": {
+    "f101_control": {
+      "applicable": 3,
+      "old_v2_trigger": 1,
+      "onepage_complete_v2_trigger": 1,
+      "onepage_all_v2_trigger": 1
+    },
+    "f101_winner": {
+      "applicable": 3,
+      "old_v2_trigger": 0,
+      "onepage_complete_v2_trigger": 0,
+      "onepage_all_v2_trigger": 2,
+      "changed_all_trigger": 2
+    },
+    "matched": {
+      "applicable": 27,
+      "old_v2_trigger": 9,
+      "onepage_complete_v2_trigger": 8,
+      "onepage_all_v2_trigger": 14,
+      "changed_complete_trigger": 1,
+      "changed_all_trigger": 7
+    },
+    "random": {
+      "applicable": 16,
+      "old_v2_trigger": 5,
+      "onepage_complete_v2_trigger": 4,
+      "onepage_all_v2_trigger": 6,
+      "changed_all_trigger": 1,
+      "changed_complete_trigger": 1
+    },
+    "winner": {
+      "applicable": 27,
+      "old_v2_trigger": 8,
+      "onepage_complete_v2_trigger": 7,
+      "onepage_all_v2_trigger": 13,
+      "changed_all_trigger": 5,
+      "changed_complete_trigger": 1
+    }
+  },
+  "changed_mints": [
+    {
+      "mint": "7YE6BUanMhvoJYwVC8sLBEMrJjAzr9cnpvkRXmCzpump",
+      "stratum": "random",
+      "seven_day_v2": 0.0714168280117349,
+      "onepage_complete_v2": 0.0,
+      "onepage_all_v2": 0.0350986921632653
+    },
+    {
+      "mint": "5msxC5d3SYnLs5pgGaWsi9aeBihJmddY3uVguV8Fpump",
+      "stratum": "winner",
+      "seven_day_v2": 0.1561479995750034,
+      "onepage_complete_v2": 0.0,
+      "onepage_all_v2": 0.1546686768400421
+    },
+    {
+      "mint": "AzVXNsPqr9kZyfqUzpJfSN6rCH7PcVEnsGDpFGzjpump",
+      "stratum": "matched",
+      "seven_day_v2": 0.12950723781386253,
+      "onepage_complete_v2": 0.0,
+      "onepage_all_v2": 0.0
+    }
+  ]
+}
