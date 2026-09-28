@@ -1,0 +1,1360 @@
+/* S1 双口径（09-28，F116 用户裁决）：原列为保守口径 A，不改；后缀 _b 的列为乐观口径 B（我方仓位留在曲线里）。
+   由 build_s1_dual_sql.py 从已验证的修正版只追加生成；新增行行尾带 B 标记注释。 */
+/* S1 CORRECTED SELL DIRECTION + SAMPLE-FIRST OPTIMIZATION.
+   Exact frozen S0 mint list; no S1-outcome reselection. Sample weights
+   and total denominators MUST come from S0, not recomputed outcomes.
+   Verify mint set and independent sell quotes before interpreting returns. */
+/* S1 ONE-DAY QA ONLY: June 1 creations and full 30-day path; no population or return inference. Execution cap <=100 credits. */
+/* S1 DRAFT: fixed-exit baseline, development cohort only.
+   Derived mechanically from frozen S0 v1.3. Do not run before
+   source audit, one-day QA, and actual Dune balance reconciliation. */
+/* DQ-21 S0 v1.3 — A/B 开发期事件时点机会普查。
+   v1.3 将 v1.2 病例超集的逆序未来峰值窗口改为顺序运行最低价。
+   病例入场状态必须在第三位合格买家之后，含同秒时用事件序号判定。
+   其余成交、状态、三档延迟和抽样口径沿用 v1.2：
+   (1) 全量纳入 t3 后至创建后 420 秒内任一可观察状态仍有未来 8x 价格空间的病例超集；
+   (2) 以字符串输出精确 xxhash64；(3) 分开报告迁移事件与 AMM 映射完整性。
+   仅 2026-06-01～06-14 创建的 SOL 计价 pump 币；不读取 06-15 起创建的封存 cohort。
+   一次扫描成交路径，输出：病例超集 + 固定哈希 2% 子队列 + R0 已看过币。
+   病例超集只决定抽样，不是收益标签；本查询不包含资金关系，不是收益检验。 */
+WITH
+r0_seen(mint) AS (
+    SELECT mint FROM (VALUES
+        /* 由 sample.csv 在冻结时生成；空值占位会在运行前生成脚本中替换。 */
+        ('12JPYuF5tvXbCPy7KLmEoqB53Mbpxre2L6yCteXEpump'),
+        ('28ZB8XufMp87CAwBVRvo1dHGicVB6CyMysryqY6qpump'),
+        ('2XQXAnHFoh92B95hribj4reS1o4LwpyaKgFXmgWQpump'),
+        ('2cgAW8un1eE2xN99PTs4NJyFYXA4pzqUEQTJbiuowgcn'),
+        ('2dJniDEAGCG7zWKseCkyrML3W23WLjDf1CGxpNv3pump'),
+        ('2qhwsQpTspqfdtTa2Yrox98kwam7vkbZNUabsLZ5pump'),
+        ('2r9x15QN6obFdUPGKmv98x99N4PAYKsL7xg8Ug2Spump'),
+        ('2sUsARJsNq6tM3Z4nas9Todu6auLL47e4utynsdwpump'),
+        ('35Ki5P8TWL6VwhCXJ3RZMQb1HKV3xfSfiqjtYBBapump'),
+        ('3757xRe9ejGDXNFbwNyM64KLX1fkf2jgyHAunZfspump'),
+        ('37pTLREQQonabNbVYvsrwrmBj5wT9LqxKA6nUzEYpump'),
+        ('3EuefWfzbkXoE6YSxKJLzn8M7gWrKLW65LDTTEjUpump'),
+        ('3FDvp4d7RVqU1Ng6DQXBpVnyG844CeJYx8WW5PBHpump'),
+        ('3KviqQykdwZBb6LQkksjYbr9pQP9WQBBdSvf3tb5pump'),
+        ('3RabpBEybbRi7xk4Z8rwiPLTkQMnTwm8PD39Ngt1wep1'),
+        ('3izvF4HcyYY4RXLyEBDHUNjjb4n2jZFfys7Dtw6Upump'),
+        ('3nTmaNvUd12oEd52rsjc8hZLqSjRm1yoEtCnZBDRpump'),
+        ('3uRnHKeooz6NyiCrD1Dq5JEpM5XPKe3abxAsJvNGpump'),
+        ('4SQ2qZrKeCUtMQacmTCLxttjX1y4r3zHidnFwsHvpump'),
+        ('4sEPTyzdj2At9X2gSPg5HKfEAnD9hSqv5DqiY6E7pump'),
+        ('57L67vSKy6fkDNjwncNx6UX1BQnWCsc1a4hcWYyhpump'),
+        ('5JbJX1QXzRBeX6d6KkMKbtuTfmgxpc4ASDtfz7uopump'),
+        ('5K2mmc16PDufaVZY7Cr4sqM8vacdbq21rSxpqwyYVGoE'),
+        ('5Sgx4R6W2e7ZH2toZ2J5x9zYmEAsrZg4ay4Bk7Jtpump'),
+        ('5cMcYeG4PSebuurzSpW1C36igxTyV3WaGhzUEFmppump'),
+        ('5eyrv3Wuc8GLMnLM3RGLAgahaAEv3bvUzWFczp8gpump'),
+        ('5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump'),
+        ('5msxC5d3SYnLs5pgGaWsi9aeBihJmddY3uVguV8Fpump'),
+        ('62JPRFp7wvf2VXPQc9zgtjynZis9yGofdh2cgtwqpump'),
+        ('67CDB8uKAukpTXWV7YPwAAK4dJUjVtyFJEMwLFeBpump'),
+        ('6LTZzr1u8TUMixEn1Lw9H2X1dQGWCzFD8UwiESgdpump'),
+        ('6g8uqRDkGc62s4n3M7yDAPrZqkGPbqaeuqPrE97Fpump'),
+        ('6rbwj1wzJMH1gQMqSWEiwcuUsQGYGDpfSVXfyKXSpump'),
+        ('6tbd2au2Dtm9vaJPSuhfAe4bi52UFk9HeKDqfwwJae2U'),
+        ('6vpjdKC8EAHdqXgX3gry3voXnQYGuRR6RJkH7hMxpump'),
+        ('7Fgs3tqGT2sBGx6B55kdzEZFcCbgtPsD5k4hsoX4pump'),
+        ('7HzXuJB4yJKFvGz5meJey8EhE6xuW2w2t4a8Jjd8pump'),
+        ('7JnXhMSaX5uoiHxvrApZcmri3a6u4rS5AGXUhpH6pump'),
+        ('7LUfsEbQZXxPq6cWA6x2s2pvswUKuu4qWH6BMLYopump'),
+        ('7YE6BUanMhvoJYwVC8sLBEMrJjAzr9cnpvkRXmCzpump'),
+        ('7xhT4Fs7KXhb7kHHJ73pZoLvqa7GVWgJLnuUBi5Ypump'),
+        ('81TnF7k8V8NPBLbP54MRDAftmAphWDKhi49fYfDbs99C'),
+        ('81uq5m7ZJF1p5n3jrjBE1TvSnh2GFHFbAFMCQ81wpump'),
+        ('8CYQP7cnc4xDefoBp2K5nYTCht2zwUQtsQ1T1iAopump'),
+        ('8NJQWbjtkbUbYhkcgp9jSJJo4pwkfwdKD8JfhHxrpump'),
+        ('8iyxKLAc8c3fZt6udcVJ9DA9uGcYYZgdfDHms7VZpump'),
+        ('8jyUQyUuHMua72KebwnyJ5hybycjTPSkB3b8zqjHpump'),
+        ('8kJcRLna8k6qvTrTwTZxPWMvXxdtHF2bwinsxXJ1pump'),
+        ('932aB51UWX51yzT9mTneNuUy9fh5p4B8FdmMnqBhvNcm'),
+        ('93DB6Wsm1QjxXLXm9eEtTkUCpkYD69XbfgHoZBSpump'),
+        ('97bMMJD7ev3eZzyBgHLpacpNSDWH9Vrke6gBE6p6pump'),
+        ('9PoGmWKbQNLWYynwNVGNXireSs7KcCPHikDwJRd4pump'),
+        ('9RWbXv3hCdmEpkqwb659JCvnVes6XLhvpXB7oYxjpump'),
+        ('9Y6f6KaguaxF4yRo9Mv4WrGAncjqR3AexnHK6bCspump'),
+        ('9ekZJnccBGbrZ7wj13qgcLH5dCBru579dPDdSUGopump'),
+        ('9iqwUDuHMNXvSzh1N5yaubUitanLuPtx4ec9CJiqpump'),
+        ('9qpDk7hGSHqyfMGDT7p4zFQ35aGff248Qes48CgLpump'),
+        ('AKQsb5XKL7RohnLGWjRui5ArUYVSZWJ5VwDSa2EEpump'),
+        ('ARYoDE9aaS4u7N3xfRysHwSAbY3bVFGHq5eGi3NuyYM6'),
+        ('ASTcDNieMSvrSEtg1HUogScEgSSeEForG4ZKohuPpump'),
+        ('AomvUWpEPZYw4FNNVJH3gfzJvVtJx37LFWcdGYEpump'),
+        ('AzVXNsPqr9kZyfqUzpJfSN6rCH7PcVEnsGDpFGzjpump'),
+        ('B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump'),
+        ('B66MkcNKFbXwFa7XbX1CbHMBPdgLyQtp6X75eAHspump'),
+        ('BJkAwqXE3w3iAwuwSHacsz9T3RTVKyFjpttMEfbvpump'),
+        ('BThQvp71A4krugaqoaGXzX4yQSSRKQEMrvNar8pypump'),
+        ('BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump'),
+        ('BecDT17N8aMugk1jjBspereXzBu1FzWnwQP7cMS2pump'),
+        ('BvVumYuqfiMty43uJNU8keYmnVaXJzEhy9t1kRe8pump'),
+        ('C3b3ZdKQZ5BQYo8PQyQuv7bGT2fXd8RTpErbuz9npump'),
+        ('CMzcCtnwPC3hcJfUwc2hrQojHubgHr4o7nUPPHiJpump'),
+        ('D826xNm4gC9L97UjnFjpbsZoUXAKdEWXukyfdA4Apump'),
+        ('DAW7qFqQ4jnWeVPgzeNZzEKgxWr9nNXo7dKSZPQ1pump'),
+        ('DEAVE9fyfQDk3fDLspnEv7y7dTGErezq2FFrp6B2pump'),
+        ('DKvB8MKLTyDeBhy6LsdQUsws9epWbC8A8HAW5Lb9pump'),
+        ('DLt86ttMxRKvJWg7H6Tcr8V2nGGrnLWisKtuYJ7epump'),
+        ('Dbi7ZS53u8KjCUMCx9XDj9mJcSJ4uxyGuEuzQ7Hzpump'),
+        ('DioWcz9RdEHNPQZiiRDLyHvqJB3j88CduS3LepNGpump'),
+        ('E2sHHwpzeVjhV3DjAMP8kYBeG27qT66xS3V9EBYVpump'),
+        ('EGcyghBEZ3A1t32FkcPzbKnMjE9UpBgK7789rq1W4JcR'),
+        ('EVY4xJ3ytMHa77sjgs2uVj7fgXj1ha98QSQxPadApump'),
+        ('EYEyyarU2mpWCTjEU5j2ezk2QEvCcr6SFMukc7Vjpump'),
+        ('EqG6cBksZ6qBG5dRdYqja1R8gCeXWsCpdmiK2RUdpump'),
+        ('FTRk6qHeoNvPHKpsPGbiVbpuRytVWfAd6jYsQFGypump'),
+        ('FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump'),
+        ('G55tdZ564fkV46Hw6EhTa2W6xkAgFH8ugvLjvv2Epump'),
+        ('GB2t2Hs2Awo4YAafTL7PzYafQJ75CkPCLCEnWoD8pump'),
+        ('GCnoV95mgWUsz8M5mayYv5XJEdfASupdt6pm3ztnpump'),
+        ('GCoJ8URGCr2dvY5pHVv3NbQ1hEQ3FzQEmyeGLbVgpump'),
+        ('GPuJcLQ4u3r1pzh9qAiJaXXf9ak6ui6DxwDAAHsppump'),
+        ('GUsV1iB83HJTcdFnqRtRSKoXcrWZfcDBSnnsb4Dxpump'),
+        ('Geha2uBuvCUeAQSuwjkzKdvExUtMAXenJB8qEnDnpump'),
+        ('GigDaD7zbfEYUpNzpZuYfKmGSHRRDMysnRvtEJ25pump'),
+        ('GqVb7LcyFX4Xwr2UT9NTxagBUAgZkzwGrQEwCm4Kpump'),
+        ('Gw7YRUTc4uc4uBv1WLgciu2sZNeaBdcuYkkyGejzpump'),
+        ('HENbwYB9roXganed9MFXm9kQ9YnhMb1cTHxeg44gpump'),
+        ('Hx2PQy6jWEnemnjuV6owU9VSHca2DkhCqhCQxzqJpump'),
+        ('J4x1EMmQjF6WEzXq2tUtzY89x5aMhYz5CzfevcJEpump'),
+        ('MBVyDu7GddjEZ9zNBHWBTqJkhU6Fv4g4VUNGZUnpump'),
+        ('YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump'),
+        ('ZhN8j2bJfs5BswAU1Axbnhpvea74dR2H6Bs9C4tpump'),
+        ('fgLjT6mAQJosXq6oz8Zk96zcnEpbV6wV5SUSK3Dpump'),
+        ('kGCE3FqVUwg2Rp7fgGLi2x6v1dvJnbttJhCyvpxpump'),
+        ('oFm29ScgdzqckDVYCN7PxnZKnQL7p9btkUBqQvNpump'),
+        ('wrxBhFHqdgYiYBjUrnHqU4Si5j59cWuocG32HNspump')
+    ) AS v(mint)
+),
+cohort AS (
+    SELECT
+        mint,
+        min(evt_block_time) AS created_at,
+        min(evt_block_slot) AS created_slot,
+        max(CAST("user" AS varchar)) AS dev,
+        max(quote_mint) AS quote_mint
+    FROM pumpdotfun_solana.pump_evt_createevent
+    WHERE evt_block_date BETWEEN DATE '2026-06-01' AND DATE '2026-06-01'
+      AND mint IN (
+            '12bLc7rF9WAVQWgSRgcqFvTbEtkgN2vL2fpeYFSZpump',
+            '12xT3RVaCgxDn8vGYFtir6UPwk2pxSDHy2PowwHapump',
+            '137uNFVymnW6sudJLEj6V1pUqQDvCXqqoi3UxGW4pump',
+            '13aPGePu9iGNv7rp7imyYji41p95LBFTweYwFMxmpump',
+            '146btmhjr3oDcLeF8PJJJyXYaduibjE3KoyPLV1jpump',
+            '14VefFAyoFPRWBS2datchXFyF1CyushrBzcBff82pump',
+            '1wHAczwcD2qPkP9xrFpPQ5B137w697sYuKBZw8Gpump',
+            '218EtF9d5ZZbwk1Z9gBLaAVghu4Eg5XUnzwz2ENNpump',
+            '218N1hjNBsh9R4wKhGS1vWRmzatga9dBY7wuy9Ggpump',
+            '219D1dCUeezsdxY9vYajHRgJvyhVuHMr4cYwncRzpump',
+            '219LB9xpbwMaUw5uoFVQbxurKvFTetst3Qofi4rRpump',
+            '219QrBG6HQWyzrNduSTpoUjyxjZ5J8o62KXmvrSQpump',
+            '219Rj4vkRvySGkF64a3TY4EzjkVdStaoQwTy9Y2qpump',
+            '23bWmG6Jfdzb2v8YKo54ESmHj29vSbkeBDXCYiBRpump',
+            '2Bgrju2ExmE1zhF6obAXiG4gWtUHV2Qw45XGJp6jpump',
+            '2ECmCcubbKaGZHoeUdVHFEaN7FkJL8ALFxVV3Mukpump',
+            '2FEySUUfjp8RPK7mxH2KH66cGsKgthFc9YFbPgVfpump',
+            '2GXP4QFBQ24pV67SsHXBTTAfExxVU4oyCWLrfuy6pump',
+            '2Jd4P7MozyD8kQCeZer3gH4D6ViRkhNMSsFE9cwtpump',
+            '2KJqMx4GDfXKvyXdaCF3Xa7kTfezZsrSiFvVhF3spump',
+            '2KVwtcE375dYxGfAznEvi5kp5iaqnc1BhzEsbnMkpump',
+            '2MaRpvqNy45Rr3geye4NgqRB4X9YXzw9G8UmQhbNpump',
+            '2Pq2ZF5xRbAxt6pwJL5imS2Bvm6vkJ6ESR939uCHpump',
+            '2RbAsFsRgvTJ7Eb8YwciR39tHprFQ5Wax2XAZxcEpump',
+            '2b7xXvCy12GUQNRMEP6eJx5FoZ1ww8166py6wakapump',
+            '2cgAW8un1eE2xN99PTs4NJyFYXA4pzqUEQTJbiuowgcn',
+            '2ctabTuwaPku3581TcBDQFKtFaNXur53NJT1cGMdpump',
+            '2dm7vLNmKP9tBKKn4TKkbUyD5pysfRkq5AoTCnLMpump',
+            '2dmM1fi4mGQHvg8DiPV81VLGbVakLptyqBdEiLZFpump',
+            '2f97Cg18U1hTEsaAjvNK6HQSehk1ntcN5AECSW5cpump',
+            '2g4y2eG9JEEM2pKbC1D3WU9B7iKJqx4dBoeW7QkWpump',
+            '2hqdBdkd5YqagpBcV7QBPiQvdU3V1y8C8dWsv4nQpump',
+            '2i5J8wyBuJJgRqcC7mAatNfjC3UvwatLgvavnmi5WqrP',
+            '2iLakUhj8ShVtdivcQRqgW6jPzYTZvUjdhm1oJRfpump',
+            '2mQFv3zDqPg61LhGxPeB3R2oqPVnKyMuTgkei7Fcpump',
+            '2oo13k1fe9CNKfqoJQUSb8YaFne7PUvQnqSagarUpump',
+            '2q68mqEbjwmnMjs1o3KZDNZVyMv6RZKkHcm64iinpump',
+            '2r9x15QN6obFdUPGKmv98x99N4PAYKsL7xg8Ug2Spump',
+            '2sYezRbddvX7ahJezPSEUiy9uMSxiQ1scVoxERFWpump',
+            '2tpx7Ja5ospmTedW1xviyamxquycvNMxt5AACvPApump',
+            '2xpnkvrz9mZFnWfoKGf6kw5KJ5ri6498NbbMfdZhpump',
+            '2xtz4VvZ12AfHPpRKs3Ld2sssD5waFxDjZEM2bBQpump',
+            '2ze2U14JUyEatKkMNChipjkcbaWX9yrp38tvDVwJfomo',
+            '32xgvbs1GVECqA8FWMJXedKC2qm3qRiH54b88HVvpump',
+            '35Ki5P8TWL6VwhCXJ3RZMQb1HKV3xfSfiqjtYBBapump',
+            '35TCq1GZ62TwD9ucuehndv4sUvUP7r27pg3uvRqBpump',
+            '36gYBqLuhWLbGBhU9TCLNSrKg2WmS4dUeyrXnGVFpump',
+            '39XJDrNpwWhjdgNR32ATYFHPfqRJ6TsWQspgbEaLpump',
+            '3BTcAzJEnB7Sjn1z5anMQS2i7skQzEFoE1gUdyDSpump',
+            '3BxtWeQ7ezuurhpqbqXcjChaxohGquNhH7TP4Fx2pump',
+            '3Cj1XSskaWrKMo2xN4ucnUi94JFZXTSePGAv4sZApump',
+            '3CnvfrhJCPjBjQBPxhhJrskWgvjLSpTawRQVSRx8pump',
+            '3EEhwc5w6KT9BmQWqUYgjbfZxvjeoEXbFaZMpNFxyF3Q',
+            '3GUiGWnYcaaT3U42UtTR5WVAPmKwbutY2mhTS6qWpump',
+            '3Ghd6vXcYk4ATmjj7cRLRNvApc84roqGc96NCKu4pump',
+            '3H7EoDQkEe36hgeuUzwMDmUbUMJg3yGKQUZhBnhnpump',
+            '3HnGjArqnqjRYwpGYWbA2UKQvVd2hfKzHL2CH8Z9pump',
+            '3L6hs7cng8jUxym5mpqTamkRB22yU2zA364jx7pxDy9m',
+            '3QMpeXZwf1MmVy8HFM52RDPALtTxEp7jeKHq5W8Zpump',
+            '3QajV2BmCEVKYLMg4PKXaPFAJ6nhTRPMh1PkTv4Zpump',
+            '3R5sShTYqrCsfiqRkwidgnG5u86SY1jM2iLiuHcYpump',
+            '3R9onxWJ3f9Rskekb3khQmuuJvRCoiEo2Zrdd6knpump',
+            '3RBLqSiNNTWZpCrgDzeSGDptdXo36XCBBhRBUZQppump',
+            '3XLPM2jhUaJF1Q4PTaj8piuXeg2qnjT8cfeZpGf5pump',
+            '3XmFDxqHcciv1CHUiokQas5HHZsQ24y22NWNaPT6pump',
+            '3YHfs9p8PNFKLD5KhkDKtTjsHEMs9MLHni4MiJfBpump',
+            '3byJGWBcH4CuqMQm3q1EUthntcjZLRWR5KmM3Dy3Dg9j',
+            '3dfetAqpmGRcjfzZXVFfr67kssK2a7wqprZv3QLppump',
+            '3fX6omf8iXTx98ZShhu8JrTUoLoo7du8uQb2W7qWpump',
+            '3ipdoQKPdkqc6LQFLZW6BziFnErEKkCzX4PoTxGCpump',
+            '3iscDXEFWrML7y2hV9sDkbSzswQoqsyfEjtcrYRupump',
+            '3izvF4HcyYY4RXLyEBDHUNjjb4n2jZFfys7Dtw6Upump',
+            '3jLnu8YpKbn5EgoPVJkD8tbq8epmLWGVo259pPr2pump',
+            '3jnmWBHQuT3u4j5Rp4s1whBSSmWx1h4KYYgHxSo7pump',
+            '3n6RL4cbeP5NLjvVAwQ7Xe81HPU2qtUGsyXPLLU5pump',
+            '3szHByCMyuGmTUECwTU5bLJuzCXDtDEnnPv3Rvngpump',
+            '3vJk39J4oYXQoNCdxwuDTkuqS3HeWwFfdkj2FHrJpump',
+            '41DibbGvNrjRgiDxL6Hb6wuwFzB8kAQUfzm5DGTjpump',
+            '41xCucJDd3mCFJsUQURRpZvFp1Rb6FziaY9KaUoCBvLy',
+            '44Wjk2eqDi4H2XcxSC5NY88Wm3ccKqoLQspkmpBTpump',
+            '45FmXh72Gpo2DmPhf2W57HWu8R1uqtXJwaTQ9TW3pump',
+            '46iYGWzMzoKGuQbaLaPjMnFyeV2YyThd7rmwTJjupump',
+            '4E3Z3y3jiM9zdr66ZUEXPBxH3bRAWYFB7wNv4VYvpump',
+            '4K1agtdFr14R4SSePSz4rffADaGF6cFtVm7juJdXpump',
+            '4KWVVhoFzhUJEQ4zEF1XwZZZiVHRCDpTUnX7gqXQpump',
+            '4M6iLjmjUGxuGdf1Ac1d6gsTgULYbUWxNAKaUviBpump',
+            '4MNXaqc7TF867y4HyNBpgbqZqnyrwzqAbvmAervHpump',
+            '4N6T3kGBkqMu61Ttx5PGpYSeqCbwQgiikK4vB7ybpump',
+            '4NHSFjB7XdRsEUK9AAZYCKyj9PsqJSnTaUvGL67Gpump',
+            '4NTME14SSMRw3W4vQSTBP9yrdB4Mz2FTVynLjUo1pump',
+            '4QAVnQYwzfF5C4TTAukPi2udDcAGvEbkuNHRyS3cpump',
+            '4Ypw5fETXczMv8CyyXu8tgQzHqQgsR8kjUuHNLtupump',
+            '4ZoUV2KTBiGofSEQf8D3oq51oeTJUAuuStSrEkhapump',
+            '4ZobRNu1ufAcHBFkr2n7XLK4XfzadBDc5d68yAu1pump',
+            '4bhZ15bFqLNzdqWWN1Czkzi1SUKYZeCVAzit1qbdpump',
+            '4eCiHwxdRHzoq8Sfww2p3NDH7nHwi98c6TdGHukTpump',
+            '4ecUhxTMRhHQnhUPrZ7rSpmQPXpvLVkBg3iwxMfnpump',
+            '4gJtW9BY1Wc7ZSZiP51RNFjQXz8RifQ7rBSWHUsspump',
+            '4hHzQSjiKJspR3nmV8wTicjaLuUuSYMddVSybQcJs5Nb',
+            '4oF8igxKPVD59bRrLJeX2Jgg2hXTW9djdHywsKhApump',
+            '4pvnZUXTgNs1ewqzS8Zrcb5i6sXNT3NBu3N9RDqhpump',
+            '4rUXeuyEhjAfy9RfBqqTrfTyDa8sxZd9yNNatTHGpump',
+            '4t7WWuMmGbLzmUCHwjchtFW6DMNASLTJh3YRMBfppump',
+            '4ttypWeHJBY9H1zqczvswCmQfA5rtMJrMuQgYpShpump',
+            '4uDJzL7neBYKEA8hpT15isXukMwuats1m7dSuqbhpump',
+            '4usv3AsjtjeWqKxtafFxV7wYEJabhgxEoTDnXTvHL1C6',
+            '4xPAfZtADUvVhSU1agN6iFBBc9KtqS46jT27u4Fgpump',
+            '51WzAVjEa8J411sNDhMHmQpQufxxcUoRNMzpg1Zqpump',
+            '52H9vwK6La4qB4jRTvC7eLdfQLzDUnUKpd2Zt7Ujpump',
+            '52oGbMavg3YPQaUzJnDvZod5XxjMe4CWurQMHH7Npump',
+            '54SjNAmMPjULbB6HYZFLDZmru8fudV9At9HNnmvCpump',
+            '54YHpbNhvC3hXyqDaL5utwU2Ei6r8je1CgDF1gZzpump',
+            '55re4o7z4JxsLZ6BFFtt6Qaam4iu58P2XciSq7dLpump',
+            '55veFfNq2DRC9LLVXADbtZY1ZetFHtKcC9HNd6hmpump',
+            '56Bz5hMsjoiPDtB64aWwaJ7UCwwLKK25kTctGWUQpump',
+            '57L67vSKy6fkDNjwncNx6UX1BQnWCsc1a4hcWYyhpump',
+            '59yckzUPxqTfRX1PrxXYKUSRN3q9BnpA1M52hy5apump',
+            '5CodH6RzAbjFTGYbQ4HDwzaUxB8bDr5p6MaJxUUjpump',
+            '5FW6a6QQgEqVFpPCgrwGWb3gsQpaSHAGepV6Mk3kpump',
+            '5Fmdr7JUw2Rz7SJLaRw5gtGMcD5AbbpH6XbNSvMApump',
+            '5Ft81EcoDZpiSFm1nu5CantAmzT9j4oL98N3VBGkpump',
+            '5FwgAKJCUGwZKF2GXxSPLWFbP78u7Y83upYbWjeTpump',
+            '5HoWa7E5ZJBMPzrvu1WXKjicpqQTXkaTKMVC9Je8pump',
+            '5M4BdscRsAoeqthUcDsHBwSEBbt7wdxxsB6N3BqQpump',
+            '5NMuMmRc3HG3SaDicw8t4qLAEhngZn71hPYT8iscpump',
+            '5R3FTJgcp2VrXedFU4Lp2RVb1kURW7X8ATYF4RbZpump',
+            '5S9uCmJW8TexwhBwmGJet52F5RiuGFnbT5HYKJsQpump',
+            '5VH6sCcJD132jDVaRENh2UssPniBSs487kjdfXdhpump',
+            '5ZaGZegPCDZhTFDG7dpFCjjRtk2D3RGnpNB4YhDCpump',
+            '5b3s7qN4t7jL9i8wS8p3MwLnujzyCZ59seLgxWtzpump',
+            '5b7CqYeGEeZE9uXw8ESCX56vVqetSrZMxK6y5i5Vpump',
+            '5cGd87ZFEsbUEjsi1EbUqG9XSvpo5TevH8RATLatpump',
+            '5friWp96qgsE71LWBteLuagQc4VH528zJXyYUVVYpump',
+            '5gH9NCrkdx4v3mUeB1VWZfpTDwKXGZ9L7SJQCQKkpump',
+            '5gTqSyynLy8y2VzhkhEWwQzzhAdJ4HL1XkiSQzAbpump',
+            '5m1uJFWphnpMsht4dztcU1fbCWmgxskWRjXmhphFpump',
+            '5m6LdRNWhY4Uxh1aTrUXY3KWyDaA8i3KeSeLV9ZTpump',
+            '5o74auEh8Tub3z5Yf6mX9U9RB4DSuunqZdwdhnx5pump',
+            '5p7M8cQkg6Hn7wkaNoBvupbJaHieRpL7rDUpHQhZpump',
+            '5pMpQyqUZafaTy4YYcfARTrPQBKyVM64mMAfc323pump',
+            '5q9bFouEQ7ttV8vMSV2HygR4VxeYKzdrxQPz2BVJpump',
+            '5qbooan6ypYdk6z3fHDtqnevrxF5yeJjx3cKPyK8pump',
+            '5sZXHaPb2Vnb1c9xWMMDxgLQCnfh2MxqXoBdMpmkpump',
+            '5sjYEedFrW93SZjdms4dUCeSefjo2VuJGTPtLiFzpump',
+            '5sv4pDy3mL4pC8o5KF7m9Ev3kAkvWbAqLBc7SKJspump',
+            '5t6BFzgbBmK9iQwSQbUpT2CTqiRJ8Pc7ynPd73T7pump',
+            '5tiNEdx5XzRb5o6xqNqNjQs3SofPAv7jXB2RAEbkpump',
+            '5wHbeE5xr3TRgueLQmT6NZUnZEUB2cq4LdaakrkLpump',
+            '5xM6uFnU3CAVsGafTsK6GKgfk6GKjSUgA6eyRutupump',
+            '5xU43kGDshMWTDUEZ3fKxtqeuVo9yML1bhgSiNw6pump',
+            '5yMtYmzHN3DwfdCgtw8hFQC33AzT76QBYs4q7wq9pump',
+            '614VfAfVh5pUrEmrXXs9jVW5DMUAp1E4HhbDpbxUpump',
+            '61aNNrrRp81a3ZztDL69dNyrcshBsqWZdWVSrpYpump',
+            '628wLPtMAbmkUUs6fiMgvFcUSsSpAxNaGQWgB7cDpump',
+            '65hdVZZuckfqnjj8uS9DEBJFEo6LxzufqHsE1g72pump',
+            '688sLZ6PC4a1gWuMMZ3wkzLfZiYbM7wP9h3VAHP9pump',
+            '68Neov1ZiduM3Nr8of4ApG6dSfSjuzTwvo5eF4MDTRtC',
+            '6ACZNtDkHFqWciNrmK6buq5qPrgEXfZpiDLZCrT5pump',
+            '6BeyohhmEkxxBsKsne2rLUjkVpx1uQ1jw4KVB9uTpump',
+            '6Cs76J2wydFfgnJiFMFMW2D7RQyi1j4vyw81tMr3pump',
+            '6EXGfxaXy3Fa8fExerg81zBVUcp5KKQ9aC6h9DHZpump',
+            '6EuNbBna6q8TG2c3u2P4LRWxJpB7KaCcN2tFfWgMpump',
+            '6Gt2ESvYkDVecUr3rxzQhbjdNcRff8g7nyQYWXkFpump',
+            '6HpUdH8KfBdArAE21ZeWsymodhJ61eecyiC7gLX6pump',
+            '6KBsERKvgGGDnoHiNcfwprM1pr3TzY3X5q8FvmBVpump',
+            '6L6dwcYaJJMRbxHuUtsNTCG9FfV4Cy6sMk9mXquppump',
+            '6Leg5xcQ4PXiXPPw2UoR9o4eFuJxKZffTNPTsxopump',
+            '6N6F94johoR3SYxL5sJrngXU8Z3XNnea2JXja1XJpump',
+            '6NXkYFVz8uTL4v3bz1cPvNfpQUN2tZX5sUr5PxJzpump',
+            '6S56yPGGL2pRLm2Gdh4zFWpyJTdtS5N8Usdf6CMDpump',
+            '6TXZHKTq1Lm93gSZYDixRYjGHgarnPqiQj4ctXyApump',
+            '6YVTDwP9zNY3MZ1nTaZP1MFTduTqhHzeD7JCsZrdpump',
+            '6YaUq4mTDGL23UTWBo4ViQVuV1cmm1dd65CYT6WVpump',
+            '6ZRoZsA8QSPbJYWcXkTjqbKaENc1ch9jocZ9ModLpump',
+            '6ZzwhD4afnn8HfbPHNcSQSScoq5ESb5v22XRjrHXpump',
+            '6dexNEA561G7TGJ5WK4KyXAm5CC4YTBwBrJMBTbupump',
+            '6fGo2xJzsasJTReKxMExQR6YymWZansLnEexWi5npump',
+            '6fS3FEqDK6zazqvp2dvgUjZ5spfZJrBqZsiY2qSApump',
+            '6gY5Qdx5zJ1oFhN28YQEtcrEM41YbKm3dSsR4Jjqpump',
+            '6i8pm2E7shihRuq856vrJicW1oPaY7rkDYuv3hTypump',
+            '6jPdqTo5Dthr5hkKZJeLCtYscGST5fp5VpgRU3rxpump',
+            '6jPrFhYScxbupd39SVuPmx7qdk3HPuh4YkW4YYxtpump',
+            '6oBuLNmvvsEhmKrGmWoyLviou4mEf7oqL7EnUhuYpump',
+            '6oDYdfcVDsyQjpdsLUB7o6dy4t4uoaLKawAsQcwEpump',
+            '6qZoPbbos1tuD9wG27AwF6UCYraGWnqAmqUnRrJxpump',
+            '6ve5dDuywLTJUMLxUg7FGarvPV1zRQZn9t4TpAKcpump',
+            '6xoKTYQUTHmQzKN4JjTrxjY6yVV5KDppt9ATdmH3pump',
+            '6zArYxcW55wHG7KPe7weuZFSUyLVJvazaTHh8gKCpump',
+            '71T1VCWoiaAf72UVxrh9bt6CHJ5XtTGD9medT8espump',
+            '726qTeYRPh6SrzYfjrqNuXZNncYQp54KMGRUzreYpump',
+            '72CergLWXAAdK3egJfEhBuUMHjoYABaxHJVrpT7cav5C',
+            '74vSKhmWcV5KbydsHxgoLFiRtNWVJNZrcGSbPt45pump',
+            '76d3BABC4Py5BLrPU2APrShdcy1zBCbTZnjh5mm8pump',
+            '78gx3gbEPPFPwBADUM3F2QvNXyW6Bzhtb13nfpVapump',
+            '79vZjazUNYWbMbMYJ8JF4T2bv2Mox1HzUW3MoREpZeiB',
+            '7DLSsR3TNmyPrLGzYSJE5iVrqVf1nTasmSqLpaGspump',
+            '7EKCWkDCZoHVXtHzvm5vRNQTDsz5SKCY9FrXavhbpump',
+            '7Ea4EkGvNFJEhr2QMLpKQbFTXTAJad8Vx43mqNBHpump',
+            '7FA9eXh2YZw3tPeHEyRW3p8W63XREexavUPpVWKgpump',
+            '7J5pp54YwSNhqungZUWvojgGB7ws3WihkXMUiq1ipump',
+            '7LipZkJQmLMtGCs8Wf6fxN3PVEV8EdQchUm4QYmgpump',
+            '7MfzCcqtdDdXTGZUM1zk7Zp59Q4qmycUcVCNBun7pump',
+            '7PtVQzwxbJ2Wrf3LprKS9FMg1FKyEVG8Q7t8r3Mgpump',
+            '7QWNxTTqHV3xUr32JHesm4E11WSxE6vbZu34sYMgpump',
+            '7QpiDt12WkMyU8niRizYEYwKoz9yR2QHU6ZxZbx3pump',
+            '7S6iPvnzgiPoRQ332i9XrfGZB5dW1oKsRz4YAvKDJgZW',
+            '7SDScq8ZioE4f7aGiCLYfY48uNj9R4jKUSrotPD1pump',
+            '7STAsuDVxuaG9Kr4hKvgHyyUwLr5M5zB5nemowkzpump',
+            '7TwWUskjbXCxYEzr96rugNYxAvXhNRJTmyofDiDBpump',
+            '7VhEFLR9NxFKxxhug6wh3xdKYwFg3NtcNSouXdq6pump',
+            '7WPUcjEGMEHszXFNwNwG1Wdtva2aohbBpHLNufLtpump',
+            '7WPeEiQvyxFGVap17piTbZEQSHsc6562JurCtUhppump',
+            '7XgePcueJNYo3NYxwrr812qzPd6DE5kW56K56hU1pump',
+            '7ZjSg9FqVVE5pkjBfFsfwCkjFebFButmwogDenpPpump',
+            '7avWx5pky4TCupjrAryxhWDPk6gbVE7JwXn6T8dkSqbi',
+            '7c8QpY4C7pKsCkG6UPLehrXVcxMUV12EXPGAKXQ1pump',
+            '7dJLderbZxTFWsm2KTJPxbBFGVo9o184bMkS7hHJpump',
+            '7dj7URC8XhJMj5xTpqmne9tZYuB4JCEg576Q8Uvfpump',
+            '7f9GGoaoqwwqBZepK2yhiRnAhaMzg7mLYRdR54Uzpump',
+            '7gEP57BHGXe8TZQHsmn9WdGSFWKNJKBYJ9DvPbqxpump',
+            '7hhZjTDpKzb6ze8oANR8GpKWyBfYuo6kx15wudy7pump',
+            '7hiTexvr7RoDgJRweCo1hyccVJpDhuTPimspwoEnpump',
+            '7kGwNufNZ5Qjvu1wHPgh57XWvn9J65tcphS5hEUKpump',
+            '7ki544rYYZnUYyWqYDwRf8XP93TguUH4uvNv45wMpump',
+            '7m6Ee1eUFo9q9M3UzqfhG2fFKpieyx558tTmFo7ypump',
+            '7mSVbtyMSv1ELWngb3nKc8wKFzRme7hvgN7fyTvPpump',
+            '7mgJfib3NWCSdkPJRPzGZt24N5KMCer1bGojM47Vpump',
+            '7n4oRpmh6NXsArAhnhLy3YbP4XhW29eAsDhMadYVfmYc',
+            '7nKWmMB1JmhqvSUUzvju4UzY362Ci2cx84aqkNdnpump',
+            '7pFVJdig6Jqukm6nPkZqJSPMVC7wArefWXq9BexQpump',
+            '7szB6Gvan3wNoqaJe7cwfeoEZ6ydeCRRytD8RpT5pump',
+            '7u9ty2ykRcxTLte3SzKCkGvYEPVvmZb11JW2hHSupump',
+            '7wz4LeFAhCGr77w9zm36pnnVknQFWHbNCPB7StBopump',
+            '7xE3zSZQ8zKpyvAHqWqfaDbNfx1NjRCtaoUmB9mjpump',
+            '82W9JMCKxhsjWMd3nzH6EC7Lz5a7e1QVeHR4hLXmpump',
+            '84uFCrMpaCeTHny5Xug6W2zuCxpiEAs9vcAc4RaGpump',
+            '882JMH287Sj9haXRBZssRHQ2YTWptimooZp5TVMtpump',
+            '89EBx88xzRqjhZZqqc1ZzQdfHGm2RNYXw7tsueytpump',
+            '8AuS5e8cnsfDT77AhirQWY6q8SW2ogZGLg7QCVWPfBCJ',
+            '8B7DPX9SN7TtXve5FYDrWnkY6t9rs4o2RS16iRfapump',
+            '8BMDSAgUgZizv2oiTNUdMSVHxA3oVv4E6YQwfWpCpump',
+            '8Em9GrfyuCbVC24QjpAhFFxraf8L4WzNfpFb5x1dpump',
+            '8KKuoUCBCs6FvSqRqLxyMhHUb5kgLpPQriWwwCn3pump',
+            '8Mu14fnyj5VYmS258k9Lxd6T4QM7GSUhcSTbs2pZpump',
+            '8Ns9JeEEC5HTSCemKPmfnCAHmkACUnkvAkWXpQ8Zpump',
+            '8Rr7x4sfYy8BX7B35cXc5M7ZbcvUKhae2zRyp3p4UJc8',
+            '8UYmg4Yhx6xJpYgS87baCVBW5HNQSWVU585iUdhfpump',
+            '8VVWzTiynSE6x5QUJnU9sDfXSWz3skb4AeD8vnoipump',
+            '8YQnMn4azyZVpZyVAxHCMUL9psGSLnw6E7wjXTMXpump',
+            '8bYWfzLig7PnHper3SxdjGJMbFescah2TRNb3EPzpump',
+            '8bZn3YXjWm2nLWhgk4GWfCGB87F4zCRk2EmUR7Nypump',
+            '8dNzz9neGeD8b36dDbzFqDyVZg1TFuGGUD1P3vxWpump',
+            '8gBtTfL3DrEV7ab8vCD7UQWHtxFsqkMGkrziQsJ3pump',
+            '8hEFqGz5LEz1EYVr3h7KhBHz8V73b3RqKG8dhR5Tpump',
+            '8jSoAKpcCK3c14hVfjFV3mGzWDVX5fVCZPZYgfK3pump',
+            '8kn7zQnDnYEGj7S3ZfcQfZ8gScuY3vjJuMiT8wEwpump',
+            '8m36x9qY1NjEyyuZv3EfqBFzEjYXsVgjYMjZkewEpump',
+            '8msGfLTW6SFDAp1cnPJqAtGXpZm6nW3GJXwdyRzLpump',
+            '8nAFvcEuw84EEPvY2g8RD8AWUGReCP6kdtgYBrvgpump',
+            '8niEKR2kQ5nZccBdozeXcSXgyxzedAmLdnpzzZyVpump',
+            '8pARR5AKUqq1Qq4nnte9RpvscRanu7RznqPn82xEpump',
+            '8pPDgCsM4A2KKDweRSEGMFFRXkuiqeSYVPkQJWCipump',
+            '8pnAswZJzKCkg34DgSVuiNvQ6CYkyYNRttFZTWs2pump',
+            '8uMhihLzJ9LxH8awi1DegiXE33iQz7dgnJF2FsVPpump',
+            '8uhGfr9SmXjpXVD1rQtUVz1VECmkLPR3anC5MJ6mpump',
+            '8vgCX4tugxYUYubrh9c1DkCyymcbnpmQTDykPszHpump',
+            '916YpKNbyb3CTvFmggmFh8CTUPRmjHjbLFWbNYG5pump',
+            '92g5Ug3MshmSAcr4cmgf8AN5wxtzdXbrRUJSjUSRje7Z',
+            '92zMe3gp6yubTjgY6pmFsxYDR8fmHWWSvUfMRQ3qpump',
+            '93gqX72GC4UPVQxGVnygEE3A2LVDXvAGizaQQeyxpump',
+            '98QjByc29cQSbXa9a1KDeuoeRWcqb5wyYXn1Q62Zpump',
+            '99N2yocr2m9e2NxrBqAsUgxrHyDriFUknUq6tAPupump',
+            '9Aonj1cXoSMfikejb2iSSBBN5ikgJd7ax4CRMNVipump',
+            '9CLYtGwpS8uijK2GtnevSqLqXNsuyvzQfRX8cNsPpump',
+            '9DZ319skEVnkfuYQFiUBys8SPXwCGj5RPYxUc9e1pump',
+            '9GNjEUdzNtbiaz9Xh8gWP8VAy4CgGXYqAe5X2qVFpump',
+            '9J1ZBgGzwb3L2xhTjf7DwCToyuEagfsiDic7rKanpump',
+            '9Ju2kuqV87QXoynDCZsbL76ewTpFxqtLmiggqzcFpump',
+            '9KLeURmHbCeECYQBhwsTGmvSMSGH11RaJL4VqVPUpump',
+            '9LDkkJZmYvGqfL2zJcLM6YJEQsxD2TTkDAbWMTNnpump',
+            '9LPkyFhVYMJcvB7TPAvnyfuU5Hs3EqC2jkzDXTdypump',
+            '9Mq3oZ6RVjKAGFh5k92PE7ahJsepzc9iVdGErpQmpump',
+            '9NuxvcUA2JsPRjBYh1yqU7jxJHAjR9E564T7xTMGpump',
+            '9PPykQdBVnqcQnxb5Z5VnCDmM1p9BGrjC3DjKL7Jpump',
+            '9RRdnpHgKxfdEYsysgMmyS7eLwmP44x1N2pMJBFwpump',
+            '9RWbXv3hCdmEpkqwb659JCvnVes6XLhvpXB7oYxjpump',
+            '9SJmLiFkNL1UTxamboLFE5SW8R2NKzw2jBtvTJZwpump',
+            '9T6FV9dZiQsahdTntKE6Tq3J456AAVXZnfeM45Fhpump',
+            '9TSdMo24CPGUaWxsH1fAtwjrvvGgG3P8BjsGryUjpump',
+            '9TvTbJx4FcNbBDMWKYXtD1fdNhSSkHzGYgLnXo7upump',
+            '9VSC3wp5jpgQwVbDx33PPmNAvPabq3w27RsJ5Hh1gn8f',
+            '9WCYnrgHJVd9VuAtjtxZSY1K5PW59Unp3EnZoFU1pump',
+            '9YDLAbPPA5hbzm9uFUHcLXom2Avkw4zWcX1V84V8pump',
+            '9YT82TBzUFm9yrstpRzevuepmL5rnyvtgDQXEsQvpump',
+            '9djV3eMdwrTJfGr6k9zPGhzSChpeV6SEyubCz437pump',
+            '9ejVfTUDnBwHgrCHwzu11Tjj84edXMyyeJ3RTE4qpump',
+            '9fGmY4s2XVPQZqgiAYKUtnEbzKxQaPv9Fj3SYfrNpump',
+            '9fJ7Bqkydb4kxzGVqik476VFvAibqPBdwX5EtLj1pump',
+            '9guWZMpCgAWrzAiUzfTW3Bw3HLPEr7EqjLh2DcuHpump',
+            '9hwwqLfFtoSZXJ4tf17k9jKyyxZiyxDH6YguJt9qpump',
+            '9iFLYijMpm5nKkqgTt7Vp4NLfRFWPQrc6NLHfMKppump',
+            '9jAXdUE3VYPLRz6Aa1chYYUjFdn1hdyLs7iKF8WNpump',
+            '9jjRmfhggofqKc7a95HT4oZaLtVjbLcrVPfMQjfppump',
+            '9jm4DtK9ZnhMr11DCxns5vtnvEXWrrbqru7fogijpump',
+            '9kPxYVChiV5KYJazFmpmHYNBdUDSAp1bSxFQW1DFpump',
+            '9mM1Mc4Ta9UJJ32v5qsHef91PiXi7EWyiSsqF5WXpump',
+            '9pgR3UnNeHsHgKS4DAPbTtz1jsYWbWNZeTAwRwJepump',
+            '9pmNeczg26v82szrMzpEZdQ56u4bmDTfEd97yTKZpump',
+            '9rPD9JsTVyTuXckGTD5xzdoWJPhyRZyzd8y2A7Gpump',
+            '9rWs7hbofCtTTCNpRGBPKEQWjTtLVDyWp31VdHp6zEes',
+            '9t6sn8Z594bnMa73FeyJBdEZJD39X3XxAr2A8QbRpump',
+            '9xgma2vJxpoJKD9Qeaydke8oc6294UbLG4nmEvmTpump',
+            '9zXgz2wPGZi6r2zjZYBVTrxAKZmpP88wX4uQCS5rpump',
+            'A1R2KYNEiYFw1Y6f1aY2LVhTyZF23S7m7kUp2AAYqkMe',
+            'A2JNCjp1RTDH14Lu3cJGKyd8w1kpRw7PfMoTJUs6pump',
+            'A2QBykzv8BvnW66iE74nyk5pKTDBSYcKtAtw4P73pump',
+            'A5o7dnwovq9P53UHQcye9n1thoikrjfskeS6Vh1qpump',
+            'A944moJNcTH6LqRMhgYKMJe5ztJigpPtM6f4UGH4pump',
+            'A96gGTHw5Yot1kywCWuSLbs3zWh9jWe66L5uNiUppump',
+            'ABXjdF1aFn9mhQKTPpjbfeGb8tqmki86yFcNxcwQpump',
+            'ABnWYDAjbq34U5qeZRs3aNnbcc4dUGeGWoLme7qmpump',
+            'ACuZX4asxyqcRd6BTgGBKXJjViUP3kZQuDUQawBapump',
+            'AFUCrXLoFPDGXzAkQXuqRFYiiMKbvRyFPogD6Wsqpump',
+            'AFfrzJxupzsyEunc9y5AXRTzpWr7LUWL7yxvUQm8pump',
+            'AHuCNBJziaMf7LtjvGwDCE7D2XWWSA7K5egxwNGZpump',
+            'AJuK2XuiHTHvzkezpjB4LN6QHi1qq2zbH3wHn6LQpump',
+            'AKUYQxitb6GqqJnoSbwgzJJphRW5emgn2ykEiPpKpump',
+            'AQdxrd4iPQRU8BJpgeHazwFbHZ8GuHubnKcHdKPppump',
+            'AQkqYH6X9VTFS7do9PFfU8npvBQbx4E7Ww6QaW1pump',
+            'AQwwnGmWPXLYv6Zp4LQv48XapzNHtaDgkapLtTXcpump',
+            'ARYoDE9aaS4u7N3xfRysHwSAbY3bVFGHq5eGi3NuyYM6',
+            'ARvJmPehVVC31kqSwgDaA1Gikdjf2CSQ99MqcJEGpump',
+            'ATRqrrZeYGuhepDoVFfJUEMxYt8X5VgiXM7zN3mTpump',
+            'AVbnBc27GGNDHzBytJ53MpJueYRBVQqoV9TZzx2Dpump',
+            'AVrjuVDF3oVAe1fqF9X6fteU6razKsjK1EmaZa2hpump',
+            'Abtvo94xZzuwMRnBhH3UmNkKyuAhC2396Dvvjpc5jnRx',
+            'AcaWJhMbUNgVPnWTRQoYE6xS79AoWUz3Z7TQfdoQpump',
+            'AdTw2vqXnJ7uGEmDnaqs2QgTEtLc1YqB4BrkJNw9pump',
+            'AeEfymE5v4X3N8vgB5b5X8cSEPRsvt33KPKkeutxpump',
+            'Aeo3vWaSj2ahmojSW7PgQ8dQrqaccUtHr9oZuAYWpump',
+            'Ah97yk9Gbt52BoMhihbkUxizDMnv3XYuVyBXBmDfpump',
+            'AhVYmEzaFYuZk2AgVZX2U6wSYnxui6fCPXbCnqK3pump',
+            'AhcXGw6BgxX1hypaTpW2UMLBDTceF9MUWkQEQKTHpump',
+            'AiCZCu7rMNdgbCsHzNhP3xVnJxYupNJDb1bMkJx7pump',
+            'AijpUxsZN8i8yvZ1VLAgctYDy1NXMNMmQ3ms6uDppump',
+            'AinGdtw5nC7kkX6QdnCKJNezLSEG7RiFXyHLxCkKpump',
+            'Aj2iuWT8yxSVFzgfvn7b64NZH1C75KGVkKourdhcLKda',
+            'AkcxKLmtihQuMKjRxTKQUidt7hYVP2816LSGtkS7pump',
+            'An2E6sJXFaQkUdYr3SiNfddn9XgBcBt3f9uFEVRTpump',
+            'AoNDhp6xXu5BB2PLWjPECtC8raCDXweAyarvcpG6pump',
+            'AqeN1VCdcAy3tyKhrzcc25FhatxnUCcja6PydjeCpump',
+            'Ar2AuUroSpv4npPFDWEQ6XBzYmUU41jrYGbxs5ENpump',
+            'As7HJzYPAzPGvdkLNznk6gRVEhZv8zJJjdcFBMimpump',
+            'AyLn7YdHqh3pGSNC1YrdEtEdSCVjG7BxQedxBvkTpump',
+            'AyoG3UT34ij1SvK1JT4cVso6pDvRCXqLuRa64ofqpump',
+            'B1C2xfcUajAAU8n3zfuXqXvvALRw8cB5sPzNB5ktpump',
+            'B58Xm3hx5vN5JTr9q5rMiQbMsyvjYHstd7DSxr1pump',
+            'B6CyWKhVKnbciq1xHJnho5k1S4yyq6E18djPezKKpump',
+            'B6ht3phVSrvEcK7KcZHztu8p3dKHTG58F3keBLV8pump',
+            'B7g2conojvFzbP8aCDMjB4t5T4kGrEAjwjyNtVoypump',
+            'B8HSqwAjatqU4YxXy9XrX4PGHWEXmoForJs48akBpump',
+            'B8uY9Sp11TnkdS8H9NuxDNmuNSyT2vqANoWrvpbhpump',
+            'B9vpKpEHnaoRriwxTq28vFVpweAMMCwusjCUyp6Npump',
+            'BBPbrVBSiQf5xTJ7qj56PrTApEE7UhMYTeNGR7xupump',
+            'BBQifNheCBM7eyqufSLDpBpf6ExvBrF2BpoWa66Bpump',
+            'BCwuSizoLgCbZ5TwfBiNPL6Wh9HXmdbvHXyWgJn6pump',
+            'BEY1BDrGMisjRKfgiGrELkMn9Eg8WvkHMUsJQdKUvFZC',
+            'BH5xHRHuDsmoVfhUdykw5rDZh6n59NJ7aJtKyWxLpump',
+            'BHoaR5kbxdof4eNWrUZi79A9ikhiR5U8C7Cenw8jpump',
+            'BJFBhHEkHHnZVenHBzMtADc2tMoWo9W2AQbGGtpEpump',
+            'BJepmGZCjjTxXL8jw2puhyC2oymE14yKJbkTvSqPpump',
+            'BLfBvVu4rZ1pQevf9uR3vQnYFt6F8RgB8VWP4JYypump',
+            'BMB9W3bQ7mMP7RDFu7GxZXY8bKpeFFBkSKEGbBHxpump',
+            'BMMkmu4jGQRZAN4eMc4QnqBASaYax78Qmy2SaK8fpump',
+            'BQororvjVhVJJYQqxyGzrj6nknpDEDCr5iZ2ad7cpump',
+            'BSGjHCjF3S4ED5Y46Pu4cwMMVHX7bfkCxCZ3JvHpump',
+            'BUr3YmVJvRRqtmg6MbMP9tbETZuUdGxdsbaWotBvkpay',
+            'BVWExD96PdWnQZxhLPX6Z1SokvWM8YeeNUr86W4Bpump',
+            'BVdbn6oCEVt5TTARujSA6P6bsPoPzJyDW2jFUo6spump',
+            'Bb3jwS7YP8T4vqLhezUc9yge2cPZZxDpa9zibtRppump',
+            'Bd1fjDmFuSWue96QG3i62jcDeA5M7mtU2kxfJpQCpump',
+            'BeQtWP4LeyJfLn9kzaX6HJXMCkiCmTMyQTzVSXxTpump',
+            'BfWuo9mhiHVECnPGj1FAR4E5mH3vDmdwnN8DSeNTpump',
+            'BftoKDAVHYuQQwNMgXGRAkc5HDYjfFewAeX5xvn4pump',
+            'Bg3G5WVeoGdXiwgYiczkyzePJwR9VoZqNcgKM21QfAJ',
+            'Bg5AdhZUoMAnbTRnyE7SYr7KqFwfqQAtonkBu3bYpump',
+            'BgXkbdVypcHHD34Q9RCNrKfNkPY8PLWNH6X3WW3Ppump',
+            'BhCp8aaTn3G1JKKs6HZA6KsH1867PG1NTYsp7yAypump',
+            'BhcCjdvmEsTK5edMvKk6ZfzRvUn1vc9jDPo21xGSpump',
+            'BhiSfHGPHcmnmadJrPudYuFPMg58emM6iYY47TA3pump',
+            'Bi99UaDik5PHh6eSJqW2Qx4H7iGFxHsU6v3odCVApump',
+            'BmYCCNXqB2rNVaSGFVVVpUdWY18bVySr24Wukqaepump',
+            'Bmrsgsv3b4pjcLGjcaUmmcwPUVVRj94E4iG69TJ3pump',
+            'BpS6F8zpqWAhof3AMf8qoPiT46WQxVfjso4reoEcpump',
+            'Bqc4oEFW6Y8GmF5uSt9HabnT55shMVicPCn1qzj9pump',
+            'BqfGcaqtipvAdprczrmcCpyf18zcotJVwqtA6vNvpump',
+            'BuwkegjtgieofBSdHnkVyCJuYEjJqBjSW28GUCJupump',
+            'BvaDZ1tKAgC8iwtmq8YqE5BeF7P8GLU7Qa2NHBSpump',
+            'BvaJ9UySzTUpdbm7yCDV86QCSrV3QnBCfJwkacQcpump',
+            'BvvDEGiXEficFRphyLiqEWBD9bn7SLPZJTjUCLYPpump',
+            'ByAT76iBudwJvSpXctYuACMMfoDyJYRT1ZV2gQzhpump',
+            'C3WHcMk1bRcnCDcqTHrj1Npj4M226REx3FtH3kQjpump',
+            'C3qvzih5Kir3xDeAcayEJWawGhiobVRrHuPLQT79pump',
+            'C4CTJCsQSJxJTVgsLmwJLtE7dGCPpE9YM7KMC7USpump',
+            'C4JKKo4fhqkJDPHkzedsSbo3YCKAD5LHcH7jrbHXpump',
+            'C5PVHD8oum72NGcui3RTRf6ZN25mdM4MoMYGbKakpump',
+            'C5oGri67qn2eJrtPHANGtZgy1W2bX3vCQre4gQcpump',
+            'C76iiXm4w6jMaL7GX2qqygt9uK9NjphzdTGW6X1fpump',
+            'C7cmYazouxohuDdTNbBkDwZnpp2SvW8hgjXn1cQFGG34',
+            'C8WzdanM5NV6iZAzDkSrDk6dtRkzXkmM7nzD7KtMpump',
+            'C92WC8Z3ZdHy3Pe6m8oGMVatJWLvxWZHedAjr9BNpump',
+            'C97wYuWVBLHj5KgiaD3KeiQMMQiweJyCP4gBuSg6pump',
+            'C9EvexYLymZJVbuo2jJaep8jKYLq1XdcixtoEDmhpump',
+            'CE5iuS9Y2XZYm4csc18MMgkeeVnMn2gyw5ez5KF7pump',
+            'CJUcVx9Hgg1qf7tQBnSuexjfuqpTUz9j3373WifLpump',
+            'CLym3zdHsJu2VVkVJC2Wa6XCB5A6mDjciAfkx4fYpump',
+            'CPHMUt8bfUKzrYrfwE9tVoruATdjcGe6fU2yW1tJpump',
+            'CTTRVLQRFgcNd1Ru7ip83NeTzffwsydWSUwtBmNEpump',
+            'CTc93S8rBhEAVVE5HZDSS2HFNdiZQq7HVrXDxQbfpump',
+            'CU367u6aRbSnqDzuCTqLdxNe3dQLsPrawrcMpLiipump',
+            'CUEaFi358zuoVdCcamYVJ9ZEEjncmLTnrhrrurdLpump',
+            'CV1KP8wEWRtLaSdtFg7MYoXuxxUib2BsHMWauHpWpump',
+            'CVRLJkLmzz8YaK1mKYrDuU4BLthKiM9NX73RAnoKpump',
+            'CXVa6zkWqEu9R2KyznRXPX2dJxHKxUbyZtXpKnSjpump',
+            'CZosmxHdupJfgAxvEqHTKt5XqGbQhKsy6qZKZnGwpump',
+            'CbAYG1B9CBYaukmRXHuGJmY6Nov6K5VA5YRaReFXpump',
+            'CbzToRqBoapsMr7LxYfrBTV9hjLQDGnAe74EqNNJpump',
+            'CcV5u7v89knUCNznSAWjk6AAuKiXL2kGQykUpPBfpump',
+            'CfzcXeH6WKnvJ1zP1KSakik5fXkQfGcUUUYQ1VP2pump',
+            'CiiGhcekpshbXWFc1iWZuZ37UMfMtTKxQMDhx9SBpump',
+            'Cj91asvtJ5Ui6jH2rwBpoY5d6MPqsxDtSiGgxi6jpump',
+            'CkzqrtL5rniNePpKiKadDCHfZsa6CRE9B6VNVyMFpump',
+            'CmZW9itGvfxktRT3yJ3HAzHjfobf2VPvzkx1Rbxpump',
+            'CmbcV7ddrMPyDKETY935uyEjN5WLvQcDqoum8QqhZCNn',
+            'CnxVjFr8j5cJtrwjs1RFDZkZAqm2D36vdYFK4EJCpump',
+            'CnypJKVFjJTime1TScAbmBkVgjfYhFvuDStuDtbCpump',
+            'Coie3kiQVieJuhXsnT72DfyVuvJPYwMf7HegTY8Bpump',
+            'CqrjQPv61qJvnhXdKL8SeLwy7aVv79zKdQRXLRfMpump',
+            'CsyBAwm6KyAi6mAA5w1x71huP4JztsMnvoWgoGRnpump',
+            'CwMhdXt2Vw1az1ioZ8grN1NZuFp7tBjcvmea8YScpump',
+            'CwWPRQrHSitADcTGgy66z2Fc2nzfKZzq56vFV8jspump',
+            'CwhWwJ8zUsrg8HZLAC5mPDjQunG3PVHrp6SMGreNpump',
+            'CxcjnqoWxtyx8sysj8qeQVoxDxhJXukLsYVGVQPLpump',
+            'Cxtd4j9mVysEoE8JRiiyhPoqa59mfU6JW58jy34GPump',
+            'CxvoR89ZC5qg8ZqQUmB9e1ToMTQCvgqSKNKdg5Xrpump',
+            'Cy92yUTBs3kopPwtRFKp6VyffPNHnMz46zrYoyJdpump',
+            'CyCSZbEg3FQr4TnHtvbLstbKUDxFtV9xAe39qKhpump',
+            'CycYDsmtCwcG4MvykgtC8Zr9zH1fsbwPBdMD1DCYpump',
+            'CzjNtDDAJMbnidpGTgDvFLWQfYD1ngpASCtahzkFpump',
+            'D2QZPgZaHbVHzppREhWP9LKTqMxSBE3xBwz9fEZ8W7X4',
+            'D2nJe3qvwbyDB1tqFo7TM3DsvnnUwpKEtY7SS6CT3SEC',
+            'D6At37jYw1vmvdiodua1Nitv6rAPN1QzZXgeDcnipump',
+            'D6LFJ1fvnhEz5AMX57wrQLyUcGewYexpmVbzffNTpump',
+            'D826xNm4gC9L97UjnFjpbsZoUXAKdEWXukyfdA4Apump',
+            'D9bH64aj26PB9SZRaBMx3qC1ms4eUz5ysP57Sj7C84k4',
+            'DEAVE9fyfQDk3fDLspnEv7y7dTGErezq2FFrp6B2pump',
+            'DFRZt2HRcqgHDZ7BZfBnvbD4bvYxrt3e9UmXywcApump',
+            'DH6cg7bLDTke3naNaj4YczKbhxjKVNE9Pc6ZU6xdpump',
+            'DJzwS5gGk584DvZXcMFq8qHG9mJkHLVG728Gozugpump',
+            'DLSayJ2qH3YFzgA5CuovEsQugmShmMAUZ9jPcWjHpump',
+            'DQ6ufHk2ivT7diDst4HRReTkGoe8vG74hNLCjxQTKNQt',
+            'DbJwgJfmgX6pDPJR3tYZzEkm4RqD1pJkBJfy33mtpump',
+            'DcvFpoT65EfXU7MHWfMJaH2UZD1uag6Xi9Uqy65apump',
+            'DeqsPTYwvsNjkf5G8zDxziUnFPp55nQZA4vrNM2apump',
+            'Df4A8hcPqmoBpGzbdDKauN4pqyJRK6u16F2SUCsMpump',
+            'DfZnf6KD4GWev3LQt6r7bQGSecKVp442gr5hJ4XSpump',
+            'DfoJ9mT8UdYJhpWJpNySpXnMtJo5MBDFmspNQGKfpump',
+            'DhKnoZRNbK55YyhhyASkgDEdaJ9J91fXqxgZvwvUpump',
+            'DqwbGChassnjuXyAz4PPumVst5LqwHniprp8wwnqpump',
+            'DuqGLvocgDVUy3AdRpmnJGc6Wq7TYK5wU7zYcnAVs656',
+            'DvaraAtoPDL1jf4W7uME98nHBT1sCqcupeB7tRXRpump',
+            'DxhjaW4dEREqEfBVnoKfUC9jKYj9HsyfUmALuVwhpump',
+            'DzZdfgR5nahLn12M432UQSVBuRYNc1dQ14xvuX5Vpump',
+            'DzvRost1kzBnd5wjpEVqjAtFUXTYUPC9ngy8RANEpump',
+            'E2sHHwpzeVjhV3DjAMP8kYBeG27qT66xS3V9EBYVpump',
+            'E3aFKiMhHnQqoSvHwpDVGS6nTFebPpXCrorDY4kGpump',
+            'E7j8yHbcMKnZykzrafPkRCmXS9fmrDZg4r8Uqmdapump',
+            'E83Tc7ScwHHSkNpa8nxWXNW9ErmWrnT6MHroEBZrpump',
+            'E8BtcnJAbv9SUvHewovgimigQmUzWpmZq8StMzZLpump',
+            'E8dyEFucRuSaBpkEobqUhTK7JiSgyfdiyq26HaBupump',
+            'E8y4PPNfyRWs693TXYs9mzi4qWFYbchyxwaPPff1pump',
+            'E9FQiVGB21RMn5UkJqPdKLaLcFxduQ8iQRDzvuWdpump',
+            'E9LTJu7WU6N6j5itTz2Xh6Khiu9AhatUYZyM9pGnpump',
+            'EBntHeisi3g7EhLFdh9SeFMMy9zpd9fHjv2fw9Qjpump',
+            'EBoS4LszJcyn6AnFyFC2eH8xZwCCYG6NL17qwo8Spump',
+            'EDka38HHyZrtv6UnNDh4qmNBvuKKQ9Pgq9kyFx7Ppump',
+            'EF9HoqEoHZ7mqmpXXpj5z1wdZ6CmXnH11fD3nU4gpump',
+            'EJgK8xHFK2ZZdwsoRXzPdUvfN6qgzSMt9ZtagSsmpump',
+            'EKmzbjpNhw7H4AssEcWFcucjkfyGRwgdj51LTXHQpump',
+            'ENBMhiEvvvmyybZeQyc1vxHwreRFVgw6nUnnh8STpump',
+            'ETHFENV7K6LuFLy7e1Tewa2LVb8Pem4DPhJnUkD9TPMP',
+            'ETKLaYQTQgQA1dje1h3Ze7QVhkis8viTjskdZ5Lspump',
+            'EU8vNFfwCRbpVDkBDyyLacTy2urodGdcAGNJucZFpump',
+            'EYEyyarU2mpWCTjEU5j2ezk2QEvCcr6SFMukc7Vjpump',
+            'EZDSCqJ2kB2XoB4CsSyPiSi9gpgX4zjkr9qP48Apump',
+            'Eaod7khtwqR3KsBtZhbSbjto4ZADPTWfLvKegbqifomo',
+            'EbnLFfTrjCRayJgVb4TVwmSn1kFTrnHHnfLmAJQLpump',
+            'EeEztmmDpxjYVShGCwxTbXpFB1Bome8KZAV3cHFmpump',
+            'EeRytayi7G7AAfDhHKYQZNfXPL7q34tmnQv3HhYTpump',
+            'EeSHyt1ahSvm91CSa8ASqvenmxxQn2WU5VeNhdmepump',
+            'EfP6HeQdGX8KFAi9EAYU4atLf1jjfi1MQDr9qrG4s8df',
+            'Efah7f3t2jkBjfDsqUCaB1UQa85zNZDwf6sXFqpnpump',
+            'EfesuF57sN6XqT57ZhJiYvgt345nB8yPDqAQm6Y5EU3x',
+            'Efw6Mx1eVkYeH3WjcuuPWJAUvMDJdWTauyYT1Fhkpump',
+            'EgSAq6jRNuWHNkQyHLVpC9byEYRZ67kfWBKA9KPapump',
+            'EhRGAh7cM3CbkYWVnT8BcEdo8TZNTNtNguSSbxbspump',
+            'EjGXzC9Hfw1CHeY8CAc26dkimbxPZevABNNCxMn6pump',
+            'EjXSX7bPQXDRBN6E5SrfVKvEUopeGgW1NHpMbN1Apump',
+            'Ejya4zf6Ty4LueWzc4zv6UZfQap2BYNNtnNdiuJGpump',
+            'Ek8FwDFBNAsWqkMt6BGoxPpPxQLmyAqmS2BBGnSepump',
+            'En6R4RqdRx7oJvvnzdU2QC6wV8ZC2ehZxRNprxUfpump',
+            'EnxEjhQCY93vdSQ2ynPErzqJKsUC1TUZM9Q8cFMRpump',
+            'Eo211QPfJeZCcowbYpi2jBjuFv3ZwmQUo7qbYf4dpump',
+            'EqVMYw1r7R2d6JMdqnAp9gyRj8cmEtYLFfm6BWF4pump',
+            'EuRQeS2JAA9MxA3RmbpXQr5KTQjWiTDQbKEztEuYpump',
+            'EwDtRZ2SuPixNomv36TWkHMNW44b4GEHxTAM7MDApump',
+            'Eyh9TyNzpi2kV2t7ESTpZuJBXE94JYN2QyozCtSppump',
+            'F1nRpCjND1FjQtgVScRhgEgLp95Q3z4vDDhe8fgKpump',
+            'F4gMPszaB2eAExStqHvy36VCYRwsFiQ9ACB8z7Nvpump',
+            'F5fi4hZRPp5reo34RBLSadj8TJWae8HRsu54hweEpump',
+            'FADfUR1VUkJyRTUpAa4RDuuHDy2MgkcVHDkF2dFRpump',
+            'FAPx8s23u8Ao6MTmSmPcfjdweJngzghLz5i9MzpcMQph',
+            'FB4QfXgH6aydNFSHAmMFVdMUQFwzJtT6utUWxLzHpump',
+            'FDVu3VmwoeF2rymVkkmptNBAZxmBLqpjRBcGfZ4npump',
+            'FDu9UmQfx2kAEAyCDT3i8bntdM6Vq2yWFaVwUsMapump',
+            'FEvTY2wBvH8ZnBtXxzKvVW4YtT9zGCWCS3ipvB7epump',
+            'FGmFm3jyEjN9nHDkiGAvTvxDThXNza8XUA4GNqgBpump',
+            'FHpySp6udPVnmfdQR5CfBcBE1mVRHAnrzrnrM13Upump',
+            'FKCzyJC1hxXf26z1QYjGM3nq5xgV7ZkkJ5hnNvkKpump',
+            'FKMARK9y7Lx1qr3HyftG7aNfmZrfrCvbqTrAVRiJpump',
+            'FLGjXiRPkriEUKWhrN3XQKDFEJ1fwJk1HvMZCJk2pump',
+            'FLJia2jdms8ZZHDBVbtsPQW5EuV8HuGCwTCrpQxWpump',
+            'FLPGY8ydPj9V2vYzmcmjJWQh5PwUR4nfM6vxfGtrpump',
+            'FLaiUDT2KQzA6RXpEPasMCvNwWaBz6RqozZSLi31pump',
+            'FNV4emzcsooMYjXn9tT7qnhrznDnSgDz3kfbnCHcpump',
+            'FPmyQC4kxcs7AJ8oEszPQPTit48fsMwJPg2yT6ZYpump',
+            'FPqHPBT8ekmR8e7JqbskhPKe8vXXF4w8cff5pcrupump',
+            'FSg85JNvJPsvQBQou8aJqDh3TFhumApzUQCEDyEypump',
+            'FVrVda3ukXgsncceowoZcmM3Fmm7nuKtLdNZFtCdpump',
+            'FXZowBPq98zsHg7XhhcLKLQFEvZk8iG9jLUCByW5pump',
+            'FZ8a7XbvtWKKJV5uJk3DYjnEgLN54EKwrHsrWCttpump',
+            'FdwE9vzmgVVWMZ4PpqJ1tLevzepSSy1TSwQEmamHpump',
+            'FgmnHXRuza17AfiFhpb3Ma6aQEARPUR2zDXbCpHWpump',
+            'Fgs7ANSyoi5n5BcH2tGFhZmbEjKyKyehZHvgBnKTpump',
+            'FjDsbiFmi6CAQ5hEQxTFZTWkouUKvtnuddQxxZWhpump',
+            'FnZqGbZDkmBq8eRkExGsLzQCQLx6ko4CfM3nneRcpump',
+            'Fo15ALpWTv1oHwsBcDqGXQ5v1dTfobK3spXZbzKtpump',
+            'FoDh8LKZJBF2t5HgwodKJjHqdgEhU6m2vT1Xxz7Gpump',
+            'Fp9htyLhoSNDGnBuGydYSYEE3C2gmJ98r2w4s9yNpump',
+            'FqrbMMbp3RrRqGq3F6ewMPMFDoEQFtKfG6LHYET8pump',
+            'FthULyPvLbTSig9XqcQpWpz9ufP75wzM2ezPSYbipump',
+            'FuYQSK4sJehJoNFSLAK6ZqtRd6JJGKNyis6de5vtpump',
+            'Fuabm8jWYzXNVKa3eybg6qig6XgzkL21J1yeo8ybpump',
+            'Fup2VHfqum5bTMaHPLQrpFYoAANNEijc8LeP7ZNSpump',
+            'FvMURocd4DEgdWe7w7mmYbahDpn7KRoBEwCTv96pump',
+            'FxvRPmokX9oLr1qN4E3ud7YyUkQeNsj7xTT27TE2pump',
+            'Fy7s3XqpcYq62XDpTrGMWBPsLe5R3ECPwj6YE3Jopump',
+            'FywXXg4QC44UhJ1EfCqr4SqVt3um2cCuaFJUgLEiWXX5',
+            'FyyR3qGpuPXepbuPT676gJP1gijSQ45uaweq3vNppump',
+            'G1AAZVjqrn9kyCKRmpqBYnqcxpUwSFTMeHSY9CEXpump',
+            'G1fPuAG8P7KgREcw5DoUSFJCtMUD44TDU2ZwXzgcpump',
+            'G1oQXBnGzCAX1n9yDM8mcMWNG8NodrQ3ZzS1jqGCpump',
+            'G488Q6ntdKTb3nZ1gADSTaVbYrxMz5EJevj3gjpRpump',
+            'G66aGhVWft1SspcmsT7HCPWeTsTNUu5QEFXfBpBtpump',
+            'G7Gc4qRR2nzEcoVGZaYSAjKjhXqDrUC3CB5sGuyipump',
+            'G9pTKKqZqBU89LL38QvBvtmCrzZrhe3M4Ba1xZ7qpump',
+            'GB2t2Hs2Awo4YAafTL7PzYafQJ75CkPCLCEnWoD8pump',
+            'GBtk8jX3k22b2XnbzB1faBGQfny9by6nXSFALLbbpump',
+            'GCsY18AcynnnqERuaHtvQqGFaXeydknyTDfjr7EPpump',
+            'GDkMxcKj85yperGNKVxGk368iqSqBJ47paJFYWXmPRxG',
+            'GFzdHhDiEEoDWpJxTFMwUQPfGHRnZZ9ZR86nA5scpump',
+            'GHARCXaZHTqTRWgZAdAXbH7BBetgHeLoHGfTEaeepump',
+            'GHBTvS3Fv5h4iffP8GCnVXZcHjwhRtwXEewFfEMLpump',
+            'GMVHTHLPFFZd6NPANwZNZzMSLz5TLCzVFSvjgKkbpump',
+            'GPyyxDNKGJmbzwdqXrNTBJYFrNohyA6iL6s5nPJypump',
+            'GQTWNeEqM7mb1AaMdEMeDNuq9eWDthbsCCXGnLszpump',
+            'GS4teHiTV5MKir4X8134M7Bf7Q7QCyTd75nomyX8pump',
+            'GSLMrF27z48Wnz2YkDbFqMVgZ8GHySiYHMoE4pnpump',
+            'GSefD1YASUDE94FBXePioCHw3wZ9CQ2zSxbZiGJVpump',
+            'GSmxcmwBukJa2jSJ54dEDqSLmm6Mks7Wr2ty48pppump',
+            'GUsV1iB83HJTcdFnqRtRSKoXcrWZfcDBSnnsb4Dxpump',
+            'GWGdSR5WtAaP1HG6yshbErXgF5jJXtBiLzB1PPbpump',
+            'GYux4XH5H8byvHsqEhHWRw8MU6vA68wLZBYuQHgDpump',
+            'GZD2Ti3FxnXgkLzpUSzeFZqMq43eksujZMP6bPuNpump',
+            'GZz5UM9BDeQC3QSkyVXpBxF4K9Kv9q9x43X3Mvkrpump',
+            'GaqU1tai74fo6JW2tN4MXgxxenS2Z7orC3Adx1irpump',
+            'GcMEdvoL7pxb5BFKL1wGNENpUDZ8PFxDGKzBrUN4pump',
+            'Gdd7sP4xpsD7xhYEXvQkDCMBtZkzJ6oLxwYAMTEupump',
+            'GdyKJvmvuzCxGfPtt3hnJuQGqnAVzvbb4qMFJJsepump',
+            'Gf8f42ToyQihJpWBsHmuy9zDWchL9uUZxbyX8QYtpump',
+            'GhBS7bEaLjgPSFJGEH4ZsnKAZbjG5XfSxPdCMwQbpump',
+            'GivnsKoaJbMocbjbSnWe7dEVoMRr4rMCV9bj7EoDpump',
+            'GkiUC8m9pRYGziv62j3pKxmKCQQJx6Cb3z4uTKb4pump',
+            'GmYMBuyZuATTKH8Ur4sdPgaoZy6wiocBoExbuBBspump',
+            'Go1mDoxih7ByGT2KvFpEtBUAb2DDfGK91aYxqW7spump',
+            'GofmJoa598m6f67PS3mszhRSDf5hJWP972EGmAn9pump',
+            'GtXBZoorXyeqDz38Uxhq6zwYzCbxLYmh1XWw7HWspump',
+            'GticpXZjWqU9CZpCvdWzcT37dAvgAge75SzsxAVNpump',
+            'GuWAkhjcPTG48LqSmCWb3ZTrz99i4LxLGgEAYUdQpump',
+            'Gv6R1Q1aUsXSzNBbu14YGpYZPnwuNhvjiJqatmchpump',
+            'GvDW7ue12CH1QqckxJN8j75L8Ueeni6dt19VJ8kGpump',
+            'GwEM4KHtBzrJnvLY5nLmEf1N2Tbxe13hg56EpMHYpump',
+            'GyNgRXytBVnGpx1kDBw2tjJhhg5ho7bRxWDj66Cjpump',
+            'GynMXeAZE5bXpkcyMTbNcGdz3GBsxcuG2WkiHxYV93dm',
+            'GzKwVgMBQ6vgeGGG55XFvYbVaL1GZ8va2faHyavSpump',
+            'GzUx6F1K4kBoz2NEh7BQRT5dcYjPmWGanyLvtEkjpump',
+            'H3p6a4BVrVjJb8bX1P9WKH7Da3pPik93ht9iPNQ9pump',
+            'H8Jn6AhvLYNsArGbGFyGB5FqviUXyPVaLXCaFE67pump',
+            'H9qdeEgVXGjEvwHkXhRXGvcmr3pqd1JVGZh6S88fpump',
+            'HAJAeRURXJrniiEcsVU3Y7VBXi7zxB5k5AiYyNpqpump',
+            'HD6Skbv27U1DWdi4SeVF1bVWwGkdHwRaUXvqX15ppump',
+            'HDL7tVGqcwEpYk1EH61xe2VkW7c9XNdkapP33zwspump',
+            'HDNTUWgrWASLaQEqwpZkfqADgLtsVAh9yhz6PmFopump',
+            'HEugiQQVnGo6JsmAWdYFrMQKsju5sQsbuNsYYoCBDPVN',
+            'HF7K1TRsYo6c6tRKnZkLBEzvb1GWvJC2uVzFZwCBpump',
+            'HJ8e2TeyJUz9oKFVXEatR611NRjNMgP6vNqN7FJApump',
+            'HKazXmbs9AB2BBHy99vBNi2SCHUi8cPXwtKAfMY9pump',
+            'HLciSwwiqQe9hYTm7BQfZghcZFvvu1dAFBR6fhjTpump',
+            'HQJwmK24WN3e87aQzNHnUVK4SaNgYfrR3tDkGgWTpump',
+            'HREUbAPvyrtFUZQYPnANAVSjhPwLBdpFcNziPo8cpump',
+            'HRbxBe6yQvGB1FRCRbaCuyzThHqxB3ci7RD2Aigcpump',
+            'HRvvpMNazPB2aExFzU4EH1mKF2sp6XqbPUWvA43tpump',
+            'HT1YM2kSdvoHnXppnb39pFcAo5Yf3kSChfrudoJQpump',
+            'HTTiFZ75sxRjsYjL988RoukZz72izii43QvH9YDMpump',
+            'HTaWjLknBSMji4fFdWrCYBZdZPqYEdKfVqcJ88hYpump',
+            'HUj5TrhzDEmaAcacEPoFgNQTXkHjrkRLX3xKtkepump',
+            'HVkQ8b7WRkrG4uZf9QA61csWoXqUHfeLSrq2uqGkpump',
+            'HXVLmFawGDmwhJcCaDqmhmorS2UfNZToT28Ygr2pump',
+            'HaQmuqcbWwCv31BuHW4Fi8siSAHbvbB85xHbecuopump',
+            'HcNvfZJo7TVxpA3WEf1UHKzm4LYqNRgHd2Hfwchjpump',
+            'Hd6XHZ6UusCdVNrPsdwpW3FmUTAuY5fjRLbFTMR87qoW',
+            'Hgs7TtyF68Lx9oxdfLiRqUy9fa9Mvp9PyasRU9jrpump',
+            'HhdGGpZeAKKreMhWuy84fRkgSFhGfPYns3WeRubWpump',
+            'HixsiJHj2vRS7Fd5ffGigTYx446EDTAauVqhJEyyr5dh',
+            'Hk7SjUXp142igXsB8FpMbPUTZQjStG1fSqSSaAQZpump',
+            'HkJUJuMnp7gUuvjsSWuX7LWTZEdj6THPsUyxCEXGpump',
+            'HnVTyRDyt5DuzgxVFrbnzx3vATjYDR7ffDwJaN9ppump',
+            'HrgzgULagysmR1cogiUPMnbLJDpMfdz1DnWivfkpoiyp',
+            'HrkKpjDdgMGCA16LsgkK2a4kQYznv8Sjx5LM5Ad3pump',
+            'HtMu7jXNmBC3WM9Au2xmHyxzztwcckqCeuRKDpNtpump',
+            'Hyn8PbDjqiTBJLM3S9FgZ1xthFY84oM6HSVsd6s8pump',
+            'HzCopkmzZwsRwoNEEjVPYqXin9CDKkxJrb8eBSmFpump',
+            'J1NFVQzpEczTNZH5S7dXBQiJ93stbVjvrkdpHUs2pump',
+            'J5oPcwtdHCKPBjgouqH25Jjb53Shxb6ssSK1T6grpump',
+            'J8LfiDsEG2orrCvNq6zqMBhscXSUG9UbmjJ9kCccpump',
+            'JAd4TVqSp78sHjn7zNJpAQAF2kr34fbGvQ6YfrhYpump',
+            'JAroCR7YWQPYRUK5LbQMPBau1Z6Me3HbH5zZMtKYpump',
+            'JDEfGF5mUGD1K84xNMrrJpFgRfNphx1eDPShTE89pump',
+            'KFgKrv8TmWM1uMaXkZX1U1bE3F9474RCh33YmNepump',
+            'QJN236mwUf1TaCsaM3X2G4hSiLUUazGgo8jK2wApump',
+            'SBaWL6p1Txs1UKDciyWUhDW8LpZte7LDtpCyCdRpump',
+            'TGPUxfFHArCsg7SAXESzc4eP8CrX2rSrUSb6RMZyH14',
+            'UGsA6AcZmwWamkgnvQw5Qu7sKtia7RzzoKS1Vr5pump',
+            'V9JX3J3A32oLJwFPRMvrEtoPzvXJeywG2p7VHQupump',
+            'WD2N1ovsxUWFqMMhqiAaY58F4KWJdmVmeiuMyd8pump',
+            'X518bK2Tdn4zJPwEkSeBUbXwMeMapR4BpcUUis8pump',
+            'YPQzfFWAHhHek1MDs7t41oeycQ3vbZ9ictpHSuBpump',
+            'YSEVDYV4Vyi2RBV6ix9uDCoMoHjDEYVVJPQzmdkpump',
+            'YxUstMyYDyqPNz78auhYfhdUKrBQgg7uctnKNDEpump',
+            'Z3ucaLqtFJNMRPWALBhDkE5xMBxVFaiSzswaMFapump',
+            'Z7H53QYFPP5pzD9CSpv84pdx3cFcotXAtDovZhWpump',
+            'Zr8bD2HCLFCRzV1p12unqqmUJYcCKSs649Qvtjhpump',
+            'ZxhtomtEuoo8TPmX1TvvbHtJb3LBSg1N1RCWUr9pump',
+            'b6NA3o1DVzZFuZuoC6dcN87i7Nc5Q7EggEBpJuspump',
+            'b8cf5sEXe5jXLB5jgPtZUwwNGSEyTXhudra2zhipump',
+            'dJ5fQ1vN4DYdtvq2g2HavhSfWDRdDHQ2cjN2ZMQpump',
+            'dsa46yNjHeQYufuJcZRek8F9fyV54gwenLXX1BQpump',
+            'fZD6mYskhv9yK2CzocMG7mhrhW8QZHnk6yYBcsHpump',
+            'figGg6RsrJj9aoqash5X94g8g6Qws5kFV2FXqGhpump',
+            'fk4nz8GD2rwEa8u5Bu6eRBjtJgHZ8yuthVXNHTopump',
+            'fvLZe6g6skGWYhAYCG6mYkiPkpj6gz34J4vW8pepump',
+            'g5PEURzT1bDBJqaCwM6kvFJntioGH4rHMN9LVihpump',
+            'gScbLjUZTckCcnmZngTyJNCo5eGKJQgQZMpL48Vpump',
+            'hwHUZY6XnJ6djAwi4iyGzC5dkhFZ6RiTk1VqqWypump',
+            'in5rdV9WNW9wyfXbAtr6RvsbjTfSCWg9pgeWSbDGrvp',
+            'iowQGYr7F7wgCCfPg4QUwUmnquXAo6ACYQJf8aPvSTR',
+            'j9cTHmwrJSP1i98rAcXr7U5FVBKQTaK2AJv9wCSpump',
+            'kaZmRdbTB5oMfTF9PFKCTE5VHkSBasZAeJmHpLtpump',
+            'kr1BBEqoFFYpHkqByZthhLSSSfX3w19snpL9xhTpump',
+            'mGxHpNwddduVur5H5Bqh63Va49kXeLLKjodVZ5dpump',
+            'mehi5KXoCD7WaaY5grZc8QxT4msp1tm2k6NqPV3pump',
+            'mt9WedjBvCqyGmahBQmnzuwtAYstQG9mdasqY8spump',
+            'omRpGhKAeKjk7zNJwMiYQKRaVyvc57qRnmvw3mYpump',
+            'p3EGcWcDj6qnYr9mCMi1rGLVPJGfmFEhSZPTJ4zpump',
+            'ptaiFKwdYqHa4eUVTL9tPgRxmfGxBX5F8q32wGLTNy2',
+            'qKnAEPCLEBjTqhXop9NMwJsHsfU1YsLtbBxzbCzpump',
+            'qp4fvq84uY4dt9nDXQSzKWm4sjKCNZkxeoAh4nopump',
+            'qx4oewya5yxv5eaM5vK1B6maAz5JdnYckjsCAArpump',
+            'rALTauDCM5KAowRj52dfS1j51YT269gJiHz7Pzapump',
+            'tSmY5r4YWedHC4EAYBA7Z7P52ySpzWzkV9EWG4upump',
+            'vEgKwcsRpnrvwd6PZNSxevgnRUZZ35h9ER4hngQpump',
+            'wcsGMjGgYm6GovFna5PZPXEUPfzzcZDwhFyDdccpump',
+            'xsLu5ZkWVxvq1RHKmMPCEvSvesmrGdGK2yT6mVppump',
+            'yDfnbotaBrkNxwYYhtg6idpQBb1G5roh6iSMRKcpump',
+            'zGyPFLyRbKBTbAaGd3PuWZEKQ13WENyAk4aGWPfpump'
+      )
+    GROUP BY 1
+),
+sol_cohort AS (
+    SELECT mint, created_at, created_slot, dev
+    FROM cohort
+    WHERE quote_mint IS NULL OR quote_mint = '11111111111111111111111111111111'
+),
+mig AS (
+    SELECT mint, min_by(pool, evt_block_slot) AS pool
+    FROM pumpdotfun_solana.pump_evt_completepumpammmigrationevent
+    WHERE evt_block_date BETWEEN DATE '2026-06-01' AND DATE '2026-07-02'
+      AND mint IN (SELECT mint FROM sol_cohort)
+    GROUP BY 1
+),
+cp AS (
+    SELECT
+        pool,
+        max(base_mint) AS base_mint,
+        max(quote_mint) AS quote_mint,
+        max(base_mint_decimals) AS bd,
+        max(quote_mint_decimals) AS qd,
+        min(evt_block_slot) AS pool_created_slot,
+        COALESCE(bool_or(evt_outer_executing_account = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P' AND index = 0), false) AS by_pump
+    FROM pumpdotfun_solana.pump_amm_evt_createpoolevent
+    WHERE evt_block_date BETWEEN DATE '2026-06-01' AND DATE '2026-07-02'
+      AND (
+          base_mint IN (SELECT mint FROM sol_cohort)
+          OR quote_mint IN (SELECT mint FROM sol_cohort)
+      )
+    GROUP BY 1
+),
+cp_norm AS (
+    SELECT
+        pool,
+        CASE
+            WHEN quote_mint = 'So11111111111111111111111111111111111111112' THEN base_mint
+            WHEN base_mint = 'So11111111111111111111111111111111111111112' THEN quote_mint
+        END AS mint,
+        base_mint = 'So11111111111111111111111111111111111111112' AS pool_reversed,
+        CASE WHEN base_mint = 'So11111111111111111111111111111111111111112' THEN qd ELSE bd END AS td,
+        CASE WHEN base_mint = 'So11111111111111111111111111111111111111112' THEN bd ELSE qd END AS sd,
+        pool_created_slot,
+        by_pump
+    FROM cp
+    WHERE (
+        quote_mint = 'So11111111111111111111111111111111111111112'
+        AND base_mint IN (SELECT mint FROM sol_cohort)
+    ) OR (
+        base_mint = 'So11111111111111111111111111111111111111112'
+        AND quote_mint IN (SELECT mint FROM sol_cohort)
+    )
+),
+fallback_pool AS (
+    SELECT mint, min_by(pool, pool_created_slot) AS pool
+    FROM cp_norm
+    WHERE by_pump
+    GROUP BY 1
+),
+mapping0 AS (
+    SELECT c.mint, COALESCE(m.pool, f.pool) AS pool
+    FROM sol_cohort c
+    LEFT JOIN mig m ON m.mint = c.mint
+    LEFT JOIN fallback_pool f ON f.mint = c.mint
+),
+mapping AS (
+    SELECT m.mint, m.pool, p.pool_reversed, p.td, p.sd
+    FROM mapping0 m
+    JOIN cp_norm p ON p.pool = m.pool AND p.mint = m.mint
+),
+amm_raw AS (
+    SELECT
+        m.mint, a.pool, m.pool_reversed, m.td, m.sd,
+        a.evt_block_time AS ts, a.evt_block_slot AS slot, a.evt_tx_index AS txi,
+        COALESCE(a.evt_outer_instruction_index, 0) AS oix,
+        COALESCE(a.evt_inner_instruction_index, -1) AS iix,
+        CASE WHEN m.pool_reversed THEN CAST(a.pool_base_token_reserves AS DOUBLE)
+             ELSE CAST(a.pool_quote_token_reserves AS DOUBLE) END AS sol_pre_raw,
+        CASE WHEN m.pool_reversed THEN CAST(a.pool_quote_token_reserves AS DOUBLE)
+             ELSE CAST(a.pool_base_token_reserves AS DOUBLE) END AS target_pre_raw,
+        CASE WHEN m.pool_reversed THEN -CAST(a.base_amount_out AS DOUBLE)
+             ELSE CAST(a.quote_amount_in_with_lp_fee AS DOUBLE) END AS dsol_raw,
+        CASE WHEN m.pool_reversed THEN CAST(a.quote_amount_in_with_lp_fee AS DOUBLE)
+             ELSE -CAST(a.base_amount_out AS DOUBLE) END AS dtarget_raw,
+        COALESCE(CAST(a.lp_fee_basis_points AS DOUBLE), 0) + COALESCE(CAST(a.protocol_fee_basis_points AS DOUBLE), 0)
+          + COALESCE(CAST(a.coin_creator_fee_basis_points AS DOUBLE), 0) AS fee_bps,
+        CAST(a."user" AS varchar) AS usr,
+        NOT m.pool_reversed AS is_buy,
+        CASE WHEN m.pool_reversed THEN CAST(a.base_amount_out AS DOUBLE) / power(10, m.sd)
+             ELSE CAST(a.quote_amount_in_with_lp_fee AS DOUBLE) / power(10, m.sd) END AS sol_amt
+    FROM pumpdotfun_solana.pump_amm_evt_buyevent a
+    JOIN mapping m ON m.pool = a.pool
+    WHERE a.evt_block_date BETWEEN DATE '2026-06-01' AND DATE '2026-07-02'
+    UNION ALL
+    SELECT
+        m.mint, a.pool, m.pool_reversed, m.td, m.sd,
+        a.evt_block_time, a.evt_block_slot, a.evt_tx_index,
+        COALESCE(a.evt_outer_instruction_index, 0), COALESCE(a.evt_inner_instruction_index, -1),
+        CASE WHEN m.pool_reversed THEN CAST(a.pool_base_token_reserves AS DOUBLE)
+             ELSE CAST(a.pool_quote_token_reserves AS DOUBLE) END,
+        CASE WHEN m.pool_reversed THEN CAST(a.pool_quote_token_reserves AS DOUBLE)
+             ELSE CAST(a.pool_base_token_reserves AS DOUBLE) END,
+        CASE WHEN m.pool_reversed THEN CAST(a.base_amount_in AS DOUBLE)
+             ELSE -(CAST(a.quote_amount_out AS DOUBLE) - COALESCE(CAST(a.lp_fee AS DOUBLE), 0)) END,
+        CASE WHEN m.pool_reversed THEN -(CAST(a.quote_amount_out AS DOUBLE) - COALESCE(CAST(a.lp_fee AS DOUBLE), 0))
+             ELSE CAST(a.base_amount_in AS DOUBLE) END,
+        COALESCE(CAST(a.lp_fee_basis_points AS DOUBLE), 0) + COALESCE(CAST(a.protocol_fee_basis_points AS DOUBLE), 0)
+          + COALESCE(CAST(a.coin_creator_fee_basis_points AS DOUBLE), 0),
+        CAST(a."user" AS varchar),
+        m.pool_reversed,
+        CASE WHEN m.pool_reversed THEN CAST(a.base_amount_in AS DOUBLE) / power(10, m.sd)
+             ELSE CAST(a.quote_amount_out AS DOUBLE) / power(10, m.sd) END
+    FROM pumpdotfun_solana.pump_amm_evt_sellevent a
+    JOIN mapping m ON m.pool = a.pool
+    WHERE a.evt_block_date BETWEEN DATE '2026-06-01' AND DATE '2026-07-02'
+),
+amm_states AS (
+    SELECT
+        mint, ts, 1 AS venue, slot, txi, oix, iix,
+        (sol_pre_raw + dsol_raw) / power(10, sd) AS x,
+        (target_pre_raw + dtarget_raw) / power(10, td) AS y,
+        CAST(NULL AS DOUBLE) AS xr, fee_bps, usr, is_buy, sol_amt, pool_reversed
+    FROM amm_raw
+),
+states AS (
+    SELECT
+        t.mint, t.evt_block_time AS ts, 0 AS venue, t.evt_block_slot AS slot, t.evt_tx_index AS txi,
+        COALESCE(t.evt_outer_instruction_index, 0) AS oix,
+        COALESCE(t.evt_inner_instruction_index, -1) AS iix,
+        CAST(COALESCE(t.virtual_sol_reserves, t.virtualSolReserves) AS DOUBLE) / 1e9 AS x,
+        CAST(COALESCE(t.virtual_token_reserves, t.virtualTokenReserves) AS DOUBLE) / 1e6 AS y,
+        CAST(t.real_sol_reserves AS DOUBLE) / 1e9 AS xr,
+        COALESCE(CAST(t.fee_basis_points AS DOUBLE), 0) + COALESCE(CAST(t.creator_fee_basis_points AS DOUBLE), 0) AS fee_bps,
+        CAST(t."user" AS varchar) AS usr,
+        COALESCE(t.is_buy, t.isBuy) AS is_buy,
+        CAST(COALESCE(t.sol_amount, t.solAmount) AS DOUBLE) / 1e9 AS sol_amt,
+        false AS pool_reversed
+    FROM pumpdotfun_solana.pump_evt_tradeevent t
+    WHERE t.evt_block_date BETWEEN DATE '2026-06-01' AND DATE '2026-07-02'
+      AND t.mint IN (SELECT mint FROM sol_cohort)
+    UNION ALL
+    SELECT mint, ts, venue, slot, txi, oix, iix, x, y, xr, fee_bps, usr, is_buy, sol_amt, pool_reversed
+    FROM amm_states
+),
+s1_raw AS (
+    SELECT
+        s.*, c.created_at, c.created_slot, c.dev,
+        row_number() OVER (PARTITION BY s.mint ORDER BY s.slot, s.txi, s.oix, s.iix, s.venue) AS rn,
+        max(s.ts) OVER (
+            PARTITION BY s.mint ORDER BY s.slot, s.txi, s.oix, s.iix, s.venue
+            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS clock_ts
+    FROM states s
+    JOIN sol_cohort c ON c.mint = s.mint
+    WHERE s.ts >= c.created_at
+      AND s.ts <= c.created_at + INTERVAL '30' DAY
+      AND s.x > 0 AND s.y > 0
+),
+s1 AS (
+    SELECT *, date_diff('second', created_at, clock_ts) AS dt
+    FROM s1_raw
+),
+s2 AS (
+    SELECT
+        *,
+        min(CASE WHEN is_buy AND sol_amt >= 0.1 AND usr IS NOT NULL AND usr <> dev THEN rn END)
+          OVER (PARTITION BY mint, usr) AS first_q_rn
+    FROM s1
+),
+s3 AS (
+    SELECT
+        *,
+        (rn = first_q_rn) AS q_new,
+        x / y AS price,
+        count(*) OVER (PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS n_trades_cum,
+        sum(CASE WHEN is_buy THEN sol_amt ELSE 0 END) OVER (PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS buy_sol_cum,
+        sum(CASE WHEN NOT is_buy THEN sol_amt ELSE 0 END) OVER (PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS sell_sol_cum,
+        sum(CASE WHEN is_buy AND usr = dev THEN sol_amt ELSE 0 END) OVER (PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS dev_buy_sol_cum
+    FROM s2
+),
+s4 AS (
+    SELECT
+        *,
+        sum(CASE WHEN q_new THEN 1 ELSE 0 END) OVER (PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS q_count
+    FROM s3
+),
+s5 AS (
+    SELECT
+        *,
+        min(CASE WHEN q_new AND q_count = 3 THEN rn END) OVER (PARTITION BY mint) AS t3_rn
+    FROM s4
+),
+s6 AS (
+    SELECT
+        *,
+        max(CASE WHEN rn = t3_rn THEN clock_ts END) OVER (PARTITION BY mint) AS t3_ts
+    FROM s5
+),
+s7 AS (
+    SELECT
+        *,
+        max(CASE WHEN clock_ts <= t3_ts + INTERVAL '5' SECOND THEN rn END) OVER (PARTITION BY mint) AS e5_rn,
+        max(CASE WHEN clock_ts <= t3_ts + INTERVAL '30' SECOND THEN rn END) OVER (PARTITION BY mint) AS e30_rn,
+        max(CASE WHEN clock_ts <= t3_ts + INTERVAL '120' SECOND THEN rn END) OVER (PARTITION BY mint) AS e120_rn
+    FROM s6
+),
+s8 AS (
+    SELECT
+        *,
+        max(CASE WHEN rn = e5_rn THEN x END) OVER (PARTITION BY mint) AS e5_x,
+        max(CASE WHEN rn = e5_rn THEN y END) OVER (PARTITION BY mint) AS e5_y,
+        max(CASE WHEN rn = e5_rn THEN xr END) OVER (PARTITION BY mint) AS e5_xr,
+        max(CASE WHEN rn = e5_rn THEN fee_bps END) OVER (PARTITION BY mint) AS e5_fee_bps,
+        max(CASE WHEN rn = e5_rn THEN venue END) OVER (PARTITION BY mint) AS e5_venue,
+        max(CASE WHEN rn = e5_rn THEN IF(pool_reversed, 1, 0) END) OVER (PARTITION BY mint) AS e5_pool_reversed,
+        max(CASE WHEN rn = e5_rn THEN clock_ts END) OVER (PARTITION BY mint) AS e5_ts,
+        max(CASE WHEN rn = e30_rn THEN x END) OVER (PARTITION BY mint) AS e30_x,
+        max(CASE WHEN rn = e30_rn THEN y END) OVER (PARTITION BY mint) AS e30_y,
+        max(CASE WHEN rn = e30_rn THEN fee_bps END) OVER (PARTITION BY mint) AS e30_fee_bps,
+        max(CASE WHEN rn = e30_rn THEN clock_ts END) OVER (PARTITION BY mint) AS e30_ts,
+        max(CASE WHEN rn = e120_rn THEN x END) OVER (PARTITION BY mint) AS e120_x,
+        max(CASE WHEN rn = e120_rn THEN y END) OVER (PARTITION BY mint) AS e120_y,
+        max(CASE WHEN rn = e120_rn THEN fee_bps END) OVER (PARTITION BY mint) AS e120_fee_bps,
+        max(CASE WHEN rn = e120_rn THEN clock_ts END) OVER (PARTITION BY mint) AS e120_ts,
+        max(CASE WHEN rn = e30_rn THEN x / y END) OVER (PARTITION BY mint) AS e30_price,
+        max(CASE WHEN rn = e120_rn THEN x / y END) OVER (PARTITION BY mint) AS e120_price
+    FROM s7
+),
+s9 AS (
+    SELECT
+        *,
+        e5_y - e5_x * e5_y / (e5_x + 0.5 * (1 - e5_fee_bps / 1e4)) AS entry_tokens,
+        e30_y - e30_x * e30_y / (e30_x + 0.5 * (1 - e30_fee_bps / 1e4)) AS entry_tokens_e30,
+        e120_y - e120_x * e120_y / (e120_x + 0.5 * (1 - e120_fee_bps / 1e4)) AS entry_tokens_e120,
+        price / NULLIF(e5_x / e5_y, 0) AS pm,
+        price / NULLIF(e30_x / e30_y, 0) AS pm_e30,
+        price / NULLIF(e120_x / e120_y, 0) AS pm_e120
+    FROM s8
+),
+s10 AS (
+    SELECT
+        *,
+        LEAST(
+            CASE
+                WHEN venue = 0 THEN (x * entry_tokens / (y + entry_tokens)) * (1 - fee_bps / 1e4)
+                ELSE (x - x * y / (y + entry_tokens)) * (1 - fee_bps / 1e4)
+            END,
+            IF(venue = 0, xr + 0.5 * (1 - e5_fee_bps / 1e4), 1e18)
+        ) / 0.5 AS sell_multiple,
+        CASE WHEN rn >= e30_rn THEN LEAST(
+            CASE
+                WHEN venue = 0 THEN (x * entry_tokens_e30 / (y + entry_tokens_e30)) * (1 - fee_bps / 1e4)
+                ELSE (x - x * y / (y + entry_tokens_e30)) * (1 - fee_bps / 1e4)
+            END,
+            IF(venue = 0, xr + 0.5 * (1 - e30_fee_bps / 1e4), 1e18)
+        ) / 0.5 END AS sell_multiple_e30,
+        CASE WHEN rn >= e120_rn THEN LEAST(
+            CASE
+                WHEN venue = 0 THEN (x * entry_tokens_e120 / (y + entry_tokens_e120)) * (1 - fee_bps / 1e4)
+                ELSE (x - x * y / (y + entry_tokens_e120)) * (1 - fee_bps / 1e4)
+            END,
+            IF(venue = 0, xr + 0.5 * (1 - e120_fee_bps / 1e4), 1e18)
+        ) / 0.5 END AS sell_multiple_e120,
+        LEAST(  /*B*/
+            CASE  /*B*/
+                WHEN venue = 0 AND y > entry_tokens THEN (x * y / (y - entry_tokens) - x) * (1 - fee_bps / 1e4)  /*B*/
+                WHEN venue = 0 THEN NULL  /*B*/
+                ELSE (x - x * y / (y + entry_tokens)) * (1 - fee_bps / 1e4)  /*B*/
+            END,  /*B*/
+            IF(venue = 0, xr + 0.5 * (1 - e5_fee_bps / 1e4), 1e18)  /*B*/
+        ) / 0.5 AS sell_multiple_b,  /*B*/
+        LEAST(  /*B*/
+            CASE  /*B*/
+                WHEN venue = 0 AND y > entry_tokens_e30 THEN (x * y / (y - entry_tokens_e30) - x) * (1 - fee_bps / 1e4)  /*B*/
+                WHEN venue = 0 THEN NULL  /*B*/
+                ELSE (x - x * y / (y + entry_tokens_e30)) * (1 - fee_bps / 1e4)  /*B*/
+            END,  /*B*/
+            IF(venue = 0, xr + 0.5 * (1 - e30_fee_bps / 1e4), 1e18)  /*B*/
+        ) / 0.5 AS sell_multiple_e30_b_raw,  /*B*/
+        LEAST(  /*B*/
+            CASE  /*B*/
+                WHEN venue = 0 AND y > entry_tokens_e120 THEN (x * y / (y - entry_tokens_e120) - x) * (1 - fee_bps / 1e4)  /*B*/
+                WHEN venue = 0 THEN NULL  /*B*/
+                ELSE (x - x * y / (y + entry_tokens_e120)) * (1 - fee_bps / 1e4)  /*B*/
+            END,  /*B*/
+            IF(venue = 0, xr + 0.5 * (1 - e120_fee_bps / 1e4), 1e18)  /*B*/
+        ) / 0.5 AS sell_multiple_e120_b_raw,  /*B*/
+        max(CASE WHEN rn >= e5_rn THEN pm END) OVER (
+            PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS runmax_pm,
+        max(CASE WHEN rn >= e30_rn THEN pm_e30 END) OVER (
+            PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS runmax_pm_e30,
+        max(CASE WHEN rn >= e120_rn THEN pm_e120 END) OVER (
+            PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS runmax_pm_e120,
+        min(CASE
+            WHEN rn >= t3_rn AND clock_ts <= created_at + INTERVAL '420' SECOND
+            THEN price
+        END) OVER (
+            PARTITION BY mint ORDER BY rn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS runmin_early_price
+    FROM s9
+),
+s10b AS (  /*B*/
+    SELECT *,  /*B*/
+        CASE WHEN rn >= e30_rn THEN sell_multiple_e30_b_raw END AS sell_multiple_e30_b,  /*B*/
+        CASE WHEN rn >= e120_rn THEN sell_multiple_e120_b_raw END AS sell_multiple_e120_b  /*B*/
+    FROM s10  /*B*/
+),  /*B*/
+coin_path AS (
+    SELECT
+        mint,
+        min(created_at) AS created_at,
+        max(dev) AS dev,
+        max(t3_ts) AS t3_ts,
+        date_diff('second', max(created_at), max(t3_ts)) AS t3_s,
+        max(e5_x) AS e5_x, max(e5_y) AS e5_y, max(e5_xr) AS e5_xr,
+        max(e5_fee_bps) AS e5_fee_bps, max(e5_venue) AS e5_venue,
+        max(e5_pool_reversed) AS e5_pool_reversed,
+        max(e5_ts) AS e5_ts, max(e30_ts) AS e30_ts, max(e120_ts) AS e120_ts,
+        max(e30_price) / NULLIF(max(e5_x / e5_y), 0) AS price_pm_30s,
+        max(e120_price) / NULLIF(max(e5_x / e5_y), 0) AS price_pm_120s,
+        max_by(price, rn) FILTER (WHERE dt <= 5) / NULLIF(min_by(price, rn), 0) AS price_pm_5s_from_open,
+        max_by(price, rn) FILTER (WHERE dt <= 15) / NULLIF(min_by(price, rn), 0) AS price_pm_15s_from_open,
+        max_by(price, rn) FILTER (WHERE dt <= 30) / NULLIF(min_by(price, rn), 0) AS price_pm_30s_from_open,
+        max_by(price, rn) FILTER (WHERE dt <= 60) / NULLIF(min_by(price, rn), 0) AS price_pm_60s_from_open,
+        max_by(price, rn) FILTER (WHERE dt <= 120) / NULLIF(min_by(price, rn), 0) AS price_pm_120s_from_open,
+        max_by(price, rn) FILTER (WHERE dt <= 300) / NULLIF(min_by(price, rn), 0) AS price_pm_300s_from_open,
+        max(q_count) FILTER (WHERE dt <= 5) AS qbuyers_5s,
+        max(q_count) FILTER (WHERE dt <= 15) AS qbuyers_15s,
+        max(q_count) FILTER (WHERE dt <= 30) AS qbuyers_30s,
+        max(q_count) FILTER (WHERE dt <= 60) AS qbuyers_60s,
+        max(q_count) FILTER (WHERE dt <= 120) AS qbuyers_120s,
+        max(q_count) FILTER (WHERE dt <= 300) AS qbuyers_300s,
+        max_by(n_trades_cum, rn) FILTER (WHERE rn = t3_rn) AS trades_t3,
+        max_by(buy_sol_cum, rn) FILTER (WHERE rn = t3_rn) AS buy_sol_t3,
+        max_by(sell_sol_cum, rn) FILTER (WHERE rn = t3_rn) AS sell_sol_t3,
+        max_by(dev_buy_sol_cum, rn) FILTER (WHERE rn = t3_rn) AS dev_buy_sol_t3,
+        max(sell_multiple) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '10' MINUTE) AS max_sell_10m,
+        max(sell_multiple) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '30' MINUTE) AS max_sell_30m,
+        max(sell_multiple) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '2' HOUR) AS max_sell_2h,
+        max(sell_multiple) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '24' HOUR) AS max_sell_24h,
+        max(sell_multiple) FILTER (WHERE rn >= e5_rn) AS max_sell_30d,
+        max(sell_multiple_e30) FILTER (WHERE rn >= e30_rn) AS max_sell_30d_e30,
+        max(sell_multiple_e120) FILTER (WHERE rn >= e120_rn) AS max_sell_30d_e120,
+        NULLIF(max_by(COALESCE(sell_multiple, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '35' SECOND), -1.0) AS ret_d5_30s,
+        NULLIF(max_by(COALESCE(sell_multiple_b, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '35' SECOND), -1.0) AS ret_d5_30s_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '35' SECOND), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '35' SECOND) AS state_age_d5_30s,
+        NULLIF(max_by(COALESCE(sell_multiple, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '125' SECOND), -1.0) AS ret_d5_2m,
+        NULLIF(max_by(COALESCE(sell_multiple_b, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '125' SECOND), -1.0) AS ret_d5_2m_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '125' SECOND), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '125' SECOND) AS state_age_d5_2m,
+        NULLIF(max_by(COALESCE(sell_multiple, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '605' SECOND), -1.0) AS ret_d5_10m,
+        NULLIF(max_by(COALESCE(sell_multiple_b, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '605' SECOND), -1.0) AS ret_d5_10m_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '605' SECOND), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '605' SECOND) AS state_age_d5_10m,
+        NULLIF(max_by(COALESCE(sell_multiple, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '3605' SECOND), -1.0) AS ret_d5_1h,
+        NULLIF(max_by(COALESCE(sell_multiple_b, -1.0), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '3605' SECOND), -1.0) AS ret_d5_1h_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '3605' SECOND), rn) FILTER (WHERE rn >= e5_rn AND clock_ts <= t3_ts + INTERVAL '3605' SECOND) AS state_age_d5_1h,
+        NULLIF(min_by(COALESCE(sell_multiple, -1.0), rn) FILTER (WHERE rn >= e5_rn AND pm <= 0.5 * greatest(1.0, runmax_pm)), -1.0) AS stop_ret_d5,
+        NULLIF(min_by(COALESCE(sell_multiple_b, -1.0), rn) FILTER (WHERE rn >= e5_rn AND pm <= 0.5 * greatest(1.0, runmax_pm)), -1.0) AS stop_ret_d5_b,  /*B*/
+        min_by(date_diff('second', t3_ts, clock_ts), rn) FILTER (WHERE rn >= e5_rn AND pm <= 0.5 * greatest(1.0, runmax_pm)) AS stop_time_d5,
+        NULLIF(max_by(COALESCE(sell_multiple, -1.0), rn) FILTER (WHERE rn >= e5_rn), -1.0) AS horizon_ret_d5,
+        NULLIF(max_by(COALESCE(sell_multiple_b, -1.0), rn) FILTER (WHERE rn >= e5_rn), -1.0) AS horizon_ret_d5_b,  /*B*/
+        NULLIF(max_by(COALESCE(sell_multiple_e30, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '60' SECOND), -1.0) AS ret_d30_30s,
+        NULLIF(max_by(COALESCE(sell_multiple_e30_b, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '60' SECOND), -1.0) AS ret_d30_30s_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '60' SECOND), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '60' SECOND) AS state_age_d30_30s,
+        NULLIF(max_by(COALESCE(sell_multiple_e30, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '150' SECOND), -1.0) AS ret_d30_2m,
+        NULLIF(max_by(COALESCE(sell_multiple_e30_b, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '150' SECOND), -1.0) AS ret_d30_2m_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '150' SECOND), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '150' SECOND) AS state_age_d30_2m,
+        NULLIF(max_by(COALESCE(sell_multiple_e30, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '630' SECOND), -1.0) AS ret_d30_10m,
+        NULLIF(max_by(COALESCE(sell_multiple_e30_b, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '630' SECOND), -1.0) AS ret_d30_10m_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '630' SECOND), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '630' SECOND) AS state_age_d30_10m,
+        NULLIF(max_by(COALESCE(sell_multiple_e30, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '3630' SECOND), -1.0) AS ret_d30_1h,
+        NULLIF(max_by(COALESCE(sell_multiple_e30_b, -1.0), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '3630' SECOND), -1.0) AS ret_d30_1h_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '3630' SECOND), rn) FILTER (WHERE rn >= e30_rn AND clock_ts <= t3_ts + INTERVAL '3630' SECOND) AS state_age_d30_1h,
+        NULLIF(min_by(COALESCE(sell_multiple_e30, -1.0), rn) FILTER (WHERE rn >= e30_rn AND pm_e30 <= 0.5 * greatest(1.0, runmax_pm_e30)), -1.0) AS stop_ret_d30,
+        NULLIF(min_by(COALESCE(sell_multiple_e30_b, -1.0), rn) FILTER (WHERE rn >= e30_rn AND pm_e30 <= 0.5 * greatest(1.0, runmax_pm_e30)), -1.0) AS stop_ret_d30_b,  /*B*/
+        min_by(date_diff('second', t3_ts, clock_ts), rn) FILTER (WHERE rn >= e30_rn AND pm_e30 <= 0.5 * greatest(1.0, runmax_pm_e30)) AS stop_time_d30,
+        NULLIF(max_by(COALESCE(sell_multiple_e30, -1.0), rn) FILTER (WHERE rn >= e30_rn), -1.0) AS horizon_ret_d30,
+        NULLIF(max_by(COALESCE(sell_multiple_e30_b, -1.0), rn) FILTER (WHERE rn >= e30_rn), -1.0) AS horizon_ret_d30_b,  /*B*/
+        NULLIF(max_by(COALESCE(sell_multiple_e120, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '150' SECOND), -1.0) AS ret_d120_30s,
+        NULLIF(max_by(COALESCE(sell_multiple_e120_b, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '150' SECOND), -1.0) AS ret_d120_30s_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '150' SECOND), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '150' SECOND) AS state_age_d120_30s,
+        NULLIF(max_by(COALESCE(sell_multiple_e120, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '240' SECOND), -1.0) AS ret_d120_2m,
+        NULLIF(max_by(COALESCE(sell_multiple_e120_b, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '240' SECOND), -1.0) AS ret_d120_2m_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '240' SECOND), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '240' SECOND) AS state_age_d120_2m,
+        NULLIF(max_by(COALESCE(sell_multiple_e120, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '720' SECOND), -1.0) AS ret_d120_10m,
+        NULLIF(max_by(COALESCE(sell_multiple_e120_b, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '720' SECOND), -1.0) AS ret_d120_10m_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '720' SECOND), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '720' SECOND) AS state_age_d120_10m,
+        NULLIF(max_by(COALESCE(sell_multiple_e120, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '3720' SECOND), -1.0) AS ret_d120_1h,
+        NULLIF(max_by(COALESCE(sell_multiple_e120_b, -1.0), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '3720' SECOND), -1.0) AS ret_d120_1h_b,  /*B*/
+        max_by(date_diff('second', clock_ts, t3_ts + INTERVAL '3720' SECOND), rn) FILTER (WHERE rn >= e120_rn AND clock_ts <= t3_ts + INTERVAL '3720' SECOND) AS state_age_d120_1h,
+        NULLIF(min_by(COALESCE(sell_multiple_e120, -1.0), rn) FILTER (WHERE rn >= e120_rn AND pm_e120 <= 0.5 * greatest(1.0, runmax_pm_e120)), -1.0) AS stop_ret_d120,
+        NULLIF(min_by(COALESCE(sell_multiple_e120_b, -1.0), rn) FILTER (WHERE rn >= e120_rn AND pm_e120 <= 0.5 * greatest(1.0, runmax_pm_e120)), -1.0) AS stop_ret_d120_b,  /*B*/
+        min_by(date_diff('second', t3_ts, clock_ts), rn) FILTER (WHERE rn >= e120_rn AND pm_e120 <= 0.5 * greatest(1.0, runmax_pm_e120)) AS stop_time_d120,
+        NULLIF(max_by(COALESCE(sell_multiple_e120, -1.0), rn) FILTER (WHERE rn >= e120_rn), -1.0) AS horizon_ret_d120,
+        NULLIF(max_by(COALESCE(sell_multiple_e120_b, -1.0), rn) FILTER (WHERE rn >= e120_rn), -1.0) AS horizon_ret_d120_b,  /*B*/
+        max(pm) FILTER (WHERE rn >= e5_rn) AS max_price_pm_30d,
+        max(CASE
+            WHEN runmin_early_price IS NOT NULL
+             AND price / NULLIF(runmin_early_price, 0) >= 8
+            THEN 1 ELSE 0
+        END) = 1 AS tail420_candidate,
+        min(date_diff('second', e5_ts, clock_ts)) FILTER (
+            WHERE rn >= e5_rn AND pm <= 0.5 * greatest(1.0, runmax_pm)
+        ) AS first_dd50_s,
+        max(date_diff('second', created_at, clock_ts)) AS last_trade_s,
+        count(*) FILTER (WHERE rn > e5_rn) AS n_post_entry_trades
+    FROM s10b  /*B*/
+    WHERE t3_ts IS NOT NULL
+    GROUP BY mint
+),
+all_coins AS (
+    SELECT
+        c.mint, c.created_at, c.dev,
+        p.t3_ts, p.t3_s,
+        p.e5_x, p.e5_y, p.e5_xr, p.e5_fee_bps, p.e5_venue, p.e5_pool_reversed,
+        p.e5_ts, p.e30_ts, p.e120_ts,
+        p.price_pm_30s, p.price_pm_120s,
+        p.price_pm_5s_from_open, p.price_pm_15s_from_open, p.price_pm_30s_from_open,
+        p.price_pm_60s_from_open, p.price_pm_120s_from_open, p.price_pm_300s_from_open,
+        p.qbuyers_5s, p.qbuyers_15s, p.qbuyers_30s, p.qbuyers_60s, p.qbuyers_120s, p.qbuyers_300s,
+        p.trades_t3, p.buy_sol_t3, p.sell_sol_t3, p.dev_buy_sol_t3,
+        p.max_sell_10m, p.max_sell_30m, p.max_sell_2h, p.max_sell_24h, p.max_sell_30d,
+        p.max_sell_30d_e30, p.max_sell_30d_e120,
+        p.max_price_pm_30d, p.tail420_candidate,
+        p.ret_d5_30s, p.state_age_d5_30s, p.ret_d5_2m, p.state_age_d5_2m, p.ret_d5_10m, p.state_age_d5_10m, p.ret_d5_1h, p.state_age_d5_1h, p.stop_ret_d5, p.stop_time_d5, p.horizon_ret_d5, p.ret_d30_30s, p.state_age_d30_30s, p.ret_d30_2m, p.state_age_d30_2m, p.ret_d30_10m, p.state_age_d30_10m, p.ret_d30_1h, p.state_age_d30_1h, p.stop_ret_d30, p.stop_time_d30, p.horizon_ret_d30, p.ret_d120_30s, p.state_age_d120_30s, p.ret_d120_2m, p.state_age_d120_2m, p.ret_d120_10m, p.state_age_d120_10m, p.ret_d120_1h, p.state_age_d120_1h, p.stop_ret_d120, p.stop_time_d120, p.horizon_ret_d120,
+        p.ret_d5_30s_b, p.ret_d5_2m_b, p.ret_d5_10m_b, p.ret_d5_1h_b, p.stop_ret_d5_b, p.horizon_ret_d5_b, p.ret_d30_30s_b, p.ret_d30_2m_b, p.ret_d30_10m_b, p.ret_d30_1h_b, p.stop_ret_d30_b, p.horizon_ret_d30_b, p.ret_d120_30s_b, p.ret_d120_2m_b, p.ret_d120_10m_b, p.ret_d120_1h_b, p.stop_ret_d120_b, p.horizon_ret_d120_b,  /*B*/
+        p.first_dd50_s, p.last_trade_s, p.n_post_entry_trades,
+        mg.mint IS NOT NULL AS has_migration_event,
+        mp.pool IS NOT NULL AS amm_mapped,
+        COALESCE(mp.pool_reversed, false) AS mapped_pool_reversed,
+        p.t3_s BETWEEN 0 AND 300 AS eligible,
+        COALESCE(p.max_sell_30d >= 10, false) AS tail10_exec,
+        COALESCE(p.first_dd50_s BETWEEN 0 AND 1800 AND p.max_sell_24h < 2, false) AS early_crash,
+        r.mint IS NOT NULL AS r0_seen,
+        IF(CAST(c.created_at AS date) <= DATE '2026-06-07', 'A', 'B') AS cohort_week,
+        CASE
+            WHEN p.t3_s <= 5 THEN '000_005'
+            WHEN p.t3_s <= 15 THEN '006_015'
+            WHEN p.t3_s <= 30 THEN '016_030'
+            WHEN p.t3_s <= 60 THEN '031_060'
+            WHEN p.t3_s <= 120 THEN '061_120'
+            WHEN p.t3_s <= 300 THEN '121_300'
+            ELSE 'not_eligible'
+        END AS t3_bucket,
+        bitwise_and(from_big_endian_64(xxhash64(to_utf8(c.mint))), 9223372036854775807) AS mint_hash
+    FROM sol_cohort c
+    LEFT JOIN coin_path p ON p.mint = c.mint
+    LEFT JOIN r0_seen r ON r.mint = c.mint
+    LEFT JOIN mig mg ON mg.mint = c.mint
+    LEFT JOIN mapping mp ON mp.mint = c.mint
+),
+with_counts AS (
+    SELECT
+        *,
+        count(*) OVER () AS n_all,
+        sum(CASE WHEN eligible THEN 1 ELSE 0 END) OVER () AS n_eligible,
+        sum(CASE WHEN eligible AND tail10_exec THEN 1 ELSE 0 END) OVER () AS n_tail10_exec,
+        sum(CASE WHEN eligible AND tail420_candidate THEN 1 ELSE 0 END) OVER () AS n_tail420_candidate,
+        sum(CASE WHEN eligible AND tail10_exec AND NOT tail420_candidate THEN 1 ELSE 0 END) OVER () AS n_tail10_outside_tail420,
+        sum(CASE WHEN eligible AND early_crash THEN 1 ELSE 0 END) OVER () AS n_early_crash,
+        sum(CASE WHEN eligible AND mod(mint_hash, 10000) < 200 THEN 1 ELSE 0 END) OVER () AS n_random_2pct,
+        sum(CASE WHEN has_migration_event THEN 1 ELSE 0 END) OVER () AS n_migration_event,
+        sum(CASE WHEN amm_mapped THEN 1 ELSE 0 END) OVER () AS n_amm_mapped,
+        sum(CASE WHEN has_migration_event AND NOT amm_mapped THEN 1 ELSE 0 END) OVER () AS n_migration_unmapped,
+        sum(CASE WHEN mapped_pool_reversed THEN 1 ELSE 0 END) OVER () AS n_mapped_reverse_pool,
+        count(*) OVER (PARTITION BY cohort_week) AS n_all_week,
+        sum(CASE WHEN eligible THEN 1 ELSE 0 END) OVER (PARTITION BY cohort_week) AS n_eligible_week,
+        sum(CASE WHEN eligible THEN 1 ELSE 0 END) OVER (PARTITION BY cohort_week, t3_bucket) AS n_eligible_week_t3_bucket
+    FROM all_coins
+)
+SELECT
+    CAST(mint_hash AS varchar) AS mint_hash_exact,
+    mint, created_at, cohort_week, t3_s, t3_bucket, eligible,
+    tail420_candidate, tail10_exec, r0_seen, has_migration_event, amm_mapped,
+    e5_x, e5_y, e5_xr, e5_fee_bps, e5_venue, e5_ts, e30_ts, e120_ts,
+    ret_d5_30s,
+    state_age_d5_30s,
+    ret_d5_2m,
+    state_age_d5_2m,
+    ret_d5_10m,
+    state_age_d5_10m,
+    ret_d5_1h,
+    state_age_d5_1h,
+    CASE WHEN stop_time_d5 IS NOT NULL THEN stop_ret_d5 ELSE horizon_ret_d5 END AS b50_ret_d5,
+    stop_time_d5,
+    ret_d30_30s,
+    state_age_d30_30s,
+    ret_d30_2m,
+    state_age_d30_2m,
+    ret_d30_10m,
+    state_age_d30_10m,
+    ret_d30_1h,
+    state_age_d30_1h,
+    CASE WHEN stop_time_d30 IS NOT NULL THEN stop_ret_d30 ELSE horizon_ret_d30 END AS b50_ret_d30,
+    stop_time_d30,
+    ret_d120_30s,
+    state_age_d120_30s,
+    ret_d120_2m,
+    state_age_d120_2m,
+    ret_d120_10m,
+    state_age_d120_10m,
+    ret_d120_1h,
+    state_age_d120_1h,
+    CASE WHEN stop_time_d120 IS NOT NULL THEN stop_ret_d120 ELSE horizon_ret_d120 END AS b50_ret_d120,
+    stop_time_d120,
+    ret_d5_30s_b,  /*B*/
+    ret_d5_2m_b,  /*B*/
+    ret_d5_10m_b,  /*B*/
+    ret_d5_1h_b,  /*B*/
+    ret_d30_30s_b,  /*B*/
+    ret_d30_2m_b,  /*B*/
+    ret_d30_10m_b,  /*B*/
+    ret_d30_1h_b,  /*B*/
+    ret_d120_30s_b,  /*B*/
+    ret_d120_2m_b,  /*B*/
+    ret_d120_10m_b,  /*B*/
+    ret_d120_1h_b,  /*B*/
+    CASE WHEN stop_time_d5 IS NOT NULL THEN stop_ret_d5_b ELSE horizon_ret_d5_b END AS b50_ret_d5_b,  /*B*/
+    CASE WHEN stop_time_d30 IS NOT NULL THEN stop_ret_d30_b ELSE horizon_ret_d30_b END AS b50_ret_d30_b,  /*B*/
+    CASE WHEN stop_time_d120 IS NOT NULL THEN stop_ret_d120_b ELSE horizon_ret_d120_b END AS b50_ret_d120_b,  /*B*/
+    1 AS sample_preselected
+FROM all_coins
+ORDER BY created_at, mint
