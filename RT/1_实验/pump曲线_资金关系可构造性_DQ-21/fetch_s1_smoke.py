@@ -15,7 +15,7 @@ from fetch_s0_v1_2 import api_key, get, normalized_sql
 HERE = Path(__file__).resolve().parent
 QUERY_ID = 8844536
 EXECUTION_ID = "01M3K2Q7GZ38N0507QH57WPM5H"
-SQL = HERE / "sql/S1_SMOKE_20260601_固定退出基础回收_待验.sql"
+SQL = HERE / "sql/S1_SMOKE_20260601_旧卖出公式_全量后过滤_已执行_勿复用.sql"
 OUT = HERE / "raw/s1/S1_SMOKE_20260601.csv.gz"
 MAX_RESULT_BYTES = 500_000
 PAGE_SIZE = 50  # Keep each request below the account's per-request datapoint gate.

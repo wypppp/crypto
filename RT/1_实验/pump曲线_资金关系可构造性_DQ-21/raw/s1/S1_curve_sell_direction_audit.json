@@ -1,0 +1,52 @@
+{
+  "source": "/home/ancillary/RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/s1/S1_SMOKE_20260601.csv.gz",
+  "curve_eligible": 669,
+  "same_state_30s_count": 21,
+  "same_state_overstatement_median": 0.030897609651785785,
+  "same_state_overstatement_min": 0.02342150353715855,
+  "same_state_overstatement_max": 0.0312837536472258,
+  "counterfactual_roundtrip_overstatement_median": 0.024604947441957847,
+  "counterfactual_roundtrip_overstatement_p95": 0.05660502977333692,
+  "counterfactual_roundtrip_overstatement_max": 0.1266438822654372,
+  "same_state_examples_first_5": [
+    {
+      "mint": "2GXP4QFBQ24pV67SsHXBTTAfExxVU4oyCWLrfuy6pump",
+      "observed_old": 0.9751562499999973,
+      "correct": 0.9447278910718787,
+      "overstatement": 0.03042835892811857
+    },
+    {
+      "mint": "3byJGWBcH4CuqMQm3q1EUthntcjZLRWR5KmM3Dy3Dg9j",
+      "observed_old": 0.9810902499999974,
+      "correct": 0.9498736091857014,
+      "overstatement": 0.03121664081429598
+    },
+    {
+      "mint": "C5PVHD8oum72NGcui3RTRf6ZN25mdM4MoMYGbKakpump",
+      "observed_old": 0.9751562499999973,
+      "correct": 0.9440802743051429,
+      "overstatement": 0.03107597569485443
+    },
+    {
+      "mint": "HEugiQQVnGo6JsmAWdYFrMQKsju5sQsbuNsYYoCBDPVN",
+      "observed_old": 0.9810902499999974,
+      "correct": 0.952614421640105,
+      "overstatement": 0.028475828359892374
+    },
+    {
+      "mint": "6qZoPbbos1tuD9wG27AwF6UCYraGWnqAmqUnRrJxpump",
+      "observed_old": 0.9751562499999973,
+      "correct": 0.9459249968383632,
+      "overstatement": 0.029231253161634108
+    }
+  ],
+  "note": "This diagnoses the direction error. It does not estimate the full-path strategy-return correction.",
+  "landed_trade_event_check": {
+    "cached_files_read": 7,
+    "landed_sell_events": 1000,
+    "correct_formula_exact_events": 1000,
+    "correct_formula_max_abs_lamport_error": 0,
+    "old_formula_exact_events": 147,
+    "old_formula_median_abs_lamport_error": 18691503.0
+  }
+}

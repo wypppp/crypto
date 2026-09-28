@@ -22,6 +22,7 @@ def main() -> None:
                   "t3_s", "e5_x", "e5_y")
     for mint, row in new.items():
         prior = old[mint]
+        row["_frozen_case"] = b(prior, "tail420_candidate") or b(prior, "tail10_exec")
         for col in audit_cols:
             a, z = row[col], prior[col]
             if a != z:
@@ -36,7 +37,8 @@ def main() -> None:
         b(r, "eligible") and b(r, "r0_seen") for r in new.values()
     )
     result: dict = {
-        "label": "ONE-DAY COST/TECHNICAL PILOT ONLY; do not infer two-week population return",
+        "label": "INVALID RETURNS: historical curve sell formula uses the buy-side inverse; cost/shape diagnostic only",
+        "returns_valid": False,
         "n_frozen_sample": len(new),
         "n_primary_sample": len(rows),
         "june1_exact_eligible_excluding_r0": denominator,
@@ -59,7 +61,8 @@ def main() -> None:
             result["state_age_over_hold_count"][col] = sum(v is not None and v > hold for v in ages)
     out = HERE / "raw/s1/S1_SMOKE_20260601_audit.json"
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
-    print(json.dumps({"passed": True, "sample_rows": len(new), "primary": len(rows),
+    print(json.dumps({"shape_passed": True, "returns_valid": False,
+                      "sample_rows": len(new), "primary": len(rows),
                       "target": denominator, "saved": str(out)}, ensure_ascii=False))
 
 

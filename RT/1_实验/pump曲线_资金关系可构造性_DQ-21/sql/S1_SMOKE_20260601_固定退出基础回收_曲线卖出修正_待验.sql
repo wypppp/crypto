@@ -1,6 +1,7 @@
-/* S1 SAMPLE-FIRST COST OPTIMIZATION: exact S0 frozen inclusion list;
-   no re-selection by any S1 result. n_all-like totals must come from S0.
-   Verify the output mint set against S0 before using any return. */
+/* S1 CORRECTED SELL DIRECTION + SAMPLE-FIRST OPTIMIZATION.
+   Exact frozen S0 mint list; no S1-outcome reselection. Sample weights
+   and total denominators MUST come from S0, not recomputed outcomes.
+   Verify mint set and independent sell quotes before interpreting returns. */
 /* S1 ONE-DAY QA ONLY: June 1 creations and full 30-day path; no population or return inference. Execution cap <=100 credits. */
 /* S1 DRAFT: fixed-exit baseline, development cohort only.
    Derived mechanically from frozen S0 v1.3. Do not run before
@@ -1074,24 +1075,21 @@ s10 AS (
         *,
         LEAST(
             CASE
-                WHEN venue = 0 AND y > entry_tokens THEN (x * y / (y - entry_tokens) - x) * (1 - fee_bps / 1e4)
-                WHEN venue = 0 THEN NULL
+                WHEN venue = 0 THEN (x * entry_tokens / (y + entry_tokens)) * (1 - fee_bps / 1e4)
                 ELSE (x - x * y / (y + entry_tokens)) * (1 - fee_bps / 1e4)
             END,
             IF(venue = 0, xr + 0.5 * (1 - e5_fee_bps / 1e4), 1e18)
         ) / 0.5 AS sell_multiple,
         CASE WHEN rn >= e30_rn THEN LEAST(
             CASE
-                WHEN venue = 0 AND y > entry_tokens_e30 THEN (x * y / (y - entry_tokens_e30) - x) * (1 - fee_bps / 1e4)
-                WHEN venue = 0 THEN NULL
+                WHEN venue = 0 THEN (x * entry_tokens_e30 / (y + entry_tokens_e30)) * (1 - fee_bps / 1e4)
                 ELSE (x - x * y / (y + entry_tokens_e30)) * (1 - fee_bps / 1e4)
             END,
             IF(venue = 0, xr + 0.5 * (1 - e30_fee_bps / 1e4), 1e18)
         ) / 0.5 END AS sell_multiple_e30,
         CASE WHEN rn >= e120_rn THEN LEAST(
             CASE
-                WHEN venue = 0 AND y > entry_tokens_e120 THEN (x * y / (y - entry_tokens_e120) - x) * (1 - fee_bps / 1e4)
-                WHEN venue = 0 THEN NULL
+                WHEN venue = 0 THEN (x * entry_tokens_e120 / (y + entry_tokens_e120)) * (1 - fee_bps / 1e4)
                 ELSE (x - x * y / (y + entry_tokens_e120)) * (1 - fee_bps / 1e4)
             END,
             IF(venue = 0, xr + 0.5 * (1 - e120_fee_bps / 1e4), 1e18)
@@ -1257,15 +1255,6 @@ with_counts AS (
     FROM all_coins
 )
 SELECT
-    CASE
-        WHEN r0_seen THEN 'r0_qa'
-        WHEN eligible AND (tail420_candidate OR tail10_exec) THEN 'tail420_all'
-        ELSE 'random_2pct'
-    END AS inclusion_class,
-    CASE
-        WHEN eligible AND (tail420_candidate OR tail10_exec) THEN 1.0
-        WHEN eligible AND mod(mint_hash, 10000) < 200 THEN 0.02
-    END AS objective_inclusion_probability,
     CAST(mint_hash AS varchar) AS mint_hash_exact,
     mint, created_at, cohort_week, t3_s, t3_bucket, eligible,
     tail420_candidate, tail10_exec, r0_seen, has_migration_event, amm_mapped,
@@ -1302,7 +1291,4 @@ SELECT
     stop_time_d120,
     1 AS sample_preselected
 FROM all_coins
-WHERE r0_seen
-   OR (eligible AND (tail420_candidate OR tail10_exec))
-   OR (eligible AND mod(mint_hash, 10000) < 200)
 ORDER BY created_at, mint

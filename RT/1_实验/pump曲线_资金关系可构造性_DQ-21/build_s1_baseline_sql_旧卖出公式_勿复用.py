@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Derive a narrow S1 fixed-exit SQL from the frozen S0 path implementation.
+"""HISTORICAL GENERATOR WITH WRONG CURVE-SELL DIRECTION. DO NOT REUSE.
+
+Derive a narrow S1 fixed-exit SQL from the frozen S0 path implementation.
 
 Never overwrites S0. This is a local build and structural check, not a Dune run.
 """
@@ -7,8 +9,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE / "sql/S0_AB_事件时点机会普查_v1_3_运行版.sql"
-OUT = HERE / "sql/S1_AB_固定退出基础回收_待验.sql"
-SMOKE_OUT = HERE / "sql/S1_SMOKE_20260601_固定退出基础回收_待验.sql"
+OUT = HERE / "sql/S1_AB_固定退出基础回收_旧卖出公式_未执行_勿复用.sql"
+SMOKE_OUT = HERE / "sql/S1_SMOKE_20260601_旧卖出公式_全量后过滤_已执行_勿复用.sql"
 
 
 def once(s: str, old: str, new: str) -> str:

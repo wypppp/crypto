@@ -1,5 +1,6 @@
 {
-  "label": "ONE-DAY COST/TECHNICAL PILOT ONLY; do not infer two-week population return",
+  "label": "INVALID RETURNS: historical curve sell formula uses the buy-side inverse; cost/shape diagnostic only",
+  "returns_valid": false,
   "n_frozen_sample": 695,
   "n_primary_sample": 680,
   "june1_exact_eligible_excluding_r0": 11055,

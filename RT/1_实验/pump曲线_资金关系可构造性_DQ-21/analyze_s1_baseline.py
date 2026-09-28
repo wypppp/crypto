@@ -38,7 +38,9 @@ def summarize(rows: list[dict], name: str, denominator: int) -> dict:
     present = []
     missing = []
     for r in rows:
-        weight = 1 if b(r, "tail420_candidate") or b(r, "tail10_exec") else 50
+        # Sampling was frozen in S0. S1 corrects the curve sell formula, so its
+        # newly computed tail10_exec must never rewrite the inclusion weight.
+        weight = 1 if r.get("_frozen_case") else 50
         val = f(r, name)
         if val is None or not math.isfinite(val) or val < 0:
             missing.append((r["mint"], weight))
@@ -101,9 +103,10 @@ def main() -> None:
         raise RuntimeError(f"S1 columns missing: {sorted(required - set(next(iter(s1.values()))))}")
     for mint, r in s1.items():
         old = s0[mint]
-        for col in ("eligible", "r0_seen", "tail420_candidate", "tail10_exec"):
+        for col in ("eligible", "r0_seen", "tail420_candidate"):
             if b(r, col) != b(old, col):
                 raise RuntimeError(f"S1 changed frozen S0 field: {mint} {col}: {r[col]} != {old[col]}")
+        r["_frozen_case"] = b(old, "tail420_candidate") or b(old, "tail10_exec")
         if int(r["mint_hash_exact"]) != int(old["mint_hash_exact"]):
             raise RuntimeError(f"S1 changed mint hash: {mint}")
         for col in ("t3_s", "e5_x", "e5_y"):
@@ -122,6 +125,8 @@ def main() -> None:
     summary = {
         "s0": str(args.s0), "s1": str(args.s1), "same_mints": len(s1),
         "target_eligible_excluding_r0": target, "primary_sample_rows": len(primary),
+        "old_tail10_sample_count": sum(b(r, "tail10_exec") for r in s0.values()),
+        "corrected_tail10_sample_count": sum(b(r, "tail10_exec") for r in s1.values()),
         "note": "All returns are pool-model proceeds per 0.5 SOL purchase; extra priority fees, failed trades and MEV remain excluded. Missing outcome means population mean not reported.",
         "strategies": {name: summarize(primary, name, target) for name in STRATEGIES},
     }
