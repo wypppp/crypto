@@ -1,0 +1,232 @@
+{
+  "label": "ONE-DAY COST/TECHNICAL PILOT ONLY; do not infer two-week population return",
+  "n_frozen_sample": 695,
+  "n_primary_sample": 680,
+  "june1_exact_eligible_excluding_r0": 11055,
+  "strategies": {
+    "ret_d5_30s": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.8716157947985157,
+      "observed_only_ratio_mean_diagnostic": 0.8823104671273319,
+      "weighted_median_observed_diagnostic": 0.9177606468302321,
+      "top_positive_profit_weighted_1_3_10": [
+        0.08948415835446583,
+        0.20201928569780625,
+        0.37879260994577446
+      ]
+    },
+    "ret_d5_2m": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.8149591614331424,
+      "observed_only_ratio_mean_diagnostic": 0.8249586603464325,
+      "weighted_median_observed_diagnostic": 0.8051057976404342,
+      "top_positive_profit_weighted_1_3_10": [
+        0.08287439455975852,
+        0.20006681976285476,
+        0.4464230623239025
+      ]
+    },
+    "ret_d5_10m": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.7603674470230162,
+      "observed_only_ratio_mean_diagnostic": 0.7696971089496789,
+      "weighted_median_observed_diagnostic": 0.7636599861103316,
+      "top_positive_profit_weighted_1_3_10": [
+        0.13818622718931292,
+        0.3232747239305889,
+        0.44962092765221395
+      ]
+    },
+    "ret_d5_1h": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.7539848814426487,
+      "observed_only_ratio_mean_diagnostic": 0.7632362296812089,
+      "weighted_median_observed_diagnostic": 0.7419811949224238,
+      "top_positive_profit_weighted_1_3_10": [
+        0.1702038250285061,
+        0.31019686983448835,
+        0.5240313935832002
+      ]
+    },
+    "ret_d30_30s": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.930141720499494,
+      "observed_only_ratio_mean_diagnostic": 0.9415545023461135,
+      "weighted_median_observed_diagnostic": 0.9751562499999973,
+      "top_positive_profit_weighted_1_3_10": [
+        0.08984570016421496,
+        0.19265483893154878,
+        0.3620529936565287
+      ]
+    },
+    "ret_d30_2m": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.9047861441163249,
+      "observed_only_ratio_mean_diagnostic": 0.9158878145962798,
+      "weighted_median_observed_diagnostic": 0.9666285290223893,
+      "top_positive_profit_weighted_1_3_10": [
+        0.077682078245131,
+        0.21500687893362594,
+        0.4757631121688091
+      ]
+    },
+    "ret_d30_10m": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.8601436724879792,
+      "observed_only_ratio_mean_diagnostic": 0.8706975825798563,
+      "weighted_median_observed_diagnostic": 0.94592796267074,
+      "top_positive_profit_weighted_1_3_10": [
+        0.1621235247945395,
+        0.3278704759714265,
+        0.448793453250682
+      ]
+    },
+    "ret_d30_1h": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.8540347053009238,
+      "observed_only_ratio_mean_diagnostic": 0.864513658740199,
+      "weighted_median_observed_diagnostic": 0.9379953697357398,
+      "top_positive_profit_weighted_1_3_10": [
+        0.10607504298649771,
+        0.29289304026311114,
+        0.5335201948730242
+      ]
+    },
+    "ret_d120_30s": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.9629707418603813,
+      "observed_only_ratio_mean_diagnostic": 0.9747863337850485,
+      "weighted_median_observed_diagnostic": 0.9751562500000007,
+      "top_positive_profit_weighted_1_3_10": [
+        0.1503115852433843,
+        0.27193451564883037,
+        0.5750453290368145
+      ]
+    },
+    "ret_d120_2m": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.9415543441751775,
+      "observed_only_ratio_mean_diagnostic": 0.9531071582141367,
+      "weighted_median_observed_diagnostic": 0.9751562499999973,
+      "top_positive_profit_weighted_1_3_10": [
+        0.18093972174412198,
+        0.3444912718972751,
+        0.5701893998664691
+      ]
+    },
+    "ret_d120_10m": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.9204982790938698,
+      "observed_only_ratio_mean_diagnostic": 0.9317927365060645,
+      "weighted_median_observed_diagnostic": 0.9743201084436319,
+      "top_positive_profit_weighted_1_3_10": [
+        0.14295813048892073,
+        0.24224265331258776,
+        0.42526855690680077
+      ]
+    },
+    "ret_d120_1h": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.9290738486095965,
+      "observed_only_ratio_mean_diagnostic": 0.9404735277336407,
+      "weighted_median_observed_diagnostic": 0.9723583487442692,
+      "top_positive_profit_weighted_1_3_10": [
+        0.10713181644670747,
+        0.2431820408878748,
+        0.5080549829324998
+      ]
+    },
+    "b50_ret_d5": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.833763023397189,
+      "observed_only_ratio_mean_diagnostic": 0.8439932445431668,
+      "weighted_median_observed_diagnostic": 0.7856120018025893,
+      "top_positive_profit_weighted_1_3_10": [
+        0.09124082216847582,
+        0.1786381257546553,
+        0.3060112861096833
+      ]
+    },
+    "b50_ret_d30": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.8986227965835907,
+      "observed_only_ratio_mean_diagnostic": 0.9096488431674384,
+      "weighted_median_observed_diagnostic": 0.9400442310329372,
+      "top_positive_profit_weighted_1_3_10": [
+        0.07093695572633499,
+        0.15931707348201635,
+        0.28336493741275864
+      ]
+    },
+    "b50_ret_d120": {
+      "observed_rows": 680,
+      "missing_rows": 0,
+      "observed_weight": 10921,
+      "missing_weight": 0,
+      "population_mean_if_no_missing_HT": 0.9459721127029334,
+      "observed_only_ratio_mean_diagnostic": 0.9575791324906994,
+      "weighted_median_observed_diagnostic": 0.9691751023913846,
+      "top_positive_profit_weighted_1_3_10": [
+        0.09281221422305726,
+        0.192642325851763,
+        0.3614803693883119
+      ]
+    }
+  },
+  "state_age_over_hold_count": {
+    "state_age_d5_30s": 21,
+    "state_age_d5_2m": 6,
+    "state_age_d5_10m": 3,
+    "state_age_d5_1h": 2,
+    "state_age_d30_30s": 90,
+    "state_age_d30_2m": 47,
+    "state_age_d30_10m": 30,
+    "state_age_d30_1h": 28,
+    "state_age_d120_30s": 205,
+    "state_age_d120_2m": 146,
+    "state_age_d120_10m": 126,
+    "state_age_d120_1h": 112
+  }
+}
