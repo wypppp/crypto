@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import math
+from pathlib import Path
 
 from analyze_s1_baseline import HERE, read_rows
 
@@ -24,7 +25,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("optimized")
     args = ap.parse_args()
-    old, new = read_rows(ORIGINAL), read_rows(args.optimized)
+    old, new = read_rows(ORIGINAL), read_rows(Path(args.optimized))
     if set(old) != set(new) or len(old) != 695:
         raise AssertionError(f"mint set changed: old={len(old)} new={len(new)} intersection={len(set(old)&set(new))}")
     unchanged = {

@@ -1,0 +1,10 @@
+{
+  "query_id": 8848627,
+  "execution_id": "01M3KHY8VKYNGJSHJY22WAQW3F",
+  "execution_cost_credits": 14.559423077,
+  "rows": 695,
+  "columns": 51,
+  "result_bytes": 270417,
+  "file": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/s1/S1_SMOKE_20260601_corrected.csv.gz",
+  "download_sha256": "d20a3d239499544d22b67c92e7b1644260d77ac746cb822723c2f0eae04f2e25"
+}
