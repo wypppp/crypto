@@ -1,0 +1,46 @@
+{
+ "pairs": 34,
+ "coins": 3,
+ "old_rel_err_median": 1.2127106342050096e-09,
+ "old_rel_err_max": 3.924005115696003e-05,
+ "new_rel_err_median": 0.006216749265258559,
+ "new_rel_err_max": 0.08675619007977148,
+ "sell_over_buy_sol_median": 0.9999999953764616,
+ "examples": [
+  {
+   "mint": "5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump",
+   "buy_sol": 5020215,
+   "sell_sol": 5020214,
+   "old": 5020214.941871643,
+   "new": 5018538.682710221
+  },
+  {
+   "mint": "5i1SVh2AwSFgdYuhFnM2K74n6MxBjxjWKcP3vHAcpump",
+   "buy_sol": 48888888,
+   "sell_sol": 48888887,
+   "old": 48888886.99998093,
+   "new": 48730378.88003544
+  },
+  {
+   "mint": "BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump",
+   "buy_sol": 987653,
+   "sell_sol": 987652,
+   "old": 987652.9999847412,
+   "new": 987635.7950131838
+  },
+  {
+   "mint": "BUvuChjfCJxfUyCRMNWtm2W5ygTc7vV7mK4N22tGpump",
+   "buy_sol": 49382715,
+   "sell_sol": 49382714,
+   "old": 49382713.99963379,
+   "new": 49340297.263960704
+  },
+  {
+   "mint": "FbZbeMQGonXiUKK5QGDWXTGvraY2A3fRvwBZTbYRpump",
+   "buy_sol": 1453115124,
+   "sell_sol": 1453115123,
+   "old": 1453115123.234291,
+   "new": 1327048391.1812215
+  }
+ ]
+}
