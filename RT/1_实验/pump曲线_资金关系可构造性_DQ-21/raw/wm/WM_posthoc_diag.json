@@ -1,0 +1,79 @@
+{
+ "creator": {
+  "coin_eq_RR": 1.399,
+  "coin_share_RR_gt1": 0.671,
+  "RR_ex_top10cells": 1.269,
+  "cash_net": 127529,
+  "cash_net_from_migrated": 15748
+ },
+ "sameslot": {
+  "coin_eq_RR": 1.086,
+  "coin_share_RR_gt1": 0.429,
+  "RR_ex_top10cells": 1.479,
+  "cash_net": 290697,
+  "cash_net_from_migrated": 246770
+ },
+ "open10": {
+  "coin_eq_RR": 1.028,
+  "coin_share_RR_gt1": 0.308,
+  "RR_ex_top10cells": 0.997,
+  "cash_net": 16529,
+  "cash_net_from_migrated": 69117
+ },
+ "pre": {
+  "coin_eq_RR": 0.982,
+  "coin_share_RR_gt1": 0.326,
+  "RR_ex_top10cells": 1.009,
+  "cash_net": 5371,
+  "cash_net_from_migrated": 7815
+ },
+ "e5": {
+  "coin_eq_RR": 0.984,
+  "coin_share_RR_gt1": 0.186,
+  "RR_ex_top10cells": 1.001,
+  "cash_net": 37159,
+  "cash_net_from_migrated": 70632
+ },
+ "e30": {
+  "coin_eq_RR": 0.874,
+  "coin_share_RR_gt1": 0.147,
+  "RR_ex_top10cells": 0.961,
+  "cash_net": -26230,
+  "cash_net_from_migrated": 33725
+ },
+ "e120": {
+  "coin_eq_RR": 17.02,
+  "coin_share_RR_gt1": 0.099,
+  "RR_ex_top10cells": 0.89,
+  "cash_net": -215193,
+  "cash_net_from_migrated": -114187
+ },
+ "d1": {
+  "coin_eq_RR": 0.772,
+  "coin_share_RR_gt1": 0.025,
+  "RR_ex_top10cells": 0.859,
+  "cash_net": -743472,
+  "cash_net_from_migrated": -679900
+ },
+ "late": {
+  "coin_eq_RR": 2.782,
+  "coin_share_RR_gt1": 0.049,
+  "RR_ex_top10cells": 0.759,
+  "cash_net": -381763,
+  "cash_net_from_migrated": -378053
+ },
+ "cash_net_pooled_wan": {
+  "creator": 12.75,
+  "sellonly": 60.92,
+  "sameslot": 29.07,
+  "open10": 1.65,
+  "pre": 0.54,
+  "e5": 3.72,
+  "e30": -2.62,
+  "e120": -21.52,
+  "d1": -74.35,
+  "late": -38.18
+ },
+ "cash_sellonly_over_buyer_loss": 0.44572636361477025,
+ "cash_creator_sellonly_share_of_pos": 0.6780720615947212
+}
