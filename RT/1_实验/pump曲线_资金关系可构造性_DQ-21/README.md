@@ -16,6 +16,7 @@
 | [卡片_R1a_v2_赢家富集检验.md](卡片_R1a_v2_赢家富集检验.md) | R1a v2：入场前可见的资金关系（Zero/Light/Full 三层）能否把 ≥2 倍币富集到约 5 倍；小样本先行（用户 09-28 批准方向，未取数） |
 | [build_s1_dual_sql.py](build_s1_dual_sql.py)、`sql/S1_{SMOKE_20260601,A,B}_固定退出基础回收_双口径.sql`、[check_s1_dual.py](check_s1_dual.py) | S1 双口径：在执行方已验证的修正版上只追加乐观口径 B 列（`*_b`），自检“删去新增行与源文件逐字相同”；单日结果回来后用核对脚本与旧、新两次单日结果逐币比对 |
 | [S1_结果.md](S1_结果.md)、[analyze_s1_dual.py](analyze_s1_dual.py)、`raw/s1/S1_{SMOKE_20260601,A,B}_dual.*`、`raw/s1/S1_AB_dual_analysis.json` | **S1 A/B 双口径结果**（F117）：三条查询的结果、下载元数据与核对；分析脚本复用 `analyze_s1_baseline.py` 的汇总，A/B 周分开、口径 A/B 并报、按 `t3` 分层，附富集诊断与陈旧报价占比 |
+| [diag_r1a_econ_power.py](diag_r1a_econ_power.py)、`raw/s1/S1_r1a_econ_power.json` | 组合门诊断（09-30，外部评估后补算，0 credits、不看关系信号）：R1a 主规则的保本线（富集 × 其余币均值），以及卡片小样本与第二阶段对选中集合回收的精度和 gTFA 调用量 |
 | [程序契约_2026-09-29.md](程序契约_2026-09-29.md) | 当前 pump 程序口径：估值双口径、事故与边界病例集、复用规则、基础比率参考、数据窗口、执行方式、R1a v2 冻结前须补项；文末为逐项回原件的核对记录 |
 | [S1_AB_交接包.md](S1_AB_交接包.md)、[试验记录.csv](试验记录.csv)、[sql/MCP_SMOKE_20260601.sql](sql/MCP_SMOKE_20260601.sql) | S1 双口径三条查询的 Dune 交接包（query 8863699/8863700/8863701 已建未执行；sha256、预期行列与费用依据；文末为 Dune 官方 MCP 冒烟记录，通过）；本实验试验记录表；冒烟 SQL，结果 `raw/dune/MCP_SMOKE_20260601.csv.gz` |
 | [卡片_S0_事件时点机会普查_v1.md](卡片_S0_事件时点机会普查_v1.md)、[sql/S0_AB_事件时点机会普查.sql](sql/S0_AB_事件时点机会普查.sql) | 用户批准的事件时点改版：先建立全新币早期机会总体与固定病例队列抽样框；关系信号的实际触发时点留到 R1a |
