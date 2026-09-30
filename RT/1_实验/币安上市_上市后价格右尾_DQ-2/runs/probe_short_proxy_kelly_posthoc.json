@@ -1,0 +1,38 @@
+{
+ "lag1_H7_L1": {
+  "mean": 0.07,
+  "f_star": 0.44,
+  "G_event": 0.0175,
+  "N": 0.69,
+  "g_det": 2.54,
+  "g_kelly": 0.63,
+  "g_half_kelly": 0.45
+ },
+ "lag1_H30_L1": {
+  "mean": 0.115,
+  "f_star": 0.38,
+  "G_event": 0.0234,
+  "N": 2.97,
+  "g_det": 1.4,
+  "g_kelly": 0.28,
+  "g_half_kelly": 0.21
+ },
+ "lag1_H7_L2": {
+  "mean": 0.146,
+  "f_star": 0.39,
+  "G_event": 0.03,
+  "N": 0.69,
+  "g_det": 5.27,
+  "g_kelly": 1.09,
+  "g_half_kelly": 0.8
+ },
+ "lag1_H30_L2": {
+  "mean": 0.182,
+  "f_star": 0.24,
+  "G_event": 0.0222,
+  "N": 2.97,
+  "g_det": 2.21,
+  "g_kelly": 0.27,
+  "g_half_kelly": 0.2
+ }
+}
