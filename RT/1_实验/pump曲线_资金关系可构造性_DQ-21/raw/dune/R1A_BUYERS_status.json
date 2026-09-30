@@ -1,0 +1,48 @@
+{
+  "execution_id": "01M3RM4KP6AVWRWT4RQW1R1CMV",
+  "query_id": 8867450,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-30T07:40:49.735436Z",
+  "expires_at": "2026-12-29T07:41:01.698975Z",
+  "execution_started_at": "2026-09-30T07:40:51.013191933Z",
+  "execution_ended_at": "2026-09-30T07:41:01.698927559Z",
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "mint",
+      "ts",
+      "slot",
+      "txi",
+      "oix",
+      "iix",
+      "tx_id",
+      "usr",
+      "creator_field",
+      "is_buy",
+      "sol_amt"
+    ],
+    "column_types": [
+      "varchar(6)",
+      "varchar",
+      "timestamp(3) with time zone",
+      "bigint",
+      "integer",
+      "integer",
+      "integer",
+      "varchar",
+      "varchar",
+      "varchar",
+      "boolean",
+      "double"
+    ],
+    "row_count": 74340,
+    "result_set_bytes": 16288911,
+    "total_row_count": 74340,
+    "total_result_set_bytes": 16288911,
+    "datapoint_count": 892080,
+    "pending_time_millis": 1277,
+    "execution_time_millis": 10685
+  },
+  "execution_cost_credits": 0.478264706
+}

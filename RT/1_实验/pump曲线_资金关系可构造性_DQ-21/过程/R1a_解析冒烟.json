@@ -1,0 +1,24 @@
+{
+ "coins": [
+  "3EuefWfzbkXoE6YSxKJLzn8M7gWrKLW65LDTTEjUpump",
+  "wrxBhFHqdgYiYBjUrnHqU4Si5j59cWuocG32HNspump",
+  "28ZB8XufMp87CAwBVRvo1dHGicVB6CyMysryqY6qpump",
+  "8iyxKLAc8c3fZt6udcVJ9DA9uGcYYZgdfDHms7VZpump",
+  "9PoGmWKbQNLWYynwNVGNXireSs7KcCPHikDwJRd4pump",
+  "3izvF4HcyYY4RXLyEBDHUNjjb4n2jZFfys7Dtw6Upump",
+  "EVY4xJ3ytMHa77sjgs2uVj7fgXj1ha98QSQxPadApump",
+  "EYEyyarU2mpWCTjEU5j2ezk2QEvCcr6SFMukc7Vjpump",
+  "BvVumYuqfiMty43uJNU8keYmnVaXJzEhy9t1kRe8pump",
+  "ARYoDE9aaS4u7N3xfRysHwSAbY3bVFGHq5eGi3NuyYM6"
+ ],
+ "stats": {
+  "creator_page": 10,
+  "program_account": 1,
+  "buyers": 184,
+  "full_same": 184,
+  "fund_same": 184,
+  "light_resolved": 60,
+  "full_resolved": 60
+ },
+ "mismatches": []
+}
