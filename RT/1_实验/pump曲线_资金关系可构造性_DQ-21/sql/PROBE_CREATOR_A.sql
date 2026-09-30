@@ -5076,7 +5076,7 @@ cr_all AS (
         mint,
         "user" AS dev,
         creator AS creator_field,
-        tx_signer AS signer,
+        evt_tx_signer AS signer,
         evt_block_time AS t,
         evt_block_slot AS slot,
         evt_tx_index AS txi,
