@@ -7,6 +7,8 @@
 /.env
 .env
 /1.md
+# 第二模型意见收件箱：用户每次覆盖，执行模型存档进 RT/3_审计/ 后处理（09-30）
+/review.md
 __pycache__/
 node_modules/
 # 付费原始数据（Helius 逐笔）：不进 git，备份在 D:\ancillary_backup\
