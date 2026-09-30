@@ -1,0 +1,40 @@
+{
+  "execution_id": "01M3R462JKESATEQAQCDWSWZTJ",
+  "query_id": 8864910,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-09-30T03:02:00.534328Z",
+  "expires_at": "2026-12-29T03:02:21.955821Z",
+  "execution_started_at": "2026-09-30T03:02:01.980890455Z",
+  "execution_ended_at": "2026-09-30T03:02:21.955603899Z",
+  "result_metadata": {
+    "column_names": [
+      "mint",
+      "dev",
+      "creator_field",
+      "signer",
+      "created_at_evt",
+      "created_slot",
+      "n_launch_30d",
+      "n_grad_30d"
+    ],
+    "column_types": [
+      "varchar",
+      "varchar",
+      "varchar",
+      "varchar",
+      "timestamp(3) with time zone",
+      "bigint",
+      "bigint",
+      "bigint"
+    ],
+    "row_count": 5504,
+    "result_set_bytes": 1142973,
+    "total_row_count": 5504,
+    "total_result_set_bytes": 1142973,
+    "datapoint_count": 44032,
+    "pending_time_millis": 1446,
+    "execution_time_millis": 19974
+  },
+  "execution_cost_credits": 0.358852942
+}
