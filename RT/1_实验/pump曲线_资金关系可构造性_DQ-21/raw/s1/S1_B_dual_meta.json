@@ -1,0 +1,20 @@
+{
+  "query_id": 8863701,
+  "execution_id": "01M3QTVFHBKJMT8YNFQS16BC4X",
+  "execution_cost_credits": 11.091911765,
+  "rows": 5504,
+  "columns": 66,
+  "result_bytes": 2804899,
+  "file": "RT/1_实验/pump曲线_资金关系可构造性_DQ-21/raw/s1/S1_B_dual.csv.gz",
+  "download_sha256": "922702ae87be40f1ca72eeb744fbd78abd096b67b97a1120a94fec95bee3dfb1",
+  "checks": {
+    "rows": 5504,
+    "rows_expected": 5504,
+    "rows_ok": true,
+    "ncols": 66,
+    "cols_ok": true,
+    "mint_unique": true,
+    "mint_set_eq_S0": true,
+    "S0_n": 5504
+  }
+}
