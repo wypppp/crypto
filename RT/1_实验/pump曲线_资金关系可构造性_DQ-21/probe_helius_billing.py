@@ -35,7 +35,7 @@ def plan() -> list[dict]:
 
 def main() -> None:
     HL.STATE["cap"] = N_REQUESTS * HL.CREDITS_PER_CALL
-    started = dt.datetime.now(dt.UTC).isoformat()
+    started = dt.datetime.now(dt.timezone.utc).isoformat()
     calls, keys = [], []
     for r in plan():
         if HL.STATE["calls"] >= N_REQUESTS:
@@ -73,7 +73,7 @@ def main() -> None:
                 "same_as_r0": pages == int(r["pages"]) and got == int(r["n_tx"]),
             }
         )
-    finished = dt.datetime.now(dt.UTC).isoformat()
+    finished = dt.datetime.now(dt.timezone.utc).isoformat()
     n_ok = len(calls)
     per100 = sum(max(10, 10 * math.ceil(c["n_tx"] / 100)) for c in calls)
     out = {
