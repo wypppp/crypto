@@ -13,6 +13,7 @@
 | [卡片_R1a.md](卡片_R1a.md)、[Q_cex_all.sql](Q_cex_all.sql) | R1a 提案（317 对开发筛；09-27 退回，待用户选定决策时刻后重写）与交易所地址全表查询（query 8844536，0.0513 credits，166 个地址，`raw/dune/Q_cex_all.csv.gz`） |
 | [卡片_R1a_v2_赢家富集检验.md](卡片_R1a_v2_赢家富集检验.md) | R1a v2：入场前可见的资金关系（Zero/Light/Full 三层）能否把 ≥2 倍币富集到约 5 倍；小样本先行（用户 09-28 批准方向，未取数） |
 | [build_s1_dual_sql.py](build_s1_dual_sql.py)、`sql/S1_{SMOKE_20260601,A,B}_固定退出基础回收_双口径.sql`、[check_s1_dual.py](check_s1_dual.py) | S1 双口径：在执行方已验证的修正版上只追加乐观口径 B 列（`*_b`），自检“删去新增行与源文件逐字相同”；单日结果回来后用核对脚本与旧、新两次单日结果逐币比对 |
+| [S1_AB_交接包.md](S1_AB_交接包.md)、[试验记录.csv](试验记录.csv)、[sql/MCP_SMOKE_20260601.sql](sql/MCP_SMOKE_20260601.sql) | S1 双口径三条查询的 Dune 交接包（query 8863699/8863700/8863701 已建未执行；sha256、预期行列与费用依据；文末为 Dune 官方 MCP 冒烟记录，通过）；本实验试验记录表；冒烟 SQL，结果 `raw/dune/MCP_SMOKE_20260601.csv.gz` |
 | [卡片_S0_事件时点机会普查_v1.md](卡片_S0_事件时点机会普查_v1.md)、[sql/S0_AB_事件时点机会普查.sql](sql/S0_AB_事件时点机会普查.sql) | 用户批准的事件时点改版：先建立全新币早期机会总体与固定病例队列抽样框；关系信号的实际触发时点留到 R1a |
 | [make_s0_sql.py](make_s0_sql.py)、[fetch_s0.py](fetch_s0.py)、[analyze_s0.py](analyze_s0.py) | 生成含 105 个 R0 核验币的运行版 SQL、安全下载小结果、核对样本与总体计数 |
 | [make_s0_smoke.py](make_s0_smoke.py)、[sql/S0_SMOKE_20260601.sql](sql/S0_SMOKE_20260601.sql)、[过程/S0_smoke_既有对账基准.md](过程/S0_smoke_既有对账基准.md) | 从冻结运行版机械派生的单日诊断查询；先验对账 13 个 R0 样本的 `t3_s`，只验语义、扫描与费用，不把结果当研究证据 |
