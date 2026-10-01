@@ -1,0 +1,36 @@
+{
+  "execution_id": "01M3WVDSM99QXQY3MGXZ415M83",
+  "query_id": 8880755,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T23:05:08.490022Z",
+  "expires_at": "2026-12-30T23:09:28.135474Z",
+  "execution_started_at": "2026-10-01T23:05:10.190574066Z",
+  "execution_ended_at": "2026-10-01T23:09:28.135465175Z",
+  "result_metadata": {
+    "column_names": [
+      "mint",
+      "usr",
+      "tip_sol",
+      "n_tip",
+      "tok_out",
+      "tok_in"
+    ],
+    "column_types": [
+      "varchar",
+      "varchar",
+      "double",
+      "bigint",
+      "double",
+      "double"
+    ],
+    "row_count": 407527,
+    "result_set_bytes": 43292102,
+    "total_row_count": 407527,
+    "total_result_set_bytes": 43292102,
+    "datapoint_count": 2445162,
+    "pending_time_millis": 1700,
+    "execution_time_millis": 257944
+  },
+  "execution_cost_credits": 71.155441177
+}

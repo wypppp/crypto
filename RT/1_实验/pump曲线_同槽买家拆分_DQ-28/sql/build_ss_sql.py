@@ -184,26 +184,22 @@ def link() -> str:
 cell AS (
     SELECT DISTINCT mint, usr, dev, created_at FROM tt
 ),
-nt AS (
-    SELECT c.mint, c.usr, t.amount_display AS amt, 1 AS dev_to_usr, t.block_time, c.created_at
-    FROM cell c
-    JOIN tokens_solana.transfers t ON t.from_owner = c.dev AND t.to_owner = c.usr
-    WHERE t.block_date BETWEEN DATE '{LB}' AND DATE '{C1}'
-      AND t.token_version = 'native' AND t.action = 'transfer'
+pr AS (
+    SELECT dev AS src, usr AS dst, mint, usr, created_at, 1 AS dev_to_usr FROM cell
     UNION ALL
-    SELECT c.mint, c.usr, t.amount_display, 0, t.block_time, c.created_at
-    FROM cell c
-    JOIN tokens_solana.transfers t ON t.from_owner = c.usr AND t.to_owner = c.dev
-    WHERE t.block_date BETWEEN DATE '{LB}' AND DATE '{C1}'
-      AND t.token_version = 'native' AND t.action = 'transfer'
+    SELECT usr, dev, mint, usr, created_at, 0 FROM cell
 )
 SELECT
-    mint, usr,
+    pr.mint, pr.usr,
     count(*) AS n_link,
-    sum(amt) AS link_sol,
-    sum(dev_to_usr) AS n_dev_to_usr
-FROM nt
-WHERE block_time <= created_at AND block_time >= created_at - INTERVAL '7' DAY
+    sum(t.amount_display) AS link_sol,
+    sum(pr.dev_to_usr) AS n_dev_to_usr
+FROM tokens_solana.transfers t
+JOIN pr ON t.from_owner = pr.src AND t.to_owner = pr.dst
+WHERE t.block_date BETWEEN DATE '{LB}' AND DATE '{C1}'
+  AND t.token_version = 'native' AND t.action = 'transfer'
+  AND t.block_time <= pr.created_at
+  AND t.block_time >= pr.created_at - INTERVAL '7' DAY
 GROUP BY 1, 2
 """
     )

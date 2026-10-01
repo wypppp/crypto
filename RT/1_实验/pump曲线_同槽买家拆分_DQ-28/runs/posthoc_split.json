@@ -1,0 +1,63 @@
+{
+ "I_curve_only_coins": {
+  "n_cells": 73213,
+  "n_wallets": 9313,
+  "n_coins": 22239,
+  "pay_sol": 92261.4,
+  "fee_tip_sol": 747.6,
+  "R_before_costs": 1.2074,
+  "R_full": 1.1977,
+  "R_full_ci95_by_wallet": [
+   1.1685,
+   1.2301
+  ],
+  "R_full_ci95_by_coin": [
+   1.1842,
+   1.2116
+  ],
+  "net_full_sol": 18389.4,
+  "top10_wallets_share_of_positive_net": 0.082,
+  "share_cells_R_gt1": 0.4097
+ },
+ "I_migrated_coins": {
+  "n_cells": 2732,
+  "n_wallets": 1197,
+  "n_coins": 785,
+  "pay_sol": 485069.2,
+  "fee_tip_sol": 213.6,
+  "R_before_costs": 0.2734,
+  "R_full": 0.2733,
+  "R_full_ci95_by_wallet": [
+   0.1981,
+   0.4146
+  ],
+  "R_full_ci95_by_coin": [
+   0.2151,
+   0.3389
+  ],
+  "net_full_sol": -352654.7,
+  "top10_wallets_share_of_positive_net": 0.2429,
+  "share_cells_R_gt1": 0.6658
+ },
+ "ALL_curve_only_coins": {
+  "n_cells": 93914,
+  "n_wallets": 11548,
+  "n_coins": 25248,
+  "pay_sol": 135700.1,
+  "fee_tip_sol": 805.9,
+  "R_before_costs": 1.1331,
+  "R_full": 1.1265,
+  "R_full_ci95_by_wallet": [
+   1.0998,
+   1.1562
+  ],
+  "R_full_ci95_by_coin": [
+   1.1133,
+   1.1398
+  ],
+  "net_full_sol": 17261.3,
+  "top10_wallets_share_of_positive_net": 0.1111,
+  "share_cells_R_gt1": 0.374
+ },
+ "coins_migrated_share": 0.032
+}

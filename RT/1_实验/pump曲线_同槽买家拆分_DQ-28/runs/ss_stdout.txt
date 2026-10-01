@@ -1,0 +1,115 @@
+{
+ "n_cells": 98090,
+ "classes": {
+  "B": {
+   "n_cells": 321,
+   "n_wallets": 76,
+   "n_coins": 291,
+   "pay_sol": 102569.1,
+   "fee_sol": 0.01,
+   "tip_sol": 0.0,
+   "recv_sol": 389.48,
+   "liq_sol": 20.79,
+   "R_before_costs": 0.004,
+   "R_full": 0.004,
+   "net_full_sol": -102158.84,
+   "R_full_ci95_by_wallet": [
+    0.0007,
+    0.0186
+   ],
+   "R_full_ci95_by_coin": [
+    0.0008,
+    0.0102
+   ],
+   "top10_wallets_net_sol": 317.97,
+   "share_cells_R_gt1": 0.1215
+  },
+  "L": {
+   "n_cells": 16478,
+   "n_wallets": 817,
+   "n_coins": 7071,
+   "pay_sol": 29727.26,
+   "fee_sol": 34.39,
+   "tip_sol": 1.58,
+   "recv_sol": 29517.61,
+   "liq_sol": 30.02,
+   "R_before_costs": 0.994,
+   "R_full": 0.9928,
+   "net_full_sol": -215.59,
+   "R_full_ci95_by_wallet": [
+    0.9343,
+    1.0701
+   ],
+   "R_full_ci95_by_coin": [
+    0.94,
+    1.0651
+   ],
+   "top10_wallets_net_sol": 1996.85,
+   "share_cells_R_gt1": 0.236
+  },
+  "X": {
+   "n_cells": 5346,
+   "n_wallets": 2185,
+   "n_coins": 1617,
+   "pay_sol": 36814.15,
+   "fee_sol": 25.87,
+   "tip_sol": 12.53,
+   "recv_sol": 26071.83,
+   "liq_sol": 287.6,
+   "R_before_costs": 0.716,
+   "R_full": 0.7153,
+   "net_full_sol": -10493.11,
+   "R_full_ci95_by_wallet": [
+    0.5486,
+    0.9254
+   ],
+   "R_full_ci95_by_coin": [
+    0.5909,
+    0.8647
+   ],
+   "top10_wallets_net_sol": 5711.61,
+   "share_cells_R_gt1": 0.2714
+  },
+  "I": {
+   "n_cells": 75945,
+   "n_wallets": 9954,
+   "n_coins": 23024,
+   "pay_sol": 577330.66,
+   "fee_sol": 735.88,
+   "tip_sol": 225.27,
+   "recv_sol": 243971.16,
+   "liq_sol": 55.31,
+   "R_before_costs": 0.4227,
+   "R_full": 0.422,
+   "net_full_sol": -334265.34,
+   "R_full_ci95_by_wallet": [
+    0.3167,
+    0.6152
+   ],
+   "R_full_ci95_by_coin": [
+    0.3674,
+    0.4843
+   ],
+   "top10_wallets_net_sol": 14396.72,
+   "share_cells_R_gt1": 0.4189
+  },
+  "ALL": {
+   "n_cells": 98090,
+   "n_wallets": 12396,
+   "n_coins": 26082,
+   "pay_sol": 746441.16,
+   "fee_sol": 796.15,
+   "tip_sol": 239.37,
+   "recv_sol": 299950.08,
+   "liq_sol": 393.72,
+   "R_before_costs": 0.4024,
+   "R_full": 0.4018,
+   "net_full_sol": -447132.89
+  }
+ },
+ "reading": "读法 1（停）：独立同槽买家全成本回收上界 <1",
+ "coverage": {
+  "fee_rows_found_share": 1.0,
+  "cells_with_amm_trades": 2853
+ }
+}
