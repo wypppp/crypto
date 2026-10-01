@@ -1,0 +1,112 @@
+{
+ "s1_coins": 695,
+ "s1_with_t3": 693,
+ "matched": 693,
+ "t3_equal": 693,
+ "entry_clock_equal": 693,
+ "follow_exit_a": {
+  "compared": 693,
+  "within_tol": 667,
+  "curve_only_within_tol": "662/662",
+  "max_rel_err": 0.0003378513120791477,
+  "max_rel_err_curve_only": 1.9523195747445256e-15,
+  "null_mismatch": 0
+ },
+ "b50_a": {
+  "compared": 545,
+  "within_tol": 505,
+  "unmigrated_within_tol": "367/367",
+  "max_rel_err": 0.00018978633152319486,
+  "max_rel_err_migrated": 0.00018978633152319486
+ },
+ "follow_exit_b": {
+  "compared": 693,
+  "within_tol": 667,
+  "curve_only_within_tol": "662/662",
+  "max_rel_err": 0.0003378513120791477,
+  "max_rel_err_curve_only": 9.310375867029498e-16,
+  "null_mismatch": 0
+ },
+ "b50_b": {
+  "compared": 545,
+  "within_tol": 505,
+  "unmigrated_within_tol": "367/367",
+  "max_rel_err": 0.00018978633152319486,
+  "max_rel_err_migrated": 0.00018978633152319486
+ },
+ "b50_stop_clock_equal": "545/545",
+ "mismatch_examples": [
+  {
+   "mint": "HUj5TrhzDEmaAcacEPoFgNQTXkHjrkRLX3xKtkepump",
+   "ret_d5_30s": 1.4776814048577724,
+   "sell_a_d5": 0.7387407030423289,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  },
+  {
+   "mint": "qKnAEPCLEBjTqhXop9NMwJsHsfU1YsLtbBxzbCzpump",
+   "ret_d5_30s": 1.0791091280703,
+   "sell_a_d5": 0.539408947090526,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  },
+  {
+   "mint": "DFRZt2HRcqgHDZ7BZfBnvbD4bvYxrt3e9UmXywcApump",
+   "ret_d5_30s": 0.7295564480416689,
+   "sell_a_d5": 0.3647676926500905,
+   "xvenue5": 1.0,
+   "e_venue_b": 0.0
+  },
+  {
+   "mint": "Zr8bD2HCLFCRzV1p12unqqmUJYcCKSs649Qvtjhpump",
+   "ret_d5_30s": 0.9644854672534696,
+   "sell_a_d5": 0.4821125840656526,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  },
+  {
+   "mint": "13aPGePu9iGNv7rp7imyYji41p95LBFTweYwFMxmpump",
+   "ret_d5_30s": 1.4929568493664125,
+   "sell_a_d5": 0.7463758314654255,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  },
+  {
+   "mint": "zGyPFLyRbKBTbAaGd3PuWZEKQ13WENyAk4aGWPfpump",
+   "ret_d5_30s": 1.168881503237814,
+   "sell_a_d5": 0.5842693285719204,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  },
+  {
+   "mint": "4hHzQSjiKJspR3nmV8wTicjaLuUuSYMddVSybQcJs5Nb",
+   "ret_d5_30s": 6.575296495537536,
+   "sell_a_d5": 3.287345814752551,
+   "xvenue5": 1.0,
+   "e_venue_b": 0.0
+  },
+  {
+   "mint": "3Cj1XSskaWrKMo2xN4ucnUi94JFZXTSePGAv4sZApump",
+   "ret_d5_30s": 0.9836038248585698,
+   "sell_a_d5": 0.491729909906925,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  },
+  {
+   "mint": "CxcjnqoWxtyx8sysj8qeQVoxDxhJXukLsYVGVQPLpump",
+   "ret_d5_30s": 1.1006244933096156,
+   "sell_a_d5": 0.5502319798041091,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  },
+  {
+   "mint": "b8cf5sEXe5jXLB5jgPtZUwwNGSEyTXhudra2zhipump",
+   "ret_d5_30s": 0.9324955093621906,
+   "sell_a_d5": 0.4661789471349787,
+   "xvenue5": 1.0,
+   "e_venue_b": 1.0
+  }
+ ],
+ "pass": true,
+ "pass_rule": "曲线状态逐币相对误差 ≤1e-6；PumpSwap（迁移币）因费率取法不同单列（卡片 §7）"
+}

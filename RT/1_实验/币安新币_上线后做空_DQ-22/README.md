@@ -14,6 +14,7 @@
 | [永续复现_结果.md](永续复现_结果.md) | 永续复现结果，先读这个 |
 | [卡片_样本外_v2.md](卡片_样本外_v2.md)、[样本外_结果.md](样本外_结果.md)、[oos_replicate.py](oos_replicate.py) | 样本外：币安只上 U 本位永续、不在现货首发全集中的 199 个币 |
 | [卡片_前向T1_v3.md](卡片_前向T1_v3.md)、[t1_forward.py](t1_forward.py) | 前向 T1：事件构造（公告标题＋现货首日）、窗口推导、评分；`runs/t1_validate.json`、`t1_replay.json`、`t1_rate.json`、`t1_plan.json` 为冻结前核验 |
+| [A1_外部研究审计_binance-listing-study.md](A1_外部研究审计_binance-listing-study.md) | 10-01 案头审计：外部研究只能作宽类现象的旁证（T3），不是窄类样本外证据，不能据此缩短前向窗口；逐事件复跑因含 55 条留出未做 |
 | [perp_replicate.py](perp_replicate.py) | 取数与计算（0 credits，公开归档） |
 | [试验记录.csv](试验记录.csv) | 只追加：已看过的 18 格与每次评估 |
 | `runs/` | `events.csv`（逐事件状态与回收）、`analysis.json` |
