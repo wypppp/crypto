@@ -1,0 +1,44 @@
+{
+  "execution_id": "01M3VA37T7ZQYT5DHDX99YN9HZ",
+  "query_id": 8875168,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T08:43:02.345941Z",
+  "expires_at": "2026-12-30T08:43:16.95404Z",
+  "execution_started_at": "2026-10-01T08:43:03.738446985Z",
+  "execution_ended_at": "2026-10-01T08:43:16.95387662Z",
+  "result_metadata": {
+    "column_names": [
+      "usr",
+      "mint",
+      "project",
+      "n_tx",
+      "tok_b",
+      "tok_s",
+      "sol_in",
+      "sol_out",
+      "usd_other_in",
+      "usd_other_out"
+    ],
+    "column_types": [
+      "varchar",
+      "varchar",
+      "varchar",
+      "bigint",
+      "double",
+      "double",
+      "double",
+      "double",
+      "double",
+      "double"
+    ],
+    "row_count": 525862,
+    "result_set_bytes": 80692734,
+    "total_row_count": 525862,
+    "total_result_set_bytes": 80692734,
+    "datapoint_count": 5258620,
+    "pending_time_millis": 1392,
+    "execution_time_millis": 13215
+  },
+  "execution_cost_credits": 8.437794118
+}

@@ -1,0 +1,21 @@
+{
+ "label": "REG_20260601",
+ "n_coins": 26655,
+ "n_coins_t3_le300": 11068,
+ "share_t3_le300": 0.4152,
+ "n_migrated": 211,
+ "n_wallets_eligible": 21470,
+ "closure_unmigrated": {
+  "n": 26444,
+  "rel_err_median": 7.946139531086403e-17,
+  "rel_err_p99": 5.1091107901980796e-15,
+  "n_gt_1pct": 0
+ },
+ "t3_vs_s1": {
+  "n_s1": 695,
+  "found": 693,
+  "equal": 695,
+  "abs_diff_max": 0.0,
+  "diff_examples": []
+ }
+}

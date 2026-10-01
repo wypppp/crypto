@@ -1,0 +1,206 @@
+/* DQ-26 第一步·G1b 抽样；由 sql/build_sample_sql.py 生成。前 50 个实体的钱包 146 个，
+   每个实体抽 20 笔成交交易（xxhash64(tx_id||'20261001') 排序）。只读 2026-08-03～2026-08-16 的分区。 */
+WITH
+sel(usr, entity) AS (
+    SELECT usr, entity FROM (VALUES
+        ('135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('236jX1xJfX7vP9KuXy3uiuE4Y77wr4mmMue5i85eiGaZ', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('2UmkmsL7myuAX6NbYU2UyDiKR5g4w7qcJCGaNKsZnvcy', '2UmkmsL7myuAX6NbYU2UyDiKR5g4w7qcJCGaNKsZnvcy'),
+        ('2X6rVA7KuqEdmftbzyoCVRSWnSbqdtdeSzUS8BnUhfFy', '2X6rVA7KuqEdmftbzyoCVRSWnSbqdtdeSzUS8BnUhfFy'),
+        ('2ZVMUZteEmL6NQ1oDimiWFWTrUALp2G325X4EDFFRkXV', '2ZVMUZteEmL6NQ1oDimiWFWTrUALp2G325X4EDFFRkXV'),
+        ('2aBqiwtWi3oxJ9DFLytGieRTu4YaxpuCUrkQmpC7Tyus', '2aBqiwtWi3oxJ9DFLytGieRTu4YaxpuCUrkQmpC7Tyus'),
+        ('2u2tU5RgCBdphiRFpMWYtYBtnmvz2aG7QJ93U4C8NfdD', '2u2tU5RgCBdphiRFpMWYtYBtnmvz2aG7QJ93U4C8NfdD'),
+        ('31HPt5v1zLzBM9CvfnHj467e1q7bvieJk8845kP6M8HF', '31HPt5v1zLzBM9CvfnHj467e1q7bvieJk8845kP6M8HF'),
+        ('32XV2kVEEeTDThf4Q6CT6s1Rj9oCXP49ftPHdy9kJrP1', '32XV2kVEEeTDThf4Q6CT6s1Rj9oCXP49ftPHdy9kJrP1'),
+        ('344cpTXRKLraLapQ1FCPJErPuieCab8ucxncehU7zqD3', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('35dqGKaadurAZegL6Kn3SHRBfAh6mHU7x5W4P2DYdovT', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('3ALf59Yc96VJFHGT599DXvi6gNKh2kQwcG4f7PnDH2k4', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('3MGGxpGBQDRtjtNpZhk3NQGrmrJRnGTgVzfrNyZuhgxN', '3MGGxpGBQDRtjtNpZhk3NQGrmrJRnGTgVzfrNyZuhgxN'),
+        ('3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('3eVEdULqvgtS12hTXeHeBECPyKMwCygo3s4Lc9MVSyYy', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('3neM8FZ2nJK1P3MuaQEDQKF5Vs9tXe85dJjbZpyuTuJy', '3neM8FZ2nJK1P3MuaQEDQKF5Vs9tXe85dJjbZpyuTuJy'),
+        ('3p3pFJqJK2A8wFfYtfSEiemFe9KzaPA1G9GkZdMCx8u7', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('3wB1dT7Bc9as5oceJHVAQ2fS6GR6J8WmJBgH3671vSUE', '3wB1dT7Bc9as5oceJHVAQ2fS6GR6J8WmJBgH3671vSUE'),
+        ('3wEvLZkv9HScezTauYVPvAgYHat3PJziA6CHUrNBKknj', '3wEvLZkv9HScezTauYVPvAgYHat3PJziA6CHUrNBKknj'),
+        ('3yhbf9PB63KEiC21oUapjGYtB5ibxuk27uFd44G946n7', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('42XQtUAskX2ynmDDRUbBnrw6zNvXXeCyotdxEqyV2ZTj', '31HPt5v1zLzBM9CvfnHj467e1q7bvieJk8845kP6M8HF'),
+        ('4bmKm96NWgewGShedE85TS9TjYYDVYjAEbFL5hK3Kh4s', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('4niCnz6JgFf6HFmi4zG9E9W1fqTFwvavJNp5QZTorLdp', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('4qbJH9zkQYyR6rLqo4N8rkpvepoeJpewSp39pFwmBL2H', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('4sraryXgNHVdeFuPDabBTjSfvxU58UZTz1c71ShPK56E', '4sraryXgNHVdeFuPDabBTjSfvxU58UZTz1c71ShPK56E'),
+        ('4z8NksQVKosHL99AJadPw8U21BeoZ3WX7nwdrVyLTBwM', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('5QwZhBxQs45TyF4NVFucQwHwD6MswL7S9q4iFo2hdyb4', '5QwZhBxQs45TyF4NVFucQwHwD6MswL7S9q4iFo2hdyb4'),
+        ('5enFLaV3ZBNhU8M5CdVGMeNSMjbcjFERAxgwoi6DSDL', '5enFLaV3ZBNhU8M5CdVGMeNSMjbcjFERAxgwoi6DSDL'),
+        ('5huujHCxeNiXDsiojAZWyzQkebYAbUpULaWy5Vzh7bGL', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('5k1FHzqdgX85md8iAV9NFnFmY2Myk8aY1VVM7RHskqeM', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('5kPoHufB5fkuB8y1nRdYo4YMM5sdL9XJhcRDW2VHVnUd', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('5mmkeLVVLqjNEC6UU8J8z8XAjk6fRMVqTnGJxtvbup3h', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('5qFyx4UQg5dwW66JTXSkTn4Pvwu8YA37P1FkUPNWfNEw', '5qFyx4UQg5dwW66JTXSkTn4Pvwu8YA37P1FkUPNWfNEw'),
+        ('5srEZNTkdSB4bm9n62Qp7RYWhxyJRg3rSksGu58u3G9t', '3wB1dT7Bc9as5oceJHVAQ2fS6GR6J8WmJBgH3671vSUE'),
+        ('629VCB8Kxp3NBV7BGNoYRFks4SsBY1Ku1sx35GTLThYm', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('6GAx18kw1gKN4bankfvoUv3oVdj2AVrd3BAtWUqfUDYu', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('6JjsD628YyuZNfvaZmjwkCioQGpThRP7bPrVwbBcg9bq', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('6KEjEtqtqtkYNUtxu37h9jipx1oZ2gTJCyXdrXRuJDaU', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('6LSw2UF2BA2Jckdv6LRoHh9frFLJpoiZW2dwTTgRjNwb', '6LSw2UF2BA2Jckdv6LRoHh9frFLJpoiZW2dwTTgRjNwb'),
+        ('6MAeDcSNcDUQjg5XaBeRZd1xwE3o53bEUMJno7KcUsfk', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('6N3PPe9kqfyCPRKT8h6WSddJBfugtcKVkB5JX6868zvp', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('6Y1yzrVBtyfpDDgDQqTB9sRTqh5SHiJnjkbVnmyruXAk', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('6fDmfTP8WwceuzpjdcsQov9FyRz8mTMTZzm1uEg1ViK1', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('6gbRF3iu89hpq6ewz2u53vWvnijttkNwvmQQwsr42fcS', '6gbRF3iu89hpq6ewz2u53vWvnijttkNwvmQQwsr42fcS'),
+        ('6xpZ6m7iWXTT2daNtBXPZa73iwFLVEsiJdHYMYtdf7kP', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('73zm5te9V3yLoiESNy1qC7Trq2yXP8zMfK19HHNdiZFr', '73zm5te9V3yLoiESNy1qC7Trq2yXP8zMfK19HHNdiZFr'),
+        ('7Jcd536CXi6XVShSnu4Z1WYK3yDSHe2ejZDT2Rn5UXyT', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('7m1b6bPcddT34575Hd4SZavB7oLUkzsDjRciUCUmHyXo', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('7rKgXpowBVH2v8wjKcvSqdqaky5m5QFpL3qMixw9jbL', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('7ufmve7ZSFCzuNcKRunYrGtyb2Ka1MXzkWwf7jZhVsmL', '7ufmve7ZSFCzuNcKRunYrGtyb2Ka1MXzkWwf7jZhVsmL'),
+        ('7ymbHaQptDPSNvkMFGQdJ2niEsFgUD6GfGiYmb76pjAH', '7ymbHaQptDPSNvkMFGQdJ2niEsFgUD6GfGiYmb76pjAH'),
+        ('81RWVKqrgKGmP11esLs8o5p2GJD3J92zKXeWnvdm5QTL', '81RWVKqrgKGmP11esLs8o5p2GJD3J92zKXeWnvdm5QTL'),
+        ('88upcVeh8KEAG7nun3DtSEMJuCqi7YfqUhG7vzonQz3F', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('88wCwQCWYHU61vXDBFswSp9LcMwjH6uitnriYswtmosV', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('8Ci6sU6TYsL5GVUYxfRLXPvivtFpKXXhvZw6viS3gB8u', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('8HcYptCBAaPFWkmupiSAmysZ6Z8jB7N1c4YhVjhX7zbg', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('8Z7WThW881z3K6pVKkUBxmcKytyBAwoJNZFbnZ3o3bHF', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('8ii79M5ajgVAviT6Pn8Ex3pxtcKXNw4aQUZ2Qfz7WwGV', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('8kFF2gCpvaRWNRkaDQ9MndFuqymngTXwiQLxgDiG9Rw1', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('8yjJWPUhWfBRqh4bfQoGdf5Zj56iLtYnss18gVD6GoEu', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('93XWAYFzXa9paNnXMz6pB1Ti6hxidHupbKCdFDsR1Rbh', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('9JCgmqafGG7tnZiW3kBaynmmNXba1XEu3RConuGHX835', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('9Rito26QRmbLVJTx4iQUh62rJTzPFjkS319L5yjMS7mm', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('9TfTr7LkXYQ5W3ib7JXwzw6JeXFShg4YgRttrsoxqz1H', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('9kHEy3i8APPrKcTRJw7aJyXDKwevkvQo3Lbx7m46adcV', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('9kyzre4zUxNdD71DqysPGn6KebmHJoqYtd3AzP6MA97a', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('9oTWV5qnPNRaAPDmTiP8Gvebe4GcrjCHYKcUDm9YaNec', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('9zWbVh6Gx4sAq6Nv3MPmmBV5TGfd6F2Zhp4XGwyAmYtN', '9zWbVh6Gx4sAq6Nv3MPmmBV5TGfd6F2Zhp4XGwyAmYtN'),
+        ('9zm39oGQNs1KMRnD7Q2BbezKtoAs7wKMzgUVKSynKi1B', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('A4eLD8Jme4DgfZ2xCsiPnxcGjHfqLwPMD8bWKQgBMLsu', 'A4eLD8Jme4DgfZ2xCsiPnxcGjHfqLwPMD8bWKQgBMLsu'),
+        ('A9nEmy5rjeGCMWFo39rhyuXeeoVaAv98u5D3tzdKwmd1', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('AHPFBcVbVBu7s7YHgx93tq8BXBYoZuWwLeGVKnsmCKvW', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('ARxCck4HSRKopb6KnWmtMATmMknQvDpXZvf2cBQRyiaN', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('AU12PsGK3sz1ZPQ8vRgXZXb4t6KgvzWMtA3dRMvsTTyP', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('AXTEMsgorjcHFbsFXs8d86fA9YiSTRw7YLM98JPpiXbo', '5enFLaV3ZBNhU8M5CdVGMeNSMjbcjFERAxgwoi6DSDL'),
+        ('AYNYUwcz5cBjbhrfd5GCuLVzXLDqhSRFdWKa2NQ48byW', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('AaXkcUY8e7RbaFk62gypiQ15JpWgCSKJ1J9mAd59LJiG', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('ArpFRpuzjvzzsnUm6NsZCKKUKmQaRURq2iiv7QFpyqBL', 'ArpFRpuzjvzzsnUm6NsZCKKUKmQaRURq2iiv7QFpyqBL'),
+        ('Au9ZiT6FjaDjFghvbUJb3VbZzKkGmNcKWrJTAxMMsABY', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('AyAHoyzsSFWUhnNJdfNeDUfxn9kB4pLSibkSgkxyxnKc', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('B5ek2LjoozkLPgEdLzqHHmWrR9UqJuGoyp7L7uAvgnVP', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('BCMbtr3X7JzSvRxceeERkJMuJq4gEmxy123S2vfBvttv', 'BCMbtr3X7JzSvRxceeERkJMuJq4gEmxy123S2vfBvttv'),
+        ('BTDbDTSho5nuyhV7z6mUTzQg9EiURiMEWk33JdJYUX6', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('BWzwdMydAm5ZpxKGVkD75datXmEYpA3tPDQ7nvybAuHQ', '3wB1dT7Bc9as5oceJHVAQ2fS6GR6J8WmJBgH3671vSUE'),
+        ('BbHjD6y2cwzNefXq1krkUyuDVbdkCzVP6RshSeAbvoxZ', 'BbHjD6y2cwzNefXq1krkUyuDVbdkCzVP6RshSeAbvoxZ'),
+        ('BwsEFashuP7ufEqYBi4Zr8eBWHFbGL5E8AvVRsJpoTQc', '81RWVKqrgKGmP11esLs8o5p2GJD3J92zKXeWnvdm5QTL'),
+        ('C32zAgk1ESr1u7WHBSjroBwETNkMvQnfwu66UhHPn6Gu', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('C3irJJnfcioeyFQ7nhNQrEV9jShQiqfFKG7bvcf11JwH', 'C3irJJnfcioeyFQ7nhNQrEV9jShQiqfFKG7bvcf11JwH'),
+        ('C57pQk1nBnyhK2jTjb41qjwdv11sj72vJrH6c3FXgpSQ', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('CEmNJy9m9QmBYQKUyHFtdFQNo3yUGhtSU8bzo88Dg46V', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('CKjrQ9nQNEFQp3PZ9oVrHXeiobxxyxAzsjyDyabHvnwp', 'CKjrQ9nQNEFQp3PZ9oVrHXeiobxxyxAzsjyDyabHvnwp'),
+        ('CQyBKhJMvj32irbUGw5i7Bomj6SgxHZMcsnb4HbXM3Mc', 'CQyBKhJMvj32irbUGw5i7Bomj6SgxHZMcsnb4HbXM3Mc'),
+        ('CXTC4M5W7Ls1s1be5rHhkRtzgE4k8N4iypxJDp4bEQq3', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('CfE3PpB4cyVbDCarQTYVFAfSuLLCW2iZEL79mKf4qva2', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('CioasYXrvrASharcrnW7ZmcWQM6ZvUvRnpJEqJ3tQkY8', '3wB1dT7Bc9as5oceJHVAQ2fS6GR6J8WmJBgH3671vSUE'),
+        ('CqjfeCdULLGMSHn4FTt5fwftLD3GMDWQfLcLJ9kDoq7w', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('CwDT38indM1jwMWjY52y88itB6PUA44RauwjdX9R1j8a', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('D7W2emckCA6A6ErJmfZiUpZYYDessVrUb9zbgo85zy3g', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('DHUCRj3A2xc6zCW52DYpGbJ6f1Sg1yN5UUzBdaXKxXDv', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('DQ4i3ZZvtJpKdtrPU94oJn99N8tx4XtsmmRd9k9MA5vk', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('DYJTG67gKdYfjRQvfemGzLrGidmPbLT5EPTnJ5RuVrJk', 'DYJTG67gKdYfjRQvfemGzLrGidmPbLT5EPTnJ5RuVrJk'),
+        ('DgAX3kHhszsyNG9sS5P7aRj5bkT3iZLvphivRvGB1Hk', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('E4EzXdwf7NNdqM2XGswWaWHfxgucVCo24PTCcrimTKBz', 'E4EzXdwf7NNdqM2XGswWaWHfxgucVCo24PTCcrimTKBz'),
+        ('EC8XFdGbKPu76SewvXGDHh2oqhpYViicGLY6ddgafzWn', 'EC8XFdGbKPu76SewvXGDHh2oqhpYViicGLY6ddgafzWn'),
+        ('EGXj5MEx4bC9wP9uo5iGAGREZUuPQsnVzhg6WxKtYfuX', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('ELGNVYE7X1R1uQSuVqFN8TxbV7AipcQ23HmmqNhCVUMy', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('ESmuGe6WuNudyAhh99AaFMAHP9Bo2oqSHUhNb1Tkg6JD', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('ET2J6MpTzDjBRcUuzFwjsUcBrHFRN8DwfPCxnHAVf8LH', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('EdrsiufCNBkF3krnmramuQZvRC9VpZQpMzxjbLtYWEeb', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('EgBRgL9Sf2XgpWvmhj8T5BaDXZwR9CRr4RBCivQVCpRG', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('EkZmGH5r4VrBUf4Df4TB6vbguNLbsFMNpZy4ksjZHdUz', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('EvD5TvP8qhhNP6K14YEkQkFtGhCvkjsKmM1iQkArmxGF', 'EvD5TvP8qhhNP6K14YEkQkFtGhCvkjsKmM1iQkArmxGF'),
+        ('F3i1cr6MnAn7Xq6rGN6DRDzLSCqYiy2fbarcTztoKqVP', 'F3i1cr6MnAn7Xq6rGN6DRDzLSCqYiy2fbarcTztoKqVP'),
+        ('F9vmGpRrhEpENTUSmoEtneGTCsNMpM2mbHtxF8WM9DPW', 'F9vmGpRrhEpENTUSmoEtneGTCsNMpM2mbHtxF8WM9DPW'),
+        ('FDXqTBNF53ysMRmKcJwq3bcFm1QqpmD8s5WDELhDpy1f', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('FGotS5zW14fJaoTXMdpZsuooowWomJ3skySF2cEt3LR', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('FQV4vfF9DvAwfNwrg9F9mHxBQYCP9PMN8wrxr4fPT2xU', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('FYX5JQ2kP7TD8gWb9WP1tjmwWWUAzi8edEZTr5Z8F1ck', 'FYX5JQ2kP7TD8gWb9WP1tjmwWWUAzi8edEZTr5Z8F1ck'),
+        ('FcwdLrF6t8NNfRS3wheLuB3cNUeCHn2twZ251mufD2YF', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('ForapMTg4SKR9rHxrfRHL3p1ZD9UeVnStXMEqHY5Ws4C', 'ForapMTg4SKR9rHxrfRHL3p1ZD9UeVnStXMEqHY5Ws4C'),
+        ('G3rfSianfqVWjSUptPE9CbqCr47fayoRTPK1K4oeTG5C', 'G3rfSianfqVWjSUptPE9CbqCr47fayoRTPK1K4oeTG5C'),
+        ('G5wXHMBbWgquSKgRhJDLUhNt6qJygBT8sQShc3X35FrC', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('GB1FuwDP4X4kiWiEnR4xXbmiPWCzSZyXwdH14mUFmfqE', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('GMWBrhES3DmveSMAtZnA7pWvGNWgBpKcq3xhcxA4qptC', 'GMWBrhES3DmveSMAtZnA7pWvGNWgBpKcq3xhcxA4qptC'),
+        ('GNu5i1HXqpB3zQchEY2LVHNAdei4P97qfZEfJcUBuqRT', 'GNu5i1HXqpB3zQchEY2LVHNAdei4P97qfZEfJcUBuqRT'),
+        ('GV5tv4bRucmzm39UdsGXEuf6nDQSyr51btJqDwnTbQvi', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('GWpXfC5Kt1q8zZxuHojddydZ99sPKSzPCWiTzxTX8kMc', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('GZch34j75hi796ZgQgjrYj8EXQ2NTcGcBGEdsgp5DAnj', '27VSifqHkBVNCGsVVbda64onBZmRhGpB2Zg4pZwf3jZs'),
+        ('GczmdQsxY2xB32LC88Z1ewbUd4RfonNxxMCfpGzxthaz', '2NwJxx3ZY3HPAe51zgcPAvMehrhKA9qvL1zcRwZPkfL3'),
+        ('GghmQaR563bQxEQwnob3TFmUmFzcJNgppcyMST7RVysr', 'GghmQaR563bQxEQwnob3TFmUmFzcJNgppcyMST7RVysr'),
+        ('Gy7e4mi5Rem7pt84SRHuJSLsauzDyAAWHLMqqFS5c9zF', 'Gy7e4mi5Rem7pt84SRHuJSLsauzDyAAWHLMqqFS5c9zF'),
+        ('HQHmUBS9E7nnhG3v9H339TRn9RjxDj4dzBngZxi7uC6z', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('HSnB2SAmRVjHCeuLgpBPmjdyg3r2fBXQYrjdeXPS24mP', '3bbDEL917JkpMSCBTf43azASbkttCYNYaNoQpzPLPV8X'),
+        ('HWTefYGGrkfd4fMqYBsjedd8daow5xecf8odUE4a3G7R', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('HXuSaaZ6QjnyX4mQLZQGoVSwb83uNyJpYTMUAuPcnbht', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('HYnNfsB8PammnVBbg2WGF1uNPNE75adEEeLhuu59f89h', '2HMdJbv9bUQUL5zZCBG35kkUwYrfzvH5r5vkaVqAanmj'),
+        ('Hhcu1xXi2han6ee7cCpqB1uZ7Wh8MofqGt7yYirb2Wgh', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('HjH7yUgUeznQTNzFsYBq4hSeKgNtEc4K5PfYJNcwAUfh', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('J8xvjzq2sXyi5JwBhM9dsbFEBYn7Cd6z2ZMotCxaqTto', '38Fgtgr65fZD1dyTGZ8eHMNoJiP9ArHQXKLAnQxF4PuC'),
+        ('XuyUmJTJqyFfvt88LP1Fj5fP2RH9kJbPvAixUfBQHhB', '135DN9oH9vU4CLbKiC1Rj4vByAsyRstAdjrwngYLHz86'),
+        ('itiXvAsc4sZWyisWVvG6FdAfRvJa1nvh8DwgGDbGtWW', 'itiXvAsc4sZWyisWVvG6FdAfRvJa1nvh8DwgGDbGtWW'),
+        ('t3sipR2q5TH1GafmfvqEwbfrjf6eJc5NdPYNRjTq35D', 't3sipR2q5TH1GafmfvqEwbfrjf6eJc5NdPYNRjTq35D')
+    ) AS v(usr, entity)
+),
+rm AS (
+    SELECT DISTINCT mint
+    FROM pumpdotfun_solana.pump_evt_createevent
+    WHERE evt_block_date BETWEEN DATE '2026-08-03' AND DATE '2026-08-09'
+),
+ev AS (
+    SELECT
+        t.evt_tx_id AS tx_id, CAST(t."user" AS varchar) AS usr, t.evt_block_time AS ts,
+        'curve' AS src,
+        IF(COALESCE(t.is_buy, t.isBuy), -(CAST(COALESCE(t.sol_amount, t.solAmount) AS DOUBLE) + (COALESCE(CAST(t.fee AS DOUBLE), 0) + COALESCE(CAST(t.creator_fee AS DOUBLE), 0) + COALESCE(CAST(t.buyback_fee AS DOUBLE), 0))), CAST(COALESCE(t.sol_amount, t.solAmount) AS DOUBLE) - (COALESCE(CAST(t.fee AS DOUBLE), 0) + COALESCE(CAST(t.creator_fee AS DOUBLE), 0) + COALESCE(CAST(t.buyback_fee AS DOUBLE), 0))) / 1e9 AS sol_cash,
+        0.0 AS usd_other
+    FROM pumpdotfun_solana.pump_evt_tradeevent t
+    WHERE t.evt_block_date BETWEEN DATE '2026-08-03' AND DATE '2026-08-16'
+      AND CAST(t."user" AS varchar) IN (SELECT usr FROM sel)
+      AND CAST(t."user" AS varchar) = t.evt_tx_signer
+      AND t.mint IN (SELECT mint FROM rm)
+    UNION ALL
+    SELECT
+        d.tx_id, d.trader_id, d.block_time, d.project,
+        IF(d.token_bought_mint_address IN (SELECT mint FROM rm) AND d.token_sold_mint_address IN ('So11111111111111111111111111111111111111111', 'So11111111111111111111111111111111111111112'),
+           -d.token_sold_amount, 0)
+        + IF(d.token_sold_mint_address IN (SELECT mint FROM rm) AND d.token_bought_mint_address IN ('So11111111111111111111111111111111111111111', 'So11111111111111111111111111111111111111112'),
+           d.token_bought_amount, 0),
+        IF(d.token_bought_mint_address IN ('So11111111111111111111111111111111111111111', 'So11111111111111111111111111111111111111112') OR d.token_sold_mint_address IN ('So11111111111111111111111111111111111111111', 'So11111111111111111111111111111111111111112'),
+           0.0, COALESCE(d.amount_usd, 0))
+    FROM dex_solana.trades d
+    WHERE d.block_month = DATE '2026-08-01'
+      AND d.block_date BETWEEN DATE '2026-08-03' AND DATE '2026-08-16'
+      AND d.project <> 'pumpdotfun'
+      AND d.trader_id IN (SELECT usr FROM sel)
+      AND (d.token_bought_mint_address IN (SELECT mint FROM rm)
+           OR d.token_sold_mint_address IN (SELECT mint FROM rm))
+),
+tx AS (
+    SELECT
+        e.tx_id, e.usr, s.entity, min(e.ts) AS ts,
+        sum(e.sol_cash) AS sol_cash, sum(e.usd_other) AS usd_other,
+        array_join(array_agg(DISTINCT e.src), ',') AS srcs, count(*) AS n_ev
+    FROM ev e
+    JOIN sel s ON s.usr = e.usr
+    GROUP BY 1, 2, 3
+),
+r AS (
+    SELECT
+        *,
+        row_number() OVER (
+            PARTITION BY entity ORDER BY xxhash64(to_utf8(tx_id || '20261001')), tx_id
+        ) AS rk
+    FROM tx
+)
+SELECT tx_id, usr, entity, ts, sol_cash, usd_other, srcs, n_ev
+FROM r
+WHERE rk <= 20

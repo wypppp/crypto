@@ -1,0 +1,13 @@
+{
+ "members": 3817,
+ "candidates": 1000,
+ "expanded_members": 2817,
+ "entities_with_candidate": 594,
+ "entity_size_max": 2025,
+ "entities_multi_wallet": 100,
+ "hubs_funder": 199,
+ "service_nodes_S": 65,
+ "service_nodes_T": 32,
+ "candidates_as_service_node": 90,
+ "sha256": "a08c77fecedcd6347c66a8a80f089f15a62a5a9a556bd2b93310472d13637633"
+}

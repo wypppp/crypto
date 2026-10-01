@@ -1,0 +1,14 @@
+{
+ "label": "SMOKE_20260803",
+ "n_coins": 30339,
+ "n_coins_t3_le300": 13209,
+ "share_t3_le300": 0.4354,
+ "n_migrated": 873,
+ "n_wallets_eligible": 29106,
+ "closure_unmigrated": {
+  "n": 29466,
+  "rel_err_median": 8.44075846332509e-17,
+  "rel_err_p99": 2.0502329501110583e-15,
+  "n_gt_1pct": 0
+ }
+}

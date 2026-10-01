@@ -1,0 +1,44 @@
+{
+  "execution_id": "01M3VA43GCNJA2GPBT6DP5XPVK",
+  "query_id": 8875236,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T08:43:30.701471Z",
+  "expires_at": "2026-12-30T08:44:34.125173Z",
+  "execution_started_at": "2026-10-01T08:43:32.426962041Z",
+  "execution_ended_at": "2026-10-01T08:44:34.125008896Z",
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "owner",
+      "mint",
+      "action",
+      "is_trade",
+      "cp",
+      "top_sys",
+      "n",
+      "amt_in",
+      "amt_out"
+    ],
+    "column_types": [
+      "varchar(3)",
+      "varchar",
+      "varchar",
+      "varchar",
+      "boolean",
+      "varchar",
+      "boolean",
+      "bigint",
+      "double",
+      "double"
+    ],
+    "row_count": 1078594,
+    "result_set_bytes": 160244125,
+    "total_row_count": 1078594,
+    "total_result_set_bytes": 160244125,
+    "datapoint_count": 10785940,
+    "pending_time_millis": 1725,
+    "execution_time_millis": 61698
+  },
+  "execution_cost_credits": 75.814264706
+}

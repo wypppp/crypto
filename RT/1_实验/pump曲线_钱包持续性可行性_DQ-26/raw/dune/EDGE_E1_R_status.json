@@ -1,0 +1,40 @@
+{
+  "execution_id": "01M3V89E68Z2MNFZQ123TQCDJ2",
+  "query_id": 8875132,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T08:11:28.329827Z",
+  "expires_at": "2026-12-30T08:11:59.378912Z",
+  "execution_started_at": "2026-10-01T08:11:32.004660524Z",
+  "execution_ended_at": "2026-10-01T08:11:59.378856454Z",
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "from_owner",
+      "to_owner",
+      "mint",
+      "n",
+      "amt",
+      "first_ts",
+      "last_ts"
+    ],
+    "column_types": [
+      "varchar(1)",
+      "varchar",
+      "varchar",
+      "varchar",
+      "bigint",
+      "double",
+      "timestamp(3) with time zone",
+      "timestamp(3) with time zone"
+    ],
+    "row_count": 489074,
+    "result_set_bytes": 75692357,
+    "total_row_count": 489074,
+    "total_result_set_bytes": 75692357,
+    "datapoint_count": 3912592,
+    "pending_time_millis": 3674,
+    "execution_time_millis": 27374
+  },
+  "execution_cost_credits": 19.371911765
+}

@@ -1,0 +1,34 @@
+{
+  "execution_id": "01M3VAXWMM6TMGQB9TJ4JQ7HSD",
+  "query_id": 8875225,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T08:57:35.639726Z",
+  "expires_at": "2026-12-30T08:58:00.456163Z",
+  "execution_started_at": "2026-10-01T08:57:37.410785507Z",
+  "execution_ended_at": "2026-10-01T08:58:00.455994694Z",
+  "result_metadata": {
+    "column_names": [
+      "owner",
+      "mint",
+      "bal",
+      "n_accounts",
+      "last_day"
+    ],
+    "column_types": [
+      "varchar",
+      "varchar",
+      "decimal(38, 18)",
+      "bigint",
+      "timestamp(3) with time zone"
+    ],
+    "row_count": 1003617,
+    "result_set_bytes": 120232296,
+    "total_row_count": 1003617,
+    "total_result_set_bytes": 120232296,
+    "datapoint_count": 5018085,
+    "pending_time_millis": 1771,
+    "execution_time_millis": 23045
+  },
+  "execution_cost_credits": 1.400147059
+}

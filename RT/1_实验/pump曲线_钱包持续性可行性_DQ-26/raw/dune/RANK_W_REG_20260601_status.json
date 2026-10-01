@@ -1,0 +1,50 @@
+{
+  "execution_id": "01M3V6JVE8RPRKYG0V2CWHRC7R",
+  "query_id": 8875133,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T07:41:39.657435Z",
+  "expires_at": "2026-12-30T07:42:07.136073Z",
+  "execution_started_at": "2026-10-01T07:41:41.172241814Z",
+  "execution_ended_at": "2026-10-01T07:42:07.136054528Z",
+  "result_metadata": {
+    "column_names": [
+      "usr",
+      "n_coins",
+      "n_buy",
+      "n_sell",
+      "in_sol",
+      "out_sol",
+      "liq_sol",
+      "pnl0",
+      "in_pre_t35",
+      "in_t3coin",
+      "n_same_slot",
+      "n_sellonly",
+      "hold_med"
+    ],
+    "column_types": [
+      "varchar",
+      "bigint",
+      "bigint",
+      "bigint",
+      "double",
+      "double",
+      "double",
+      "double",
+      "double",
+      "double",
+      "bigint",
+      "bigint",
+      "bigint"
+    ],
+    "row_count": 21470,
+    "result_set_bytes": 3004186,
+    "total_row_count": 21470,
+    "total_result_set_bytes": 3004186,
+    "datapoint_count": 279110,
+    "pending_time_millis": 1514,
+    "execution_time_millis": 25963
+  },
+  "execution_cost_credits": 2.000147059
+}

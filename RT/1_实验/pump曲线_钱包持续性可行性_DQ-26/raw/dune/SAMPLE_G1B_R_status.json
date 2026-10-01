@@ -1,0 +1,40 @@
+{
+  "execution_id": "01M3VDTED0091TBATJCFT7Y5WD",
+  "query_id": 8875223,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T09:48:08.481481Z",
+  "expires_at": "2026-12-30T09:49:07.244268Z",
+  "execution_started_at": "2026-10-01T09:48:09.918617329Z",
+  "execution_ended_at": "2026-10-01T09:49:07.244246949Z",
+  "result_metadata": {
+    "column_names": [
+      "tx_id",
+      "usr",
+      "entity",
+      "ts",
+      "sol_cash",
+      "usd_other",
+      "srcs",
+      "n_ev"
+    ],
+    "column_types": [
+      "varchar",
+      "varchar",
+      "varchar(44)",
+      "timestamp(3) with time zone",
+      "double",
+      "double",
+      "varchar",
+      "bigint"
+    ],
+    "row_count": 988,
+    "result_set_bytes": 212207,
+    "total_row_count": 988,
+    "total_result_set_bytes": 212207,
+    "datapoint_count": 7904,
+    "pending_time_millis": 1437,
+    "execution_time_millis": 57325
+  },
+  "execution_cost_credits": 6.9625
+}

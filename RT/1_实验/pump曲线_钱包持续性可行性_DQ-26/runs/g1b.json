@@ -1,0 +1,28 @@
+{
+ "sampled": 988,
+ "status": {
+  "ok": 950,
+  "not_signer": 38
+ },
+ "closed_share": 0.9579,
+ "pass": true,
+ "resid_quantiles": {
+  "0.01": -0.45691,
+  "0.05": -0.03351,
+  "0.25": -0.0,
+  "0.5": 0.0,
+  "0.75": 0.00083,
+  "0.95": 0.12121,
+  "0.99": 0.39629
+ },
+ "unclosed_by_src": {
+  "pumpswap": 30,
+  "meteora": 4,
+  "pumpswap,meteora": 3,
+  "meteora,pumpswap": 2,
+  "curve": 1
+ },
+ "unclosed_resid_sum": 61.9782,
+ "entities_all_closed": 42,
+ "fee_median": 2.4854e-05
+}
