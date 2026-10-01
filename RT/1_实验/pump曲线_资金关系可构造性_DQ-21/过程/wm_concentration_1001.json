@@ -1,0 +1,68 @@
+{
+ "creator": {
+  "n_cells": 10344,
+  "cash_net": 127530,
+  "mr_net": 158852,
+  "frozen_top10_maxwallet_over_mr": 0.1086,
+  "top10_cash_cells_over_cash": 0.1352,
+  "top10_mr_cells_over_mr": 0.1614,
+  "cash_rr_money_ex_top10": 1.2685,
+  "cash_rr_coin_eq": 1.3989,
+  "cash_rr_coin_eq_ex_top10": 1.3922
+ },
+ "sameslot": {
+  "n_cells": 4169,
+  "cash_net": 290697,
+  "mr_net": 340186,
+  "frozen_top10_maxwallet_over_mr": 0.0465,
+  "top10_cash_cells_over_cash": 0.1436,
+  "top10_mr_cells_over_mr": 0.1731,
+  "cash_rr_money_ex_top10": 1.4786,
+  "cash_rr_coin_eq": 1.0859,
+  "cash_rr_coin_eq_ex_top10": 1.0827
+ },
+ "open10": {
+  "n_cells": 10206,
+  "cash_net": 16529,
+  "mr_net": 187418,
+  "frozen_top10_maxwallet_over_mr": 0.0694,
+  "top10_cash_cells_over_cash": 1.259,
+  "top10_mr_cells_over_mr": 0.2031,
+  "cash_rr_money_ex_top10": 0.9973,
+  "cash_rr_coin_eq": 1.0279,
+  "cash_rr_coin_eq_ex_top10": 1.0198
+ },
+ "pre": {
+  "n_cells": 5259,
+  "cash_net": 5371,
+  "mr_net": 9835,
+  "frozen_top10_maxwallet_over_mr": 0.3025,
+  "top10_cash_cells_over_cash": 0.7916,
+  "top10_mr_cells_over_mr": 0.4357,
+  "cash_rr_money_ex_top10": 1.0093,
+  "cash_rr_coin_eq": 0.9821,
+  "cash_rr_coin_eq_ex_top10": 0.9793
+ },
+ "e5": {
+  "n_cells": 8675,
+  "cash_net": 37159,
+  "mr_net": 45383,
+  "frozen_top10_maxwallet_over_mr": 0.5992,
+  "top10_cash_cells_over_cash": 0.9778,
+  "top10_mr_cells_over_mr": 0.8069,
+  "cash_rr_money_ex_top10": 1.0012,
+  "cash_rr_coin_eq": 0.984,
+  "cash_rr_coin_eq_ex_top10": 0.9454
+ },
+ "e30": {
+  "n_cells": 8167,
+  "cash_net": -26230,
+  "mr_net": -10023,
+  "frozen_top10_maxwallet_over_mr": -1.0568,
+  "top10_cash_cells_over_cash": -0.9296,
+  "top10_mr_cells_over_mr": -2.6114,
+  "cash_rr_money_ex_top10": 0.9608,
+  "cash_rr_coin_eq": 0.8736,
+  "cash_rr_coin_eq_ex_top10": 0.8694
+ }
+}
