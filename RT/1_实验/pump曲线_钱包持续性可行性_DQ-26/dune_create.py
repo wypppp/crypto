@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""DQ-26（复制自 DQ-24）：把本地 SQL 文件原样建成私有 Dune 查询（不执行），并回读核对逐字节一致。
+"""DQ-26（复制自 DQ-24）：把本地 SQL 文件原样建成 Dune 查询（不执行），并回读核对逐字节一致。
 
-python dune_create.py SQL_FILE NAME → 打印 query_id；记录追加到 raw/created_queries.jsonl
+python dune_create.py SQL_FILE NAME [public] → 打印 query_id；记录追加到 raw/created_queries.jsonl
+10-01 起新查询可建为公开（第三个参数 public）：SQL 本来就在公开 repo 里，公开查询不占私有查询名额。
 DUNE_API_KEY 按键名从工作区 .env 读取，不打印、不写出。
 """
 
@@ -40,11 +41,12 @@ def call(method: str, path: str, body: dict | None = None) -> dict:
 
 def main() -> None:
     path, name = Path(sys.argv[1]), sys.argv[2]
+    private = not (len(sys.argv) > 3 and sys.argv[3] == "public")
     sql = path.read_text()
     sha = hashlib.sha256(sql.encode()).hexdigest()
-    qid = call("POST", "/query", {"name": name, "query_sql": sql, "is_private": True})[
-        "query_id"
-    ]
+    qid = call(
+        "POST", "/query", {"name": name, "query_sql": sql, "is_private": private}
+    )["query_id"]
     back = call("GET", f"/query/{qid}")
     same = hashlib.sha256(back["query_sql"].encode()).hexdigest() == sha
     rec = {
