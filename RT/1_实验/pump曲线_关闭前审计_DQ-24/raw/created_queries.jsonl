@@ -1,0 +1,12 @@
+{"query_id": 8873131, "name": "RT DQ-24 C1 回归冒烟 C1_REG_20260601", "file": "C1_REG_20260601.sql", "sha256": "ac68dea7302f1fa511513bb9fdbb2ef054bbcb470c6e2883ae9db548414cb60f", "saved_equal": true, "is_private": true}
+{"query_id": 8873133, "name": "RT DQ-24 C1 一日冒烟 C1_SMOKE_20250407", "file": "C1_SMOKE_20250407.sql", "sha256": "9306dc41133197193d0c3c7c1fd46de074e1cafdc31b11d35d168abe790caf28", "saved_equal": true, "is_private": true}
+{"query_id": 8873192, "name": "RT DQ-24 C1 周 20250407", "file": "C1_W20250407.sql", "sha256": "b815b72b5967aaf473838c14bf39cb000b29e4bd291b1c790d38d34a51919152", "saved_equal": true, "is_private": true}
+{"query_id": 8873194, "name": "RT DQ-24 C1 周 20250519", "file": "C1_W20250519.sql", "sha256": "c1a948d5c5e54df43115b6b702a446cbd1d39d5df8905bb4a05fde76715b49bb", "saved_equal": true, "is_private": true}
+{"query_id": 8873195, "name": "RT DQ-24 C1 周 20250707", "file": "C1_W20250707.sql", "sha256": "c50fea37bdebd709e58fa302315623d56d17bda44084b3df9884a8f1018e642d", "saved_equal": true, "is_private": true}
+{"query_id": 8873196, "name": "RT DQ-24 C1 周 20250818", "file": "C1_W20250818.sql", "sha256": "5fdb45db2c63a58bb525ebcf4de2235d9f26b434e8b5785d5d27b1c3121a2741", "saved_equal": true, "is_private": true}
+{"query_id": 8873197, "name": "RT DQ-24 C1 周 20251006", "file": "C1_W20251006.sql", "sha256": "c4bad3bcdfddf12853a2061427910db4cb3b66faff58bec6d9a5e8eafe0dc64e", "saved_equal": true, "is_private": true}
+{"query_id": 8873200, "name": "RT DQ-24 C1 周 20251117", "file": "C1_W20251117.sql", "sha256": "df1de60e54dac31b58790d3d8c64c58e516e7a8cf5d804e7c19cef4705e6e6ad", "saved_equal": true, "is_private": true}
+{"query_id": 8873202, "name": "RT DQ-24 C1 周 20260105", "file": "C1_W20260105.sql", "sha256": "314cfa9f08feb078aeedcde76af282745fa9e88f40b4186e3d7a547ece3fb530", "saved_equal": true, "is_private": true}
+{"query_id": 8873203, "name": "RT DQ-24 C1 周 20260216", "file": "C1_W20260216.sql", "sha256": "bb6caa21dff73704dd18ee5dd906076b4c83a7d92557a956c6b0efb59d372e26", "saved_equal": true, "is_private": true}
+{"query_id": 8873204, "name": "RT DQ-24 C1 周 20260406", "file": "C1_W20260406.sql", "sha256": "05aead4a0e5106b48019a19f9cc8f85be29836382cedaea98686d6507af6263b", "saved_equal": true, "is_private": true}
+{"query_id": 8873205, "name": "RT DQ-24 C1 周 20260518", "file": "C1_W20260518.sql", "sha256": "6825694ecf335f11dcfb4cefbd618333c6f3997e2445e3a1bcb71d4e5392c30f", "saved_equal": true, "is_private": true}

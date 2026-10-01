@@ -1,1 +1,4 @@
-raw/
+# 逐币结果入库，供第二模型门 3 复算；其余不入库
+raw/*
+!raw/dune/
+!raw/created_queries.jsonl
