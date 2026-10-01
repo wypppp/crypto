@@ -1,0 +1,47 @@
+{
+ "window": [
+  "2025-01-01",
+  "2026-08-31"
+ ],
+ "n_L": 113,
+ "n_L_title_hit": 113,
+ "L_missed_by_title": [],
+ "title_hits_not_in_L": [
+  {
+   "ticker": "1000CAT",
+   "status": "outside_window"
+  },
+  {
+   "ticker": "ACX",
+   "status": "outside_window"
+  },
+  {
+   "ticker": "ME",
+   "status": "outside_window"
+  },
+  {
+   "ticker": "MOVE",
+   "status": null
+  },
+  {
+   "ticker": "ORCA",
+   "status": "outside_window"
+  },
+  {
+   "ticker": "VANA",
+   "status": "outside_window"
+  },
+  {
+   "ticker": "VELODROME",
+   "status": "outside_window"
+  }
+ ],
+ "non_holdout": {
+  "n_L": 93,
+  "n_event_and_in_L": 93,
+  "T0_equal": 93,
+  "T0_diff": [],
+  "in_L_not_event": [],
+  "event_not_in_L": []
+ }
+}

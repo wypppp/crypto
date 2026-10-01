@@ -1,0 +1,30 @@
+{
+ "mean": 0.13921687112818784,
+ "sd": 0.49466842550903756,
+ "deff_block_month": 1.334783851653994,
+ "exec_share_2025_2026": 0.925531914893617,
+ "listings_trailing12": 44,
+ "listings_last6_x2": 20,
+ "lambda_exec_per_year": {
+  "trailing12": 40.723404255319146,
+  "last6_annualized": 18.51063829787234
+ },
+ "n_needed_power80_one_sided5": 104.19155366581398,
+ "years_needed": {
+  "trailing12": 2.55851777549282,
+  "last6_annualized": 5.628739106084204
+ },
+ "window_years": 2.6611909650924024,
+ "expected_n": {
+  "trailing12": 108.3727554720608,
+  "last6_annualized": 49.26034339639128
+ },
+ "power_at_window": {
+  "trailing12": 0.8135356353003776,
+  "last6_annualized": 0.5258349658143658
+ },
+ "power_if_effect_half": {
+  "trailing12": 0.35310553407886536,
+  "last6_annualized": 0.2147498660909815
+ }
+}
