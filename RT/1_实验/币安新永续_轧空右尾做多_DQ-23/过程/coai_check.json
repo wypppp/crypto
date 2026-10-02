@@ -1,0 +1,21 @@
+{
+ "settlements": 444,
+ "interval_hours": {
+  "4": 92,
+  "1": 351
+ },
+ "n_at_minus_2pct": 28,
+ "sum_rates": -1.6098,
+ "funding_daily_close_mark": 124.01,
+ "funding_hourly_mark_at_settlement": 138.43,
+ "price_part": 30.73,
+ "mark_max_over_entry": 156.8,
+ "if_adl_at_hour_end": {
+  "min": -0.14,
+  "p10": 0.17,
+  "median": 38.3,
+  "p90": 173.1,
+  "max": 225.9,
+  "first_10_days_max": 15.09
+ }
+}
