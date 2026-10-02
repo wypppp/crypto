@@ -1,0 +1,827 @@
+{
+ "roots": [
+  "/home/ancillary/RT",
+  "/home/claude/.claude/projects/-home-ancillary",
+  "/tmp/claude-1000"
+ ],
+ "path_hits": {
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices_k1/spot": [
+   "55ee32",
+   "961bd4",
+   "f077db",
+   "faa53f"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices_k1/spot/NEXOUSDT": [
+   "f077db"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices_k1/spot/MORPHOUSDT": [
+   "55ee32"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices_k1/spot/WIFUSDT": [
+   "961bd4"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices_k1/spot/HEMIUSDT": [
+   "faa53f"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices_k1/bybit": [
+   "2d905c"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices": [
+   "69948b",
+   "82379d",
+   "eb389e"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices/BANANAUSDT": [
+   "82379d"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices/SPELLUSDT": [
+   "eb389e"
+  ],
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices/WOOUSDT": [
+   "69948b"
+  ]
+ },
+ "content_hits": {
+  "/home/ancillary/RT/5_参考/旧债务/direction/v1.8.40/L_u_master.json": {
+   "n_holdout_names": 55,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "19db20",
+    "19fdfd",
+    "1e2f12",
+    "1ebcf0",
+    "2326ea",
+    "2d905c",
+    "374340",
+    "4140d0",
+    "4b1df5",
+    "500ecd",
+    "501c22",
+    "502b12",
+    "509021",
+    "554b63",
+    "55ee32",
+    "69948b",
+    "69b0bb",
+    "69e696",
+    "6e1095",
+    "6e23a3",
+    "735099",
+    "7dd0a5",
+    "82379d",
+    "82f647",
+    "82f8b9",
+    "8726ef",
+    "8cccdd",
+    "91fe49",
+    "961bd4",
+    "9b9772",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "af04c3",
+    "b43e72",
+    "c8b33f",
+    "cd429e",
+    "cd4d87",
+    "d71ee9",
+    "dc9b65",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "eb389e",
+    "eb4bb7",
+    "eb5442",
+    "ebeea5",
+    "f077db",
+    "f5d531",
+    "fa865b",
+    "faa53f",
+    "ff481f"
+   ],
+   "context_masked": [
+    "    \"<H>FDUSD\",\n",
+    "    \"<H>USDC\",\n",
+    "    \"<H>USDT\"\n"
+   ]
+  },
+  "/home/ancillary/RT/5_参考/旧债务/direction/v1.8.40/L_mother_events.json": {
+   "n_holdout_names": 55,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "19db20",
+    "19fdfd",
+    "1e2f12",
+    "1ebcf0",
+    "2326ea",
+    "2d905c",
+    "374340",
+    "4140d0",
+    "4b1df5",
+    "500ecd",
+    "501c22",
+    "502b12",
+    "509021",
+    "554b63",
+    "55ee32",
+    "69948b",
+    "69b0bb",
+    "69e696",
+    "6e1095",
+    "6e23a3",
+    "735099",
+    "7dd0a5",
+    "82379d",
+    "82f647",
+    "82f8b9",
+    "8726ef",
+    "8cccdd",
+    "91fe49",
+    "961bd4",
+    "9b9772",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "af04c3",
+    "b43e72",
+    "c8b33f",
+    "cd429e",
+    "cd4d87",
+    "d71ee9",
+    "dc9b65",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "eb389e",
+    "eb4bb7",
+    "eb5442",
+    "ebeea5",
+    "f077db",
+    "f5d531",
+    "fa865b",
+    "faa53f",
+    "ff481f"
+   ],
+   "context_masked": [
+    "   \"base_asset\": \"<H>\",\n",
+    "    \"<H>USDC\",\n",
+    "    \"<H>USDT\"\n"
+   ]
+  },
+  "/home/ancillary/RT/5_参考/旧债务/direction/v1.8.40/L_config.json": {
+   "n_holdout_names": 15,
+   "tags": [
+    "19fdfd",
+    "2d905c",
+    "502b12",
+    "6e23a3",
+    "82f647",
+    "8cccdd",
+    "91fe49",
+    "961bd4",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "b43e72",
+    "e63ffa",
+    "f077db",
+    "fa865b"
+   ],
+   "context_masked": [
+    "rmore` / 促销 / 提现 / 删除段。⚠ 实测修正:###### 开盘段仅 #+#=**#** 对,此前估的 # 对把 T<H>ing Bots 段的 <H>/USDT、XRP/FDUSD 误计;###### 只取新增段 # 对,删除段(ARK/BUSD…BUSD/VAI)必须排除;#####(BDOT)的 ####-##-#",
+    "    \"expect_base\": \"<H>\",\n",
+    "    \"expect_base\": \"<H>\",\n"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/币安新永续_轧空右尾做多_DQ-23/raw/cms48_articles.json": {
+   "n_holdout_names": 15,
+   "tags": [
+    "004c75",
+    "0ad2fa",
+    "1ebcf0",
+    "2326ea",
+    "554b63",
+    "55ee32",
+    "69b0bb",
+    "6e23a3",
+    "8726ef",
+    "9b9772",
+    "9bfd3c",
+    "af04c3",
+    "cd4d87",
+    "e63ffa",
+    "eb5442"
+   ],
+   "context_masked": [
+    "#####, \"day\": \"####-##-##\", \"title\": \"Bin<H>e Futures Will <H>unch USDⓈ-Margined <H>USDT Perpetual Contract (####-##-##)\"}, {\"id\": ######, \"day\": \"####-##-##\", \"title\":",
+    "#####, \"day\": \"####-##-##\", \"title\": \"Bin<H>e Futures Will <H>unch USDⓈ-Margined <H>USDT Perpetual Contract (####-##-##)\"}, {\"id\": ######, \"day\": \"####-##-##\", \"title\":",
+    "#####, \"day\": \"####-##-##\", \"title\": \"Bin<H>e Futures Will <H>unch USDⓈ-Margined <H>USDT Perpetual Contract Pre-Market T<H>ing (####-##-##)\"}, {\"id\": ######, \"day\": \"##"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/币安新币_上线后做空_DQ-22/runs/fapi_exchangeInfo_20260930.json": {
+   "n_holdout_names": 47,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "19db20",
+    "1e2f12",
+    "1ebcf0",
+    "2326ea",
+    "2d905c",
+    "374340",
+    "4b1df5",
+    "500ecd",
+    "502b12",
+    "554b63",
+    "55ee32",
+    "69948b",
+    "69b0bb",
+    "69e696",
+    "6e1095",
+    "6e23a3",
+    "735099",
+    "7dd0a5",
+    "82379d",
+    "82f647",
+    "82f8b9",
+    "8726ef",
+    "8cccdd",
+    "961bd4",
+    "9b9772",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "af04c3",
+    "b43e72",
+    "c8b33f",
+    "cd429e",
+    "cd4d87",
+    "dc9b65",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "eb389e",
+    "eb4bb7",
+    "eb5442",
+    "f5d531",
+    "fa865b",
+    "faa53f",
+    "ff481f"
+   ],
+   "context_masked": [
+    "Type\": \"COIN\", \"onboardD<H>e\": #############, \"st<H>us\": \"SETTLING\"}, {\"symbol\": \"<H>USDT\", \"underlyingType\": \"COIN\", \"onboardD<H>e\": #############, \"st<H>us\": \"T<H>ING\"},",
+    "gType\": \"COIN\", \"onboardD<H>e\": #############, \"st<H>us\": \"T<H>ING\"}, {\"symbol\": \"<H>USDT\", \"underlyingType\": \"COIN\", \"onboardD<H>e\": #############, \"st<H>us\": \"T<H>ING\"},",
+    "gType\": \"COIN\", \"onboardD<H>e\": #############, \"st<H>us\": \"T<H>ING\"}, {\"symbol\": \"<H>USDT\", \"underlyingType\": \"COIN\", \"onboardD<H>e\": #############, \"st<H>us\": \"T<H>ING\"},"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/币安新币_上线后做空_DQ-22/runs/t1_validate.json": {
+   "n_holdout_names": 1,
+   "tags": [
+    "fa865b"
+   ],
+   "context_masked": [
+    "   \"ticker\": \"<H>\",\n"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/pump币_晚期龙头基础比率_DQ-18/raw/s2/dexscreener_diag6.json": {
+   "n_holdout_names": 1,
+   "tags": [
+    "c8b33f"
+   ],
+   "context_masked": [
+    ": {\"address\": \"#AVedXwKfVsFp#mfS#wYvW#U#DJoLkMUuZYYxZGkk#P#\", \"name\": \"TUNANI\", \"symbol\": \"<H>\"}, \"quoteToken\": {\"address\": \"#oBYdEhV#GkXC##ZfgAvXpJWp#Rn#pm#Bx#cVNxFpump\", \"na"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/币安永续_解锁前做空_DQ-25/runs/mapping.csv": {
+   "n_holdout_names": 19,
+   "tags": [
+    "0ad2fa",
+    "1e2f12",
+    "1ebcf0",
+    "502b12",
+    "55ee32",
+    "69948b",
+    "6e23a3",
+    "735099",
+    "82f647",
+    "82f8b9",
+    "9be93b",
+    "9bfd3c",
+    "c8b33f",
+    "dc9b65",
+    "e12ed9",
+    "eb389e",
+    "eb4bb7",
+    "f5d531",
+    "fa865b"
+   ],
+   "context_masked": [
+    "Worldcoin,worldcoin,<H>,#.################,<H>USDT,#.#,ho<H>ut_hash,,\n",
+    "<H>,<H>,<H>,#.################,<H>USDT,#.#,ho<H>ut_hash,,\n",
+    "<H>iter,<H>iter,<H>,#.################,<H>USDT,#.#,ho<H>ut_hash,,\n"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/币安永续_解锁前做空_DQ-25/raw/um_usdt_perps.json": {
+   "n_holdout_names": 49,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "19db20",
+    "1e2f12",
+    "1ebcf0",
+    "2326ea",
+    "2d905c",
+    "374340",
+    "4140d0",
+    "4b1df5",
+    "500ecd",
+    "502b12",
+    "509021",
+    "554b63",
+    "55ee32",
+    "69948b",
+    "69b0bb",
+    "69e696",
+    "6e1095",
+    "6e23a3",
+    "735099",
+    "7dd0a5",
+    "82379d",
+    "82f647",
+    "82f8b9",
+    "8726ef",
+    "8cccdd",
+    "961bd4",
+    "9b9772",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "af04c3",
+    "b43e72",
+    "c8b33f",
+    "cd429e",
+    "cd4d87",
+    "dc9b65",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "eb389e",
+    "eb4bb7",
+    "eb5442",
+    "f5d531",
+    "fa865b",
+    "faa53f",
+    "ff481f"
+   ],
+   "context_masked": [
+    "[\"<H>USDT\", \"#######BOBUSDT\", \"#######MOGUSDT\", \"####BONKUSDT\", \"####BTTCUSDT\", \"####C<H>U",
+    "##BTTCUSDT\", \"####C<H>USDT\", \"####CHEEMSUSDT\", \"####FLOKIUSDT\", \"####LUNCUSDT\", \"####<H>USDT\", \"####R<H>SUSDT\", \"####S<H>SUSDT\", \"####SHIBUSDT\", \"####WHYUSDT\", \"####XECUSDT\",",
+    "ACHUSDT\", \"ACTUSDT\", \"ACUUSDT\", \"ACXUSDT\", \"ADAUSDT\", \"ADBEUSDT\", \"AERGOUSDT\", \"<H>USDT\", \"AEVOUSDT\", \"AGIXUSDT\", \"AGLDUSDT\", \"AGTUSDT\", \"AI##ZUSDT\", \"AIAUSDT\", \"AIGEN"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/币安永续_解锁前做空_DQ-25/raw/emissionsIndex.json": {
+   "n_holdout_names": 20,
+   "tags": [
+    "0ad2fa",
+    "1e2f12",
+    "1ebcf0",
+    "501c22",
+    "502b12",
+    "55ee32",
+    "69948b",
+    "6e23a3",
+    "735099",
+    "82f647",
+    "82f8b9",
+    "9be93b",
+    "9bfd3c",
+    "c8b33f",
+    "dc9b65",
+    "e12ed9",
+    "eb389e",
+    "eb4bb7",
+    "f5d531",
+    "fa865b"
+   ],
+   "context_masked": [
+    "ar\":#######,\"total\":#######,\"unknownEventCount\":#},\"tokenPrice\":[{\"decimals\":##,\"symbol\":\"<H>\",\"price\":#.################,\"timestamp\":##########,\"confidence\":#.##}],\"mcap\":##",
+    "##.###########,\"unknownEventCount\":#},\"tokenPrice\":[{\"price\":#.################,\"symbol\":\"<H>\",\"timestamp\":##########,\"confidence\":#.##}],\"mcap\":##########.#######,\"mcapUpd<H>",
+    "r\":#,\"total\":#,\"unknownEventCount\":#},\"tokenPrice\":[{\"price\":#.################,\"symbol\":\"<H>\",\"timestamp\":##########,\"confidence\":#.##}],\"mcap\":##########.#######,\"mcapUpd<H>"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/pump曲线_公开传播信息试取_DQ-15/raw/platforms/reddit/posts_CryptoMoonShots_A周_full.json": {
+   "n_holdout_names": 1,
+   "tags": [
+    "2d905c"
+   ],
+   "context_masked": [
+    "et d’accéder à l’or tokenisé comme <H> (Tether Gold) via des paires telles que <H>/USDT, offrant une exposition directe au prix de l’or sans avoir à détenir ou stocker"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/pump曲线_公开传播信息试取_DQ-15/raw/normalized/reddit.csv": {
+   "n_holdout_names": 1,
+   "tags": [
+    "2d905c"
+   ],
+   "context_masked": [
+    "et d’accéder à l’or tokenisé comme <H> (Tether Gold) via des paires telles que <H>/USDT, offrant une exposition directe au prix de l’or sans avoir à détenir ou stocker"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/过程/K2_结果.md": {
+   "n_holdout_names": 3,
+   "tags": [
+    "69948b",
+    "82379d",
+    "eb389e"
+   ],
+   "context_masked": [
+    "| ####-##-## | <H> Gun | <H>USDT | #.# | ####-##-## ##:## | -#.#% | -#.#% | +#.##% | **-#.#%** | -#.#% | ### |\n",
+    "| ####-##-## | Abracadabra <H> | <H>USDT | ##.# | ####-##-## ##:## | -#.#% | -#.#% | -#.##% | **-#.#%** | -#.#% | ### |\n",
+    "| ####-##-## | <H> X | <H>USDT | ##.# | ####-##-## ##:## | +#.#% | +#.#% | +#.##% | **+#.#%** | +#.#% | ## |\n"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/results/K2_paths.csv": {
+   "n_holdout_names": 3,
+   "tags": [
+    "69948b",
+    "82379d",
+    "eb389e"
+   ],
+   "context_masked": [
+    "####-##-##,<H> Gun,<H>USDT,#######,####,####-##-## ##:##:##,,alert,####-##-## ##:##,##.###,-#.############",
+    "####-##-##,Abracadabra <H>,<H>USDT,########,####,####-##-## ##:##:##,####-##-## ##:##:##,alert,####-##-## ##:##,#.",
+    "####-##-##,Abracadabra <H>,<H>USDT,########,####,####-##-## ##:##:##,####-##-## ##:##:##,hack,####-##-## ##:##,#.#"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/K2_events.csv": {
+   "n_holdout_names": 3,
+   "tags": [
+    "69948b",
+    "82379d",
+    "eb389e"
+   ],
+   "context_masked": [
+    "romise,,<H>,<H>-gun,yes,unknown,no,yes,\"bin<H>e:d<H>a.bin<H>e.vision当日文件存在(<H>USDT); okx:现存USDT-SWAP列表未找到该symbol(OKX极少下架永续,按no处理,不能完全排除历史上架又下架); hyperliquid:candl",
+    "ingecko有#个同symbol候选,无法确定)\",yes,unknown,no,no,\"bin<H>e:d<H>a.bin<H>e.vision当日文件存在(<H>USDT); okx:现存USDT-SWAP列表未找到该symbol(OKX极少下架永续,按no处理,不能完全排除历史上架又下架); hyperliquid:当前met",
+    "twork(候选#个,按名称相似度选,需人工核)\",yes,unknown,yes,no,\"bin<H>e:d<H>a.bin<H>e.vision当日文件存在(<H>USDT); okx:listTime=####-##-##<=攻击日,现存USDT-SWAP; hyperliquid:当前meta.universe未找到该symb"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/K1_events.csv": {
+   "n_holdout_names": 8,
+   "tags": [
+    "2d905c",
+    "55ee32",
+    "69b0bb",
+    "69e696",
+    "735099",
+    "961bd4",
+    "f077db",
+    "faa53f"
+   ],
+   "context_masked": [
+    "no,Upbit 当前(####-##-##)无 KRW-<H> 市场，判断此前未在该所 KRW 市场上线,yes,yes,yes,bin<H>e spot <H>USDT 最早数据 ####-##-##；bin<H>e USDM <H>USDT 最早数据 ####-##-##；bybit linear <H>USDT 最早数",
+    "断此前未在该所 KRW 市场上线,yes,yes,yes,bin<H>e spot <H>USDT 最早数据 ####-##-##；bin<H>e USDM <H>USDT 最早数据 ####-##-##；bybit linear <H>USDT 最早数据 ####-##-##；与公告时间 ####-##-## 比较得出 yes",
+    "pot <H>USDT 最早数据 ####-##-##；bin<H>e USDM <H>USDT 最早数据 ####-##-##；bybit linear <H>USDT 最早数据 ####-##-##；与公告时间 ####-##-## 比较得出 yes/no\n"
+   ]
+  },
+  "/home/ancillary/RT/1_实验/加密_优势来源搜索_DQ-17/raw/prices_k1/bybit/XAUTUSDT/XAUTUSDT2026-01-01.csv.gz": {
+   "n_holdout_names": 1,
+   "tags": [
+    "2d905c"
+   ],
+   "context_masked": [
+    "##########.###,<H>USDT,Buy,#.###,####.##,PlusTick,####c#e#-#edd-####-##bd-###f#fd##c#a,#.#####e+##,#.#",
+    "##########.####,<H>USDT,Sell,#.###,####.##,MinusTick,b##dcded-#f#d-####-####-a#e#####f#a#,#.#####e+##,#",
+    "##########.####,<H>USDT,Buy,#.###,####.##,PlusTick,cbe#d###-#e##-####-#c#d-#####d#afd#e,#.####e+##,#.##"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/cb9b2558-fc70-472b-b4a2-ffe63c926c03.jsonl": {
+   "n_holdout_names": 4,
+   "tags": [
+    "69948b",
+    "82379d",
+    "eb389e",
+    "faa53f"
+   ],
+   "context_masked": [
+    " ####### <H> <H>-gun yes no yes |  |  | bin<H>e:d<H>a.bin<H>e.vision当日文件存在(<H>USDT); okx:现存USDT-SW\\n####-##-## <H>iant V# ######## RDNT <H>iant-capital yes no yes",
+    "## <H> unknown(coingecko有 yes no no |  |  | bin<H>e:d<H>a.bin<H>e.vision当日文件存在(<H>USDT); okx:现存USDT-SWA\\n####-##-## Cetus CLMM ######### CETUS cetus-protocol yes no n",
+    "### <H> <H>-network(候选#个,按 yes yes no |  |  | bin<H>e:d<H>a.bin<H>e.vision当日文件存在(<H>USDT); okx:listTime=###\\n####-##-## Ya<H> ####### YA<H> ya<H> yes no no |  |  | bin<H>e"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/3660dd55-c21a-4ee5-8628-e4e697d2a631.jsonl": {
+   "n_holdout_names": 19,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "1ebcf0",
+    "2d905c",
+    "374340",
+    "502b12",
+    "735099",
+    "82f647",
+    "8726ef",
+    "8cccdd",
+    "961bd4",
+    "9be93b",
+    "cd429e",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "f077db",
+    "f5d531"
+   ],
+   "context_masked": [
+    "okTicker/BTCUSDT/\\\"\\necho \\\"=== 退市/疑似退市币 ===\\\"\\nfor s in ALPACAUSDT ALPACAUSDT_ <H>USDT AGIXUSDT OCEANUSDT; do chk \\\"d<H>a/futures/um/daily/klines/$s/\\\"; done\\necho \\\"=",
+    "m/daily/klines/ALPACAUSDT_/\\n  Key=# Prefix=##  <- d<H>a/futures/um/daily/klines/<H>USDT/\\n  Key=# Prefix=##  <- d<H>a/futures/um/daily/klines/AGIXUSDT/\\n  Key=# Prefix=",
+    "m/daily/klines/ALPACAUSDT_/\\n  Key=# Prefix=##  <- d<H>a/futures/um/daily/klines/<H>USDT/\\n  Key=# Prefix=##  <- d<H>a/futures/um/daily/klines/AGIXUSDT/\\n  Key=# Prefix="
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/169f7497-1287-49b5-9fec-a864f119d993.jsonl": {
+   "n_holdout_names": 49,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "19db20",
+    "1e2f12",
+    "1ebcf0",
+    "2326ea",
+    "2d905c",
+    "374340",
+    "4140d0",
+    "4b1df5",
+    "500ecd",
+    "502b12",
+    "509021",
+    "554b63",
+    "55ee32",
+    "69948b",
+    "69b0bb",
+    "69e696",
+    "6e1095",
+    "6e23a3",
+    "735099",
+    "7dd0a5",
+    "82379d",
+    "82f647",
+    "82f8b9",
+    "8726ef",
+    "8cccdd",
+    "961bd4",
+    "9b9772",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "af04c3",
+    "b43e72",
+    "c8b33f",
+    "cd429e",
+    "cd4d87",
+    "dc9b65",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "eb389e",
+    "eb4bb7",
+    "eb5442",
+    "f5d531",
+    "fa865b",
+    "faa53f",
+    "ff481f"
+   ],
+   "context_masked": [
+    "-##', 'T#_precision': 'DAY_GRANU<H>RITY_ONLY', 'T#_day_source_pairs': ['<H>BNB', '<H>FDUSD', '<H>TRY', '<H>USDC', '<H>USDT'], 'source': 'U_announcement', 'in_announcement_ma",
+    ": 'DAY_GRANU<H>RITY_ONLY', 'T#_day_source_pairs': ['<H>BNB', '<H>FDUSD', '<H>TRY', '<H>USDC', '<H>USDT'], 'source': 'U_announcement', 'in_announcement_m<H>ched_subset': True",
+    "NU<H>RITY_ONLY', 'T#_day_source_pairs': ['<H>BNB', '<H>FDUSD', '<H>TRY', '<H>USDC', '<H>USDT'], 'source': 'U_announcement', 'in_announcement_m<H>ched_subset': True, 'embargo"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/cb9b2558-fc70-472b-b4a2-ffe63c926c03/tool-results/bwv7xm6hp.txt": {
+   "n_holdout_names": 8,
+   "tags": [
+    "2d905c",
+    "55ee32",
+    "69948b",
+    "82379d",
+    "961bd4",
+    "eb389e",
+    "f077db",
+    "faa53f"
+   ],
+   "context_masked": [
+    "/home/<H>il<H>ry/RT/#_实验/加密_优势来源搜索_DQ-##/raw/prices/<H>USDT/<H>USDT-#m-####-##-##.zip\n",
+    "/home/<H>il<H>ry/RT/#_实验/加密_优势来源搜索_DQ-##/raw/prices/<H>USDT/<H>USDT-#m-####-##-##.zip\n",
+    "/home/<H>il<H>ry/RT/#_实验/加密_优势来源搜索_DQ-##/raw/prices/<H>USDT/<H>USDT-fundingR<H>e-####-##.zip\n"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/cb9b2558-fc70-472b-b4a2-ffe63c926c03/subagents/agent-a1e06d4e6b3b50f8a.jsonl": {
+   "n_holdout_names": 1,
+   "tags": [
+    "e63ffa"
+   ],
+   "context_masked": [
+    "ptocurrency A St<H>istical Analysis\\\",\\\"url\\\":\\\"https://pl.t<H>ingview.com/chart/<H>USDT/CdMc##Cn-Hunting-for-the-Next-####X-Cryptocurrency-A-St<H>istical-Analysis\\\"},{\\"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/cb9b2558-fc70-472b-b4a2-ffe63c926c03/subagents/agent-a44e1f35e63da6cf8.jsonl": {
+   "n_holdout_names": 3,
+   "tags": [
+    "69948b",
+    "82379d",
+    "eb389e"
+   ],
+   "context_masked": [
+    "uchain', 'symbol': 'vc', 'name': 'VinuChain'}]\\n<H> -> [{'id': '<H>-token', 'symbol': '<H>', 'name': '<H>'}, {'id': 'the-<H>caster', 'symbol': '<H>', 'name': 'The Sp",
+    ": '<H>-token', 'symbol': '<H>', 'name': '<H>'}, {'id': 'the-<H>caster', 'symbol': '<H>', 'name': 'The <H>caster'}]\\ngmx -> [{'id': 'general-motors-xstock', 'symbol':",
+    "sor TAO {'TAOUSDT': True, '####TAOUSDT': False}\\n####-##-## <H> Gun <H> {'<H>USDT': True, '####<H>USDT': False}\\n####-##-## <H>iant V# RDNT {'RDNTUSDT': True,"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/5cbd76ec-012e-4775-864e-c2d57c434f28/subagents/agent-ac5d032f31a96c7f3.jsonl": {
+   "n_holdout_names": 1,
+   "tags": [
+    "9bfd3c"
+   ],
+   "context_masked": [
+    "$<H> On Fire! Next target is +##%\\\",\\\"url\\\":\\\"https://pl.t<H>ingview.com/chart/<H>USDT/VZDM#zBP-<H>-On-Fire-Next-target-is-##\\\"}]\\n\\nBased on the search results, her"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/169f7497-1287-49b5-9fec-a864f119d993/tool-results/b4lif40cv.txt": {
+   "n_holdout_names": 55,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "19db20",
+    "19fdfd",
+    "1e2f12",
+    "1ebcf0",
+    "2326ea",
+    "2d905c",
+    "374340",
+    "4140d0",
+    "4b1df5",
+    "500ecd",
+    "501c22",
+    "502b12",
+    "509021",
+    "554b63",
+    "55ee32",
+    "69948b",
+    "69b0bb",
+    "69e696",
+    "6e1095",
+    "6e23a3",
+    "735099",
+    "7dd0a5",
+    "82379d",
+    "82f647",
+    "82f8b9",
+    "8726ef",
+    "8cccdd",
+    "91fe49",
+    "961bd4",
+    "9b9772",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "af04c3",
+    "b43e72",
+    "c8b33f",
+    "cd429e",
+    "cd4d87",
+    "d71ee9",
+    "dc9b65",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "eb389e",
+    "eb4bb7",
+    "eb5442",
+    "ebeea5",
+    "f077db",
+    "f5d531",
+    "fa865b",
+    "faa53f",
+    "ff481f"
+   ],
+   "context_masked": [
+    "d<H>a/bin<H>e_day_closes/<H>USDT-####-##.json ###\n",
+    "d<H>a/bin<H>e_day_closes/<H>USDT-####-##.json ###\n",
+    "d<H>a/bin<H>e_day_closes/<H>USDT-####-##.json ###\n"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/169f7497-1287-49b5-9fec-a864f119d993/tool-results/brmqujybn.txt": {
+   "n_holdout_names": 55,
+   "tags": [
+    "004c75",
+    "0ab25a",
+    "0ad2fa",
+    "19db20",
+    "19fdfd",
+    "1e2f12",
+    "1ebcf0",
+    "2326ea",
+    "2d905c",
+    "374340",
+    "4140d0",
+    "4b1df5",
+    "500ecd",
+    "501c22",
+    "502b12",
+    "509021",
+    "554b63",
+    "55ee32",
+    "69948b",
+    "69b0bb",
+    "69e696",
+    "6e1095",
+    "6e23a3",
+    "735099",
+    "7dd0a5",
+    "82379d",
+    "82f647",
+    "82f8b9",
+    "8726ef",
+    "8cccdd",
+    "91fe49",
+    "961bd4",
+    "9b9772",
+    "9be93b",
+    "9bfd3c",
+    "aa0948",
+    "af04c3",
+    "b43e72",
+    "c8b33f",
+    "cd429e",
+    "cd4d87",
+    "d71ee9",
+    "dc9b65",
+    "e12ed9",
+    "e16895",
+    "e63ffa",
+    "eb389e",
+    "eb4bb7",
+    "eb5442",
+    "ebeea5",
+    "f077db",
+    "f5d531",
+    "fa865b",
+    "faa53f",
+    "ff481f"
+   ],
+   "context_masked": [
+    "d<H>a/announce_shock_cache/<H>USDT_bybit_########T####.json ##\n",
+    "d<H>a/announce_shock_cache/<H>USDT_coinbase_########T####.json #####\n",
+    "d<H>a/announce_shock_cache/<H>USDT_bybit_########T####.json ##\n"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/169f7497-1287-49b5-9fec-a864f119d993/subagents/agent-aa8342f07f7e0e8ac.jsonl": {
+   "n_holdout_names": 5,
+   "tags": [
+    "1ebcf0",
+    "8726ef",
+    "9be93b",
+    "9bfd3c",
+    "ff481f"
+   ],
+   "context_masked": [
+    "<H>a/MANIFEST.md ####\\nd<H>a/announce_shock_cache None\\nd<H>a/announce_shock_cache/<H>USDT_bybit_########T####.json ##\\nd<H>a/announce_shock_cache/#ZUSDT_bybit_########T##",
+    "ock_cache/AERGOUSDT_coinbase_########T####.json ####\\nd<H>a/announce_shock_cache/<H>USDT_coinbase_########T####.json #####\\nd<H>a/announce_shock_cache/AEVOUSDT_bybit_###",
+    "hock_cache/AMPUSDT_coinbase_########T####.json #####\\nd<H>a/announce_shock_cache/<H>USDT_bybit_########T####.json ##\\nd<H>a/announce_shock_cache/<H>USDT_coinbase_#######"
+   ]
+  },
+  "/home/claude/.claude/projects/-home-ancillary/d4996688-3de9-4772-8ffc-67b329a80b40/subagents/agent-aa2835d06553020b1.jsonl": {
+   "n_holdout_names": 3,
+   "tags": [
+    "961bd4",
+    "e16895",
+    "e63ffa"
+   ],
+   "context_masked": [
+    "####-##-##**,\\n退市币保留且各自止于退市日(`ALPACAUSDT` 止 ####-##-##、`AGIXUSDT` 止 ####-##-##、`<H>USDT` 止 ####-##-##)。\\n\\n复现:\\n```bash\\ncurl -sS -X POST https://api.hyperliquid.xyz/i",
+    " 月份 | interval_hours |\\n|---|---|---|\\n| BTCUSDT | ####-## / ####-## | `#` |\\n| ####<H>USDT | ####-## / ####-## | `#` |\\n| HYPEUSDT | ####-## | `#` |\\n| <H>USDT | ####-## ",
+    " |\\n| ####<H>USDT | ####-## / ####-## | `#` |\\n| HYPEUSDT | ####-## | `#` |\\n| <H>USDT | ####-## / ####-## | `#` |\\n\\n⟹ **`###` 观察到的「#h 结算」是符号特异的,不是长尾通例。**该条不可外推,已在 p"
+   ]
+  },
+  "/tmp/claude-1000/-home-ancillary/169f7497-1287-49b5-9fec-a864f119d993/scratchpad/llama_fees.json": {
+   "n_holdout_names": 2,
+   "tags": [
+    "dc9b65",
+    "faa53f"
+   ],
+   "context_masked": [
+    "um\",\"Meter\",\"Aurora\",\"Polygon\",\"Mantle\",\"OntologyEVM\",\"Ultron\",\"Linea\",\"Scroll\",\"Base\",\"<H>\",\"ZetaChain\",\"Mode\",\"<H>\",\"Monad\"],\"protocolType\":\"protocol\",\"methodologyURL\":\"",
+    ".l<H>mao.fi/icons/protocols/clearstar\",\"chains\":[\"Polygon\",\"Arbitrum\",\"Ethereum\",\"Base\",\"<H>\",\"Unichain\",\"K<H>ana\",\"F<H>re\",\"Monad\"],\"protocolType\":\"protocol\",\"methodologyURL\""
+   ]
+  }
+ },
+ "errors": [],
+ "n_files": 48182
+}
