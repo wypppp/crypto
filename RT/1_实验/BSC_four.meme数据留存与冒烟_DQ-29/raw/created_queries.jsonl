@@ -1,0 +1,6 @@
+{"query_id": 8880666, "name": "RT DQ-29 C4 冒烟 four.meme", "file": "SMOKE_C4.sql", "sha256": "595450b697dc3d52a64cacd528885be4205b3071ad28e7f1ff2656a452d32d8d", "saved_equal": true, "is_private": false}
+{"query_id": 8880677, "name": "RT DQ-29 C4 冒烟 four.meme v2（正则改 Han）", "file": "SMOKE_C4.sql", "sha256": "54fa1f4166a69f76b8f4f44de597121653a8b716ce27cf5d59a340fcd798f6f5", "saved_equal": true, "is_private": false}
+{"query_id": 8880696, "name": "RT DQ-29 保存规模探针", "file": "SIZE_SAVE.sql", "sha256": "e709921d47ddcb3c9cc1e5eb6759e292462b9714cd0d1ad58cc18940a59ec2fe", "saved_equal": true, "is_private": false}
+{"query_id": 8880712, "name": "RT DQ-29 留存 SAVE_META", "file": "SAVE_META.sql", "sha256": "6722bae58222605f04cbc7c82ba5cf0ef360f1ed6059e3290190ee9c37c152a7", "saved_equal": true, "is_private": false}
+{"query_id": 8880714, "name": "RT DQ-29 留存 SAVE_BUCKETS", "file": "SAVE_BUCKETS.sql", "sha256": "50246bfeffd83d13a6d8eca0c1f65f5ac47c455a72a45c995b768a922eaf20a4", "saved_equal": true, "is_private": false}
+{"query_id": 8880716, "name": "RT DQ-29 留存 SAVE_POST", "file": "SAVE_POST.sql", "sha256": "244fbfbbefda0fd9c3886cad60270c200f290ac5e880b8fb750229d92f0c8542", "saved_equal": true, "is_private": false}

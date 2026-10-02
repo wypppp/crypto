@@ -1,0 +1,57 @@
+{
+ "n_wallets_list": 794,
+ "n_wallets_active": 352,
+ "n_wallets_traded_window_coins": 292,
+ "n_cells": 132479,
+ "n_cells_xfer_excluded": 812,
+ "pay_sol": 121321.1,
+ "recv_full_sol": 131450.8,
+ "fee_all_sol": 2047.6,
+ "fee_trade_sol": 807.7,
+ "tip_all_sol": 493.1,
+ "tip_trade_sol": 345.5,
+ "share_tx_trade": 0.1934,
+ "R_lo": 1.0613,
+ "R_lo_ci95_by_wallet": [
+  1.0293,
+  1.1212
+ ],
+ "R_hi": 1.0733,
+ "R_hi_ci95_by_wallet": [
+  1.0387,
+  1.1309
+ ],
+ "reading": "读法 1：存活的独立狙击钱包扣全部尝试成本后仍赚钱（R_lo 下界 >1）",
+ "wallets_net_lo_positive": 154,
+ "top10_wallets_share_of_positive_net_lo": 0.7135,
+ "by_first_buy_slot_gap": [
+  {
+   "gap_grp": "0",
+   "n": 26527,
+   "pay": 36006.401910307,
+   "rf": 43478.28118020487,
+   "R_before_costs": 1.2075
+  },
+  {
+   "gap_grp": "1-2",
+   "n": 19316,
+   "pay": 14084.089022998,
+   "rf": 14829.420246047217,
+   "R_before_costs": 1.0529
+  },
+  {
+   "gap_grp": "3-10",
+   "n": 23428,
+   "pay": 16589.876406093,
+   "rf": 17134.74343435001,
+   "R_before_costs": 1.0328
+  },
+  {
+   "gap_grp": ">10",
+   "n": 62396,
+   "pay": 54640.733149818,
+   "rf": 56008.33412173266,
+   "R_before_costs": 1.025
+  }
+ ]
+}

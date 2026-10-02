@@ -1,0 +1,3 @@
+query_id,sql_file,execution_id,state,credits,usage_after,note
+8880656,sql/PROBE_SCHEMA_2024.sql,01M3WTF237ES102FVY270ZHPZS,COMPLETED,3.264,,字段探针：2024-01～04 四个日期无任何行；2024-06 起有数据，但真实储备与费率字段全空
+8880657,sql/PROBE_COVERAGE_2024.sql,01M3WTGEVRMRJ01WTQM7Q6GAYN,COMPLETED,1.520,,覆盖探针：创建与成交事件都从 2024-04-26 09:55 UTC 开始

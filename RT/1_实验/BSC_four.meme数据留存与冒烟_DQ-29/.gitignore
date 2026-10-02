@@ -1,0 +1,3 @@
+raw/dune/SAVE_*.csv.gz
+raw/dune/*.log
+raw/dune/*.part

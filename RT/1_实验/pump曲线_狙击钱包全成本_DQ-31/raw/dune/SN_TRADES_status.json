@@ -1,0 +1,48 @@
+{
+  "execution_id": "01M3WXV6X5NFA8KCA6PFW4QSHQ",
+  "query_id": 8881046,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T23:47:25.222908Z",
+  "expires_at": "2026-12-30T23:48:48.22173Z",
+  "execution_started_at": "2026-10-01T23:47:26.739365649Z",
+  "execution_ended_at": "2026-10-01T23:48:48.22168378Z",
+  "result_metadata": {
+    "column_names": [
+      "mint",
+      "usr",
+      "created_at",
+      "first_buy_slot_gap",
+      "pay",
+      "recv",
+      "tok_b",
+      "tok_s",
+      "n_buy",
+      "n_sell",
+      "n_amm",
+      "liq_sol"
+    ],
+    "column_types": [
+      "varchar",
+      "varchar",
+      "timestamp(3) with time zone",
+      "bigint",
+      "double",
+      "double",
+      "double",
+      "double",
+      "bigint",
+      "bigint",
+      "bigint",
+      "double"
+    ],
+    "row_count": 132479,
+    "result_set_bytes": 22223983,
+    "total_row_count": 132479,
+    "total_result_set_bytes": 22223983,
+    "datapoint_count": 1589748,
+    "pending_time_millis": 1516,
+    "execution_time_millis": 81482
+  },
+  "execution_cost_credits": 11.367205883
+}

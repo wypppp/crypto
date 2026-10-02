@@ -1,0 +1,15 @@
+{
+ "median_wallet_R_lo": 0.9866,
+ "R_lo_excl_top10_wallets": 1.0251,
+ "R_lo_excl_top1": 1.041,
+ "top10_pay_share": 0.4093,
+ "wallet_R_lo_quantiles": {
+  "0.1": 0.0,
+  "0.25": 0.558,
+  "0.5": 0.987,
+  "0.75": 1.054,
+  "0.9": 1.268
+ },
+ "net_lo_total": 7589.0,
+ "inactive_listed_wallets": 442
+}

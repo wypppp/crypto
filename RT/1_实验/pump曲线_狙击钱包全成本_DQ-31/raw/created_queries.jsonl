@@ -1,0 +1,3 @@
+{"query_id": 8881046, "name": "RT DQ-31 SN_TRADES", "file": "SN_TRADES.sql", "sha256": "fedab6b1e4c509a721e178175383c21ccdd1fc2101855432566c2aca3432b911", "saved_equal": true, "is_private": false}
+{"query_id": 8881047, "name": "RT DQ-31 SN_FEES", "file": "SN_FEES.sql", "sha256": "4388236bdd35b537e0f4e982527598c6079a2d9d4431dded4effd8f0a0208939", "saved_equal": true, "is_private": false}
+{"query_id": 8881049, "name": "RT DQ-31 SN_XFER", "file": "SN_XFER.sql", "sha256": "9cace4229df0b4c6d18f261f10a5b354f74c3eedca39258be7afabd120a8bc66", "saved_equal": true, "is_private": false}
