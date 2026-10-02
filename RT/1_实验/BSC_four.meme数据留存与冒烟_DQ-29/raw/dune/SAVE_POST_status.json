@@ -1,0 +1,34 @@
+{
+  "execution_id": "01M3WTYYCYDK2MG99GGK1WYXDZ",
+  "query_id": 8880716,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-01T22:57:01.855491Z",
+  "expires_at": "2026-12-30T22:57:30.552022Z",
+  "execution_started_at": "2026-10-01T22:57:09.259910991Z",
+  "execution_ended_at": "2026-10-01T22:57:30.552001472Z",
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "token",
+      "hour",
+      "price",
+      "symbol"
+    ],
+    "column_types": [
+      "varchar(5)",
+      "varbinary",
+      "timestamp(3) with time zone",
+      "double",
+      "varchar"
+    ],
+    "row_count": 4069856,
+    "result_set_bytes": 291517306,
+    "total_row_count": 4069856,
+    "total_result_set_bytes": 291517306,
+    "datapoint_count": 20349280,
+    "pending_time_millis": 7404,
+    "execution_time_millis": 21292
+  },
+  "execution_cost_credits": 15.623676471
+}
