@@ -1,0 +1,182 @@
+{
+ "0": {
+  "top50_same_order": true,
+  "top50_overlap": 50,
+  "top50_new": [],
+  "top50_dropped": [],
+  "net_attr_sum": -260760.43112175883,
+  "net_attr_sum_old": -260760.43112175883,
+  "n_positive": 245,
+  "n_positive_old": 245,
+  "top50_net_attr": 77621.27687539952,
+  "top50_net_attr_old": 77621.27687539952,
+  "max_abs_net_change": 0.0,
+  "step1": {
+   "n_entity_wallets": 3817,
+   "n_entities": 594,
+   "events_vs_dex_tok_b": {
+    "cells": 502687,
+    "share_within_1pct": 0.9925
+   },
+   "bt_actions": {
+    "transfer": 4465513
+   },
+   "costs": {
+    "network_fee_sol": 4518.08,
+    "jito_sol": 1609.78,
+    "service_sol": 9468.75,
+    "own_or_unknown_sol_excluded": 1042628.6,
+    "n_service_recipients": 1717,
+    "fee_rows_found_share": 0.9665,
+    "fee_extra_sol": 9271.54,
+    "cashback_sol_not_counted": 4130.73
+   },
+   "top50_sha256": "263064db10dafacd058d2b36e841ae39613c410c2060d025232982120b6653fd",
+   "G1a": {
+    "balance_coverage_nonzero_cells": 1.0,
+    "entities_closed_ge95": 50,
+    "pass": true,
+    "closed_w_median": 1.0,
+    "closed_w_p10": 1.0,
+    "transfer_legs_only_entities_ge95": 50,
+    "v1_misclassified_entities_ge95": 43
+   },
+   "G1a_unclosed_cells": {
+    "n": 1,
+    "buy_sol": 0.0,
+    "calc_gt_bal_share": 1.0
+   },
+   "G2": {
+    "buy_sol_on_t3_coins": 144638.2,
+    "share_buy_at_or_after_t3_plus5": 0.4881,
+    "pass": true,
+    "entity_after_median": 0.1007,
+    "entities_after_ge50pct": 14
+   },
+   "describe": {
+    "top50_net_attr_sol": 77621.3,
+    "top50_R_full_median": 2.4174,
+    "top50_wallets_per_entity": {
+     "count": 50.0,
+     "mean": 2.9,
+     "std": 5.4,
+     "min": 1.0,
+     "25%": 1.0,
+     "50%": 1.0,
+     "75%": 1.0,
+     "max": 27.0
+    },
+    "top50_entities_unattr_gt_half_gross": 3,
+    "all_entities_unattr_share_of_gross": 0.2046,
+    "top50_extra_in_tokens_share_of_inflow": 0.0547,
+    "top50_unattr_share_of_gross": 0.0671,
+    "top50_crosspool_share_of_cost": 0.0018,
+    "holding_seconds_quantiles": {
+     "0.1": 1.0,
+     "0.25": 2.0,
+     "0.5": 2.0,
+     "0.75": 34.0,
+     "0.9": 378.0
+    },
+    "top10_coins_share_of_net": 0.3662,
+    "top_day_share_of_net": 0.2945,
+    "same_slot_cells_share": 0.3554,
+    "giant_entity_in_top50": false
+   }
+  }
+ },
+ "b": {
+  "top50_same_order": false,
+  "top50_overlap": 47,
+  "top50_new": [
+   "8zX6QJscxXTVtYYiWTtC1f1xGPwP4tibPynWXMrkNng4",
+   "24VwMM5dNbDLUaQQbYQN9giyujy1Luxg1Jz4v2t8Dnqx",
+   "3QNKcR8g3dPFNNepFecAxjPLFdzC1cMJkSGuNptPU2UU"
+  ],
+  "top50_dropped": [
+   "CKjrQ9nQNEFQp3PZ9oVrHXeiobxxyxAzsjyDyabHvnwp",
+   "CQyBKhJMvj32irbUGw5i7Bomj6SgxHZMcsnb4HbXM3Mc",
+   "G3rfSianfqVWjSUptPE9CbqCr47fayoRTPK1K4oeTG5C"
+  ],
+  "net_attr_sum": -251488.89069156582,
+  "net_attr_sum_old": -260760.43112175883,
+  "n_positive": 245,
+  "n_positive_old": 245,
+  "top50_net_attr": 78106.87476077705,
+  "top50_net_attr_old": 77621.27687539952,
+  "max_abs_net_change": 7236.408937839005,
+  "step1": {
+   "n_entity_wallets": 3817,
+   "n_entities": 594,
+   "events_vs_dex_tok_b": {
+    "cells": 502687,
+    "share_within_1pct": 0.9925
+   },
+   "bt_actions": {
+    "transfer": 4465513
+   },
+   "costs": {
+    "network_fee_sol": 4518.08,
+    "jito_sol": 1609.78,
+    "service_sol": 9468.75,
+    "own_or_unknown_sol_excluded": 1042628.6,
+    "n_service_recipients": 1717,
+    "fee_rows_found_share": 0.9665,
+    "fee_extra_sol": 0.0,
+    "cashback_sol_not_counted": 4130.73
+   },
+   "top50_sha256": "6497b4ee8f83a8372b414ffac859a9ac9a08b22e8b2ff353c82d1a11e0b7eafe",
+   "G1a": {
+    "balance_coverage_nonzero_cells": 1.0,
+    "entities_closed_ge95": 50,
+    "pass": true,
+    "closed_w_median": 1.0,
+    "closed_w_p10": 1.0,
+    "transfer_legs_only_entities_ge95": 50,
+    "v1_misclassified_entities_ge95": 42
+   },
+   "G1a_unclosed_cells": {
+    "n": 1,
+    "buy_sol": 0.0,
+    "calc_gt_bal_share": 1.0
+   },
+   "G2": {
+    "buy_sol_on_t3_coins": 168923.5,
+    "share_buy_at_or_after_t3_plus5": 0.5251,
+    "pass": true,
+    "entity_after_median": 0.0892,
+    "entities_after_ge50pct": 15
+   },
+   "describe": {
+    "top50_net_attr_sol": 78106.9,
+    "top50_R_full_median": 2.323,
+    "top50_wallets_per_entity": {
+     "count": 50.0,
+     "mean": 5.1,
+     "std": 15.0,
+     "min": 1.0,
+     "25%": 1.0,
+     "50%": 1.0,
+     "75%": 1.8,
+     "max": 102.0
+    },
+    "top50_entities_unattr_gt_half_gross": 3,
+    "all_entities_unattr_share_of_gross": 0.2046,
+    "top50_extra_in_tokens_share_of_inflow": 0.0667,
+    "top50_unattr_share_of_gross": 0.0694,
+    "top50_crosspool_share_of_cost": 0.0016,
+    "holding_seconds_quantiles": {
+     "0.1": 1.0,
+     "0.25": 2.0,
+     "0.5": 7.0,
+     "0.75": 131.0,
+     "0.9": 567.0
+    },
+    "top10_coins_share_of_net": 0.3639,
+    "top_day_share_of_net": 0.2946,
+    "same_slot_cells_share": 0.0631,
+    "giant_entity_in_top50": false
+   }
+  }
+ }
+}

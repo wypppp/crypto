@@ -12,3 +12,6 @@ raw/dune/BOOK_BX_R.csv.gz
 raw/dune/BOOK_BT_R.csv.gz
 raw/dune/BOOK_BBAL_R.csv.gz
 runs/dl_*.log
+
+# 代码审计 10-03 重跑（10-02）：大文件只留本地
+runs/audit1003/*/raw/

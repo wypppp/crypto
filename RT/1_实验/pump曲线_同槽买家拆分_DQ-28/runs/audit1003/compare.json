@@ -1,0 +1,274 @@
+{
+ "原入库": {
+  "classes": {
+   "B": {
+    "n_cells": 321,
+    "R_full": 0.004,
+    "R_full_ci95_by_wallet": [
+     0.0007,
+     0.0186
+    ]
+   },
+   "L": {
+    "n_cells": 16478,
+    "R_full": 0.9928,
+    "R_full_ci95_by_wallet": [
+     0.9343,
+     1.0701
+    ]
+   },
+   "X": {
+    "n_cells": 5346,
+    "R_full": 0.7153,
+    "R_full_ci95_by_wallet": [
+     0.5486,
+     0.9254
+    ]
+   },
+   "I": {
+    "n_cells": 75945,
+    "R_full": 0.422,
+    "R_full_ci95_by_wallet": [
+     0.3167,
+     0.6152
+    ]
+   },
+   "ALL": {
+    "n_cells": 98090,
+    "R_full": 0.4018,
+    "R_full_ci95_by_wallet": null
+   }
+  },
+  "reading": "读法 1（停）：独立同槽买家全成本回收上界 <1",
+  "posthoc": {
+   "I_curve_only_coins": {
+    "n_cells": 73213,
+    "R_full": 1.1977,
+    "R_full_ci95_by_wallet": [
+     1.1685,
+     1.2301
+    ]
+   },
+   "I_migrated_coins": {
+    "n_cells": 2732,
+    "R_full": 0.2733,
+    "R_full_ci95_by_wallet": [
+     0.1981,
+     0.4146
+    ]
+   },
+   "ALL_curve_only_coins": {
+    "n_cells": 93914,
+    "R_full": 1.1265,
+    "R_full_ci95_by_wallet": [
+     1.0998,
+     1.1562
+    ]
+   }
+  }
+ },
+ "0": {
+  "classes": {
+   "B": {
+    "n_cells": 321,
+    "R_full": 0.004,
+    "R_full_ci95_by_wallet": [
+     0.0007,
+     0.0186
+    ]
+   },
+   "L": {
+    "n_cells": 16478,
+    "R_full": 0.9928,
+    "R_full_ci95_by_wallet": [
+     0.9343,
+     1.0701
+    ]
+   },
+   "X": {
+    "n_cells": 5346,
+    "R_full": 0.7153,
+    "R_full_ci95_by_wallet": [
+     0.5486,
+     0.9254
+    ]
+   },
+   "I": {
+    "n_cells": 75945,
+    "R_full": 0.422,
+    "R_full_ci95_by_wallet": [
+     0.3167,
+     0.6152
+    ]
+   },
+   "ALL": {
+    "n_cells": 98090,
+    "R_full": 0.4018,
+    "R_full_ci95_by_wallet": null
+   }
+  },
+  "reading": "读法 1（停）：独立同槽买家全成本回收上界 <1",
+  "posthoc": {
+   "I_curve_only_coins": {
+    "n_cells": 73213,
+    "R_full": 1.1977,
+    "R_full_ci95_by_wallet": [
+     1.1685,
+     1.2301
+    ]
+   },
+   "I_migrated_coins": {
+    "n_cells": 2732,
+    "R_full": 0.2733,
+    "R_full_ci95_by_wallet": [
+     0.1981,
+     0.4146
+    ]
+   },
+   "ALL_curve_only_coins": {
+    "n_cells": 93914,
+    "R_full": 1.1265,
+    "R_full_ci95_by_wallet": [
+     1.0998,
+     1.1562
+    ]
+   }
+  }
+ },
+ "b3": {
+  "classes": {
+   "B": {
+    "n_cells": 321,
+    "R_full": 0.004,
+    "R_full_ci95_by_wallet": [
+     0.0007,
+     0.0187
+    ]
+   },
+   "L": {
+    "n_cells": 16478,
+    "R_full": 1.0019,
+    "R_full_ci95_by_wallet": [
+     0.9431,
+     1.0798
+    ]
+   },
+   "X": {
+    "n_cells": 5346,
+    "R_full": 0.72,
+    "R_full_ci95_by_wallet": [
+     0.5523,
+     0.9319
+    ]
+   },
+   "I": {
+    "n_cells": 75945,
+    "R_full": 0.4233,
+    "R_full_ci95_by_wallet": [
+     0.3175,
+     0.6177
+    ]
+   },
+   "ALL": {
+    "n_cells": 98090,
+    "R_full": 0.4033,
+    "R_full_ci95_by_wallet": null
+   }
+  },
+  "reading": "读法 1（停）：独立同槽买家全成本回收上界 <1",
+  "posthoc": {
+   "I_curve_only_coins": {
+    "n_cells": 73213,
+    "R_full": 1.2091,
+    "R_full_ci95_by_wallet": [
+     1.1796,
+     1.2418
+    ]
+   },
+   "I_migrated_coins": {
+    "n_cells": 2732,
+    "R_full": 0.2734,
+    "R_full_ci95_by_wallet": [
+     0.1982,
+     0.4148
+    ]
+   },
+   "ALL_curve_only_coins": {
+    "n_cells": 93914,
+    "R_full": 1.1372,
+    "R_full_ci95_by_wallet": [
+     1.1103,
+     1.1673
+    ]
+   }
+  }
+ },
+ "b": {
+  "classes": {
+   "B": {
+    "n_cells": 68,
+    "R_full": 0.9782,
+    "R_full_ci95_by_wallet": [
+     0.1705,
+     4.0363
+    ]
+   },
+   "L": {
+    "n_cells": 16478,
+    "R_full": 1.0019,
+    "R_full_ci95_by_wallet": [
+     0.9428,
+     1.0812
+    ]
+   },
+   "X": {
+    "n_cells": 5346,
+    "R_full": 0.72,
+    "R_full_ci95_by_wallet": [
+     0.555,
+     0.9357
+    ]
+   },
+   "I": {
+    "n_cells": 75945,
+    "R_full": 0.4233,
+    "R_full_ci95_by_wallet": [
+     0.3159,
+     0.6132
+    ]
+   },
+   "ALL": {
+    "n_cells": 98090,
+    "R_full": 0.4033,
+    "R_full_ci95_by_wallet": null
+   }
+  },
+  "reading": "读法 1（停）：独立同槽买家全成本回收上界 <1",
+  "posthoc": {
+   "I_curve_only_coins": {
+    "n_cells": 73213,
+    "R_full": 1.2091,
+    "R_full_ci95_by_wallet": [
+     1.1796,
+     1.2418
+    ]
+   },
+   "I_migrated_coins": {
+    "n_cells": 2732,
+    "R_full": 0.2734,
+    "R_full_ci95_by_wallet": [
+     0.1982,
+     0.4148
+    ]
+   },
+   "ALL_curve_only_coins": {
+    "n_cells": 93914,
+    "R_full": 1.1372,
+    "R_full_ci95_by_wallet": [
+     1.1103,
+     1.1673
+    ]
+   }
+  }
+ }
+}

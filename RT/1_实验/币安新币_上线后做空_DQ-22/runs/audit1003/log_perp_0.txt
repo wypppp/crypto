@@ -1,0 +1,1 @@
+{"status": {"perp_at_entry": 145, "perp_later": 38, "no_perp": 23}, "lambda_exec_per_year": 25.449903892359444, "reading": "1_继续"}

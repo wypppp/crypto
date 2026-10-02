@@ -2,3 +2,6 @@ raw/dune/SS_XFER.csv.gz
 raw/dune/SS_CELLS.csv.gz
 raw/dune/SS_FEES.csv.gz
 runs/ss_cells.csv
+
+# 代码审计 10-03 重跑（10-02）：逐格大表只留本地
+runs/audit1003/*/runs/ss_cells.csv

@@ -1,0 +1,835 @@
+{
+ "perp": {
+  "原入库": {
+   "H30_L1": {
+    "n": 143,
+    "mean": 0.13921687112818784,
+    "ci95_block_month": [
+     0.0430653345690684,
+     0.2280589995688279
+    ],
+    "median": 0.27391221316216274,
+    "share_liquidated": 0.1048951048951049,
+    "reading": "1_继续"
+   },
+   "H7_L1": {
+    "n": 144,
+    "mean": 0.07422883791435292,
+    "ci95_block_month": [
+     0.017135918444566172,
+     0.1282413503358443
+    ],
+    "median": 0.13708861634399372,
+    "share_liquidated": 0.05555555555555555,
+    "reading": "1_继续"
+   }
+  },
+  "0": {
+   "H30_L1": {
+    "n": 143,
+    "mean": 0.13921687112818784,
+    "ci95_block_month": [
+     0.0430653345690684,
+     0.2280589995688279
+    ],
+    "median": 0.27391221316216274,
+    "share_liquidated": 0.1048951048951049,
+    "reading": "1_继续"
+   },
+   "H7_L1": {
+    "n": 144,
+    "mean": 0.07422883791435292,
+    "ci95_block_month": [
+     0.017135918444566172,
+     0.1282413503358443
+    ],
+    "median": 0.13708861634399372,
+    "share_liquidated": 0.05555555555555555,
+    "reading": "1_继续"
+   },
+   "H30_status_changed": [],
+   "H30_r_changed": [],
+   "H7_status_changed": [],
+   "H7_r_changed": []
+  },
+  "a": {
+   "H30_L1": {
+    "n": 143,
+    "mean": 0.13921687112818784,
+    "ci95_block_month": [
+     0.0430653345690684,
+     0.2280589995688279
+    ],
+    "median": 0.27391221316216274,
+    "share_liquidated": 0.1048951048951049,
+    "reading": "1_继续"
+   },
+   "H7_L1": {
+    "n": 144,
+    "mean": 0.07422883791435292,
+    "ci95_block_month": [
+     0.017135918444566172,
+     0.1282413503358443
+    ],
+    "median": 0.13708861634399372,
+    "share_liquidated": 0.05555555555555555,
+    "reading": "1_继续"
+   },
+   "H30_status_changed": [],
+   "H30_r_changed": [],
+   "H7_status_changed": [],
+   "H7_r_changed": []
+  },
+  "b": {
+   "H30_L1": {
+    "n": 143,
+    "mean": 0.12893540464907405,
+    "ci95_block_month": [
+     0.030425777416714,
+     0.21913647668308184
+    ],
+    "median": 0.2682255693381046,
+    "share_liquidated": 0.1258741258741259,
+    "reading": "1_继续"
+   },
+   "H7_L1": {
+    "n": 144,
+    "mean": 0.0744328532575737,
+    "ci95_block_month": [
+     0.017330798570797907,
+     0.12831794033544394
+    ],
+    "median": 0.13708861634399366,
+    "share_liquidated": 0.05555555555555555,
+    "reading": "1_继续"
+   },
+   "H30_status_changed": [],
+   "H30_r_changed": [
+    {
+     "base": "ID",
+     "r_old": -1.0,
+     "r_new": -0.9897361016006194,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "TIA",
+     "r_old": -1.0,
+     "r_new": -0.9830392353292338,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "ORDI",
+     "r_old": -1.0,
+     "r_new": -0.9861895492408762,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "ETHFI",
+     "r_old": -1.0,
+     "r_new": -0.9894982924475656,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "BB",
+     "r_old": -1.0,
+     "r_new": -0.9968701992780452,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "NEIRO",
+     "r_old": -1.0,
+     "r_new": -0.9950175699985476,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "PNUT",
+     "r_old": -1.0,
+     "r_new": -0.9905843528976396,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "AIXBT",
+     "r_old": -1.0,
+     "r_new": -0.999912058492236,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "KAITO",
+     "r_old": -1.0,
+     "r_new": -0.9999443687462513,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "VIRTUAL",
+     "r_old": -1.0,
+     "r_new": -0.9999096090813154,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "SYRUP",
+     "r_old": -1.0,
+     "r_new": -0.9973204696437086,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "MITO",
+     "r_old": 0.3782835414186656,
+     "r_new": -0.9979013925584964,
+     "liq_old": false,
+     "liq_new": true
+    },
+    {
+     "base": "AVNT",
+     "r_old": -1.0,
+     "r_new": -0.9990369886813562,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "KITE",
+     "r_old": -1.0,
+     "r_new": -0.9999369025192952,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "SENT",
+     "r_old": -1.0328573239041126,
+     "r_new": -1.0,
+     "liq_old": false,
+     "liq_new": true
+    },
+    {
+     "base": "CFG",
+     "r_old": -0.8000736015164688,
+     "r_new": -1.0,
+     "liq_old": false,
+     "liq_new": true
+    }
+   ],
+   "H7_status_changed": [],
+   "H7_r_changed": [
+    {
+     "base": "ORDI",
+     "r_old": -1.0,
+     "r_new": -0.9861895492408762,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "NEIRO",
+     "r_old": -1.0,
+     "r_new": -0.9950175699985476,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "PNUT",
+     "r_old": -1.0,
+     "r_new": -0.9905843528976396,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "AIXBT",
+     "r_old": -1.0,
+     "r_new": -0.999912058492236,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "KAITO",
+     "r_old": -1.0,
+     "r_new": -0.9999443687462513,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "AVNT",
+     "r_old": -1.0,
+     "r_new": -0.9990369886813562,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "base": "KITE",
+     "r_old": -1.0,
+     "r_new": -0.9999369025192952,
+     "liq_old": true,
+     "liq_new": true
+    }
+   ]
+  }
+ },
+ "oos": {
+  "原入库": {
+   "H30_L1": {
+    "n": 189,
+    "mean": -0.033069162542030184,
+    "ci95_block_month": [
+     -0.17347333346748428,
+     0.11623049072951264
+    ],
+    "median": 0.1672747155064099,
+    "share_liquidated": 0.25396825396825395,
+    "reading": "2_样本外不支持"
+   },
+   "H7_L1": {
+    "n": 194,
+    "mean": 0.009633658536077058,
+    "ci95_block_month": [
+     -0.05702258557065859,
+     0.08362904723429901
+    ],
+    "median": 0.09299601745294898,
+    "share_liquidated": 0.0979381443298969,
+    "reading": "2_样本外不支持"
+   }
+  },
+  "0": {
+   "H30_L1": {
+    "n": 189,
+    "mean": -0.033069162542030184,
+    "ci95_block_month": [
+     -0.17347333346748428,
+     0.11623049072951264
+    ],
+    "median": 0.1672747155064099,
+    "share_liquidated": 0.25396825396825395,
+    "reading": "2_样本外不支持"
+   },
+   "H7_L1": {
+    "n": 194,
+    "mean": 0.009633658536077058,
+    "ci95_block_month": [
+     -0.05702258557065859,
+     0.08362904723429901
+    ],
+    "median": 0.09299601745294898,
+    "share_liquidated": 0.0979381443298969,
+    "reading": "2_样本外不支持"
+   },
+   "H30_status_changed": [],
+   "H30_r_changed": [],
+   "H7_status_changed": [],
+   "H7_r_changed": []
+  },
+  "a": {
+   "H30_L1": {
+    "n": 190,
+    "mean": -0.03076974611896805,
+    "ci95_block_month": [
+     -0.16884797885087607,
+     0.11351671105068978
+    ],
+    "median": 0.17826285366172878,
+    "share_liquidated": 0.25263157894736843,
+    "reading": "2_样本外不支持"
+   },
+   "H7_L1": {
+    "n": 194,
+    "mean": 0.009633658536077058,
+    "ci95_block_month": [
+     -0.05702258557065859,
+     0.08362904723429901
+    ],
+    "median": 0.09299601745294898,
+    "share_liquidated": 0.0979381443298969,
+    "reading": "2_样本外不支持"
+   },
+   "H30_status_changed": [
+    {
+     "perp": "GRVTUSDT",
+     "old": "window_missing",
+     "new": "ok",
+     "r_new": 0.4038199578397754
+    }
+   ],
+   "H30_r_changed": [],
+   "H7_status_changed": [],
+   "H7_r_changed": []
+  },
+  "b": {
+   "H30_L1": {
+    "n": 190,
+    "mean": -0.039804702612959056,
+    "ci95_block_month": [
+     -0.17487838249194132,
+     0.10382036837569275
+    ],
+    "median": 0.16347963485753486,
+    "share_liquidated": 0.26842105263157895,
+    "reading": "2_样本外不支持"
+   },
+   "H7_L1": {
+    "n": 194,
+    "mean": 0.006367218873526738,
+    "ci95_block_month": [
+     -0.05956099221658902,
+     0.08032563575596949
+    ],
+    "median": 0.092996017452949,
+    "share_liquidated": 0.10309278350515463,
+    "reading": "2_样本外不支持"
+   },
+   "H30_status_changed": [
+    {
+     "perp": "GRVTUSDT",
+     "old": "window_missing",
+     "new": "ok",
+     "r_new": 0.4038199578397755
+    }
+   ],
+   "H30_r_changed": [
+    {
+     "perp": "1000000MOGUSDT",
+     "r_old": -1.0,
+     "r_new": -0.939290550470374,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "ACUUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9998934026014142,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "AIAUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9423744876408424,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "AIOUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9675354925249128,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "AIOTUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9547153233424144,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "ARIAUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9781462277019508,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "AZTECUSDT",
+     "r_old": -0.6278091230900193,
+     "r_new": -1.0,
+     "liq_old": false,
+     "liq_new": true
+    },
+    {
+     "perp": "BASEDUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9962139923178908,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BEATUSDT",
+     "r_old": -1.0,
+     "r_new": -0.992306034919702,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BILLUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9932202544854266,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BLESSUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9730838702061688,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BROCCOLIF3BUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9221850498944768,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BSBUSDT",
+     "r_old": -1.0,
+     "r_new": -0.988594529776336,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BTRUSDT",
+     "r_old": -1.0,
+     "r_new": -0.98496737724504,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "COAIUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9592594292546488,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "CROSSUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9957554378804466,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "EDGEUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9883009216850566,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "EVAAUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9592944739265687,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "FARTCOINUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9793394976035584,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "FHEUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9926658555536294,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "FOLKSUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9836388386533402,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "GOATUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9477717302409252,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "JELLYJELLYUSDT",
+     "r_old": -1.0,
+     "r_new": -0.973056408041354,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "KGENUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9920361054372722,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "LABUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9778800716080488,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "LIGHTUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9450140635361578,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9999457571099554,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MEMEFIUSDT",
+     "r_old": -1.0,
+     "r_new": -0.999906651170682,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MOCAUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9999000703422052,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MOODENGUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9673301774652072,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MYXUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9958795415292394,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "ORDERUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9997096097025724,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "PLAYUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9700018050883236,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "PONKEUSDT",
+     "r_old": -1.0,
+     "r_new": -0.984362913264065,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "POWERUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9679282358088218,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "PRLUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9958024413875416,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "PTBUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9987114179291876,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "QUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9947393060746276,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "RECALLUSDT",
+     "r_old": 0.502641756700173,
+     "r_new": -0.999084603567359,
+     "liq_old": false,
+     "liq_new": true
+    },
+    {
+     "perp": "RIVERUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9921662536243272,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "SPXUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9921677835883423,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "STBLUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9788049935299932,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "VELVETUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9822873982948268,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "ZETAUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9899461117266418,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "ZORAUSDT",
+     "r_old": -0.285902872252432,
+     "r_new": -0.9924974747486984,
+     "liq_old": false,
+     "liq_new": true
+    }
+   ],
+   "H7_status_changed": [],
+   "H7_r_changed": [
+    {
+     "perp": "ACUUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9998934026014142,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "AIOTUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9547153233424144,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BEATUSDT",
+     "r_old": -1.0,
+     "r_new": -0.992306034919702,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BILLUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9932202544854266,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "BTWUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9835179980939718,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "COAIUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9592594292546488,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "CROSSUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9957554378804466,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9999457571099554,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MOCAUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9999000703422052,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "MYXUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9958795415292394,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "ORDERUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9997096097025724,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "PLAYUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9700018050883236,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "PTBUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9987114179291876,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "QUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9947393060746276,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "RECALLUSDT",
+     "r_old": -0.1739219445410547,
+     "r_new": -0.999084603567359,
+     "liq_old": false,
+     "liq_new": true
+    },
+    {
+     "perp": "RIVERUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9921662536243272,
+     "liq_old": true,
+     "liq_new": true
+    },
+    {
+     "perp": "STBLUSDT",
+     "r_old": -1.0,
+     "r_new": -0.9788049935299932,
+     "liq_old": true,
+     "liq_new": true
+    }
+   ]
+  }
+ }
+}

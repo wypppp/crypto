@@ -1,0 +1,24 @@
+{
+ "n_wallets_list": 794,
+ "n_wallets_active": 352,
+ "n_cells": 132479,
+ "n_cells_xfer_excluded": 812,
+ "pay_sol": 120854.3,
+ "recv_full_sol": 131973.6,
+ "cost_all_fee_tip_sol": 2540.7,
+ "cost_x_cells_removed_sol": 3.9,
+ "cost_trade_keep_sol": 1244.4,
+ "R_lo": 1.0696,
+ "R_lo_ci95_by_wallet": [
+  1.037,
+  1.1303
+ ],
+ "R_hi": 1.0809,
+ "R_hi_ci95_by_wallet": [
+  1.0459,
+  1.1401
+ ],
+ "reading": "读法 1：存活的独立狙击钱包扣全部尝试成本后仍赚钱（R_lo 下界 >1）",
+ "wallets_net_lo_positive": 168,
+ "top10_wallets_share_of_positive_net_lo": 0.6835
+}

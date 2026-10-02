@@ -1,0 +1,11 @@
+holdout_score_v3.py sha256 af52abadd42b067575487db567c5b827c301d441f0df0a467447578663a03fd7
+perp_v2.py sha256 0a313dc0dca8e9468e6fcac43fd33a4c63c8e08b18406bf7f39cb3803310f9a5
+对照 runs/audit1003/perp_b/events.csv sha256 71cfbe5d2058d9d57addcc08df02f31e71800b9cca6b54529656c7142f7e17f3
+开发期入场日已有永续的事件 145 比较项 870 差异 0
+DEV_MEAN 0.129
+judge (33, 0.01, 0.12) {'label': '通过', 'flag_lower_gt_0': True, 'flag_dev_effect_excluded': True}
+judge (33, -0.1, 0.12) {'label': '开发期效应量被排除', 'flag_lower_gt_0': False, 'flag_dev_effect_excluded': True}
+judge (33, -0.1, 0.13) {'label': '未判定', 'flag_lower_gt_0': False, 'flag_dev_effect_excluded': False}
+触及留出币名? False；raw_holdout 存在? False
+preflight 拒绝: 没有门 1 批准记录
+锁文件存在? False

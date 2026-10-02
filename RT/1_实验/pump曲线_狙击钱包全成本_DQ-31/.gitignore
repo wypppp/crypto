@@ -1,2 +1,7 @@
 raw/dune/SN_*.csv.gz
 runs/sn_wallets.csv
+
+# 代码审计 10-03 重跑（10-02）：大于 5 MB 的结果只留本地，可按 runs/dune_ledger.csv 的 execution_id 重新下载
+审计重跑_1003/raw/dune/SN2_TRADES.csv.gz
+审计重跑_1003/raw/dune/SN2_FEES.csv.gz
+审计重跑_1003/runs/sn_v2_wallets.csv
