@@ -12,7 +12,7 @@
 | MetaDAO 一级发行 | 历史 22 个发行；冻结后新 Launch = 0 | 数一次事件率，做一次除法 | **10 分钟** |
 | Uniswap CCA | 无冻结后的事前评分样本；物理门 PASS 但判断力 UNIDENTIFIED | 同上 | 30 分钟 |
 | HIP-3 基差 | mark−oracle 仅 1.6–11.4 bp < 往返成本 | 一次 API 调用比对 | **15 分钟** |
-| **HIP-3 闭市残差** | **xyz 个股 oracle 在周日 20:00–周五 20:00 ET 取自外部隔夜价源**；`corr(r, oracle−cash_close)=0.959`，方差归因 82.4% | **读 trade.xyz 的 oracle/external-price 规格** | **一段官方文档** |
+| **HIP-3 闭市残差** | **xyz 个股 oracle 在周日 20:00–周五 20:00 ET 取自外部隔夜价源**；`corr(r, oracle−cash_close)=0.959`，方差归因 82.4% | **读 trade.xyz 的 oracle/external-price 规格** | **一段官方文档**（10-02：这条是无效检验，不是证伪，见[死亡档案 #17](死亡档案.md) 更正） |
 
 ## 元教训（与上表不同类：这条记的是"为什么它没有被早点杀死"）
 

@@ -62,7 +62,7 @@ AWS_SECRET_ACCESS_KEY=（你的 Secret access key）
 }
 ```
 
-下一步添加内联权限策略（只允许给用户挂、摘策略）：
+下一步添加内联权限策略：只允许给 `rt-hydromancer-readonly` 这一个用户挂或摘 `AWSDenyAll` 这一条策略（总控 10-03 第十一轮第 1 条收窄；条件键写法按 AWS IAM 用户指南“iam:PolicyARN”与 `ArnEquals` 示例核对，10-02）。把 `<账户号>` 换成你的 12 位 AWS 账户号（控制台右上角点账户名可见）：
 
 ```json
 {
@@ -71,13 +71,16 @@ AWS_SECRET_ACCESS_KEY=（你的 Secret access key）
     {
       "Effect": "Allow",
       "Action": ["iam:AttachUserPolicy", "iam:DetachUserPolicy"],
-      "Resource": "*"
+      "Resource": "arn:aws:iam::<账户号>:user/rt-hydromancer-readonly",
+      "Condition": {
+        "ArnEquals": { "iam:PolicyARN": "arn:aws:iam::aws:policy/AWSDenyAll" }
+      }
     }
   ]
 }
 ```
 
-角色名 `rt-budgets-action`。
+角色名 `rt-budgets-action`。这个角色即使被冒用，也只能把那个只读用户整个封掉，不能给任何人加权限。
 
 **4.2 建预算**：Billing and Cost Management → Budgets → 创建预算 → “自定义” → “成本预算”，按月，金额 **$10**。告警：实际成本达 50%（$5）、100%（$10）各发一封邮件到你的邮箱。
 

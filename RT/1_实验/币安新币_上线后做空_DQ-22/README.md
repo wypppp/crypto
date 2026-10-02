@@ -16,8 +16,11 @@
 | [卡片_永续复现_v1.md](卡片_永续复现_v1.md) | 冻结规格：事件与可执行性、回收、统计量、写死的读法、数据契约 |
 | [永续复现_结果.md](永续复现_结果.md) | 永续复现结果，先读这个 |
 | [卡片_样本外_v2.md](卡片_样本外_v2.md)、[样本外_结果.md](样本外_结果.md)、[oos_replicate.py](oos_replicate.py) | 样本外：币安只上 U 本位永续、不在现货首发全集中的 199 个币 |
-| [卡片_前向T1_v3.md](卡片_前向T1_v3.md)、[t1_forward.py](t1_forward.py) | 前向 T1：事件构造（公告标题＋现货首日）、窗口推导、评分；`runs/t1_validate.json`、`t1_replay.json`、`t1_rate.json`、`t1_plan.json` 为冻结前核验 |
-| [卡片_留出一次性评分_v2.md](卡片_留出一次性评分_v2.md)、[holdout_score_v2.py](holdout_score_v2.py)、[过程/留出暴露审计_v2.md](过程/留出暴露审计_v2.md)、`过程/v2_开发期回归_1002.txt`、`过程/exposure_scan_v2.py` | **v2（现行）**：按门 1 五项修改；运行前须有已提交的 `过程/门1_批准记录_v2.md`；尝试日志 `runs/holdout_attempts.csv` |
+| [卡片_前向T1_v4.md](卡片_前向T1_v4.md)、[t1_forward_v2.py](t1_forward_v2.py)、`runs/t1v4_replay.json`、`runs/t1v4_plan.json` | **前向 T1 现行版（v4，10-02 代码审计第 9、13 处）**：资金费月份右开、逐仓账户（[perp_v2.py](perp_v2.py)）；检验力 0.75；窗口不变；待门 1 |
+| [卡片_留出一次性评分_v3.md](卡片_留出一次性评分_v3.md)、[holdout_score_v3.py](holdout_score_v3.py)、`过程/v3_开发期回归.py`（及 `_1002.txt`） | **留出评分现行版（v3，10-02）**：逐仓账户；开发期基准 0.129；待门 1（附暴露审计 v2） |
+| [perp_v2.py](perp_v2.py)、[test_audit_perp_v2.py](test_audit_perp_v2.py)、[rerun_audit1003.py](rerun_audit1003.py)、`runs/audit1003/` | 代码审计修复：逐仓账户与资金费窗口（10 条手算测试）；F123、F124 重跑对照。`perp_v2.py` 已被 v3、v4 两张卡冻结，不再改 |
+| [卡片_前向T1_v3.md](卡片_前向T1_v3.md)、[t1_forward.py](t1_forward.py) | （**已被 v4 取代**）前向 T1：事件构造（公告标题＋现货首日）、窗口推导、评分；`runs/t1_validate.json`、`t1_replay.json`、`t1_rate.json`、`t1_plan.json` 为冻结前核验 |
+| [卡片_留出一次性评分_v2.md](卡片_留出一次性评分_v2.md)、[holdout_score_v2.py](holdout_score_v2.py)、[过程/留出暴露审计_v2.md](过程/留出暴露审计_v2.md)、`过程/v2_开发期回归_1002.txt`、`过程/exposure_scan_v2.py` | （**已被 v3 取代，不再送审**）v2：按门 1 五项修改；运行前须有已提交的 `过程/门1_批准记录_v2.md`；尝试日志 `runs/holdout_attempts.csv` |
 | [卡片_留出一次性评分_v1.md](卡片_留出一次性评分_v1.md)、[holdout_score.py](holdout_score.py)、[过程/留出暴露审计_1002.md](过程/留出暴露审计_1002.md) | **55 条留出一次性评分**（用户 10-02 裁决）：暴露审计、冻结卡片与脚本；门 1 复核通过之前不运行，缓存写 `raw_holdout/`（不入库） |
 | [A1_外部研究审计_binance-listing-study.md](A1_外部研究审计_binance-listing-study.md) | 10-01 案头审计：外部研究只能作宽类现象的旁证（T3），不是窄类样本外证据，不能据此缩短前向窗口；逐事件复跑因含 55 条留出未做 |
 | [perp_replicate.py](perp_replicate.py) | 取数与计算（0 credits，公开归档） |
