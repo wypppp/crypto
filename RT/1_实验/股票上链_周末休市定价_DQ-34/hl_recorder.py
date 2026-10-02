@@ -120,7 +120,9 @@ def main() -> None:
         if ok < len(dexes):
             log(f"partial {ok}/{len(dexes)}")
         nt = next_tick(dt.datetime.now(UTC))
-        time.sleep(max(1.0, (nt - dt.datetime.now(UTC)).total_seconds()))
+        # 分段睡、按墙钟判断：主机睡眠时单调钟停走，一次睡到底会错过醒来后的整点
+        while dt.datetime.now(UTC) < nt:
+            time.sleep(min(30.0, max(1.0, (nt - dt.datetime.now(UTC)).total_seconds())))
 
 
 if __name__ == "__main__":
