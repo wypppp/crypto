@@ -19,7 +19,7 @@
 
 **仓库与材料**
 
-- 仓库（公开）：github.com/wypppp/crypto。提交号 `{{COMMIT}}`，所有引用都以这个提交为准。
+- 仓库（公开）：github.com/wypppp/crypto。提交号 `b4b757ac`，所有引用都以这个提交为准。
 - 本批材料在 `RT/3_审计/2026-10-04_总控第十四轮/`：
   1. `后续推进方案_v1.md`：被审对象 A；
   2. `评价契约_v1_交GPT数学核验_2026-10-04.md` 和 `eval_contract_ref.py`：被审对象 B；
