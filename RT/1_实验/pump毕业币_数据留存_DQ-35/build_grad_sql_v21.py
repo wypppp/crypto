@@ -3,7 +3,8 @@
 
 python build_grad_sql_v21.py <层> <事件起日> <事件止日> <标签> [--sample <起时> <止时>]  → sql/<标签>.sql
 层：B＝分桶；P＝池头与固定时点快照；L＝加池、撤池逐笔；M＝母体计数（META2）。
---sample 只用于小样本对照：把母体限制为建池时刻在 [起时, 止时) 的池，其余逻辑与正式片完全相同。
+--sample 只用于小样本对照：把母体限制为建池时刻在 [起时, 止时) 的池，其余逻辑与正式片完全相同；
+  其后再加 --nonsol 只取非 SOL 计价的池（非 SOL 样本用）。
 
 相对 v2（build_grad_sql_v2.py）的改动：
  1. 金额精度：解码表金额是 uint256，一律 CAST 成 DECIMAL(38,0) 做整数运算与求和，输出时转 varchar
@@ -17,10 +18,16 @@ python build_grad_sql_v21.py <层> <事件起日> <事件止日> <标签> [--sam
  5. 买入的 cashback、回购费：Dune 解码表 pump_amm_evt_buyevent 没有这两列（10-04 searchTables 核对；卖出表有），
     所以买入一侧输出 NULL（未知），不写 0；卖出一侧照读。买入后报价储备＝前＋quote_amount_in_with_lp_fee 在 v2
     小样本里逐笔吻合，池状态不受影响；未知的只是用户侧返利。
- 6. 计价资产：P 层存 quote_mint 与 decimals；2026-09 的 pump 迁移池里非 SOL 计价约 7%（探针），价格按原单位，不换算。
- 7. 2026-09-30 起：PumpSwap 池有带符号的 virtual_quote_reserves（解码表尚无此字段），由事件储备算出的价格可能不对。
-    事件止日放到 2026-10-04（总控第十六轮 R3：开发只用 10-05 之前的成交），09-30 起的事件照存原始量与储备，
-    价格列只用 09-30 之前的事件计算，另存 n_px_unknown（09-30 起的事件数）。
+ 6. 计价资产：P 层存 quote_mint、decimals 与 quote_class（SOL／USDC／OTHER）；2026-09 的 pump 迁移池里非 SOL 计价约 7%（探针），
+    金额与价格按计价资产原单位，不换算。主分析只用 SOL 层；USDC 层另报，换算 SOL 用按分钟的价格序列；OTHER 只计数（总控第十八轮）。
+ 7. 虚拟报价储备（10-04 第二次修正）：PumpSwap 按“有效报价储备＝池报价储备＋virtual_quote_reserves”成交（官方文档 2026-07-15；
+    PROBE21b 逐字段核对）。该字段 Dune 解码表没有；它对 07-18 建的池为 0，对 08-03 起建的 pump 迁移池大多约 17.58 SOL（PROBE21c）。
+    v2.1 首版以为 09-30 才生效、按日期截断价格，是错的，已去掉。现在由卖出事件的整数恒等式
+      quote_amount_out＝floor((q0＋vq)·base_in／(b0＋base_in))
+    反解每笔卖出允许的 vq 整数区间 [vlo, vhi]（真值落在区间内：PROBE21b 55/55；2026-09-23 样本 48 个池全天各只一段、无冲突），
+    分桶层输出桶内交集 vq_lo／vq_hi 与所用卖出笔数，价格高低点用本片内池级交集的中点；池级交集为空（vq 在片内变过）或本片无卖出时，
+    价格列置空并计入 n_px_unknown。买入的两种指令（buy、buy_exact_quote_in）成交式不同，不用于反解。
+    事件止日 2026-10-04（总控第十六轮 R3：开发只用 10-05 之前的成交）。
  8. P 层：每池一行。池头（建池事件键与 tx_id、mint、计价资产与 decimals、曲线创建与完成时刻、名称、代号、URI、
     创建者、mayhem、cashback 标志）＋固定时点快照：建池后 {offsets} 秒各两组——该时点前最后一笔成交的事件键、
     成交后储备与时刻（“截至该时点已可知”）；该时点起第一笔成交的事件键、成交前储备与时刻（该时点发出的单子最早
@@ -37,7 +44,8 @@ from pathlib import Path
 H = Path(__file__).resolve().parent
 PUMPSWAP_START = dt.date(2025, 3, 15)
 LAST_EVENT_DAY = dt.date(2026, 10, 4)
-PX_CUTOFF = "2026-09-30 00:00:00"
+WSOL = "So11111111111111111111111111111111111111112"
+USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 OFFSETS = (2, 10, 45, 60, 75, 900, 3600, 86400)
 
 HEAD = """/* DQ-35 v2.1 数据留存（10-04，执行模型）：层 {layer}；pump 迁移池在 {e_start}～{e_end} 的事件；只存不分析；由 build_grad_sql_v21.py 生成 */
@@ -91,7 +99,8 @@ ev AS (
            CAST(lp_fee AS DECIMAL(38,0)) AS f_lp,
            CAST(protocol_fee AS DECIMAL(38,0)) AS f_pr,
            CAST(coin_creator_fee AS DECIMAL(38,0)) AS f_cr,
-           CAST(NULL AS DECIMAL(38,0)) AS f_cb, CAST(NULL AS DECIMAL(38,0)) AS f_bb
+           CAST(NULL AS DECIMAL(38,0)) AS f_cb, CAST(NULL AS DECIMAL(38,0)) AS f_bb,
+           CAST(NULL AS DECIMAL(38,0)) AS q_gross_out
     FROM pumpdotfun_solana.pump_amm_evt_buyevent
     WHERE evt_block_date BETWEEN DATE '{ev_start}' AND DATE '{ev_end}'
     UNION ALL
@@ -107,7 +116,8 @@ ev AS (
            CAST(protocol_fee AS DECIMAL(38,0)),
            CAST(coin_creator_fee AS DECIMAL(38,0)),
            CAST(cashback AS DECIMAL(38,0)),
-           CAST(buyback_fee AS DECIMAL(38,0))
+           CAST(buyback_fee AS DECIMAL(38,0)),
+           CAST(quote_amount_out AS DECIMAL(38,0))
     FROM pumpdotfun_solana.pump_amm_evt_sellevent
     WHERE evt_block_date BETWEEN DATE '{ev_start}' AND DATE '{ev_end}'
 ),
@@ -119,15 +129,26 @@ k AS (
            CAST(e.slot AS BIGINT) * 10000000000 + CAST(e.txi AS BIGINT) * 100000
              + CAST(e.oix AS BIGINT) * 1000 + CAST(e.iix AS BIGINT) AS ord,
            CASE WHEN e.txi >= 100000 OR e.oix >= 100 OR e.iix >= 1000 OR e.iix < 0 OR e.oix IS NULL
-                THEN 1 ELSE 0 END AS ovf
+                THEN 1 ELSE 0 END AS ovf,
+           /* 卖出反解 vq：ceil(a/d)＝(a＋d−1 − mod(a＋d−1, d))/d，全程整数 */
+           CASE WHEN e.side = 'S' AND e.b_amt > 0 THEN
+                (e.q_gross_out * (e.b0 + e.b_amt) + e.b_amt - 1
+                 - mod(e.q_gross_out * (e.b0 + e.b_amt) + e.b_amt - 1, e.b_amt)) / e.b_amt - e.q0 END AS vlo,
+           CASE WHEN e.side = 'S' AND e.b_amt > 0 THEN
+                ((e.q_gross_out + 1) * (e.b0 + e.b_amt) + e.b_amt - 1
+                 - mod((e.q_gross_out + 1) * (e.b0 + e.b_amt) + e.b_amt - 1, e.b_amt)) / e.b_amt - 1 - e.q0 END AS vhi
     FROM ev e
     JOIN pools p ON p.pool = e.pool
     WHERE e.ts >= p.created_at AND e.ts < p.created_at + INTERVAL '{horizon}' DAY
 )"""
 
 BUCKETS = """,
+kp AS (
+    SELECT k.*, max(vlo) OVER (PARTITION BY pool) AS pvlo, min(vhi) OVER (PARTITION BY pool) AS pvhi
+    FROM k
+),
 kb AS (
-    SELECT k.*,
+    SELECT kp.*,
            CASE WHEN age_ms < 300000 THEN 'S' WHEN age_ms < 3600000 THEN 'M'
                 WHEN age_ms < 604800000 THEN 'H' ELSE 'D' END AS kind,
            CASE WHEN age_ms < 300000 THEN floor(age_ms / 5000e0)
@@ -136,9 +157,10 @@ kb AS (
                 ELSE floor(age_ms / 86400000e0) END AS bkey,
            CASE WHEN age_ms < 300000 THEN 5 WHEN age_ms < 3600000 THEN 60
                 WHEN age_ms < 604800000 THEN 3600 ELSE 86400 END AS w,
-           CASE WHEN ts < TIMESTAMP '{px_cutoff}'
-                THEN (CAST(q1 AS DOUBLE) / power(10, qd)) / nullif(CAST(b1 AS DOUBLE) / power(10, bd), 0) END AS px
-    FROM k
+           CASE WHEN pvlo <= pvhi
+                THEN ((CAST(q1 AS DOUBLE) + (CAST(pvlo AS DOUBLE) + CAST(pvhi AS DOUBLE)) / 2) / power(10, qd))
+                     / nullif(CAST(b1 AS DOUBLE) / power(10, bd), 0) END AS px
+    FROM kp
 ),
 kbs AS (
     SELECT kb.*,
@@ -164,7 +186,8 @@ SELECT kind, pool, CAST(bkey AS BIGINT) AS bkey, straddle,
        CAST(min_by(q0, ord) AS varchar) AS q0_open, CAST(min_by(b0, ord) AS varchar) AS b0_open, min_by(side, ord) AS side_first,
        CAST(max_by(q1, ord) AS varchar) AS q1_close, CAST(max_by(b1, ord) AS varchar) AS b1_close, max_by(side, ord) AS side_last,
        CAST(max_by(q_pool, ord) AS varchar) AS q_pool_last, CAST(max_by(b_amt, ord) AS varchar) AS b_amt_last,
-       max(px) AS px_high, min(px) AS px_low, count_if(ts >= TIMESTAMP '{px_cutoff}') AS n_px_unknown,
+       CAST(max(vlo) AS varchar) AS vq_lo, CAST(min(vhi) AS varchar) AS vq_hi, count(vlo) AS n_vq_obs,
+       max(px) AS px_high, min(px) AS px_low, count_if(px IS NULL) AS n_px_unknown,
        to_unixtime(min(ts)) AS t_first, to_unixtime(max(ts)) AS t_last,
        sum(ovf) AS n_ord_overflow
 FROM kbs
@@ -202,11 +225,14 @@ comp AS (
     GROUP BY 1
 ),
 sn AS (
-    SELECT pool, count(*) AS n_7d{snap_cols}
+    SELECT pool, count(*) AS n_7d, CAST(max(vlo) AS varchar) AS vq_lo_7d, CAST(min(vhi) AS varchar) AS vq_hi_7d,
+           count(vlo) AS n_vq_obs_7d{snap_cols}
     FROM k
     GROUP BY 1
 )
-SELECT p.pool, p.mint, p.quote_mint, p.bd, p.qd, to_unixtime(p.created_at) AS created_t,
+SELECT p.pool, p.mint, p.quote_mint,
+       CASE WHEN p.quote_mint = '{wsol}' THEN 'SOL' WHEN p.quote_mint = '{usdc}' THEN 'USDC' ELSE 'OTHER' END AS quote_class,
+       p.bd, p.qd, to_unixtime(p.created_at) AS created_t,
        p.c_slot, p.c_txi, p.c_oix, p.c_iix, p.c_tx,
        to_unixtime(p.curve_created_at) AS curve_created_t, to_unixtime(cm.completed_at) AS curve_completed_t,
        p.symbol, m.name, m.uri, m.creator, m.mayhem, m.cashback, m.curve_quote_mint,
@@ -255,7 +281,13 @@ SELECT count(*) AS n_candidate,
                 AND NOT (curve_created_at >= TIMESTAMP '2026-06-15 00:00:00' AND curve_created_at < TIMESTAMP '2026-07-13 00:00:00')
                 AND upper(trim(replace(symbol, '$', ''))) IN (SELECT base FROM excl)) AS n_holdout_name,
        (SELECT count(*) FROM pools
-         WHERE created_at >= TIMESTAMP '{e_start} 00:00:00' AND created_at < TIMESTAMP '{e_end} 00:00:00' + INTERVAL '1' DAY) AS n_included
+         WHERE created_at >= TIMESTAMP '{e_start} 00:00:00' AND created_at < TIMESTAMP '{e_end} 00:00:00' + INTERVAL '1' DAY) AS n_included,
+       (SELECT count_if(quote_mint = '{wsol}') FROM pools
+         WHERE created_at >= TIMESTAMP '{e_start} 00:00:00' AND created_at < TIMESTAMP '{e_end} 00:00:00' + INTERVAL '1' DAY) AS n_included_sol,
+       (SELECT count_if(quote_mint = '{usdc}') FROM pools
+         WHERE created_at >= TIMESTAMP '{e_start} 00:00:00' AND created_at < TIMESTAMP '{e_end} 00:00:00' + INTERVAL '1' DAY) AS n_included_usdc,
+       (SELECT count_if(quote_mint NOT IN ('{wsol}', '{usdc}')) FROM pools
+         WHERE created_at >= TIMESTAMP '{e_start} 00:00:00' AND created_at < TIMESTAMP '{e_end} 00:00:00' + INTERVAL '1' DAY) AS n_included_other
 FROM ccall
 """
 
@@ -271,8 +303,10 @@ def build(layer, e_start, e_end, sample=None):
     if sample:
         smp = (
             "\n      AND created_at >= TIMESTAMP '%s' AND created_at < TIMESTAMP '%s'"
-            % sample
+            % sample[:2]
         )
+        if len(sample) > 2:  # 只用于非 SOL 计价样本
+            smp += "\n      AND quote_mint <> '%s'" % WSOL
     fmt = dict(
         layer=layer,
         names=names,
@@ -280,7 +314,8 @@ def build(layer, e_start, e_end, sample=None):
         e_end=e_end.isoformat(),
         p_start=p_start.isoformat(),
         sample=smp,
-        px_cutoff=PX_CUTOFF,
+        wsol=WSOL,
+        usdc=USDC,
     )
     head = HEAD.format(**fmt)
     if layer == "B":
@@ -291,7 +326,7 @@ def build(layer, e_start, e_end, sample=None):
         ev_end = min(LAST_EVENT_DAY, e_end + dt.timedelta(days=8))
         evr = dict(ev_start=fmt["e_start"], ev_end=ev_end.isoformat())
         cols = "".join(SNAP_COLS.format(o=o, ms=o * 1000) for o in OFFSETS)
-        names_out = ["n_7d"] + [
+        names_out = ["n_7d", "vq_lo_7d", "vq_hi_7d", "n_vq_obs_7d"] + [
             "%s%d_%s" % (ab, o, f)
             for o in OFFSETS
             for ab, fs in (
@@ -322,6 +357,8 @@ def main():
     sample = None
     if len(a) > 4 and a[4] == "--sample":
         sample = (a[5], a[6])
+        if len(a) > 7 and a[7] == "--nonsol":
+            sample = sample + ("nonsol",)
     (H / "sql" / ("%s.sql" % label)).write_text(build(layer, e_start, e_end, sample))
     print("sql/%s.sql" % label)
 
