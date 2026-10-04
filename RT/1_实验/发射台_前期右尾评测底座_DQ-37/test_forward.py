@@ -28,3 +28,19 @@ def test_drop_and_guard():
     f.assert_not_forward(["2026-09-28", "2026-10-04"])
     with pytest.raises(ValueError):
         f.assert_not_forward(["2026-09-28", "2026-10-05"])
+
+
+def test_trade_cutoff_hand():
+    # 老币（09 月创建）10-04 23:59:59 UTC 的成交可读，10-05 00:00 起不可读
+    assert not f.is_after_cutoff("2026-10-04T23:59:59Z")
+    assert f.is_after_cutoff("2026-10-05T00:00:00Z")
+    # 北京时间 10-05 07:59 是 UTC 10-04 23:59，可读
+    bj = dt.timezone(dt.timedelta(hours=8))
+    assert not f.is_after_cutoff(dt.datetime(2026, 10, 5, 7, 59, tzinfo=bj))
+    tr = pd.DataFrame(
+        {"ts": ["2026-09-29 12:00", "2026-10-04 23:00", "2026-10-06 01:00"]}
+    )
+    assert len(f.drop_after_cutoff(tr, "ts")) == 2
+    f.assert_before_cutoff(["2026-10-04 23:00"])
+    with pytest.raises(ValueError):
+        f.assert_before_cutoff(["2026-10-04 23:00", "2026-10-05 00:00"])
