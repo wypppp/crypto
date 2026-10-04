@@ -1,0 +1,34 @@
+{
+  "execution_id": "01M42G6BREH4WANZBFBVRQ3VXT",
+  "query_id": 8892939,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-04T03:44:17.167103Z",
+  "expires_at": "2027-01-02T03:44:38.907489Z",
+  "execution_started_at": "2026-10-04T03:44:18.426188104Z",
+  "execution_ended_at": "2026-10-04T03:44:38.907469316Z",
+  "result_metadata": {
+    "column_names": [
+      "n_candidate",
+      "n_no_curve_create",
+      "n_sealed",
+      "n_holdout_name",
+      "n_included"
+    ],
+    "column_types": [
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint"
+    ],
+    "row_count": 1,
+    "result_set_bytes": 40,
+    "total_row_count": 1,
+    "total_result_set_bytes": 40,
+    "datapoint_count": 5,
+    "pending_time_millis": 1259,
+    "execution_time_millis": 20481
+  },
+  "execution_cost_credits": 1.45173077
+}

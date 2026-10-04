@@ -57,6 +57,42 @@ GPT 审计原文见 [存档](../../3_审计/2026-10-03_总控第十三轮与用�
 - **mayhem 币**（2026-04 起）：TradeEvent 的虚拟 SOL 不满足“成交后＝成交前±金额”（变动约为金额的 437 倍），`x_pre_first` 对 mayhem 币无效，桶里的 `mayhem` 标志可识别；PumpSwap 侧不受影响。
 - 结论：v2 的提取逻辑在样本上与逐笔原始事件逐项一致，可以交 GPT 复核；复核通过后用 `run_all_v2.py` 重取（新标签），`check_manifest_v2.py` 按清单核齐全。重取估约 530 credits（v1 475 加母体查询开销）。
 
+## 1c. v2.1：按 GPT 10-04 复核（“修改后重取”）与批 0 A4 修正（10-04，进行中；只修不取）
+
+生成器 `build_grad_sql_v21.py`，分四层：B 分桶、P 池头与固定时点快照、L 加撤池逐笔、M 母体计数（即 v2 承诺的 META2）。改动见文件头，要点：
+- 金额以 DECIMAL(38,0) 做整数运算，输出 varchar，不经 DOUBLE；
+- 事件唯一键为池＋slot＋交易序号＋外层＋内层，输出四个整数列；
+- 时间输出 epoch 秒；
+- 新增 [300 秒,1 小时) 的一分钟桶；
+- 池级字段移到 P 层，分桶行不重复；
+- 快照时点为 2、10、45、60、75 秒，15 分钟，1 小时，1 天；
+- 事件止日 2026-10-04（R3），09-30 起的事件价格列置空，另计数。
+
+**两项实测发现**（10-04）：
+- Dune 解码表 `pump_amm_evt_buyevent` **没有 `cashback`、`buyback_fee` 两列**（searchTables 核对；卖出表有），所以买入一侧只能记“未知”（NULL），不能实读。池状态不受影响，因为买入后储备＝前＋`quote_amount_in_with_lp_fee`。
+- 结构探针（`sql/PROBE21_类型与唯一键.sql`，2026-09-23）：
+  - 金额类型是 uint256；
+  - 买卖事件键全唯一（957.6 万、1346.2 万行）；
+  - 2026-09 的 pump 迁移池 30,858 个，SOL 计价 93.1%、USDC 4.4%，其余 114 种计价资产共 2.5%。
+
+**小样本对照**（2025-10-07 建池于 00:00～01:00 的 5 个池，[报告](runs/SMP21_B_20251007_r1_compare.md)）：
+- 储备逐笔守恒 28,392/28,392；事件键唯一；
+- 628 个分桶逐项（整数）与逐笔重算一致；
+- 35 个快照一致，快照内部一致；
+- B、P 两层同一 SQL 两次运行逐行一致；
+- 越界计数 0；`approx_distinct` 与精确去重有 6 个桶不同。
+- 小样本 CSV 已入库（`samples/`）。B 层每行约 335 字节（v2 约 409）。P 层同一 SQL 两次费用为 12.87 与 2.57 credits。
+
+**还没做**：
+- 毕业前 v2.1（mayhem 的 `x_pre_first` 置空并加有效性标志、整数化、止日 10-04）；
+- 扩大样本：老池、日桶、跨片合并、封存边界、非 SOL；
+- 清单绑定 SQL 哈希、query_id、execution_id 与下载状态（`run_all_v21`、`check_manifest_v21`）；
+- 全日体量探针；
+- 本 README 第 40 行的矛盾与“2026-06b 零行”的更正；
+- 修复记录里 F59 上界改为 R/(1−0.0125)，F3 已有外层键。
+
+做完后交 GPT 批 1a；精度与唯一性核验通过前不重取。
+
 ## 2. 费用（实测，见 `runs/dune_ledger.csv`）
 
 | 步骤 | credits |
@@ -75,6 +111,10 @@ GPT 审计原文见 [存档](../../3_审计/2026-10-03_总控第十三轮与用�
 | `build_grad_sql_v2.py`、`build_gradpre_sql_v2.py`、`build_sample_raw_v2.py` | v2 SQL 生成器与小样本逐笔 SQL |
 | `compare_sample_v2.py`、`test_compare_sample_v2.py` | 小样本对照与手算测试 |
 | `run_all_v2.py`、`check_manifest_v2.py`、`test_run_all_v2.py` | v2 重取与按清单核齐全（未运行） |
+| `build_grad_sql_v21.py` | v2.1 毕业后生成器（B、P、L、M 四层，§1c） |
+| `compare_sample_v21.py`、`test_compare_sample_v21.py` | v2.1 小样本整数逐项对照与手算测试 |
+| `sql/PROBE21_类型与唯一键.sql`、`sql/SMP21_*.sql` | v2.1 结构探针与小样本 SQL |
+| `samples/` | 入库的小样本 CSV（供 GPT 独立复算，见其 README） |
 | `run_all.py` | 按半月分片依次执行；单片 >100 或累计超过上限即停 |
 | `run_dune.py`、`dune_create.py`、`dune_get.py`、`dune_get_stream.py` | 执行、台账、流式下载（后三个复制自 DQ-34，sha 相同） |
 | `sql/` | 每片的 SQL（公开查询，查询号见台账）；`LPCHK*.sql` 口径核查；`SMP2_*.sql` 是 v2 小样本最后一次运行的版本，早先版本以台账里的 Dune 查询号为准 |

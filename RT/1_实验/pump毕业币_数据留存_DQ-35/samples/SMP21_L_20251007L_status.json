@@ -1,0 +1,52 @@
+{
+  "execution_id": "01M42G5FX7Y2D8AJ37R8WGV3KK",
+  "query_id": 8892938,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-04T03:43:48.648236Z",
+  "expires_at": "2027-01-02T03:43:55.321405Z",
+  "execution_started_at": "2026-10-04T03:43:49.962750449Z",
+  "execution_ended_at": "2026-10-04T03:43:55.321387859Z",
+  "result_metadata": {
+    "column_names": [
+      "pool",
+      "kind",
+      "slot",
+      "txi",
+      "oix",
+      "iix",
+      "t",
+      "usr",
+      "tx_id",
+      "q0",
+      "b0",
+      "dq",
+      "db",
+      "ovf"
+    ],
+    "column_types": [
+      "varchar",
+      "varchar(1)",
+      "bigint",
+      "integer",
+      "integer",
+      "integer",
+      "double",
+      "varchar",
+      "varchar",
+      "varchar",
+      "varchar",
+      "varchar",
+      "varchar",
+      "integer"
+    ],
+    "row_count": 4,
+    "result_set_bytes": 1020,
+    "total_row_count": 4,
+    "total_result_set_bytes": 1020,
+    "datapoint_count": 56,
+    "pending_time_millis": 1314,
+    "execution_time_millis": 5358
+  },
+  "execution_cost_credits": 0.203423077
+}
