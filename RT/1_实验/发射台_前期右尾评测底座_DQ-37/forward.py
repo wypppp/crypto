@@ -13,15 +13,27 @@
 """
 
 import datetime as dt
+import numbers
 
 from weeks import _to_date
+
+# weeks.py 已冻结（sha 记在 README），它的 _to_date 不接受数值 epoch。这里另写一个入口：
+# 数值按 UTC epoch 秒解析，其余交给 weeks._to_date（总控第十七轮第二节第 3 条，GPT 批 0 A4）。
+# 注意 epoch 秒只用于判断日期归属，不承担槽内排序。
+
+
+def _to_utc_date(ts):
+    if isinstance(ts, numbers.Real) and not isinstance(ts, bool):
+        return (dt.datetime(1970, 1, 1) + dt.timedelta(seconds=float(ts))).date()
+    return _to_date(ts)
+
 
 FORWARD_START = dt.date(2026, 10, 5)
 
 
 def is_forward(ts):
     """ts 是币的曲线创建时刻；不早于 2026-10-05（UTC）即属前向批次。"""
-    return _to_date(ts) >= FORWARD_START
+    return _to_utc_date(ts) >= FORWARD_START
 
 
 def drop_forward(df, created_col):
@@ -42,7 +54,7 @@ TRADE_CUTOFF = dt.date(2026, 10, 5)  # 成交时刻 < 2026-10-05 00:00 UTC 才�
 
 def is_after_cutoff(ts):
     """ts 是成交时刻；不早于 2026-10-05（UTC）即在观测止日之后。"""
-    return _to_date(ts) >= TRADE_CUTOFF
+    return _to_utc_date(ts) >= TRADE_CUTOFF
 
 
 def drop_after_cutoff(df, trade_col):

@@ -44,3 +44,16 @@ def test_trade_cutoff_hand():
     f.assert_before_cutoff(["2026-10-04 23:00"])
     with pytest.raises(ValueError):
         f.assert_before_cutoff(["2026-10-04 23:00", "2026-10-05 00:00"])
+
+
+def test_numeric_epoch_hand():
+    # 1970-01-01 到 2026-10-05：56 年×365＋14 个闰日＝20,454 天到 2026-01-01，
+    # 再加 1～9 月 273 天＝20,731 天；×86,400＝1,791,158,400 秒
+    t0 = 1_791_158_400
+    assert f.is_forward(t0) and not f.is_forward(t0 - 1)
+    assert f.is_after_cutoff(float(t0)) and not f.is_after_cutoff(t0 - 0.5)
+    # 冻结的 weeks._to_date 不接受数值 epoch：调用方须先转成时间
+    import weeks
+
+    with pytest.raises(TypeError):
+        weeks._to_date(t0)
