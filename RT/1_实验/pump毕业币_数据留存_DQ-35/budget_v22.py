@@ -57,8 +57,22 @@ def usage():
             d = json.load(r)
     except Exception:
         return None
-    bp = d.get("billingPeriods") or []
-    return float(bp[-1]["credits_used"]) if bp else None
+    return current_used(d, dt.datetime.utcnow().date())
+
+
+def current_used(d, today):
+    """从用量接口的返回里取“今天所在计费期”的已用 credits；找不到或不唯一返回 None。
+    10-06 修：接口的键是 billing_periods（原读 billingPeriods，永远读不到）；而且会多返回一个起止颠倒、用量为 0 的
+    下一期（实测 start 10-13、end 10-05），原来取最后一期会把用量读成 0。"""
+    bp = d.get("billing_periods") or []
+    hit = [
+        p
+        for p in bp
+        if dt.date.fromisoformat(p["start_date"])
+        <= today
+        < dt.date.fromisoformat(p["end_date"])
+    ]
+    return float(hit[0]["credits_used"]) if len(hit) == 1 else None
 
 
 def rows():

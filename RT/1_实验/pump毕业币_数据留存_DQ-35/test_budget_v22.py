@@ -1,5 +1,7 @@
 """budget_v22.check 的手算预期值测试（10-05）。"""
 
+import datetime as dt
+
 import budget_v22 as b
 
 
@@ -49,3 +51,25 @@ def test_export_counts_and_unknown_task_hand():
     # 读不到用量或任务无预批：一律不跑
     assert not b.check("refetch", 1, 0, "plus", None, rs=[])[0]
     assert not b.check("other", 1, 0, "plus", 0, rs=[])[0]
+
+
+def test_current_used_picks_period_containing_today_hand():
+    # 10-06 实测的返回：第二期起止颠倒、用量 0；原实现取最后一期会读成 0
+    d = {
+        "billing_periods": [
+            {
+                "start_date": "2026-09-29",
+                "end_date": "2026-10-13",
+                "credits_used": 2395.292,
+            },
+            {"start_date": "2026-10-13", "end_date": "2026-10-05", "credits_used": 0},
+        ]
+    }
+    assert b.current_used(d, dt.date(2026, 10, 6)) == 2395.292
+    assert (
+        b.current_used(d, dt.date(2026, 10, 13)) is None
+    )  # 没有今天所在的期：读不到即停
+    assert (
+        b.current_used({"billingPeriods": d["billing_periods"]}, dt.date(2026, 10, 6))
+        is None
+    )

@@ -1,0 +1,6 @@
+time,task,label,kind,credits,usage_before,usage_after,note
+2026-10-05 22:38:30,vq,PROBE23a_boost_1d,probe,0.774346,2395.292,,一天费用探针
+2026-10-05 22:38:30,vq,SCAN23_BOOST_v0820,probe,1.664038,,,模板验证，与 PROBE23a 对数
+2026-10-05 22:40:04,vq,SCAN23_BOOST_a,execute,23.836346,2397.730,2421.566,
+2026-10-05 22:41:31,vq,SCAN23_BOOST_b,execute,34.977885,2421.566,2456.544,
+2026-10-05 22:44:21,vq,SCAN23_BOOST_c,execute,37.987115,2456.544,2494.531,

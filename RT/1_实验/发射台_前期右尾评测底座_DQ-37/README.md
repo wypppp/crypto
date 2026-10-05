@@ -43,6 +43,11 @@
 | test_weeks.py（sha256 `6ced9b3b0e27a0b3b040b2265540901f53ad12cbd6cec5ab146eb3ded66337ae`） | 手算预期值测试（哈希样例只用范围外的 2024 年周一） |
 | [曲线阶段留存_设计_v0.md](曲线阶段留存_设计_v0.md) | 全部新币的曲线阶段留存：体量实测、四个方案的费用、建议与请 GPT 审的要点 |
 | `build_curve_sql.py` | 曲线阶段留存的 SQL 生成器（`meta`、`trades` 两层；可按币哈希抽样） |
+| [曲线阶段留存_设计_v1.md](曲线阶段留存_设计_v1.md) | **v1（10-06，批 1a-ii，交 GPT 审）**：首轮局部信息面板（每币前 100 笔、按周全截面）；五层（M、META、T、MAY、RAWC）；选周规则与结果；Dune 曲线成交表缺 4 个字段与 mayhem 储备改写事件；体量与费用；验收计划。SQL 未在 Dune 执行 |
+| `build_curve_sql_v1.py`、`sql/CV1_*_示例.sql` | v1 的 SQL 生成器与示例（2026-07-27 周的 1 小时样本、2025-10-06 周的 T 层） |
+| `select_curve_weeks.py` | v1 的选周规则：6 个制度阶段、固定种子排序、最大余数法分配、只按数据缺失替补 |
+| `curve_rawdecode_v1.py`、`test_curve_rawdecode_v1.py` | 曲线 TradeEvent 原始字节解码（按 IDL 布局），手算测试按 IDL 拼字节并核对 SQL 偏移 |
+| [规则窗口_推断方法_v1.md](规则窗口_推断方法_v1.md)、`rule_window_infer.py`、`test_rule_window_infer.py` | 规则窗口推断方法（10-06，随批 1b 交 GPT）：冻结五样（f、机会日历、年机会数、门槛、推断设置）；施加零假设的 wild cluster bootstrap-t（Webb 六点）检验反演求 80% 下界，CR2＋t(G−1) 交叉核对，取较低者；手算测试 |
 | `sql/PROBE1～3_*.sql`、`sql/SMK_*.sql` | 体量探针与冒烟（只数行数与字节；SMK 是 ord 转 varchar 之前的版本） |
 | `sql/CURVE_*_示例.sql` | 当前生成器对 2025-10-06 这一周生成的两层 SQL（交 GPT 审的就是它们；未执行） |
 | `run_dune.py`、`dune_get.py`、`dune_get_stream.py` | 执行、台账、流式下载（复制自 DQ-35） |

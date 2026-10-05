@@ -251,6 +251,19 @@ GPT 审阅原文与总控第十九轮见[存档](../../3_审计/2026-10-05_总�
 - 时间列由 `to_unixtime` 输出 DOUBLE（epoch 秒），读取时按十进制文本解析（`dev_gate.to_epoch`）。
 - 每层输出 `chain='solana'`，清单也写链名。
 
+## 1e. InitBoost 全量扫描（10-06，总控第二十轮第二节；算在 vq 解码额度里）
+
+**结论：07-15～09-14 升级前建的池，InitBoost 0 次、BoostBuyAndBurn 0 次**（[报告](runs/SCAN23_BOOST_report.md)）。
+
+- 扫描：`solana.instruction_calls` 里 PumpSwap 的全部自调用事件，分段 a（07-15～08-04）、b（08-05～08-25）、c（08-26～09-14）。生成器 `过程/build_boostscan_sql.py`，执行 `过程/run_boostscan.py`，读取 `过程/boostscan_report.py`。
+- 费用：三段 23.84＋34.98＋37.99＝96.8 credits；另有一天的费用探针 0.77 与模板验证 1.66（与探针的判别符计数逐项一致）。都用试用余额，记在 `runs/budget_v22.csv`（task＝vq）。
+- d 段（09-15～10-04）没跑：c 段之后读数 2,494.5/2,500，驱动脚本在余额不足 40 时按设计停下。Plus 生效后补跑 `python 过程/run_boostscan.py d`。
+- 新池：40,980 个池各有恰好 1 次 InitBoost，都与建池同一秒；同一个池各次的 vq 相同；溢出 0。
+- 事件清单：17 种判别符全部按官方 IDL 认出。只有 InitBoost 与 BoostBuyAndBurn 带 vq；IDL 里池账户的 vq 只有 `init_boost` 可写，`boost_buy_and_burn` 的池账户只读。
+- **老币可能有新池**：07-15 之前创建、升级后才毕业的币，建的是新池。[按币核对](runs/SCAN23_BOOST_affected.md)（`过程/boostscan_affected.py`）：DQ-18、DQ-8A、DQ-21 S1 为 0；DQ-1M 20 个、DQ-1F 21 个币待逐笔重算。
+
+**预算控制器修正**（`budget_v22.py`）：用量接口的键名是 `billing_periods`，原代码读 `billingPeriods`，永远读不到；接口还会多返回一个起止颠倒、用量为 0 的下一期，原来取最后一期会读成 0。改为取“今天所在的计费期”，找不到就返回 None（读不到即停）。手算测试 `test_current_used_picks_period_containing_today_hand`。这一修正晚于 GPT 增量复核所用的提交 `7a4871dd`。
+
 ## 2. 费用（实测，见 `runs/dune_ledger.csv`）
 
 | 步骤 | credits |
@@ -273,7 +286,7 @@ GPT 审阅原文与总控第十九轮见[存档](../../3_审计/2026-10-05_总�
 | `build_sample_raw_v22.py`、`rawdecode_v22.py` | v2.2 扩大样本的逐笔原始（独立母体、原始字节尾段 'R' 行、止日硬限制）与 Python 原始字节解析 |
 | `compare_sample_v22.py`、`compare_pre_v22.py`、`dev_gate.py` | v2.2 对照（逐字段、先查重复）与开发拒读入口 |
 | `run_all_v22.py`、`check_manifest_v22.py`、`budget_v22.py` | v2.2 重取执行器（三方核对、续传）、清单与内容验收、跨任务预算控制器（未运行重取） |
-| `test_compare_sample_v22.py`、`test_rawdecode_v22.py`、`test_dev_gate.py`、`test_run_all_v22.py`、`test_budget_v22.py` | v2.2 手算预期值测试（21 项） |
+| `test_compare_sample_v22.py`、`test_rawdecode_v22.py`、`test_dev_gate.py`、`test_run_all_v22.py`、`test_budget_v22.py` | v2.2 手算预期值测试（16 项，含 10-06 加的预算控制器读用量 1 项；原记“21 项”有误） |
 | `过程/subset_sample_v22.py` | v2.2 样本入库子集（强制纳入加撤池、储备异常与 boost 池） |
 | `sql/PROBE22*`、`sql/RAW22_*`、`sql/SMP22*` | v2.2 费用与对齐探针、扩大样本 SQL |
 | `build_grad_sql_v21.py`、`build_gradpre_sql_v21.py` | v2.1 毕业后生成器（B、P、L、M 四层）与毕业前生成器（B、M 两层），§1c（已被 v2.2 取代） |
@@ -291,5 +304,7 @@ GPT 审阅原文与总控第十九轮见[存档](../../3_审计/2026-10-05_总�
 | `run_dune.py`、`dune_create.py`、`dune_get.py`、`dune_get_stream.py` | 执行、台账、流式下载（后三个复制自 DQ-34，sha 相同） |
 | `sql/` | 每片的 SQL（公开查询，查询号见台账）；`LPCHK*.sql` 口径核查；`SMP2_*.sql` 是 v2 小样本最后一次运行的版本，早先版本以台账里的 Dune 查询号为准 |
 | `过程/curve_x120_by_month.py` | 毕业币完成时曲线虚拟 SOL >120 的月度占比 |
+| `过程/build_boostscan_sql.py`、`过程/run_boostscan.py`、`过程/boostscan_report.py`、`过程/boostscan_affected.py`、`sql/PROBE23a_boost_1d.sql`、`sql/SCAN23_BOOST_*.sql` | §1e InitBoost 全量扫描：生成、分段执行（余额不足即停）、报告与按币核对 |
+| `runs/SCAN23_BOOST_report.md`、`runs/SCAN23_BOOST_affected.md`、`runs/budget_v22.csv` | §1e 的结果与预算账 |
 | `runs/dune_ledger.csv` | 每次执行的费用 |
 | `raw/` | 数据（不入库） |
