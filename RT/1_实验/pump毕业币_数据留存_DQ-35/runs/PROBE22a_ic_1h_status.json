@@ -1,0 +1,36 @@
+{
+  "execution_id": "01M45SK6S7ZFMAY3A1T19BFT7X",
+  "query_id": 8899566,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-05T10:26:18.536068Z",
+  "expires_at": "2027-01-03T10:26:55.201436Z",
+  "execution_started_at": "2026-10-05T10:26:30.449237979Z",
+  "execution_ended_at": "2026-10-05T10:26:55.201425539Z",
+  "result_metadata": {
+    "column_names": [
+      "n",
+      "n_buy",
+      "n_sell",
+      "n_tx",
+      "min_len",
+      "max_len"
+    ],
+    "column_types": [
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint"
+    ],
+    "row_count": 1,
+    "result_set_bytes": 48,
+    "total_row_count": 1,
+    "total_result_set_bytes": 48,
+    "datapoint_count": 6,
+    "pending_time_millis": 11913,
+    "execution_time_millis": 24752
+  },
+  "execution_cost_credits": 1.7785
+}

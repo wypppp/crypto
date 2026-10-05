@@ -1,0 +1,344 @@
+{
+ "bootstrap_S1S5_by_coin": {
+  "1000000_mean": [
+   0.6977,
+   0.7869
+  ],
+  "1000000_ge10_cap1400_per_year": [
+   21.2876,
+   32.1106
+  ],
+  "1000000_hit100k_per_year": [
+   20.1672,
+   30.9902
+  ],
+  "5000000_mean": [
+   0.6905,
+   0.7437
+  ],
+  "5000000_ge10_cap1400_per_year": [
+   6.7224,
+   6.7224
+  ],
+  "5000000_hit100k_per_year": [
+   6.1622,
+   6.1622
+  ],
+  "20000000_mean": [
+   0.637,
+   0.637
+  ],
+  "20000000_ge10_cap1400_per_year": [
+   1.1204,
+   1.1204
+  ],
+  "20000000_hit100k_per_year": [
+   1.1204,
+   1.1204
+  ],
+  "100000000_mean": [
+   0.4276,
+   0.4276
+  ],
+  "100000000_ge10_cap1400_per_year": [
+   0.0,
+   0.0
+  ],
+  "100000000_hit100k_per_year": [
+   0.0,
+   0.0
+  ]
+ },
+ "all_buy_account_3y": {
+  "f0.02_c0.002": {
+   "p10_gain_rmb": -8244,
+   "p50_gain_rmb": -8229,
+   "p90_gain_rmb": -8218,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.02_c0.005": {
+   "p10_gain_rmb": -8245,
+   "p50_gain_rmb": -8231,
+   "p90_gain_rmb": -8218,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.02_c0.01": {
+   "p10_gain_rmb": -8247,
+   "p50_gain_rmb": -8232,
+   "p90_gain_rmb": -8218,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.05_c0.002": {
+   "p10_gain_rmb": -9315,
+   "p50_gain_rmb": -9300,
+   "p90_gain_rmb": -9289,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.05_c0.005": {
+   "p10_gain_rmb": -9316,
+   "p50_gain_rmb": -9301,
+   "p90_gain_rmb": -9289,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.05_c0.01": {
+   "p10_gain_rmb": -9318,
+   "p50_gain_rmb": -9304,
+   "p90_gain_rmb": -9290,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.1_c0.002": {
+   "p10_gain_rmb": -9671,
+   "p50_gain_rmb": -9657,
+   "p90_gain_rmb": -9646,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.1_c0.005": {
+   "p10_gain_rmb": -9673,
+   "p50_gain_rmb": -9658,
+   "p90_gain_rmb": -9646,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  },
+  "f0.1_c0.01": {
+   "p10_gain_rmb": -9675,
+   "p50_gain_rmb": -9662,
+   "p90_gain_rmb": -9647,
+   "share_gain_pos": 0.0,
+   "median_open_at_end_rmb": 0
+  }
+ },
+ "start_each_half_12m": {
+  "2024-06-01": {
+   "all_buy_f5_c005_p50_gain_rmb": -9301,
+   "all_buy_share_gain_pos": 0.0,
+   "oracle_b50only": {
+    "k": 2,
+    "net_gain_rmb": 33215825,
+    "open_at_end_rmb": 404296,
+    "trades": 260,
+    "top3": [
+     {
+      "mint": "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump",
+      "share_of_gains": 0.0528
+     },
+     {
+      "mint": "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump",
+      "share_of_gains": 0.034
+     },
+     {
+      "mint": "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY",
+      "share_of_gains": 0.0338
+     }
+    ]
+   },
+   "oracle_main": {
+    "k": 2,
+    "net_gain_rmb": 94431393,
+    "open_at_end_rmb": 5794942,
+    "trades": 462,
+    "top3": [
+     {
+      "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+      "share_of_gains": 0.06
+     },
+     {
+      "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+      "share_of_gains": 0.0401
+     },
+     {
+      "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+      "share_of_gains": 0.0339
+     }
+    ]
+   }
+  },
+  "2024-07-01": {
+   "all_buy_f5_c005_p50_gain_rmb": -9302,
+   "all_buy_share_gain_pos": 0.0,
+   "oracle_b50only": {
+    "k": 2,
+    "net_gain_rmb": 32234522,
+    "open_at_end_rmb": 108133,
+    "trades": 253,
+    "top3": [
+     {
+      "mint": "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump",
+      "share_of_gains": 0.0549
+     },
+     {
+      "mint": "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump",
+      "share_of_gains": 0.0353
+     },
+     {
+      "mint": "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY",
+      "share_of_gains": 0.0351
+     }
+    ]
+   },
+   "oracle_main": {
+    "k": 2,
+    "net_gain_rmb": 88181241,
+    "open_at_end_rmb": 2811905,
+    "trades": 412,
+    "top3": [
+     {
+      "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+      "share_of_gains": 0.0661
+     },
+     {
+      "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+      "share_of_gains": 0.0441
+     },
+     {
+      "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+      "share_of_gains": 0.0373
+     }
+    ]
+   }
+  },
+  "2025-01-01": {
+   "all_buy_f5_c005_p50_gain_rmb": -9303,
+   "all_buy_share_gain_pos": 0.0,
+   "oracle_b50only": {
+    "k": 3,
+    "net_gain_rmb": 10560274,
+    "open_at_end_rmb": 239359,
+    "trades": 68,
+    "top3": [
+     {
+      "mint": "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump",
+      "share_of_gains": 0.1058
+     },
+     {
+      "mint": "BftUiGB2iDkNDa8AKdhtLuJHHXiUfqLvTNmiXaSopump",
+      "share_of_gains": 0.093
+     },
+     {
+      "mint": "7oBYdEhV4GkXC19ZfgAvXpJWp2Rn9pm1Bx2cVNxFpump",
+      "share_of_gains": 0.0688
+     }
+    ]
+   },
+   "oracle_main": {
+    "k": 2,
+    "net_gain_rmb": 30145914,
+    "open_at_end_rmb": 818906,
+    "trades": 193,
+    "top3": [
+     {
+      "mint": "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump",
+      "share_of_gains": 0.0549
+     },
+     {
+      "mint": "BftUiGB2iDkNDa8AKdhtLuJHHXiUfqLvTNmiXaSopump",
+      "share_of_gains": 0.0325
+     },
+     {
+      "mint": "AxriehR6Xw3adzHopnvMn7GcpRFcD41ddpiTWMg6pump",
+      "share_of_gains": 0.0255
+     }
+    ]
+   }
+  },
+  "2025-07-01": {
+   "all_buy_f5_c005_p50_gain_rmb": -9299,
+   "all_buy_share_gain_pos": 0.0,
+   "oracle_b50only": {
+    "k": 2,
+    "net_gain_rmb": 2154820,
+    "open_at_end_rmb": 0,
+    "trades": 27,
+    "top3": [
+     {
+      "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+      "share_of_gains": 0.2454
+     },
+     {
+      "mint": "DQnkBM4eYYMnVE8Qy2K3BB7uts1fh2EwBVktEz6jpump",
+      "share_of_gains": 0.1379
+     },
+     {
+      "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+      "share_of_gains": 0.0924
+     }
+    ]
+   },
+   "oracle_main": {
+    "k": 2,
+    "net_gain_rmb": 6483070,
+    "open_at_end_rmb": 36920,
+    "trades": 51,
+    "top3": [
+     {
+      "mint": "8Jx8AAHj86wbQgUTjGuj6GTTL5Ps3cqxKRTvpaJApump",
+      "share_of_gains": 0.1063
+     },
+     {
+      "mint": "6nR8wBnfsmXfcdDr1hovJKjvFQxNSidN6XFyfAFZpump",
+      "share_of_gains": 0.0838
+     },
+     {
+      "mint": "a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump",
+      "share_of_gains": 0.0714
+     }
+    ]
+   }
+  }
+ },
+ "oracle_3y_sample_lower_bound_of_bound": {
+  "k": 2,
+  "net_gain_rmb": 208574398,
+  "open_at_end_rmb": 1819332,
+  "trades": 1005,
+  "top3": [
+   {
+    "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+    "share_of_gains": 0.0572
+   },
+   {
+    "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+    "share_of_gains": 0.0382
+   },
+   {
+    "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+    "share_of_gains": 0.0323
+   }
+  ]
+ },
+ "mayhem_coins_in_sample": [
+  "ydDccyq66xKtfqn5bsRpfFXz4WeF4fh3bgQBx1npump"
+ ],
+ "oracle_3y_excl_mayhem": {
+  "k": 2,
+  "net_gain_rmb": 208574398,
+  "open_at_end_rmb": 1819332,
+  "trades": 1005,
+  "top3": [
+   {
+    "mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+    "share_of_gains": 0.0572
+   },
+   {
+    "mint": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+    "share_of_gains": 0.0382
+   },
+   {
+    "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+    "share_of_gains": 0.0323
+   }
+  ]
+ },
+ "mean_excl_mayhem": {
+  "1000000": 0.7434,
+  "5000000": 0.7166,
+  "20000000": 0.637,
+  "100000000": 0.4276
+ }
+}

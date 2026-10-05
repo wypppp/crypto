@@ -1,0 +1,46 @@
+{
+  "execution_id": "01M45WR30043K8YJPHKWKW74MB",
+  "query_id": 8899728,
+  "is_execution_finished": true,
+  "state": "QUERY_STATE_COMPLETED",
+  "submitted_at": "2026-10-05T11:21:24.225614Z",
+  "expires_at": "2027-01-03T11:21:32.193229Z",
+  "execution_started_at": "2026-10-05T11:21:25.463004855Z",
+  "execution_ended_at": "2026-10-05T11:21:32.193212125Z",
+  "result_metadata": {
+    "column_names": [
+      "chain",
+      "n_candidate",
+      "n_no_curve_create",
+      "n_sealed",
+      "n_no_symbol",
+      "n_holdout_name",
+      "n_included",
+      "n_included_sol",
+      "n_included_usdc",
+      "n_included_other",
+      "identity_gap"
+    ],
+    "column_types": [
+      "varchar(6)",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint"
+    ],
+    "row_count": 1,
+    "result_set_bytes": 86,
+    "total_row_count": 1,
+    "total_result_set_bytes": 86,
+    "datapoint_count": 11,
+    "pending_time_millis": 1237,
+    "execution_time_millis": 6730
+  },
+  "execution_cost_credits": 0.14973077
+}

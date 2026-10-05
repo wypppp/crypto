@@ -1,0 +1,2 @@
+query_id,sql_file,execution_id,state,credits,usage_after,note
+8899627,sql/S0_链上时间锚.sql,01M45TS2B8TQNM2P33W80EQW9G,QUERY_STATE_COMPLETED,0.265423077,,公开查询

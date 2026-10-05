@@ -12,7 +12,7 @@ python 过程/estimate_volume_v21.py  → 打印并写 runs/VOL21_估算.md
 - P：费用主要来自扫描的事件天数（片长＋8 天，探针日为 1＋8＝9 天），每片＝探针费用 × (片长＋8)／9 × 权重。
 - L、M、PRE M：与体量关系小，每片按探针费用计（39 片）。
 - 上沿：同一 SQL 两次运行的费用比，本轮实测最大约 5 倍（P 层 2.70 对 14.20，费用随执行耗时、即集群负载变化），
-  上沿取“点估计×2”，另报“点估计×5”的极端值。
+  “×2”是情景上沿（不是统计上界，10-05 更正措辞），另报“×5”的极端情景。
 """
 
 import csv
@@ -81,7 +81,7 @@ def main():
     cost, rows = v1()
     lines = ["# DQ-35 v2.1 重取体量与费用外推（探针日 2026-09-23）", ""]
     lines.append(
-        "| 层 | 探针日费用 | 探针日行数 | 探针日结果字节 | 外推全量费用（点） | 上沿（×2） | 极端（×5） | 外推行数 | 外推结果 GB |"
+        "| 层 | 探针日费用 | 探针日行数 | 探针日结果字节 | 外推全量费用（点） | 情景上沿（×2，非统计上界） | 极端情景（×5） | 外推行数 | 外推结果 GB |"
     )
     lines.append("|---|---|---|---|---|---|---|---|---|")
     tot = 0.0
@@ -106,6 +106,10 @@ def main():
                 f = sum((d + 8) / 9 * w for _, d, w in ws)
                 g = sum(d * w for _, d, w in ws)
                 est, est_rows, est_gb = pr["cost"] * f, n * g, b * g / 1e9
+            elif layer == "L":
+                # 10-05 更正（GPT 批 1a-i）：L 层是逐笔，行数与字节随事件天数放大；费用每片按探针计
+                f = sum(d * w for _, d, w in ws)
+                est, est_rows, est_gb = pr["cost"] * len(ws), n * f, b * f / 1e9
             else:
                 est, est_rows, est_gb = pr["cost"] * len(ws), len(ws), 0.0
             tot += est
@@ -127,7 +131,8 @@ def main():
             )
     lines += [
         "",
-        "合计（点）%.0f credits；上沿 %.0f；极端 %.0f。" % (tot, tot * 2, tot * 5),
+        "合计（点）%.0f credits；情景上沿（×2，非统计上界）%.0f；极端情景（×5）%.0f。"
+        % (tot, tot * 2, tot * 5),
         "",
         "权重：v1 GRAD 2026-09b 每日 %.0f 行，全期 %d 行；v1 GRADPRE 2026-09b 每日 %.0f 行，全期 %d 行。"
         % (
