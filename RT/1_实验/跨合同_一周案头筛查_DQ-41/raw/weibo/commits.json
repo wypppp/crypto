@@ -1,0 +1,479 @@
+[
+ {
+  "day": "2026-06-01",
+  "sha": "4b1a36b6ec9da83f3a481c04518a077910023070",
+  "committer_date": "2026-06-01T10:20:13Z",
+  "author_date": "2026-06-01T10:20:13Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-01",
+  "sha": "d84ebe811626f572db54a2548c2db7fc83c19f03",
+  "committer_date": "2026-06-01T04:08:36Z",
+  "author_date": "2026-06-01T04:08:36Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-01",
+  "sha": "389d45224b1372ad499aee187b2939ec39260dca",
+  "committer_date": "2026-05-31T23:11:47Z",
+  "author_date": "2026-05-31T23:11:47Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-01",
+  "sha": "f4c2a3185c0983f5e5f6e0d2b32f28ead5490f81",
+  "committer_date": "2026-05-31T22:00:05Z",
+  "author_date": "2026-05-31T22:00:05Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-01",
+  "sha": "25c10db02171bafcd417a44e7043accbf9257c57",
+  "committer_date": "2026-05-31T20:08:30Z",
+  "author_date": "2026-05-31T20:08:30Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-01",
+  "sha": "5a9ced2ca672af96a837bc22a9e76db72e982c56",
+  "committer_date": "2026-05-31T18:02:31Z",
+  "author_date": "2026-05-31T18:02:31Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-01",
+  "sha": "4237adc0af83a260b1935f31211e368f4c77a2fc",
+  "committer_date": "2026-05-31T16:08:42Z",
+  "author_date": "2026-05-31T16:08:42Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-02",
+  "sha": "7398e79d715866abd223a5f24db03c52803eef92",
+  "committer_date": "2026-06-02T14:02:30Z",
+  "author_date": "2026-06-02T14:02:30Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-02",
+  "sha": "e7ae665f6a083fbc2494c7f9c4708c9b266f063b",
+  "committer_date": "2026-06-02T09:05:43Z",
+  "author_date": "2026-06-02T09:05:43Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-02",
+  "sha": "f9dfb7c1373e6f97ef4c4c39e18dcc80d78269d9",
+  "committer_date": "2026-06-02T04:01:54Z",
+  "author_date": "2026-06-02T04:01:54Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-02",
+  "sha": "68eda49d161ab942c43d49c5124fb63ac1130e18",
+  "committer_date": "2026-06-01T23:02:11Z",
+  "author_date": "2026-06-01T23:02:11Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-02",
+  "sha": "1592171e64593367545cd2c7cfaf58f50039ca4c",
+  "committer_date": "2026-06-01T20:55:00Z",
+  "author_date": "2026-06-01T20:55:00Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-02",
+  "sha": "69275b78e79e749ce10541fff437e72429d7f058",
+  "committer_date": "2026-06-01T16:37:31Z",
+  "author_date": "2026-06-01T16:37:31Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-03",
+  "sha": "09df5500521a0bfff2a6f03c70f183547901681c",
+  "committer_date": "2026-06-03T14:38:45Z",
+  "author_date": "2026-06-03T14:38:45Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-03",
+  "sha": "0c792b2c3a13dc6db57879904e2bafc1279ee4c8",
+  "committer_date": "2026-06-03T09:25:05Z",
+  "author_date": "2026-06-03T09:25:05Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-03",
+  "sha": "f38f4dfdb498cc3e6947f4517a7560085363c7f8",
+  "committer_date": "2026-06-03T04:10:58Z",
+  "author_date": "2026-06-03T04:10:58Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-03",
+  "sha": "68730216b3a57c352e34716e54211d95cc377d03",
+  "committer_date": "2026-06-02T23:45:24Z",
+  "author_date": "2026-06-02T23:45:24Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-03",
+  "sha": "5e1784c5d0c1ee6c9da3549dfa7cfd633817df66",
+  "committer_date": "2026-06-02T21:47:34Z",
+  "author_date": "2026-06-02T21:47:34Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-03",
+  "sha": "88e72d70c0b7709f4f662b2766dbbda7ecf66185",
+  "committer_date": "2026-06-02T18:38:42Z",
+  "author_date": "2026-06-02T18:38:42Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-04",
+  "sha": "9831167404c5985c755c80c00fad52f587f0f2f7",
+  "committer_date": "2026-06-04T15:15:35Z",
+  "author_date": "2026-06-04T15:15:35Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-04",
+  "sha": "a29e0e22864c1c9b082fae95d53d3964d47c446d",
+  "committer_date": "2026-06-04T11:53:37Z",
+  "author_date": "2026-06-04T11:53:37Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-04",
+  "sha": "ae07c6a99d21ca8ca39f1c59e9e8ca7e60ec0b7e",
+  "committer_date": "2026-06-04T08:48:02Z",
+  "author_date": "2026-06-04T08:48:02Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-04",
+  "sha": "337afa125d86de0808f3a2018379311608950a7f",
+  "committer_date": "2026-06-04T04:04:33Z",
+  "author_date": "2026-06-04T04:04:33Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-04",
+  "sha": "b791de0062354510fceede920cdf8986094471be",
+  "committer_date": "2026-06-03T23:43:48Z",
+  "author_date": "2026-06-03T23:43:48Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-04",
+  "sha": "246031ce234a0ca0865120aefd038eae7619a324",
+  "committer_date": "2026-06-03T21:49:14Z",
+  "author_date": "2026-06-03T21:49:14Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-04",
+  "sha": "ad8254adab64b56ce5748f1312f9107032da1c51",
+  "committer_date": "2026-06-03T18:43:30Z",
+  "author_date": "2026-06-03T18:43:30Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "2493337dbb8bd540f61aee3127fedc483b1a114a",
+  "committer_date": "2026-06-05T15:53:47Z",
+  "author_date": "2026-06-05T15:53:47Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "cc6338514bd084fc7429d94f36f351ea15e12259",
+  "committer_date": "2026-06-05T12:37:57Z",
+  "author_date": "2026-06-05T12:37:57Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "561ba96bb1bca83f7f54efb9a1f1c5b2d407f462",
+  "committer_date": "2026-06-05T09:51:20Z",
+  "author_date": "2026-06-05T09:51:20Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "62cba76561442678c9d05ebd0bcb2778c4933dcc",
+  "committer_date": "2026-06-05T05:17:25Z",
+  "author_date": "2026-06-05T05:17:25Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "c8de08b28b7797b2b100b0f4efd2701e175c2783",
+  "committer_date": "2026-06-05T00:08:10Z",
+  "author_date": "2026-06-05T00:08:10Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "cc859da34173bef5389b65d8133787dbd9f5b65e",
+  "committer_date": "2026-06-04T22:22:30Z",
+  "author_date": "2026-06-04T22:22:30Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "76d6faafe8b55f01cfd8011e9efedb34b29ac883",
+  "committer_date": "2026-06-04T20:56:30Z",
+  "author_date": "2026-06-04T20:56:30Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-05",
+  "sha": "80c5ecdc7651ea928f3a7a61c234c780a8fab560",
+  "committer_date": "2026-06-04T18:15:51Z",
+  "author_date": "2026-06-04T18:15:51Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "5dad18d15afed4ce7075d4b172e3ee6d91c363b8",
+  "committer_date": "2026-06-06T15:16:05Z",
+  "author_date": "2026-06-06T15:16:05Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "920fe59ce8b172fcb9ab39210c8fd5f86b9b33e2",
+  "committer_date": "2026-06-06T13:44:16Z",
+  "author_date": "2026-06-06T13:44:16Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "da04cf6182026edae0fde107ff27c27918e223a1",
+  "committer_date": "2026-06-06T11:26:53Z",
+  "author_date": "2026-06-06T11:26:53Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "20a537cf4f3917fad35e6d59b3aaa9a96be0f6ff",
+  "committer_date": "2026-06-06T09:25:50Z",
+  "author_date": "2026-06-06T09:25:50Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "0f36cbcc276a7b8f622ae14e00bbebd97b34a25a",
+  "committer_date": "2026-06-06T06:52:55Z",
+  "author_date": "2026-06-06T06:52:55Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "cea0116fa638e13da0446038ef211ff8bf6f2cbe",
+  "committer_date": "2026-06-06T03:33:18Z",
+  "author_date": "2026-06-06T03:33:18Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "a81873e041634fee528388bec97edad425d964f0",
+  "committer_date": "2026-06-05T23:09:45Z",
+  "author_date": "2026-06-05T23:09:45Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "6d5214d322469dc50f979a9f0d154573435269a4",
+  "committer_date": "2026-06-05T21:25:56Z",
+  "author_date": "2026-06-05T21:25:56Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "b2e64c871dc013bfabe3f6b4470591752ca0e1ed",
+  "committer_date": "2026-06-05T19:55:03Z",
+  "author_date": "2026-06-05T19:55:03Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-06",
+  "sha": "0206218d7ba3ef85dca0543cb2ddf0f30b2b2e54",
+  "committer_date": "2026-06-05T17:55:30Z",
+  "author_date": "2026-06-05T17:55:30Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "a18853922c3c8e7b6a67a472b879ed214bc8660b",
+  "committer_date": "2026-06-07T14:53:05Z",
+  "author_date": "2026-06-07T14:53:05Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "dc021cd5ae3613df85223c5e17192c632da5bce6",
+  "committer_date": "2026-06-07T12:21:08Z",
+  "author_date": "2026-06-07T12:21:08Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "a14ef3c1ba6fbd9860f79ab945914b67d3d32935",
+  "committer_date": "2026-06-07T10:34:05Z",
+  "author_date": "2026-06-07T10:34:05Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "d8dcd4b87461b49514afd38dd30791709cf91d88",
+  "committer_date": "2026-06-07T07:59:27Z",
+  "author_date": "2026-06-07T07:59:27Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "e6d23d0f8c0418ac2592e20b9e7191418465ff8a",
+  "committer_date": "2026-06-07T03:59:53Z",
+  "author_date": "2026-06-07T03:59:53Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "d23dac977682b3329d5498c45a9710f7309fa274",
+  "committer_date": "2026-06-06T23:04:20Z",
+  "author_date": "2026-06-06T23:04:20Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "2ce6ef4d044b04d2aa523996b056f03df29968c8",
+  "committer_date": "2026-06-06T21:05:24Z",
+  "author_date": "2026-06-06T21:05:24Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "2aa704e555e168748adbe7673f09e896b5eccc01",
+  "committer_date": "2026-06-06T19:23:39Z",
+  "author_date": "2026-06-06T19:23:39Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ },
+ {
+  "day": "2026-06-07",
+  "sha": "351a3f2ef1a701a7c84561b33f5b8ec6ba5bebde",
+  "committer_date": "2026-06-06T17:15:12Z",
+  "author_date": "2026-06-06T17:15:12Z",
+  "author": "bot",
+  "message": "update by github action",
+  "gate_ok": true
+ }
+]

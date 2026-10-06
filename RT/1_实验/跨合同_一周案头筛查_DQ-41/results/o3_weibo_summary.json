@@ -1,0 +1,23 @@
+{
+ "events": 1449,
+ "coins_in_window": 23747,
+ "coins_gated_out_or_outside": 833206,
+ "events_left_censored": 51,
+ "window_h_median": 4.345833333333333,
+ "window_h_max": 6.288333333333333,
+ "loose_zero": 959,
+ "strict_zero": 1390,
+ "loose_ge1": 490,
+ "strict_ge1": 59,
+ "loose_median_if_ge1": 2.0,
+ "strict_median_if_ge1": 2.0,
+ "events_with_loose_created_in_window": 50,
+ "strict_events_not_censored": 56,
+ "strict_events_with_coin_created_in_window": 19,
+ "strict_coins_created_in_window": 43,
+ "lead_h_q10_q50_q90": [
+  0.61,
+  1.93,
+  4.35
+ ]
+}

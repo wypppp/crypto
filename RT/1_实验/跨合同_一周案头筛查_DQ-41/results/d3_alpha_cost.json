@@ -1,0 +1,377 @@
+{
+ "rows_kept": 261,
+ "rows_excluded_by_gate": 188,
+ "kept_per_month": {
+  "2025-04": 4,
+  "2025-05": 15,
+  "2025-06": 28,
+  "2025-07": 21,
+  "2025-08": 26,
+  "2025-09": 36,
+  "2025-10": 26,
+  "2025-11": 16,
+  "2025-12": 26,
+  "2026-01": 14,
+  "2026-02": 9,
+  "2026-03": 10,
+  "2026-04": 9,
+  "2026-05": 1,
+  "2026-06": 3,
+  "2026-07": 7,
+  "2026-08": 4,
+  "2026-09": 6
+ },
+ "threshold_2026_dev_quantiles": {
+  "0.1": 227.6,
+  "0.25": 235.0,
+  "0.5": 241.0,
+  "0.75": 243.0,
+  "0.9": 251.0
+ },
+ "type_2026_dev": {
+  "grab": 54,
+  "tge": 8,
+  "空": 1
+ },
+ "phase_2026_dev": {
+  "1": 63
+ },
+ "cost_grid": [
+  {
+   "T": 241.0,
+   "balance_pts": 2,
+   "volume_pts": 12,
+   "daily_buy_usd": 4096.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 2,
+   "volume_pts": 13,
+   "daily_buy_usd": 8192.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 2,
+   "volume_pts": 14,
+   "daily_buy_usd": 16384.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 2,
+   "volume_pts": 15,
+   "daily_buy_usd": 32768.0,
+   "claims_per_15d": 1,
+   "buy_usd_per_claim": 491520.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 2,
+   "volume_pts": 16,
+   "daily_buy_usd": 65536.0,
+   "claims_per_15d": 2,
+   "buy_usd_per_claim": 491520.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 2,
+   "volume_pts": 17,
+   "daily_buy_usd": 131072.0,
+   "claims_per_15d": 3,
+   "buy_usd_per_claim": 655360.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 2,
+   "volume_pts": 18,
+   "daily_buy_usd": 262144.0,
+   "claims_per_15d": 4,
+   "buy_usd_per_claim": 983040.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 3,
+   "volume_pts": 12,
+   "daily_buy_usd": 4096.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 3,
+   "volume_pts": 13,
+   "daily_buy_usd": 8192.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 3,
+   "volume_pts": 14,
+   "daily_buy_usd": 16384.0,
+   "claims_per_15d": 1,
+   "buy_usd_per_claim": 245760.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 3,
+   "volume_pts": 15,
+   "daily_buy_usd": 32768.0,
+   "claims_per_15d": 2,
+   "buy_usd_per_claim": 245760.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 3,
+   "volume_pts": 16,
+   "daily_buy_usd": 65536.0,
+   "claims_per_15d": 3,
+   "buy_usd_per_claim": 327680.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 3,
+   "volume_pts": 17,
+   "daily_buy_usd": 131072.0,
+   "claims_per_15d": 4,
+   "buy_usd_per_claim": 491520.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 3,
+   "volume_pts": 18,
+   "daily_buy_usd": 262144.0,
+   "claims_per_15d": 5,
+   "buy_usd_per_claim": 786432.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 4,
+   "volume_pts": 12,
+   "daily_buy_usd": 4096.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 4,
+   "volume_pts": 13,
+   "daily_buy_usd": 8192.0,
+   "claims_per_15d": 1,
+   "buy_usd_per_claim": 122880.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 4,
+   "volume_pts": 14,
+   "daily_buy_usd": 16384.0,
+   "claims_per_15d": 2,
+   "buy_usd_per_claim": 122880.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 4,
+   "volume_pts": 15,
+   "daily_buy_usd": 32768.0,
+   "claims_per_15d": 3,
+   "buy_usd_per_claim": 163840.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 4,
+   "volume_pts": 16,
+   "daily_buy_usd": 65536.0,
+   "claims_per_15d": 4,
+   "buy_usd_per_claim": 245760.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 4,
+   "volume_pts": 17,
+   "daily_buy_usd": 131072.0,
+   "claims_per_15d": 5,
+   "buy_usd_per_claim": 393216.0
+  },
+  {
+   "T": 241.0,
+   "balance_pts": 4,
+   "volume_pts": 18,
+   "daily_buy_usd": 262144.0,
+   "claims_per_15d": 6,
+   "buy_usd_per_claim": 655360.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 2,
+   "volume_pts": 12,
+   "daily_buy_usd": 4096.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 2,
+   "volume_pts": 13,
+   "daily_buy_usd": 8192.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 2,
+   "volume_pts": 14,
+   "daily_buy_usd": 16384.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 2,
+   "volume_pts": 15,
+   "daily_buy_usd": 32768.0,
+   "claims_per_15d": 1,
+   "buy_usd_per_claim": 491520.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 2,
+   "volume_pts": 16,
+   "daily_buy_usd": 65536.0,
+   "claims_per_15d": 2,
+   "buy_usd_per_claim": 491520.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 2,
+   "volume_pts": 17,
+   "daily_buy_usd": 131072.0,
+   "claims_per_15d": 3,
+   "buy_usd_per_claim": 655360.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 2,
+   "volume_pts": 18,
+   "daily_buy_usd": 262144.0,
+   "claims_per_15d": 4,
+   "buy_usd_per_claim": 983040.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 3,
+   "volume_pts": 12,
+   "daily_buy_usd": 4096.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 3,
+   "volume_pts": 13,
+   "daily_buy_usd": 8192.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 3,
+   "volume_pts": 14,
+   "daily_buy_usd": 16384.0,
+   "claims_per_15d": 1,
+   "buy_usd_per_claim": 245760.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 3,
+   "volume_pts": 15,
+   "daily_buy_usd": 32768.0,
+   "claims_per_15d": 2,
+   "buy_usd_per_claim": 245760.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 3,
+   "volume_pts": 16,
+   "daily_buy_usd": 65536.0,
+   "claims_per_15d": 3,
+   "buy_usd_per_claim": 327680.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 3,
+   "volume_pts": 17,
+   "daily_buy_usd": 131072.0,
+   "claims_per_15d": 4,
+   "buy_usd_per_claim": 491520.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 3,
+   "volume_pts": 18,
+   "daily_buy_usd": 262144.0,
+   "claims_per_15d": 5,
+   "buy_usd_per_claim": 786432.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 4,
+   "volume_pts": 12,
+   "daily_buy_usd": 4096.0,
+   "claims_per_15d": 0,
+   "buy_usd_per_claim": null
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 4,
+   "volume_pts": 13,
+   "daily_buy_usd": 8192.0,
+   "claims_per_15d": 1,
+   "buy_usd_per_claim": 122880.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 4,
+   "volume_pts": 14,
+   "daily_buy_usd": 16384.0,
+   "claims_per_15d": 2,
+   "buy_usd_per_claim": 122880.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 4,
+   "volume_pts": 15,
+   "daily_buy_usd": 32768.0,
+   "claims_per_15d": 3,
+   "buy_usd_per_claim": 163840.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 4,
+   "volume_pts": 16,
+   "daily_buy_usd": 65536.0,
+   "claims_per_15d": 4,
+   "buy_usd_per_claim": 245760.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 4,
+   "volume_pts": 17,
+   "daily_buy_usd": 131072.0,
+   "claims_per_15d": 5,
+   "buy_usd_per_claim": 393216.0
+  },
+  {
+   "T": 251.0,
+   "balance_pts": 4,
+   "volume_pts": 18,
+   "daily_buy_usd": 262144.0,
+   "claims_per_15d": 6,
+   "buy_usd_per_claim": 655360.0
+  }
+ ]
+}
