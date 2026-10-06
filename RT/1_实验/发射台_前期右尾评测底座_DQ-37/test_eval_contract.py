@@ -10,8 +10,11 @@ from scipy.stats import binom
 import eval_contract as E
 
 
-def CERT(d0, d1, policy="dev"):
-    return {"policy": policy, "data_start": d0, "data_end": d1}
+def CERT(A, d0, d1, card="dev", channel="C2", passed=True):
+    """在账本 A 的可信确认记录里写一条确认结果，返回编号（第二十二轮：恢复只收可信记录的编号）。"""
+    if A.confirmations is None:
+        A.confirmations = E.ConfirmationRegistry()
+    return A.confirmations.record(card, channel, passed, d0, d1)
 
 
 W = E.WAN
@@ -95,13 +98,13 @@ def test_dust_lock_triggers_funds_exhausted_pause():
     # GPT 批 0 反例，m_min＝100：首笔剩 50 → 投第二笔；第二笔又亏到总共只剩 50：
     # D＝2 万、N＝−19,950，过不了 −2 万的暂停线，但已不能下注 → 须“资金耗尽暂停”，保留真实现金与 N
     A = E.Ledger(m_min=100)
-    A.open("x", W)
-    A.set_value("x", 50)
+    x = A.open("x", W)
+    A.set_value(x, 50)
     A.mark(10)
     assert A.D == 2 * W and A.state == "ACTIVE"
-    A.close("x")  # 现金 10,050
-    A.open("y", W)
-    A.set_value("y", 0)
+    A.close(x)  # 现金 10,050
+    y = A.open("y", W)
+    A.set_value(y, 0)
     A.mark(20)
     assert A.state == "PAUSED" and close(A.n_loss(20), -19_950) and A.cash == 50
     assert A.log[-1][1] == "pause:funds_exhausted"
@@ -110,36 +113,35 @@ def test_dust_lock_triggers_funds_exhausted_pause():
 def test_lock_writedown_classes():
     # 正常 12 个月归属：上市后 200 天仍在归属期内，不能被记 0；按 min(成本, 合格市价×0.7)
     A = E.Ledger()
-    A.subscribe("tge", 5_000, sub_deadline=0, vest_end=400)
+    tge = A.subscribe("tge", 5_000, sub_deadline=0, vest_end=400)
     A.list_asset(
-        "tge", day=30, price_value=6_000, volume_24h=60_000
+        tge, day=30, price_value=6_000, volume_24h=60_000
     )  # 成交额 ≥ 10×估值，合格
-    assert A.locked["tge"].value_loss(230) == 4_200  # min(5000, 0.7×6000)
-    A.locked["tge"].volume_24h = 59_999  # 不合格 → 视为没有市价 → 按成本
-    assert A.locked["tge"].value_loss(230) == 5_000
-    assert A.locked["tge"].value_loss(401) == 0.0  # 逾期未解锁
+    assert A.locked[tge].value_loss(230) == 4_200  # min(5000, 0.7×6000)
+    A.locked[tge].volume_24h = 59_999  # 不合格 → 视为没有市价 → 按成本
+    assert A.locked[tge].value_loss(230) == 5_000
+    assert A.locked[tge].value_loss(401) == 0.0  # 逾期未解锁
     B = E.Ledger()
-    B.subscribe("pre", 3_000, sub_deadline=10)
+    pre = B.subscribe("pre", 3_000, sub_deadline=10)
     assert (
-        B.locked["pre"].value_loss(190) == 3_000
-        and B.locked["pre"].value_loss(191) == 0.0
+        B.locked[pre].value_loss(190) == 3_000 and B.locked[pre].value_loss(191) == 0.0
     )  # 未上市：截止日起 180 天
 
 
 def test_writedown_during_pause_triggers_stop():
     # 一年内到 10 万 → 追加 2 万（D＝3 万）；随后可交易部分归零、剩 1 万锁定 → N＝−2 万暂停；锁定项目失败 → N＝−3 万停止
     A = E.Ledger()
-    A.open("x", W)
-    A.set_value("x", 100_000)
+    x = A.open("x", W)
+    A.set_value(x, 100_000)
     A.mark(100)
     assert A.D == 3 * W and A.bonus_used
-    A.close("x")
-    A.subscribe("lk", 10_000, sub_deadline=110, vest_end=500)
-    A.open("z", A.cash)
-    A.set_value("z", 0)
+    A.close(x)
+    lk = A.subscribe("lk", 10_000, sub_deadline=110, vest_end=500)
+    z = A.open("z", A.cash)
+    A.set_value(z, 0)
     A.mark(120)
     assert A.state == "PAUSED" and close(A.n_loss(120), -2 * W)
-    A.fail_asset("lk")
+    A.fail_asset(lk)
     A.mark(130)
     assert A.state == "STOPPED" and close(A.n_loss(130), -3 * W)
     A.mark(140)  # 停止后继续记账、不恢复
@@ -148,59 +150,62 @@ def test_writedown_during_pause_triggers_stop():
 
 def test_refund_is_conversion_not_deposit():
     A = E.Ledger()
-    A.subscribe("r", 4_000, sub_deadline=0)
-    A.request_refund("r", 3_500)
+    r = A.subscribe("r", 4_000, sub_deadline=0)
+    A.request_refund(r, 3_500)
     assert (
         A.liq() == 6_000 and A.v_loss(10) == 9_500
     )  # 到账前：不计入清算价值，风险估值按退款额
     d0 = A.D
-    A.refund_arrives("r")
+    A.refund_arrives(r)
     assert (
-        A.cash == 9_500 and A.D == d0 and "r" not in A.locked
+        A.cash == 9_500 and A.D == d0 and r not in A.locked
     )  # 到账：资产转换，D 不变，不重复计
 
 
 def test_resume_checks_inside_state_machine():
     A = E.Ledger()
-    A.open("x", W)
-    A.set_value("x", 0)
+    x = A.open("x", W)
+    A.set_value(x, 0)
     A.mark(5)  # 第二笔
-    A.open("y", W)
-    A.set_value("y", 0)
+    y = A.open("y", W)
+    A.set_value(y, 0)
     A.mark(10)
     assert A.state == "PAUSED" and A.pause_start == 10
     with pytest.raises(RuntimeError):
-        A.resume(50, certificate=True)  # 不足 90 天
+        A.resume(50, True)  # 不足 90 天
     with pytest.raises(RuntimeError):
-        A.resume(120, certificate=None)  # 缺确认凭证
+        A.resume(120, None)  # 缺确认记录
     with pytest.raises(RuntimeError):
         A.resume(
-            120, certificate="cert-001"
-        )  # 只有非空字符串不够：须绑定政策与数据时段
-    A.resume(120, certificate=CERT(10, 100))
+            120, {"policy": "dev", "data_start": 10, "data_end": 100}
+        )  # 调用方临时构造的凭证不收：只收可信记录的编号
+    rid = CERT(A, 10, 100)
+    with pytest.raises(RuntimeError):
+        A.resume(120, rid + 1)  # 不在可信记录里的编号
+    A.resume(120, rid)
     assert A.state == "ACTIVE" and A.phase == "B" and A.D == 3 * W
     B = E.Ledger()
-    B.open("x", W)
-    B.set_value("x", 0)
+    x = B.open("x", W)
+    B.set_value(x, 0)
     B.mark(5)
-    B.open("y", W)
-    B.set_value("y", 0)
+    y = B.open("y", W)
+    B.set_value(y, 0)
     B.mark(1_000)
     with pytest.raises(RuntimeError):
-        B.resume(1_100, certificate=CERT(1_000, 1_090))  # 过了 36 个月期限
+        B.resume(1_100, CERT(B, 1_000, 1_090))  # 过了 36 个月期限
     with pytest.raises(RuntimeError):
         B.open("z", 1)  # 暂停中禁止开仓
 
 
 def test_success_by_liquidation_value_only():
     A = E.Ledger()
-    A.subscribe("lk", 5_000, sub_deadline=0, vest_end=300)
+    lk = A.subscribe("lk", 5_000, sub_deadline=0, vest_end=300)
     A.list_asset(
-        "lk", 10, price_value=5_000_000, volume_24h=1e9
+        lk, 10, price_value=5_000_000, volume_24h=1e9
     )  # 锁定资产账面很高也不触发成功
     A.mark(20)
     assert A.state == "ACTIVE"
-    A.unlock("lk", 1_200_000)
+    A.unlock(lk, 1_200_000)
     A.mark(310)
     assert A.state == "SUCCESS"
 
@@ -248,22 +253,41 @@ def test_resume_revalues_and_stop_is_permanent():
     # 锁定资产 300 天后逾期未解锁记 0：N＝−3 万。原实现直接 resume 变 ACTIVE；现在重估后永久停止
     A, lk = _paused_with_lock()
     with pytest.raises(RuntimeError):
-        A.resume(301, certificate=CERT(130, 300))
+        A.resume(301, CERT(A, 130, 300))
     assert A.state == "STOPPED" and close(A.n_loss(301), -3 * W)
     A.mark(2_000)  # 永久停止不会被期限检查改成期满
     assert A.state == "STOPPED"
 
 
-def test_certificate_binds_policy_and_post_pause_period():
+def test_certificate_binds_card_channel_pass_and_post_pause_period():
     A, lk = _paused_with_lock()
     with pytest.raises(RuntimeError):
-        A.resume(250, certificate=CERT(130, 240, policy="other"))  # 政策不符
+        A.resume(250, CERT(A, 130, 240, card="other"))  # 卡片不符
     with pytest.raises(RuntimeError):
-        A.resume(250, certificate=CERT(100, 240))  # 数据时段早于暂停（120）
+        A.resume(250, CERT(A, 130, 240, channel="C3"))  # 通道不符（卡片写定 C2）
     with pytest.raises(RuntimeError):
-        A.resume(250, certificate=CERT(130, 260))  # 数据时段晚于恢复时刻
-    A.resume(250, certificate=CERT(130, 240))
+        A.resume(
+            250, CERT(A, 130, 240, passed=False)
+        )  # 未通过（GPT 整改复核：原实现仍能恢复）
+    with pytest.raises(RuntimeError):
+        A.resume(250, CERT(A, 100, 240))  # 数据时段早于暂停（120）
+    with pytest.raises(RuntimeError):
+        A.resume(250, CERT(A, 130, 260))  # 数据时段晚于恢复时刻
+    assert A.state == "PAUSED"  # 被拒的恢复不改状态
+    A.resume(250, CERT(A, 130, 240))
     assert A.state == "ACTIVE"
+
+
+def test_confirmation_registry_rejects_bad_records():
+    R = E.ConfirmationRegistry()
+    with pytest.raises(ValueError):
+        R.record("dev", "C1", True, 0, 10)  # C1 是关闭通道，不能用于恢复
+    with pytest.raises(ValueError):
+        R.record("dev", "C2", "yes", 0, 10)  # 结论必须是布尔值
+    with pytest.raises(ValueError):
+        R.record("dev", "C2", True, 10, 10)  # 空时段
+    with pytest.raises(ValueError):
+        E.Ledger(channel="C1")
 
 
 def test_unlock_during_pause_goes_to_cash():
@@ -306,3 +330,24 @@ def test_kelly_zero_when_expectation_not_above_one():
         [0.0, 3.0], [0.5, 0.5]
     )  # 期望 1.5：Kelly f＝(0.5·2−0.5)/2＝0.25
     assert abs(f - 0.25) < 1e-6 and g > 0
+
+
+# ---- 10-06 第二十二轮（GPT 整改复核 A）：全局唯一编号
+def test_ids_are_global_counter_not_name_based():
+    # GPT 原序列：依次认购 x、x#2、x，各 2,000。旧实现返回 x、x#2、x#2，第三笔覆盖第二笔，风险价值 8,000
+    A = E.Ledger()
+    ids = [A.subscribe(n, 2_000, sub_deadline=0) for n in ("x", "x#2", "x")]
+    assert len(set(ids)) == 3 and len(A.locked) == 3
+    assert A.cash == 4_000 and A.v_loss(10) == 10_000  # 现金 4,000＋锁定 3×2,000
+    assert [A.labels[i] for i in ids] == ["x", "x#2", "x"]
+
+
+def test_open_ids_are_global_counter_not_name_based():
+    A = E.Ledger()
+    ids = [A.open(n, 2_000) for n in ("x", "x#2", "x")]
+    assert len(set(ids)) == 3 and len(A.pos) == 3
+    assert A.cash == 4_000 and A.liq() == 10_000
+    lk = A.subscribe("x", 1_000, sub_deadline=0)  # 认购与开仓共用一个计数器
+    assert lk not in ids and A.v_loss(10) == 10_000
+    A.close(ids[1])  # 关掉一个，编号不复用
+    assert A.open("x", 500) not in ids + [lk]

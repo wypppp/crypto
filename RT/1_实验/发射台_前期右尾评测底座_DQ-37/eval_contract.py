@@ -14,6 +14,8 @@
 - 暂停期间：清掉可交易仓位、禁止开仓；锁定资产照常跟踪；停止线照常有效（GPT“暂停中减记触发停止”反例）。
 - 永久停止后：继续记账，不自动恢复。
 - resume()：状态机内校验暂停 ≥90 天、确认凭证、36 个月期限（GPT“resume 绕过”反例），并记录暂停起点。
+  10-06 第二十二轮（GPT 整改复核 A）：凭证只收可信确认记录（ConfirmationRegistry）的编号，核卡片、通道、通过结论、
+  暂停后时段；仓位与认购的编号由账本计数器分配，单调递增、永不复用，资产名只作标签。
 - 统计：台阶下界 P4（0≤L_j≤1、同时有效、L_{J+1}＝0、从右往左取累积最大）；P6（台阶证书对任意 f 成立；经验 Bernstein
   的 f 网格须在开发期冻结）；P12 的准确表述（只排除保守分布下 g≤0 的下注，不保证不超过 Kelly，也不控制有限期大亏）。
 - 需求曲线：改称“指定二点模型、指定下注规则下的需求曲线”，在网格上计算并检查单调（GPT 批 0 A8）。
@@ -22,6 +24,7 @@
 """
 
 import math
+from collections import namedtuple
 
 import numpy as np
 from scipy.optimize import minimize_scalar
@@ -196,18 +199,56 @@ class LockedAsset:
         )
 
 
-class Ledger:
-    """背景.md 第 4、5 条＋契约 v1.1 的状态机。事件按时间顺序调用；mark(t) 在每次估值后判定状态。"""
+CHANNELS = ("C2", "C3")
+ConfirmationRecord = namedtuple(
+    "ConfirmationRecord", "card_sha channel passed data_start data_end"
+)
 
-    def __init__(self, m_min=100.0, policy_id="dev"):
-        self.m_min = m_min
-        self.policy_id = (
-            policy_id  # 冻结政策的编号；恢复凭证必须与之一致（GPT 批 1b A）
+
+class ConfirmationRegistry:
+    """可信的确认结果记录（10-06 第二十二轮，GPT 整改复核 A）。由确认评分流程写入，账本只按编号读取。
+    每条记录绑定冻结卡片的哈希、通道（C2 或 C3）、通过结论、确认所用数据的时段。账本不重算统计检验。"""
+
+    def __init__(self):
+        self._recs = {}
+        self._seq = 0
+
+    def record(self, card_sha, channel, passed, data_start, data_end):
+        """写入一条确认结果，返回编号。字段不合规即拒绝。"""
+        if channel not in CHANNELS:
+            raise ValueError("确认通道只能是 C2 或 C3：%r" % (channel,))
+        if not isinstance(passed, bool):
+            raise ValueError("通过结论必须是布尔值：%r" % (passed,))
+        if not data_start < data_end:
+            raise ValueError("确认数据时段为空")
+        self._seq += 1
+        self._recs[self._seq] = ConfirmationRecord(
+            card_sha, channel, passed, data_start, data_end
         )
-        self._names = {}  # 名字 → 已用次数；仓位与锁定资产用唯一编号
+        return self._seq
+
+    def get(self, rid):
+        if rid not in self._recs:
+            raise KeyError("未知确认记录 %r" % (rid,))
+        return self._recs[rid]
+
+
+class Ledger:
+    """背景.md 第 4、5 条＋契约 v1.1 的状态机。事件按时间顺序调用；mark(t) 在每次估值后判定状态。
+    card_sha：本账本所跑政策的冻结卡片哈希；channel：该卡预先写定的确认通道；
+    confirmations：可信确认结果记录（恢复时只从这里按编号读取）。"""
+
+    def __init__(self, m_min=100.0, card_sha="dev", channel="C2", confirmations=None):
+        if channel not in CHANNELS:
+            raise ValueError("确认通道只能是 C2 或 C3：%r" % (channel,))
+        self.m_min = m_min
+        self.card_sha, self.channel = card_sha, channel
+        self.confirmations = confirmations
+        self._seq = 0  # 编号计数器：单调递增、永不复用，与资产名无关（第二十二轮）
+        self.labels = {}  # 编号 → 资产名（只作标签）
         self.D, self.W, self.cash = WAN, 0.0, WAN
-        self.pos = {}  # 可交易仓位：名称 → 可执行清算价值
-        self.locked = {}  # 名称 → LockedAsset
+        self.pos = {}  # 可交易仓位：编号 → 可执行清算价值
+        self.locked = {}  # 编号 → LockedAsset
         self.phase, self.state = "A", "ACTIVE"
         self.bonus_used = False
         self.pause_start = None
@@ -233,10 +274,11 @@ class Ledger:
 
     # 交易与资产事件（10-06 按 GPT 批 1b A 改：唯一编号；先校验、后改账，任何一步失败都不留下半截状态）
     def _new_id(self, name):
-        """名字第一次用时编号就是名字；同名再用时加 #2、#3……，两次认购或开仓各自计账。"""
-        k = self._names.get(name, 0) + 1
-        self._names[name] = k
-        return name if k == 1 else "%s#%d" % (name, k)
+        """账本计数器分配编号：整数，单调递增，永不复用。资产名只记作标签，可以重复
+        （第二十二轮：按名字加 #k 的旧做法会被 x、x#2、x 的顺序撞号）。"""
+        self._seq += 1
+        self.labels[self._seq] = name
+        return self._seq
 
     @staticmethod
     def _amount(x, what):
@@ -372,10 +414,10 @@ class Ledger:
         self.state, self.pause_start = "PAUSED", t
         self._rec(t, "pause:" + why)
 
-    def resume(self, t, certificate):
+    def resume(self, t, record_id):
         """暂停后恢复：先按 t 重估（mark），触及停止线即永久停止、不能恢复；再在状态机内校验，任一不满足就拒绝。
-        确认凭证须是 dict：policy＝本账本的政策编号；data_start、data_end＝确认所用数据的时段，
-        必须在暂停之后（data_start ≥ pause_start）、不晚于 t，且 data_end > data_start（GPT 批 1b A：只验非空不够）。"""
+        record_id 是可信确认结果记录的编号（第二十二轮：调用方临时构造的凭证一律不收）。记录须满足：
+        卡片哈希＝本账本的卡片；通道＝该卡写定的通道；结论为通过；数据时段在暂停之后、恢复之前。"""
         if self.state != "PAUSED":
             raise RuntimeError("只有暂停状态可以恢复（%s）" % self.state)
         self.mark(t)  # 重估：锁定资产逾期归零等会在这里触发停止线
@@ -383,13 +425,20 @@ class Ledger:
             raise RuntimeError("重估后状态为 %s，不能恢复" % self.state)
         if t - self.pause_start < PAUSE_MIN_DAYS:
             raise RuntimeError("暂停不足 %d 天" % PAUSE_MIN_DAYS)
-        if not isinstance(certificate, dict):
-            raise RuntimeError("缺确认凭证（须绑定政策与暂停后的数据时段）")
-        if certificate.get("policy") != self.policy_id:
-            raise RuntimeError("确认凭证的政策编号与账本不一致")
-        d0, d1 = certificate.get("data_start"), certificate.get("data_end")
-        if d0 is None or d1 is None or not (self.pause_start <= d0 < d1 <= t):
-            raise RuntimeError("确认凭证的数据时段须在暂停之后、恢复之前")
+        if self.confirmations is None or isinstance(record_id, bool):
+            raise RuntimeError("缺可信确认记录")
+        try:
+            rec = self.confirmations.get(record_id)
+        except (KeyError, TypeError):
+            raise RuntimeError("确认记录 %r 不在可信记录里" % (record_id,))
+        if rec.card_sha != self.card_sha:
+            raise RuntimeError("确认记录的卡片与账本不一致")
+        if rec.channel != self.channel:
+            raise RuntimeError("确认记录的通道与卡片写定的通道不一致")
+        if rec.passed is not True:
+            raise RuntimeError("确认结论不是通过")
+        if not (self.pause_start <= rec.data_start < rec.data_end <= t):
+            raise RuntimeError("确认数据时段须在暂停之后、恢复之前")
         if t > HORIZON:
             raise RuntimeError("已过 36 个月期限")
         if self.D < 3 * WAN:

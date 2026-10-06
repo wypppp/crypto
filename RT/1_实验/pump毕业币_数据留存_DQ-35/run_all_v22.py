@@ -145,7 +145,17 @@ def append(rec):
         w.writerow(rec)
 
 
+# 取数挡板（10-06，总控第二十二轮第三节；GPT 清单确认 ③ 不通过）：状态事件的排序键拼成固定位宽的数
+# slot×10^10＋txi×10^5＋oix×10^3＋iix，分量越界会碰撞（(txi,oix,iix)＝(1,100,0) 与 (2,0,0) 同值），
+# P 层验收查不出。改用多列元组排序或全键范围检查、补回归测试、经 GPT 只确认 ③ 之前，运行器拒绝运行。
+GATE3_FIXED = False
+
+
 def main():
+    if not GATE3_FIXED:
+        raise SystemExit(
+            "取数挡板：DQ-35 ③（状态事件键位宽碰撞）未修复并经 GPT 确认，拒绝运行（README §1g）"
+        )
     with bud.run_lock():
         _main()
 

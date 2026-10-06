@@ -125,3 +125,21 @@ def test_content_l_key_ignores_kind_hand():
     rows = [dict(base, kind="D"), dict(base, kind="W")]  # 同一事件键标成 D、W
     probs = K.content_rows(rows, "L", "GRAD")
     assert any("片内键重复 1" in p for p in probs)
+
+
+def test_runner_refuses_before_gate3_fixed(monkeypatch):
+    # 总控第二十二轮第三节：③ 修复并经 GPT 确认之前，运行器在取锁、读清单、执行查询之前就拒绝
+    import pytest
+
+    import run_all_v22 as R
+
+    assert R.GATE3_FIXED is False
+    monkeypatch.setattr(
+        R, "_main", lambda: (_ for _ in ()).throw(AssertionError("不应运行"))
+    )
+    monkeypatch.setattr(
+        R.bud, "run_lock", lambda: (_ for _ in ()).throw(AssertionError("不应取锁"))
+    )
+    with pytest.raises(SystemExit) as e:
+        R.main()
+    assert "取数挡板" in str(e.value)
