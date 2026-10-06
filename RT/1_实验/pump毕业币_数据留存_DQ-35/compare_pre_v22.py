@@ -254,7 +254,10 @@ def main():
             else str({k: v for k, v in bad.items() if v}),
         )
     )
-    lines.append("- n_users 与精确去重不同的桶（10-06 起 SQL 用精确去重，应为 0）：%d" % users_diff)
+    lines.append(
+        "- n_users 与精确去重不同的桶（10-06 起 SQL 用精确去重，应为 0）：%d"
+        % users_diff
+    )
     lines.append(
         "- 越界计数合计：%d；mayhem 桶 %d、pre_valid＝false 的桶 %d（x_pre_first 已置空）"
         % (

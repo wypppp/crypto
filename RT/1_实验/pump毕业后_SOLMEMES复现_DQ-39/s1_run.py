@@ -7,6 +7,7 @@
 变体：V1 时间＋链上文本；V2 时间＋发布数据的错位文本；V3 时间＋同周打乱的链上文本；V4 只用时间。
 """
 
+import datetime as dt
 import hashlib
 import json
 import random
@@ -14,7 +15,6 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 import numpy as np
-import pyarrow as pa
 import pyarrow.parquet as pq
 import torch
 from catboost import CatBoostClassifier
@@ -117,20 +117,14 @@ def main():
     for i, t in enumerate(m["token"]):
         first.setdefault(t, i)
     dev = sorted(t for t in first if s0.classify(anc[t], excl) == "dev")
-    rows = [first[t] for t in dev]
-    # 价格列：读入后立即只保留开发 token 的首行
-    tab = pq.read_table(
-        s.PARQ, columns=["average_price_0", "average_price_14", "description"]
-    )
-    keep = np.zeros(tab.num_rows, dtype=bool)
-    keep[rows] = True
-    mask = pa.array(keep)
-    tab = tab.filter(mask)
-    idx_map = {r: k for k, r in enumerate(sorted(rows))}
-    p0 = tab.column("average_price_0").to_pylist()
-    p14 = tab.column("average_price_14").to_pylist()
-    desc_row = tab.column("description").to_pylist()
-    del tab, mask
+    # 价格列只从开发 token 的价格文件读（s0_dev_prices.py 用行过滤生成；10-06，GPT 批 1b D）；每个 token 取第一行
+    dp = pq.read_table(H / "raw" / "dev_prices.parquet").to_pydict()
+    assert set(dp["token"]) <= set(dev), "价格文件里有非开发 token"
+    k_of = {}
+    for k, t in enumerate(dp["token"]):
+        k_of.setdefault(t, k)
+    p0, p14, desc_row = dp["average_price_0"], dp["average_price_14"], dp["description"]
+    gd_dev = dp["graduated_date"]
 
     ip = ipfs_desc()
     cl = s.claims(m, anc)
@@ -146,15 +140,23 @@ def main():
     recs, n_missing_label = [], 0
     src = Counter()
     agree = Counter()
+    n_immature = 0
+    split_dt = dt.datetime.fromisoformat(SPLIT)
     for t in dev:
         i = first[t]
-        k = idx_map[i]
+        k = k_of[t]
         a, b = p0[k], p14[k]
         if a is None or b is None or not a or a <= 0 or b < 0:
             n_missing_label += 1
             continue
         cr = float(anc[t]["curve_created_t"])
         ca, gd = m["created_at"][i], m["graduated_date"][i]
+        # 训练标签必须在测试期开始前成熟：毕业＋15 分钟早于切分日；没有毕业时刻的币，标签时点不明，也不进训练
+        if week_of(cr) < SPLIT and (
+            gd_dev[k] is None or gd_dev[k] + dt.timedelta(minutes=15) > split_dt
+        ):
+            n_immature += 1
+            continue
         ttg = (gd - ca).total_seconds() if (ca and gd) else float("nan")
         name, sym = anc[t]["c_name"], anc[t]["c_symbol"]
         if t in ip:
@@ -241,6 +243,7 @@ def main():
     out = dict(
         n_dev=len(dev),
         n_missing_label=n_missing_label,
+        n_train_label_immature=n_immature,
         n_train=int(tr.sum()),
         n_test=int(te.sum()),
         pos_rate_train=float(y[tr].mean()),

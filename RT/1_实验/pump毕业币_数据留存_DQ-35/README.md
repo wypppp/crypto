@@ -264,6 +264,41 @@ GPT 审阅原文与总控第十九轮见[存档](../../3_审计/2026-10-05_总�
 
 **预算控制器修正**（`budget_v22.py`）：用量接口的键名是 `billing_periods`，原代码读 `billingPeriods`，永远读不到；接口还会多返回一个起止颠倒、用量为 0 的下一期，原来取最后一期会读成 0。改为取“今天所在的计费期”，找不到就返回 None（读不到即停）。手算测试 `test_current_used_picks_period_containing_today_hand`。这一修正晚于 GPT 增量复核所用的提交 `7a4871dd`。
 
+## 1f. 收口整改（10-06，总控第二十一轮第三节；GPT 批 1a-i 增量复核与清单确认）
+
+按收口规则，GPT 的每条意见分为三类：数据失真（必须修并补测试）、理论边界（加断言，出现即失败）、流程卫生（直接修）。修完交 GPT 做一次清单确认，只判原有条目。
+
+| GPT 条目 | 分类 | 改法（文件） | 测试或证据 |
+|---|---|---|---|
+| ① 固定 IDL 版本 | 流程卫生 | 官方 IDL 固定于提交 `e0687ae9`（pump_amm、pump）与 vq 引入时的 `2c22246b`，副本与 sha256 在 `idl/` | `idl/SHA256SUMS` |
+| ① 短尾处理 | 数据失真 | 只有已核对的旧布局记 0：升级完成（07-15 18:07:32）之前、且（事件, 字节长度）在白名单里（卖出 320/368/384/400，买入 320/368/401/416/431/432/447/448/463）。升级后缺字段、白名单外的长度记 `unknown`，与 `missing` 一样阻断验收（`build_grad_sql_v22.py` icl 段、`rawdecode_v22.layout_class`） | `test_layout_class_hand`；样本 0714x：unknown 0 |
+| ① u64 按有符号读 | 理论边界 | cashback、回购费、boost 储备按无符号 u64 解码（负值加 2^64） | `test_hi_word_bounds_and_u64_hand` |
+| ① 高字为 −2^63 | 理论边界 | 用上下界比较代替 `abs`；越界记溢出、vq 置空 | 同上 |
+| ① 早期按月核对 | 数据失真防护 | PROBE24：2025-03～2026-06 每月一个开发周日，加 2026-07-14 与 07-15 升级前，**全部池子**（含建池 30 天以上的老池）：升级前没有一笔带 vq 字段；白名单由此得来 | `sql/PROBE24_旧布局按月.sql`（34.7 credits） |
+| ② coverage 用了时点之后的事件 | 数据失真 | 另存 `qknown{o}_at`（质量判定的可知时刻）；coverage、gap_flag 只作事后诊断，T 时的决策不能用 | 样本 0714x：`qknown_at` 376 个快照逐个一致 |
+| ③ 唯一性 | 数据失真防护 | SQL 聚合前按源事件键计重复（B 层 `n_src_dup`、P 层 `n_src_dup_7d`）；对照脚本先查重复、有重复直接失败（`DuplicateKey`）；L 唯一键去掉 `kind`；P 层验收补齐（7 天重复、vq 未知、coverage 取值、target_time）；内容验收默认开启（`--no-content` 只作排查） | `test_build_events_fails_on_duplicate_source_key`、`test_content_l_key_ignores_kind_hand` |
+| ④ 续传、执行号、预算、分账 | 数据失真防护与流程卫生 | 续传锁定清单里冻结的 `execution_id`（`dune_get_stream.py` 加执行号参数），续传前过预算预检；状态文件缺失时 `row_ok` 返回假；扫原始指令表的查询记在 vq 名下（3,000 专项上限生效）；付费运行器加跨进程单运行器锁 | `test_row_ok_rejects_missing_status_hand`、`test_resume_precheck_blocks_hand` |
+| 样本 README“3 个池” | 流程卫生 | 改为“2 个池、3 处” | — |
+| 自查：`n_users` 是近似去重 | 数据失真 | B 层与毕业前层改为精确 `count(DISTINCT)` | 样本 0714x 与 PRE 0923：与精确值差 0 |
+
+**样本验证（用新生成器重跑，`runs/SMP23_20260714x_compare.md`、`runs/SMP23PRE_B_20260923_compare.md`）**：
+
+- 跨 07-15 升级的 0714x 组：vq 来源按日期记 0 的 152,533 笔、升级前白名单 24,731 笔、原始字节解出 45,031 笔，未知 0、缺失 0；B 层 49 个字段逐项一致；P 层 376 个快照、21 个字段（含 `qknown_at`）全部一致；L 层一致。
+- 同一条 B 层 SQL 跑两次，逐行一致。
+- 毕业前 0923 组：989 个桶逐字段一致，用户数与精确去重差 0。
+- 费用：B 4.74、P 14.52、B 两次 3.36＋3.11、PRE 0.31。
+
+**新 Dune 账户与重取费用（10-06 实测）**：
+
+- 用户 10-06 更换了 `DUNE_API_KEY`。用量接口读到的新账户：计费期 10-06～11-06，额度 25,000，起始用量 0。用户说明的可用额度是 2,500；在用户确认前，按 2,500 作工作上限。
+- **新账户的导出要收费**：本轮下载约 5.9 MB，用量比执行费多 10.0 credits，约每 MB 1.7～2 credits，与付费档每 MB 2 credits 一致。试用期“导出不收费”不再成立。
+- 全量重取 v2.2 的估计：执行费约 1,350～2,200（v2.1 体量探针 856～1,712，加 07-15 之后扫原始指令表约 500）；结果约 12 GB，导出费约 2.4 万。合计约 2.6 万，远超 2,500。
+- 所以重取不能按原计划全量进行。可选：按池抽样（[方案 B](方案B_按池抽样规则_预登记.md)，路线 B2 走 Dune）；或者先减少列与行，再估。需要用户确认额度后决定。
+
+**v1 数据**：见 [v1 可用性评估](v1可用性评估.md)。小时、日桶修正后可用于长周期路径；首小时以内改用方案 B。
+
+**Helius 可用性探针（`过程/helius_probe.py`，`runs/helius_probe.json`）**：当前套餐能调用 `getTransactionsForAddress`；完整交易带内层指令，可本地解码；本次约 20 Helius credits。剩余额度要用管理接口查，需要项目编号，`.env` 里没有。
+
 ## 2. 费用（实测，见 `runs/dune_ledger.csv`）
 
 | 步骤 | credits |
@@ -306,5 +341,9 @@ GPT 审阅原文与总控第十九轮见[存档](../../3_审计/2026-10-05_总�
 | `过程/curve_x120_by_month.py` | 毕业币完成时曲线虚拟 SOL >120 的月度占比 |
 | `过程/build_boostscan_sql.py`、`过程/run_boostscan.py`、`过程/boostscan_report.py`、`过程/boostscan_affected.py`、`sql/PROBE23a_boost_1d.sql`、`sql/SCAN23_BOOST_*.sql` | §1e InitBoost 全量扫描：生成、分段执行（余额不足即停）、报告与按币核对 |
 | `runs/SCAN23_BOOST_report.md`、`runs/SCAN23_BOOST_affected.md`、`runs/budget_v22.csv` | §1e 的结果与预算账 |
+| `idl/`（`pump_amm_e0687ae9.json`、`pump_e0687ae9.json`、`pump_amm_2c22246b.json`、`SHA256SUMS`） | §1f 固定的官方 IDL 副本 |
+| `sql/PROBE24_旧布局按月.sql`、`sql/PROBE25_v1母体缺口.sql`、`sql/SMP23*` | §1f 旧布局按月核对、v1 母体缺口、新生成器的样本重跑 |
+| `runs/SMP23_20260714x_compare.md`、`runs/SMP23PRE_B_20260923_compare.md`、`runs/v1_rowcount_check.txt`、`runs/helius_probe.json` | §1f 样本对照、v1 行数对账、Helius 探针 |
+| [v1可用性评估.md](v1可用性评估.md)、[方案B_按池抽样规则_预登记.md](方案B_按池抽样规则_预登记.md)、`过程/helius_probe.py` | v1 能否用、用于哪里；方案 B 的抽样规则（取数前提交） |
 | `runs/dune_ledger.csv` | 每次执行的费用 |
 | `raw/` | 数据（不入库） |

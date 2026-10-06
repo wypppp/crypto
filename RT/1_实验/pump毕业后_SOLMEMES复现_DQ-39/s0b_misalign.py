@@ -292,13 +292,13 @@ def main():
             dec_hit[d] += 1
         else:
             miss["重复 token 多出的行" if cnt[m["token"][i]] > 1 else c] += 1
-    L.append("## 4. 结构：每 10 条一页、每页重复一次")
+    L.append("## 4. 结构：一个固定的位置映射")
     L.append("")
     L.append(
         "按 token 在数据里首次出现的顺序编号（0 起）。第 u 个 token 拿到的元数据，属于第 10·⌊u/20⌋＋(u mod 10) 个 token。"
     )
     L.append(
-        "这相当于把元数据按每页 10 条取回时，每一页都重复了一次，再按位置与 token 拼接。"
+        "一个可能的成因是：按每页 10 条取元数据时每一页重复了一次，再按位置与 token 拼接。这是推测，没有核实；85% 的行符合这个映射是事实（GPT 批 1b D）。"
     )
     L.append("")
     L.append(

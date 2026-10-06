@@ -1,0 +1,138 @@
+{
+ "per_signal": {
+  "n": 935,
+  "weighted_mean": 0.4779614858412212,
+  "unweighted_mean": 0.6669608373374472,
+  "strata": {
+   "S100": 228,
+   "S20": 545,
+   "S1": 54,
+   "S5": 108
+  },
+  "mean_by_stratum": {
+   "S100": 0.6673537358944244,
+   "S20": 0.7140071215149475,
+   "S1": 0.2820352526213034,
+   "S5": 0.6211846875869094
+  },
+  "weight_by_stratum": {
+   "S100": 1.0,
+   "S20": 1.0,
+   "S1": 25.656,
+   "S5": 6.44
+  }
+ },
+ "account_f05": {
+  "total": 1432.6233482406697,
+  "pnl": 32.063124151036895,
+  "check_identity": true,
+  "n_trades": 407,
+  "mean_m": 1.114837121889803,
+  "dollar_weighted_m": 1.000652704026892,
+  "weighted_m_by_layer": 0.5513116098520413,
+  "top5": [
+   {
+    "mint": "DQnkBM4eYYMnVE8Qy2K3BB7uts1fh2EwBVktEz6jpump",
+    "usd": 98.96,
+    "m": 34.328,
+    "pnl": 3298.13,
+    "open_at_end": false
+   },
+   {
+    "mint": "7Pnqg1S6MYrL6AP1ZXcToTHfdBbTB77ze6Y33qBBpump",
+    "usd": 180.11,
+    "m": 12.547,
+    "pnl": 2079.76,
+    "open_at_end": false
+   },
+   {
+    "mint": "7eMJmn1bYWSQEwxAX7CyngBzGNGu1cT582asKxxRpump",
+    "usd": 261.73,
+    "m": 7.135,
+    "pnl": 1605.69,
+    "open_at_end": false
+   },
+   {
+    "mint": "71Jvq4Epe2FCJ7JFSF7jLXdNk1Wy4Bhqd9iL6bEFELvg",
+    "usd": 57.93,
+    "m": 26.309,
+    "pnl": 1466.0,
+    "open_at_end": false
+   },
+   {
+    "mint": "AGdGTQa8iRnSx4fQJehWo4Xwbh1bzTazs55R6Jwupump",
+    "usd": 124.4,
+    "m": 12.169,
+    "pnl": 1389.53,
+    "open_at_end": false
+   }
+  ],
+  "pnl_without_top1": -3266.063595050304,
+  "pnl_without_top3": -6951.5182541205095,
+  "gains_share_top3": 0.27526701131851056,
+  "pnl_closed": -293.14729027208534,
+  "pnl_open": 325.2104144231223,
+  "n_open": 4,
+  "skipped": {
+   "同一个币仍在持有": 528
+  },
+  "mean_m_not_traded_at_1400": 0.28862020290077645,
+  "window_end": "2026-03-16 00:00:00"
+ },
+ "account_fixed70": {
+  "total": 0.0,
+  "pnl": -1400.5602240896358,
+  "check_identity": true,
+  "n_trades": 47,
+  "mean_m": 0.5589331561710253,
+  "dollar_weighted_m": 0.5675862471949266,
+  "weighted_m_by_layer": 0.5371438803325035,
+  "top5": [
+   {
+    "mint": "6WPNzRN6ZPCFLm5jXzuVMMCj5nG2jhaf19xvDkTnQ8Rn",
+    "usd": 70.03,
+    "m": 7.924,
+    "pnl": 484.85,
+    "open_at_end": false
+   },
+   {
+    "mint": "CniPCE4b3s8gSUPhUiyMjXnytrEqUrMfSsnbBjLCpump",
+    "usd": 70.03,
+    "m": 7.287,
+    "pnl": 440.24,
+    "open_at_end": false
+   },
+   {
+    "mint": "BSmfit77mzLC3LoYvK6tUpdVgCcpuNmnpLybdFoCkuz4",
+    "usd": 70.03,
+    "m": 1.573,
+    "pnl": 40.15,
+    "open_at_end": false
+   },
+   {
+    "mint": "AUuCEHQ7sm2i5GmaHrpE961voWcTY8U6mgrkhcV7pump",
+    "usd": 70.03,
+    "m": 1.568,
+    "pnl": 39.75,
+    "open_at_end": false
+   },
+   {
+    "mint": "3MadWqcN9cSrULn8ikDnan9mF3znoQmBPXtVy6BfSTDB",
+    "usd": 70.03,
+    "m": 1.312,
+    "pnl": 21.85,
+    "open_at_end": false
+   }
+  ],
+  "pnl_without_top1": -1885.4055520917177,
+  "pnl_without_top3": -2365.7955961003972,
+  "gains_share_top3": 0.9363205519275384,
+  "pnl_closed": -1400.5602240896358,
+  "pnl_open": 0,
+  "n_open": 0,
+  "skipped": {
+   "同一个币仍在持有": 84,
+   "可投金额 < $5": 804
+  }
+ }
+}

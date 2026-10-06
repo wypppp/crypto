@@ -9,6 +9,7 @@ python s0_structure.py  → S0_结构核对.md
 2. 按链上曲线创建时刻分类：无链上创建记录、早于 DQ-37 范围（2025-02-24 之前）、封存、检验周、留出同名（链上初始代号，
    规则同 DQ-35 _holdout_names.sqlpart：币安 746 个基础资产名里 sha256 首字节 mod 5 == 0 的）、开发；
 3. 只对“开发”类 token 读价格与成交列，且只输出计数（缺值、重复行价格是否相同），不输出任何价格或收益。
+   10-06 起价格列只从 raw/dev_prices.parquet 读（s0_dev_prices.py 先用行过滤生成，GPT 批 1b D）。
 """
 
 import datetime as dt
@@ -232,17 +233,21 @@ def main():
     L.append("## 4. 开发 token 的价格与成交列（只出计数）")
     L.append("")
     dev = {t for t in toks if cls[t] == "dev"}
-    p = pq.read_table(PARQ, columns=["token"] + PRICE_COLS).to_pydict()
-    dev_rows = [i for i, t in enumerate(p["token"]) if t in dev]
+    # 10-06（GPT 批 1b D）：只读开发 token 的价格文件（s0_dev_prices.py 用行过滤生成），不再把全体价格列读进内存
+    p = pq.read_table(H / "raw" / "dev_prices.parquet").to_pydict()
+    assert set(p["token"]) <= dev, "价格文件里有非开发 token"
+    dev_rows = list(range(len(p["token"])))
     nulls = Counter()
     for i in dev_rows:
         for c in PRICE_COLS:
             nulls[c.split("_")[0] + ("_price" if c.startswith("average") else "")] += (
                 p[c][i] is None
             )
+    rows_dev = defaultdict(list)
+    for i, t in enumerate(p["token"]):
+        rows_dev[t].append(i)
     same = diff = 0
-    for t in dev:
-        ix = rows_by[t]
+    for t, ix in rows_dev.items():
         if len(ix) > 1:
             vecs = set(tuple(p[c][i] for c in PRICE_COLS) for i in ix)
             same += len(vecs) == 1
