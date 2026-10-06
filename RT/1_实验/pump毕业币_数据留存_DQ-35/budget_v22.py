@@ -16,8 +16,10 @@
   每次下载都核一次，不外推：差值超过执行费的部分记为实测导出费。
 """
 
+import contextlib
 import csv
 import datetime as dt
+import fcntl
 import json
 import sys
 import urllib.request
@@ -73,6 +75,29 @@ def current_used(d, today):
         < dt.date.fromisoformat(p["end_date"])
     ]
     return float(hit[0]["credits_used"]) if len(hit) == 1 else None
+
+
+@contextlib.contextmanager
+def run_lock():
+    """跨进程单运行器锁（10-06，GPT 批 1a-i 增量复核④）：同一时刻只允许一个付费运行器（run_all_v22、run_boostscan 等）。
+    有锁就不需要跨进程的费用预留；拿不到锁直接退出。"""
+    p = H / "runs" / ".budget.lock"
+    f = open(p, "w")
+    try:
+        fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        f.close()
+        raise SystemExit("另一个付费运行器正在运行（runs/.budget.lock），停止")
+    try:
+        yield
+    finally:
+        fcntl.flock(f, fcntl.LOCK_UN)
+        f.close()
+
+
+def task_of_sql(sql):
+    """费用归属：扫原始指令表（vq 与 boost 解码）的查询记在 vq 名下，受 3,000 的专项上限约束；其余记 refetch。"""
+    return "vq" if "solana.instruction_calls" in sql else "refetch"
 
 
 def rows():

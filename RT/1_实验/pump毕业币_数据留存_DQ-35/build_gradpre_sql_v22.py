@@ -105,7 +105,7 @@ tr AS (
 SELECT 'solana' AS chain, mint, to_unixtime(completed_at) AS completed_t, to_unixtime(curve_created_at) AS curve_created_t, c_quote_mint,
        sol_quote AS sol_unit_ok, max(CASE WHEN mayhem THEN 1 ELSE 0 END) AS mayhem,
        CAST(floor(date_diff('millisecond', ts, completed_at) / 5000e0) AS BIGINT) AS bkey,
-       count(*) AS n, count_if(is_buy) AS n_buy, approx_distinct(usr) AS n_users,
+       count(*) AS n, count_if(is_buy) AS n_buy, count(DISTINCT usr) AS n_users,
        CAST(sum(CASE WHEN is_buy THEN sol ELSE 0 END) AS varchar) AS sol_buy,
        CAST(sum(CASE WHEN NOT is_buy THEN sol ELSE 0 END) AS varchar) AS sol_sell,
        CAST(sum(CASE WHEN is_buy THEN tok ELSE 0 END) AS varchar) AS tok_buy,

@@ -27,6 +27,11 @@ def last_cost(sql_file):
 
 
 def main():
+    with b.run_lock():  # 10-06：与 run_all_v22 共用单运行器锁
+        _main()
+
+
+def _main():
     for tag in sys.argv[1:]:
         u = b.usage()
         if u is None or QUOTA - u < MARGIN:

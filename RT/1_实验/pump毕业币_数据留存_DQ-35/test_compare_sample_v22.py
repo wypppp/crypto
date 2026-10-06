@@ -52,3 +52,26 @@ def test_same_second_counts_after_hand():
     B = ev("B", 10_000, 100, 1000, 110, 910, 2)
     x = c.expected_snapshots([C, B], created, 10, END)
     assert x["a"]["kind"] == "C" and x["b"]["kind"] == "B" and x["cov"] == "ok"
+
+
+def test_build_events_fails_on_duplicate_source_key():
+    import pytest
+
+    import compare_sample_v22 as C
+
+    row = dict(
+        ev="D",
+        pool="p",
+        slot="1",
+        txi="2",
+        oix="3",
+        iix="",
+        ts="2025-10-07 00:00:00.000 UTC",
+        tx_id="t",
+        q0="1",
+        b0="1",
+        q_amt="1",
+        b_amt="1",
+    )
+    with pytest.raises(C.DuplicateKey):
+        C.build_events([row, dict(row, ev="W")], [], {"p": 0})

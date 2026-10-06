@@ -115,11 +115,8 @@ def row_ok(r, sql_sha, finfo, sinfo, led):
         return False
     if not (r["execution_id"] == eid == led["execution_id"]):
         return False
-    if (
-        st not in ("QUERY_STATE_COMPLETED", None)
-        or led["state"] != "QUERY_STATE_COMPLETED"
-    ):
-        return False
+    if st != "QUERY_STATE_COMPLETED" or led["state"] != "QUERY_STATE_COMPLETED":
+        return False  # 10-06：状态文件缺失或未完成都不放行（GPT 批 1a-i 增量复核④）
     if n is None or str(n) != r["rows_status"]:
         return False
     nf, fs = finfo
@@ -133,6 +130,11 @@ def row_ok(r, sql_sha, finfo, sinfo, led):
     )
 
 
+def resume_precheck(sql, layer, plan, u0, ack=False):
+    """续传前的预算预检（纯函数）：执行费 0、导出费按该层预计 MB；读不到用量或越线都不续传。"""
+    return bud.check(bud.task_of_sql(sql), 0.0, EST_MB[layer], plan, u0, ack_report=ack)
+
+
 def append(rec):
     p = H / "runs" / "manifest_v22.csv"
     new = not p.exists()
@@ -144,6 +146,11 @@ def append(rec):
 
 
 def main():
+    with bud.run_lock():
+        _main()
+
+
+def _main():
     a = sys.argv[1:]
     ack = "--ack-report" in a
     a = [x for x in a if x != "--ack-report"]
@@ -171,10 +178,22 @@ def main():
             and r["state"] == "QUERY_STATE_COMPLETED"
             and r["query_id"]
         ):
-            # 续传：同一 query_id 的同一次执行，重新下载，不重跑
+            # 续传：同一 query_id 的同一次执行（锁定清单里冻结的 execution_id），重新下载，不重跑；先过预算预检
+            task = bud.task_of_sql(sql)
             u0 = bud.usage()
+            go, why = resume_precheck(sql, layer, plan, u0, ack)
+            if not go:
+                print("停止（续传前预检）：%s" % why, flush=True)
+                break
             rc = subprocess.run(
-                [sys.executable, "dune_get_stream.py", r["query_id"], lab, sql_file],
+                [
+                    sys.executable,
+                    "dune_get_stream.py",
+                    r["query_id"],
+                    lab,
+                    sql_file,
+                    r["execution_id"],
+                ],
                 cwd=H,
             ).returncode
             u1 = bud.usage()
@@ -182,9 +201,7 @@ def main():
             qid, eid, _, n = status_info(lab)
             ok = (rc == 0 or n == 0) and eid == r["execution_id"]
             if u0 is not None and u1 is not None:
-                bud.record(
-                    "refetch", lab, "export", max(0.0, u1 - u0), u0, u1, "续传下载"
-                )
+                bud.record(task, lab, "export", max(0.0, u1 - u0), u0, u1, "续传下载")
             append(
                 dict(
                     r,
@@ -197,9 +214,10 @@ def main():
             )
             print(lab, "续传", "ok" if ok else "失败", flush=True)
         else:
+            task = bud.task_of_sql(sql)
             u0 = bud.usage()
             go, why = bud.check(
-                "refetch", EST_EXEC[layer], EST_MB[layer], plan, u0, ack_report=ack
+                task, EST_EXEC[layer], EST_MB[layer], plan, u0, ack_report=ack
             )
             print(lab, why, flush=True)
             if not go:
@@ -226,10 +244,10 @@ def main():
                     else "failed"
                 )
             )
-            bud.record("refetch", lab, kind, cost, u0, u1, "执行")
+            bud.record(task, lab, kind, cost, u0, u1, "执行")
             if export is not None:
                 bud.record(
-                    "refetch",
+                    task,
                     lab,
                     "export",
                     export,

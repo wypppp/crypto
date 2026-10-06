@@ -77,6 +77,11 @@ def kelly_on_distribution(values, probs, f_max=0.999):
     P12：用保守分布的 f_c 及 2f_c 政策上限，只排除“保守分布下 g≤0”的下注，不保证不超过 Kelly，也不控制有限期大亏。"""
     values = np.asarray(values, float)
     probs = np.asarray(probs, float)
+    if float(np.sum(probs * values)) <= 1.0 + 1e-12:
+        return (
+            0.0,
+            0.0,
+        )  # 期望回收 ≤1（含确定回收 1 倍）时不下注（GPT 批 1b A：原实现确定回收 1 倍时返回约 99.9%）
     rmin = values[probs > 0].min()
     upper = f_max if rmin >= 1 else min(f_max, 0.999999 / (1.0 - rmin))
 
@@ -194,8 +199,12 @@ class LockedAsset:
 class Ledger:
     """背景.md 第 4、5 条＋契约 v1.1 的状态机。事件按时间顺序调用；mark(t) 在每次估值后判定状态。"""
 
-    def __init__(self, m_min=100.0):
+    def __init__(self, m_min=100.0, policy_id="dev"):
         self.m_min = m_min
+        self.policy_id = (
+            policy_id  # 冻结政策的编号；恢复凭证必须与之一致（GPT 批 1b A）
+        )
+        self._names = {}  # 名字 → 已用次数；仓位与锁定资产用唯一编号
         self.D, self.W, self.cash = WAN, 0.0, WAN
         self.pos = {}  # 可交易仓位：名称 → 可执行清算价值
         self.locked = {}  # 名称 → LockedAsset
@@ -222,63 +231,106 @@ class Ledger:
             (t, what, self.D, round(self.cash, 2), round(self.v_loss(t), 2), self.state)
         )
 
-    # 交易与资产事件
+    # 交易与资产事件（10-06 按 GPT 批 1b A 改：唯一编号；先校验、后改账，任何一步失败都不留下半截状态）
+    def _new_id(self, name):
+        """名字第一次用时编号就是名字；同名再用时加 #2、#3……，两次认购或开仓各自计账。"""
+        k = self._names.get(name, 0) + 1
+        self._names[name] = k
+        return name if k == 1 else "%s#%d" % (name, k)
+
+    @staticmethod
+    def _amount(x, what):
+        x = float(x)
+        if not math.isfinite(x) or x < 0:
+            raise ValueError("%s 必须是非负有限数：%r" % (what, x))
+        return x
+
+    def _pos_id(self, pid):
+        if pid not in self.pos:
+            raise KeyError("未知仓位 %r" % pid)
+        return pid
+
+    def _lock_id(self, lid):
+        if lid not in self.locked:
+            raise KeyError("未知锁定资产 %r" % lid)
+        return lid
+
     def open(self, name, amount):
+        """开仓，返回仓位编号。"""
+        amount = self._amount(amount, "开仓金额")
         if self.state != "ACTIVE":
             raise RuntimeError("非活跃状态禁止开仓（%s）" % self.state)
         if amount > self.cash + 1e-9:
             raise RuntimeError("现金不足")
+        pid = self._new_id(name)
         self.cash -= amount
-        self.pos[name] = self.pos.get(name, 0.0) + amount
+        self.pos[pid] = amount
+        return pid
 
-    def set_value(self, name, value):
-        self.pos[name] = float(value)
+    def set_value(self, pid, value):
+        value = self._amount(value, "仓位估值")
+        self.pos[self._pos_id(pid)] = value
 
-    def close(self, name):
-        self.cash += self.pos.pop(name)
+    def close(self, pid):
+        self.cash += self.pos.pop(self._pos_id(pid))
 
     def subscribe(self, name, cost, sub_deadline, vest_end=None):
+        """认购锁定资产，返回编号。"""
+        cost = self._amount(cost, "认购额")
         if self.state != "ACTIVE":
             raise RuntimeError("非活跃状态禁止认购（%s）" % self.state)
         if cost > self.cash + 1e-9:
             raise RuntimeError("现金不足")
+        lid = self._new_id(name)
         self.cash -= cost
-        self.locked[name] = LockedAsset(cost, sub_deadline, vest_end)
+        self.locked[lid] = LockedAsset(cost, sub_deadline, vest_end)
+        return lid
 
-    def list_asset(self, name, day, price_value, volume_24h):
-        a = self.locked[name]
-        a.listed_day, a.price_value, a.volume_24h = (
-            day,
-            float(price_value),
-            float(volume_24h),
-        )
+    def list_asset(self, lid, day, price_value, volume_24h):
+        a = self.locked[self._lock_id(lid)]
+        pv = self._amount(price_value, "市价估值")
+        vol = self._amount(volume_24h, "24 小时成交额")
+        a.listed_day, a.price_value, a.volume_24h = day, pv, vol
 
-    def fail_asset(self, name):
-        self.locked[name].dead = True
+    def fail_asset(self, lid):
+        self.locked[self._lock_id(lid)].dead = True
 
-    def unlock(self, name, liq_value):
-        """解锁：从锁定转为可交易仓位，按当时的可执行清算价值计；锁定里删除，不重复计。"""
-        del self.locked[name]
-        self.pos[name] = float(liq_value)
+    def unlock(self, lid, liq_value):
+        """解锁：按当时的可执行清算价值计，从锁定里删除，不重复计。
+        活跃时转为可交易仓位；暂停或停止时直接转为现金（暂停期间不持有可交易仓位，GPT 批 1b A）。"""
+        self._lock_id(lid)
+        v = self._amount(liq_value, "解锁清算价值")
+        del self.locked[lid]
+        if self.state == "ACTIVE":
+            self.pos[lid] = v
+        else:
+            self.cash += v
+        return lid
 
-    def request_refund(self, name, amount):
-        self.locked[name].refund = float(amount)
+    def request_refund(self, lid, amount):
+        amount = self._amount(amount, "退款额")
+        self.locked[self._lock_id(lid)].refund = amount
 
-    def refund_arrives(self, name):
-        """退款到账：资产转换，现金增加，D 不变。"""
-        a = self.locked.pop(name)
+    def refund_arrives(self, lid):
+        """退款到账：资产转换，现金增加，D 不变。必须先有退款申请；校验通过后才改账。"""
+        a = self.locked[self._lock_id(lid)]
+        if a.refund is None:
+            raise RuntimeError("没有退款申请，不能到账：%r" % lid)
+        del self.locked[lid]
         self.cash += a.refund
 
     # 状态判定
     def mark(self, t):
         if self.state in ("SUCCESS", "EXPIRED"):
             return self.state
+        if (
+            self.state == "STOPPED"
+        ):  # 永久停止：继续记账，不自动恢复，也不被期限检查改成期满（GPT 批 1b A）
+            self._rec(t, "book")
+            return self.state
         if t > HORIZON:
             self.state = "EXPIRED"
             self._rec(t, "expire")
-            return self.state
-        if self.state == "STOPPED":  # 继续记账，不自动恢复
-            self._rec(t, "book")
             return self.state
         if (
             self.n_liq() >= 100 * WAN
@@ -321,13 +373,23 @@ class Ledger:
         self._rec(t, "pause:" + why)
 
     def resume(self, t, certificate):
-        """暂停后恢复：状态机内校验三项，任一不满足就拒绝。"""
+        """暂停后恢复：先按 t 重估（mark），触及停止线即永久停止、不能恢复；再在状态机内校验，任一不满足就拒绝。
+        确认凭证须是 dict：policy＝本账本的政策编号；data_start、data_end＝确认所用数据的时段，
+        必须在暂停之后（data_start ≥ pause_start）、不晚于 t，且 data_end > data_start（GPT 批 1b A：只验非空不够）。"""
         if self.state != "PAUSED":
             raise RuntimeError("只有暂停状态可以恢复（%s）" % self.state)
+        self.mark(t)  # 重估：锁定资产逾期归零等会在这里触发停止线
+        if self.state != "PAUSED":
+            raise RuntimeError("重估后状态为 %s，不能恢复" % self.state)
         if t - self.pause_start < PAUSE_MIN_DAYS:
             raise RuntimeError("暂停不足 %d 天" % PAUSE_MIN_DAYS)
-        if not certificate:
-            raise RuntimeError("缺确认凭证")
+        if not isinstance(certificate, dict):
+            raise RuntimeError("缺确认凭证（须绑定政策与暂停后的数据时段）")
+        if certificate.get("policy") != self.policy_id:
+            raise RuntimeError("确认凭证的政策编号与账本不一致")
+        d0, d1 = certificate.get("data_start"), certificate.get("data_end")
+        if d0 is None or d1 is None or not (self.pause_start <= d0 < d1 <= t):
+            raise RuntimeError("确认凭证的数据时段须在暂停之后、恢复之前")
         if t > HORIZON:
             raise RuntimeError("已过 36 个月期限")
         if self.D < 3 * WAN:

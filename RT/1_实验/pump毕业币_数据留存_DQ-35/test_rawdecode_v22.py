@@ -54,3 +54,38 @@ def test_boost_hand():
 def test_short_tail_gives_none():
     d = r.parse("S", (bytes(32)).hex())  # 只有费用字段，没有 vq
     assert d["cb"] == 0 and d["vq"] is None
+
+
+# ---- 10-06 收口整改：旧布局白名单、溢出边界、u64 无符号
+def test_layout_class_hand():
+    import rawdecode_v22 as rd
+
+    pre = rd.UPGRADE_END_MS - 1000
+    post = rd.UPGRADE_END_MS + 1000
+    old_sell = "00" * (
+        400 - 368
+    )  # 卖出尾段从第 369 字节起：总长 400 → 尾段 32 字节，没有 vq 字段
+    assert rd.event_len("S", old_sell) == 400
+    assert rd.layout_class("S", old_sell, pre) == "layout0"
+    assert rd.layout_class("S", old_sell, post) == "unknown"  # 升级后缺 vq 字段
+    odd = "00" * (401 - 368)  # 白名单外的旧长度
+    assert rd.layout_class("S", odd, pre) == "unknown"
+    new_sell = "00" * (425 - 368)  # 完整新布局
+    assert rd.layout_class("S", new_sell, post) == "raw"
+
+
+def test_hi_word_bounds_and_u64_hand():
+    import struct
+
+    import rawdecode_v22 as rd
+
+    # 卖出尾段：cashback_bps(8) cashback(8) buyback_bps(8) buyback_fee(8) vq(16)
+    cb = 2**63 + 1  # u64 按无符号读，不能变成负数
+    vq_hi_min = struct.pack("<qq", 0, -(2**63))  # 高字 −2^63：越界记溢出
+    tail = struct.pack("<QQQQ", 0, cb, 0, 5) + vq_hi_min
+    d = rd.parse("S", tail.hex())
+    assert d["cb"] == cb and d["bb"] == 5
+    assert d["vq"] is None and d["vq_ovf"] == 1
+    ok = struct.pack("<QQQQ", 0, 0, 0, 0) + (-17).to_bytes(16, "little", signed=True)
+    d2 = rd.parse("S", ok.hex())
+    assert d2["vq"] == -17 and d2["vq_ovf"] == 0

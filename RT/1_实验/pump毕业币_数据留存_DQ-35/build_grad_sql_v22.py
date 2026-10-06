@@ -30,6 +30,20 @@ python build_grad_sql_v22.py <层> <事件起日> <事件止日> <标签> [--sam
  8. cashback、回购费分别计缺失：n_cb_null、n_bb_null（07-15 之前的买入为未知，不并入 0）。
  9. 时间列由 to_unixtime 输出 DOUBLE（epoch 秒，带小数），读取时按十进制文本解析（dev_gate.to_epoch）。
 沿用 v2.1：金额 DECIMAL(38,0) 整数运算、输出文本；事件唯一键四列；分桶 S／M／H／D；非 SOL 分层；事件止日 2026-10-04。
+
+10-06 收口整改（总控第二十一轮第三节；GPT 批 1a-i 增量复核①～③，“现在”各项）：
+ a. 解码版本固定：官方 IDL 取 pump-fun/pump-public-docs 提交 e0687ae9b7e064a0f54efc7297c65eecfbba3a8f（pump_amm.json、pump.json），
+    另存 vq 字段引入时的 2c22246b670812e2392e5f94b9543f500d6c9e15；副本与 sha256 在 idl/。偏移按这两版逐字段核对一致。
+ b. 旧布局规则：只有“已核对的旧布局”记 vq＝0（layout0）。已核对＝升级完成（2026-07-15 18:07:32 UTC）之前、且（事件, 字节长度）
+    在白名单里：卖出 320/368/384/400，买入 320/368/401/416/431/432/447/448/463（PROBE21c 与 PROBE24 按月核对：2025-03～2026-06
+    每月一个开发周日、2026-07-14 与 07-15 升级前，全部池子，升级前没有一笔带 vq 字段）。07-15 之前的事件不扫原始字节，
+    按升级时刻记 layout0_date。升级后缺 vq 字段、异常长度、白名单外的旧长度，一律记 unknown（vq 为空），与 missing 一样阻断验收。
+ c. 高 8 字节用上下界比较（不用 abs，避免 −2^63 越界）；费用（cashback、回购费）与 boost 储备按无符号 u64 解码（负值加 2^64）。
+ d. 唯一性：聚合前按源事件键（slot、交易序号、外层、内层）计重复，B 层输出 n_src_dup，P 层输出 n_src_dup_7d，验收要求 0；
+    B 层另出 n_vq_unknown、n_vq_missing，P 层出 n_vq_bad_7d。
+ f. B 层 n_users 改为精确去重 count(DISTINCT)（原 approx_distinct，0714x 样本 57 个桶与精确值不同；执行模型自查，数据失真类）。
+ e. 快照质量的可知时间：coverage 用了 T 之后的下一个事件，所以另存 qknown{o}_at（下一个事件的时刻；没有下一个事件时为事件止日次日
+    零点；immature 为空）。coverage 与 gap_flag 只作事后诊断，T 时的决策不能用。known_at 仍是状态本身的可知时间。
 """
 
 import datetime as dt
@@ -40,6 +54,21 @@ H = Path(__file__).resolve().parent
 PUMPSWAP_START = dt.date(2025, 3, 15)
 LAST_EVENT_DAY = dt.date(2026, 10, 4)
 VQ_START = dt.date(2026, 7, 15)
+UPGRADE_END = (
+    "2026-07-15 18:07:32"  # 带 vq 字段的最早一笔（PROBE 07-14 组）；此前为旧程序
+)
+KNOWN_OLD = dict(  # 已核对的旧布局（事件字节长度，含 16 字节前缀）：PROBE21c、PROBE24
+    sell=(320, 368, 384, 400),
+    buy=(320, 368, 401, 416, 431, 432, 447, 448, 463),
+)
+U64 = "(CAST({e} AS DECIMAL(38,0)) + CASE WHEN {e} < 0 THEN DECIMAL '18446744073709551616' ELSE DECIMAL '0' END)"
+
+
+def u64(e):
+    """有符号 BIGINT 读出的 u64 → 无符号 DECIMAL。"""
+    return U64.format(e=e)
+
+
 OFFSETS = (2, 10, 45, 60, 75, 900, 3600, 86400)
 WSOL = "So11111111111111111111111111111111111111112"
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
@@ -125,22 +154,32 @@ icv AS (
            CASE WHEN length(b) >= pv + 15 THEN bytearray_to_bigint(reverse(bytearray_substring(b, pv + 8, 8))) END AS hi_s
     FROM icp
 ),
+icl AS (
+    /* 布局类别：raw＝带完整 vq 字段；layout0＝升级前、且（事件, 长度）在已核对白名单里；其余 unknown（阻断验收） */
+    SELECT icv.*, length(b) AS blen,
+           CASE WHEN hi_s IS NOT NULL THEN 'raw'
+                WHEN ts < TIMESTAMP '{upgrade_end}'
+                     AND ((disc = {d_sell} AND length(b) IN ({old_sell})) OR (disc = {d_buy} AND length(b) IN ({old_buy})))
+                THEN 'layout0'
+                ELSE 'unknown' END AS layout,
+           hi_s IS NOT NULL AND hi_s > -4000000000000000000 AND hi_s < 4000000000000000000 AS hi_ok
+    FROM icv
+),
 rv AS (
-    SELECT tx_id, slot, txi, oix, iix, ts, disc,
+    SELECT tx_id, slot, txi, oix, iix, ts, disc, blen, layout,
            CASE WHEN disc = {d_buy} THEN 'B' WHEN disc = {d_sell} THEN 'S' WHEN disc = {d_init} THEN 'I' ELSE 'U' END AS kind,
-           CASE WHEN hi_s IS NULL THEN DECIMAL '0'  /* 布局里没有 vq 字段（07-15～07-16 升级前的事件）：按协议为 0 */
-                WHEN abs(hi_s) < 4000000000000000000
+           CASE WHEN layout = 'layout0' THEN DECIMAL '0'
+                WHEN layout = 'raw' AND hi_ok
                 THEN CAST(hi_s AS DECIMAL(38,0)) * DECIMAL '18446744073709551616' + CAST(lo_s AS DECIMAL(38,0))
                      + CASE WHEN lo_s < 0 THEN DECIMAL '18446744073709551616' ELSE DECIMAL '0' END END AS vq,
-           hi_s IS NOT NULL AS vq_has,
-           CASE WHEN hi_s IS NOT NULL AND abs(hi_s) >= 4000000000000000000 THEN 1 ELSE 0 END AS vq_ovf,
-           CASE WHEN disc = {d_buy} AND length(b) >= pc + 31 THEN CAST(bytearray_to_bigint(reverse(bytearray_substring(b, pc + 8, 8))) AS DECIMAL(38,0)) END AS cb,
-           CASE WHEN disc = {d_buy} AND length(b) >= pc + 31 THEN CAST(bytearray_to_bigint(reverse(bytearray_substring(b, pc + 24, 8))) AS DECIMAL(38,0)) END AS bb,
+           CASE WHEN layout = 'raw' AND NOT hi_ok THEN 1 ELSE 0 END AS vq_ovf,
+           CASE WHEN disc = {d_buy} AND length(b) >= pc + 31 THEN {u_cb} END AS cb,
+           CASE WHEN disc = {d_buy} AND length(b) >= pc + 31 THEN {u_bb} END AS bb,
            CASE WHEN disc IN ({d_init}, {d_burn}) THEN to_base58(bytearray_substring(b, 89, 32)) END AS boost_pool,
-           CASE WHEN disc = {d_init} THEN CAST(bytearray_to_bigint(reverse(bytearray_substring(b, 137, 8))) AS DECIMAL(38,0))
-                WHEN disc = {d_burn} THEN CAST(bytearray_to_bigint(reverse(bytearray_substring(b, 193, 8))) AS DECIMAL(38,0)) END AS boost_q1,
-           CASE WHEN disc = {d_burn} THEN CAST(bytearray_to_bigint(reverse(bytearray_substring(b, 201, 8))) AS DECIMAL(38,0)) END AS boost_b1
-    FROM icv
+           CASE WHEN disc = {d_init} THEN {u_iq}
+                WHEN disc = {d_burn} THEN {u_uq} END AS boost_q1,
+           CASE WHEN disc = {d_burn} THEN {u_ub} END AS boost_b1
+    FROM icl
 )"""
 
 EVENTS = """,
@@ -188,6 +227,7 @@ ev AS (
 ),
 k AS (
     SELECT e.*, p.created_at, p.bd, p.qd,
+           count(*) OVER (PARTITION BY e.slot, e.txi, e.oix, e.iix) AS n_key,  /* 源事件键重复（聚合前；含原始字节连接造成的重复） */
            CASE WHEN e.side = 'B' THEN e.q0 + e.q_pool ELSE e.q0 - e.q_pool END AS q1,
            CASE WHEN e.side = 'B' THEN e.b0 - e.b_amt ELSE e.b0 + e.b_amt END AS b1,
            date_diff('millisecond', p.created_at, e.ts) AS age_ms,
@@ -233,7 +273,7 @@ kbs AS (
     FROM kb
 )
 SELECT 'solana' AS chain, kind, pool, CAST(bkey AS BIGINT) AS bkey, straddle,
-       count(*) AS n, count_if(side = 'B') AS n_buy, approx_distinct(usr) AS n_users,
+       count(*) AS n, count_if(side = 'B') AS n_buy, count(DISTINCT usr) AS n_users,
        array_join(array_sort(array_distinct(array_agg(usr) FILTER (WHERE straddle))), ',') AS users_straddle,
        CAST(sum(CASE WHEN side = 'B' THEN q_user ELSE 0 END) AS varchar) AS q_buy_user,
        CAST(sum(CASE WHEN side = 'S' THEN q_user ELSE 0 END) AS varchar) AS q_sell_user,
@@ -260,7 +300,8 @@ SELECT 'solana' AS chain, kind, pool, CAST(bkey AS BIGINT) AS bkey, straddle,
        count_if(side = 'S' AND vlo IS NULL) AS n_xchk_skip,
        max(px) AS px_high, min(px) AS px_low, count_if(px IS NULL) AS n_px_null,
        to_unixtime(min(ts)) AS t_first, to_unixtime(max(ts)) AS t_last,
-       sum(ovf) AS n_ord_overflow
+       sum(ovf) AS n_ord_overflow,
+       count_if(n_key > 1) AS n_src_dup, count_if(vq_src = 'unknown') AS n_vq_unknown, count_if(vq_src = 'missing') AS n_vq_missing
 FROM kbs
 GROUP BY 2, 3, 4, 5
 """
@@ -285,17 +326,19 @@ lq AS (
     WHERE evt_block_date BETWEEN DATE '{ev_start}' AND DATE '{ev_end}'
 ),
 st AS (
-    SELECT pool, created_at, ts, slot, txi, oix, iix, tx_id, side AS kind, q0, b0, q1, b1, vq, age_ms, ord FROM k
+    SELECT pool, created_at, ts, slot, txi, oix, iix, tx_id, side AS kind, q0, b0, q1, b1, vq, age_ms, ord, vq_src FROM k
     UNION ALL
     SELECT l.pool, p.created_at, l.ts, l.slot, l.txi, l.oix, l.iix, l.tx_id, l.kind, l.q0, l.b0, l.q1, l.b1,
            CAST(NULL AS DECIMAL(38,0)), date_diff('millisecond', p.created_at, l.ts),
-           CAST(l.slot AS BIGINT) * 10000000000 + CAST(l.txi AS BIGINT) * 100000 + CAST(l.oix AS BIGINT) * 1000 + CAST(l.iix AS BIGINT)
+           CAST(l.slot AS BIGINT) * 10000000000 + CAST(l.txi AS BIGINT) * 100000 + CAST(l.oix AS BIGINT) * 1000 + CAST(l.iix AS BIGINT),
+           'n/a'
     FROM lq l JOIN pools p ON p.pool = l.pool
     WHERE l.ts >= p.created_at AND l.ts < p.created_at + INTERVAL '7' DAY
     UNION ALL
     SELECT pool, created_at, created_at, c_slot, c_txi, c_oix, c_iix, c_tx, 'C', CAST(NULL AS DECIMAL(38,0)), CAST(NULL AS DECIMAL(38,0)),
            c_q, c_b, CAST(NULL AS DECIMAL(38,0)), 0,
-           CAST(c_slot AS BIGINT) * 10000000000 + CAST(c_txi AS BIGINT) * 100000 + CAST(c_oix AS BIGINT) * 1000 + CAST(c_iix AS BIGINT)
+           CAST(c_slot AS BIGINT) * 10000000000 + CAST(c_txi AS BIGINT) * 100000 + CAST(c_oix AS BIGINT) * 1000 + CAST(c_iix AS BIGINT),
+           'n/a'
     FROM pools{boost_union}
 )"""
 
@@ -304,7 +347,8 @@ BOOST_UNION = """
     SELECT r.boost_pool, p.created_at, r.ts, r.slot, r.txi, r.oix, COALESCE(r.iix, -1), r.tx_id, r.kind,
            CAST(NULL AS DECIMAL(38,0)), CAST(NULL AS DECIMAL(38,0)), r.boost_q1, r.boost_b1, r.vq,
            date_diff('millisecond', p.created_at, r.ts),
-           CAST(r.slot AS BIGINT) * 10000000000 + CAST(r.txi AS BIGINT) * 100000 + CAST(r.oix AS BIGINT) * 1000 + CAST(COALESCE(r.iix, -1) AS BIGINT)
+           CAST(r.slot AS BIGINT) * 10000000000 + CAST(r.txi AS BIGINT) * 100000 + CAST(r.oix AS BIGINT) * 1000 + CAST(COALESCE(r.iix, -1) AS BIGINT),
+           r.layout
     FROM rv r JOIN pools p ON p.pool = r.boost_pool
     WHERE r.kind IN ('I', 'U') AND r.ts >= p.created_at AND r.ts < p.created_at + INTERVAL '7' DAY"""
 
@@ -343,13 +387,14 @@ comp AS (
     GROUP BY 1
 ),
 stt AS (
-    SELECT st.*{tt_cols}
+    SELECT st.*, count(*) OVER (PARTITION BY st.slot, st.txi, st.oix, st.iix) AS n_skey{tt_cols}
     FROM st
 ),
 sn AS (
     SELECT pool, count_if(kind IN ('B', 'S')) AS n_7d, count_if(kind IN ('D', 'W')) AS n_lp_7d,
            count_if(kind IN ('I', 'U')) AS n_boost_7d,
-           CAST(min(vq) AS varchar) AS vq_min_7d, CAST(max(vq) AS varchar) AS vq_max_7d{snap_cols}
+           CAST(min(vq) AS varchar) AS vq_min_7d, CAST(max(vq) AS varchar) AS vq_max_7d,
+           count_if(n_skey > 1) AS n_src_dup_7d, count_if(vq_src IN ('unknown', 'missing')) AS n_vq_bad_7d{snap_cols}
     FROM stt
     GROUP BY 1
 )
@@ -425,13 +470,14 @@ def raw_parts(ev_start, ev_end):
             dict(
                 rv_join="",
                 vq_expr="CAST(0 AS DECIMAL(38,0))",
-                vq_src_expr="'layout0'",
+                vq_src_expr="'layout0_date'",
                 vq_ovf_expr="0",
                 cb_expr="CAST(NULL AS DECIMAL(38,0))",
                 bb_expr="CAST(NULL AS DECIMAL(38,0))",
             ),
             False,
         )
+    bi = "bytearray_to_bigint(reverse(bytearray_substring(b, %s, 8)))"
     raw = RAW.format(
         r_start=r_start.isoformat(),
         r_end=ev_end.isoformat(),
@@ -440,6 +486,14 @@ def raw_parts(ev_start, ev_end):
         d_sell=DISC["sell"],
         d_init=DISC["init_boost"],
         d_burn=DISC["buy_burn"],
+        upgrade_end=UPGRADE_END,
+        old_sell=", ".join(str(x) for x in KNOWN_OLD["sell"]),
+        old_buy=", ".join(str(x) for x in KNOWN_OLD["buy"]),
+        u_cb=u64(bi % "pc + 8"),
+        u_bb=u64(bi % "pc + 24"),
+        u_iq=u64(bi % "137"),
+        u_uq=u64(bi % "193"),
+        u_ub=u64(bi % "201"),
     )
     cut = "TIMESTAMP '%s 00:00:00'" % VQ_START.isoformat()
     return (
@@ -448,8 +502,8 @@ def raw_parts(ev_start, ev_end):
             rv_join="\n    LEFT JOIN rv r ON r.tx_id = e.tx_id AND r.oix = e.oix AND r.iix = e.iix0 AND r.kind = e.side",
             vq_expr="CASE WHEN e.ts < %s THEN CAST(0 AS DECIMAL(38,0)) ELSE r.vq END"
             % cut,
-            vq_src_expr="CASE WHEN e.ts < %s THEN 'layout0' WHEN r.tx_id IS NULL THEN 'missing' "
-            "WHEN r.vq_has THEN 'raw' ELSE 'layout0' END" % cut,
+            vq_src_expr="CASE WHEN e.ts < %s THEN 'layout0_date' WHEN r.tx_id IS NULL THEN 'missing' "
+            "ELSE r.layout END" % cut,
             vq_ovf_expr="COALESCE(r.vq_ovf, 0)",
             cb_expr="r.cb",
             bb_expr="r.bb",
@@ -508,7 +562,15 @@ def build(layer, e_start, e_end, sample=None):
         for o in OFFSETS
     )
     cols = "".join(SNAP_COLS.format(o=o) for o in OFFSETS)
-    names_out = ["n_7d", "n_lp_7d", "n_boost_7d", "vq_min_7d", "vq_max_7d"]
+    names_out = [
+        "n_7d",
+        "n_lp_7d",
+        "n_boost_7d",
+        "vq_min_7d",
+        "vq_max_7d",
+        "n_src_dup_7d",
+        "n_vq_bad_7d",
+    ]
     for o in OFFSETS:
         names_out += [
             "%s%d_%s" % ("a", o, f)
@@ -532,11 +594,14 @@ def build(layer, e_start, e_end, sample=None):
             "WHEN sn.a{o}_q1 IS DISTINCT FROM sn.b{o}_q0 OR sn.a{o}_b1 IS DISTINCT FROM sn.b{o}_b0 THEN 'gap' "
             "ELSE 'ok' END"
         ).format(o=o, end=end_ts)
+        qk = (
+            "CASE WHEN p.created_at + INTERVAL '{o}' SECOND >= {end} THEN NULL "
+            "WHEN sn.b{o}_slot IS NULL THEN to_unixtime({end}) ELSE sn.b{o}_t END"
+        ).format(o=o, end=end_ts)
         five.append(
             "to_unixtime(p.created_at + INTERVAL '{o}' SECOND) AS target{o}_time, sn.a{o}_t AS state{o}_time, "
-            "sn.a{o}_t AS known{o}_at, {cov} AS coverage{o}, ({cov}) <> 'ok' AS gap{o}_flag".format(
-                o=o, cov=cov
-            )
+            "sn.a{o}_t AS known{o}_at, {cov} AS coverage{o}, ({cov}) <> 'ok' AS gap{o}_flag, "
+            "{qk} AS qknown{o}_at".format(o=o, cov=cov, qk=qk)
         )
     sn_cols += ",\n       " + ",\n       ".join(five)
     stream = STREAM.format(boost_union=BOOST_UNION if has else "", **evr)

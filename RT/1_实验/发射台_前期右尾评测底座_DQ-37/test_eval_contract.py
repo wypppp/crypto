@@ -9,6 +9,11 @@ from scipy.stats import binom
 
 import eval_contract as E
 
+
+def CERT(d0, d1, policy="dev"):
+    return {"policy": policy, "data_start": d0, "data_end": d1}
+
+
 W = E.WAN
 
 
@@ -168,7 +173,11 @@ def test_resume_checks_inside_state_machine():
         A.resume(50, certificate=True)  # 不足 90 天
     with pytest.raises(RuntimeError):
         A.resume(120, certificate=None)  # 缺确认凭证
-    A.resume(120, certificate="cert-001")
+    with pytest.raises(RuntimeError):
+        A.resume(
+            120, certificate="cert-001"
+        )  # 只有非空字符串不够：须绑定政策与数据时段
+    A.resume(120, certificate=CERT(10, 100))
     assert A.state == "ACTIVE" and A.phase == "B" and A.D == 3 * W
     B = E.Ledger()
     B.open("x", W)
@@ -178,7 +187,7 @@ def test_resume_checks_inside_state_machine():
     B.set_value("y", 0)
     B.mark(1_000)
     with pytest.raises(RuntimeError):
-        B.resume(1_100, certificate="c")  # 过了 36 个月期限
+        B.resume(1_100, certificate=CERT(1_000, 1_090))  # 过了 36 个月期限
     with pytest.raises(RuntimeError):
         B.open("z", 1)  # 暂停中禁止开仓
 
@@ -217,3 +226,83 @@ def test_min_ticket_hand():
         total_used=0,
         total_cap=500,
     )
+
+
+# ---- 10-06 GPT 批 1b A 的七个反例（各一条回归测试，金额手算）
+def _paused_with_lock():
+    """D＝3 万（一年内到 10 万追加 2 万）、锁定 1 万、可交易归零 → N＝−2 万暂停。"""
+    A = E.Ledger()
+    x = A.open("x", W)
+    A.set_value(x, 100_000)
+    A.mark(100)
+    A.close(x)
+    lk = A.subscribe("lk", 10_000, sub_deadline=110, vest_end=300)
+    z = A.open("z", A.cash)
+    A.set_value(z, 0)
+    A.mark(120)
+    assert A.state == "PAUSED" and close(A.n_loss(120), -2 * W)
+    return A, lk
+
+
+def test_resume_revalues_and_stop_is_permanent():
+    # 锁定资产 300 天后逾期未解锁记 0：N＝−3 万。原实现直接 resume 变 ACTIVE；现在重估后永久停止
+    A, lk = _paused_with_lock()
+    with pytest.raises(RuntimeError):
+        A.resume(301, certificate=CERT(130, 300))
+    assert A.state == "STOPPED" and close(A.n_loss(301), -3 * W)
+    A.mark(2_000)  # 永久停止不会被期限检查改成期满
+    assert A.state == "STOPPED"
+
+
+def test_certificate_binds_policy_and_post_pause_period():
+    A, lk = _paused_with_lock()
+    with pytest.raises(RuntimeError):
+        A.resume(250, certificate=CERT(130, 240, policy="other"))  # 政策不符
+    with pytest.raises(RuntimeError):
+        A.resume(250, certificate=CERT(100, 240))  # 数据时段早于暂停（120）
+    with pytest.raises(RuntimeError):
+        A.resume(250, certificate=CERT(130, 260))  # 数据时段晚于恢复时刻
+    A.resume(250, certificate=CERT(130, 240))
+    assert A.state == "ACTIVE"
+
+
+def test_unlock_during_pause_goes_to_cash():
+    A, lk = _paused_with_lock()
+    A.unlock(lk, 5_000)  # 暂停中解锁 5,000 元
+    A.mark(200)
+    assert A.cash == 5_000 and not A.pos and lk not in A.locked
+    assert close(A.n_loss(200), -2.5 * W)  # 3 万入金，剩 5,000 现金
+
+
+def test_same_name_subscriptions_are_separate():
+    A = E.Ledger()
+    a = A.subscribe("tge", 2_000, sub_deadline=0)
+    b = A.subscribe("tge", 2_000, sub_deadline=0)
+    assert a != b and len(A.locked) == 2
+    assert A.v_loss(10) == 10_000  # 现金 6,000＋两笔各 2,000，风险价值不凭空少
+
+
+def test_refund_requires_request_and_rejects_bad_input():
+    A = E.Ledger()
+    r = A.subscribe("r", 4_000, sub_deadline=0)
+    with pytest.raises(RuntimeError):
+        A.refund_arrives(r)  # 没有退款申请
+    assert r in A.locked and A.cash == 6_000  # 失败不改账
+    with pytest.raises(ValueError):
+        A.request_refund(r, -1)
+    with pytest.raises(KeyError):
+        A.set_value("nope", 10)  # 未知仓位
+    with pytest.raises(ValueError):
+        A.open("x", -5)
+    A.request_refund(r, 3_500)
+    A.refund_arrives(r)
+    assert A.cash == 9_500 and r not in A.locked
+
+
+def test_kelly_zero_when_expectation_not_above_one():
+    assert E.kelly_on_distribution([1.0], [1.0]) == (0.0, 0.0)  # 确定回收 1 倍
+    assert E.kelly_on_distribution([0.0, 2.0], [0.5, 0.5]) == (0.0, 0.0)  # 期望恰为 1
+    f, g = E.kelly_on_distribution(
+        [0.0, 3.0], [0.5, 0.5]
+    )  # 期望 1.5：Kelly f＝(0.5·2−0.5)/2＝0.25
+    assert abs(f - 0.25) < 1e-6 and g > 0

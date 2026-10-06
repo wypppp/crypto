@@ -83,3 +83,45 @@ def test_audit_hand():
         p.startswith("query_id 不符") for p in res["B"]
     )
     assert res["C"] == ["缺片"]
+
+
+# ---- 10-06 GPT 批 1a-i 增量复核④的反例
+def test_row_ok_rejects_missing_status_hand():
+    import run_all_v22 as R
+
+    r = dict(
+        sql_sha256="s",
+        state="QUERY_STATE_COMPLETED",
+        download="ok",
+        query_id="1",
+        execution_id="e",
+        rows_status="0",
+        rows_file="",
+        file_sha256="",
+    )
+    led = dict(query_id="1", execution_id="e", state="QUERY_STATE_COMPLETED")
+    assert R.row_ok(r, "s", (None, None), ("1", "e", "QUERY_STATE_COMPLETED", 0), led)
+    assert not R.row_ok(
+        r, "s", (None, None), ("1", "e", None, 0), led
+    )  # 状态缺失不放行
+
+
+def test_resume_precheck_blocks_hand():
+    import run_all_v22 as R
+
+    sql = "SELECT 1 FROM solana.instruction_calls"
+    assert not R.resume_precheck(sql, "B", "plus", None)[0]  # 读不到用量
+    assert not R.resume_precheck(sql, "B", "plus", 43_001.0, ack=True)[0]  # 越过硬线
+    assert R.resume_precheck(sql, "M", "trial", 100.0)[0]
+    import budget_v22 as B
+
+    assert B.task_of_sql(sql) == "vq" and B.task_of_sql("SELECT 1") == "refetch"
+
+
+def test_content_l_key_ignores_kind_hand():
+    import check_manifest_v22 as K
+
+    base = dict(chain="solana", pool="p", slot="1", txi="2", oix="3", iix="-1", ovf="0")
+    rows = [dict(base, kind="D"), dict(base, kind="W")]  # 同一事件键标成 D、W
+    probs = K.content_rows(rows, "L", "GRAD")
+    assert any("片内键重复 1" in p for p in probs)

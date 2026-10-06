@@ -76,6 +76,9 @@ B_CNT = (
     "n_xchk_skip",
     "n_px_null",
     "n_ord_overflow",
+    "n_src_dup",
+    "n_vq_unknown",
+    "n_vq_missing",
 )
 B_STR = ("side_first", "side_last", "tx_f", "tx_l", "vq_src")
 SIDE = {"B": "B", "S": "S"}
@@ -110,13 +113,22 @@ def px(q1, vq, b1, qd, bd):
     return ((float(q1) + float(vq)) / 10**qd) / (float(b1) / 10**bd)
 
 
+class DuplicateKey(ValueError):
+    """源事件键重复：先检测、后建索引，重复直接失败（GPT 批 1a-i 增量复核③）。"""
+
+
 def build_events(rows, rrows, created_ms):
-    """原始行 → 每池按事件键排序的成交、加撤池、boost；vq 由 Python 解析 'R' 行（07-15 之前按布局记 0）。"""
-    rmap, rk = {}, []
-    for r in rrows:
-        k = (r["tx_id"], kint(r["oix"]), kint(r["iix"]), r["usr"])
-        rk.append(k)
-        rmap[k] = r
+    """原始行 → 每池按事件键排序的成交、加撤池、boost；vq 由 Python 解析 'R' 行。
+    10-06：先查源事件键与 'R' 行键的重复，有重复直接抛 DuplicateKey；布局类别与 SQL 相同（07-15 之前 layout0_date，
+    之后 raw／layout0／unknown，对不上 'R' 行为 missing）。"""
+    rk = [(r["tx_id"], kint(r["oix"]), kint(r["iix"]), r["usr"]) for r in rrows]
+    src = [(key_of(r), r["ev"]) for r in rows if r["ev"] in ("B", "S", "D", "W")]
+    if dups(rk) or dups([k for k, _ in src]):
+        raise DuplicateKey(
+            "源事件键重复：'R' 行 %d、成交与加撤池 %d"
+            % (dups(rk), dups([k for k, _ in src]))
+        )
+    rmap = dict(zip(rk, rrows))
     out, lp, boost = defaultdict(list), defaultdict(list), defaultdict(list)
     keys = []
     for r in rows:
@@ -150,16 +162,17 @@ def build_events(rows, rrows, created_ms):
                 f_bb=opt_int(r["f_bb"]) if ev == "S" else None,
             )
             if t < VQ_START_MS:
-                e["vq"], e["vq_src"] = 0, "layout0"
+                e["vq"], e["vq_src"] = 0, "layout0_date"
             else:
                 rr = rmap.get((r["tx_id"], k[2], k[3], ev))
                 if rr is None:
                     e["vq"], e["vq_src"] = None, "missing"
                 else:
                     d = rd.parse(ev, rr["q0"])
-                    # 布局里没有 vq 字段（升级前的事件）：按协议为 0
-                    e["vq"], e["vq_src"] = (
-                        (d["vq"], "raw") if d["vq"] is not None else (0, "layout0")
+                    cls = rd.layout_class(ev, rr["q0"], t)
+                    e["vq_src"] = cls
+                    e["vq"] = (
+                        d["vq"] if cls == "raw" else (0 if cls == "layout0" else None)
                     )
                     if ev == "B":
                         e["f_cb"], e["f_bb"] = d["cb"], d["bb"]
@@ -260,6 +273,9 @@ def expected_buckets(ev, created_ms, meta):
             n_xchk_skip=sum(1 for e in es if e["side"] == "S" and e["xchk"] is None),
             n_px_null=len(es) - len(pxs),
             n_ord_overflow=0,
+            n_src_dup=0,  # build_events 已在重复时失败
+            n_vq_unknown=sum(e["vq_src"] == "unknown" for e in es),
+            n_vq_missing=sum(e["vq_src"] == "missing" for e in es),
             q0_open=f["q0"],
             b0_open=f["b0"],
             q1_close=last["q1"],
@@ -386,12 +402,15 @@ def expected_snapshots(stream, created_ms, o, cover_end_ms):
         cov = "gap"
     else:
         cov = "ok"
+    # 质量判定的可知时刻（10-06）：用到了 T 之后的下一个事件，就是那个事件的时刻；没有下一个事件时为止日次日零点
+    qknown = None if cov == "immature" else (END_MS if b is None else b["t"])
     return dict(
         a=a,
         b=b,
         vq=vqs[-1]["vq"] if vqs else None,
         nboost=nboost,
         cov=cov,
+        qknown=qknown,
         tt=tt,
         b_beyond=b is None and tt < cover_end_ms,
     )
@@ -595,7 +614,7 @@ def main():
         )
     )
     lines.append(
-        "- B 层跨片桶用户名单（逐成员）不一致：%d；n_users（approx_distinct）与精确去重不同的桶：%d"
+        "- B 层跨片桶用户名单（逐成员）不一致：%d；n_users 与精确去重不同的桶（10-06 起 SQL 用精确去重，应为 0）：%d"
         % (smem, users_diff)
     )
     lines.append(
@@ -617,12 +636,16 @@ def main():
     # 4. L 层
     if llab:
         L, _ = g.stream(llab, "pool", keep)
-        lk = [(r["pool"], key_of(r), r["kind"]) for r in L]
-        got_l = {(r["pool"], key_of(r), r["kind"]): r for r in L}
+        # 唯一键不含 kind（10-06，GPT 批 1a-i 增量复核③：同一事件键标成 D、W 两类也要被查出）；kind 作为字段比较
+        lk = [(r["pool"], key_of(r)) for r in L]
+        if dups(lk):
+            raise DuplicateKey("L 层事件键重复 %d" % dups(lk))
+        got_l = {(r["pool"], key_of(r)): r for r in L}
         exp_l = {}
         for pool, es in lp.items():
             for e in es:
-                exp_l[(pool, e["key"], e["kind"])] = (
+                exp_l[(pool, e["key"])] = (
+                    e["kind"],
                     e["dq"],
                     e["db"],
                     e["q0"],
@@ -633,7 +656,8 @@ def main():
                 )
         for pool, es in boost.items():
             for e in es:
-                exp_l[(pool, e["key"], e["kind"])] = (
+                exp_l[(pool, e["key"])] = (
+                    e["kind"],
                     None,
                     None,
                     None,
@@ -646,6 +670,7 @@ def main():
         for k in set(got_l) & set(exp_l):
             r = got_l[k]
             gv = (
+                r["kind"],
                 opt_int(r["dq"]),
                 opt_int(r["db"]),
                 opt_int(r["q0"]),
@@ -796,6 +821,10 @@ def main():
                     )
                 sb["coverage"] += r["coverage%d" % o] != x["cov"]
                 sb["gap_flag"] += is_true(r["gap%d_flag" % o]) != (x["cov"] != "ok")
+                qk = r.get("qknown%d_at" % o, "")
+                sb["qknown_at"] += (
+                    int(round(float(qk) * 1000)) if qk not in ("", None) else None
+                ) != x["qknown"]
         sfields = [
             "created_t",
             "c_q",
@@ -805,6 +834,7 @@ def main():
             "known_at",
             "coverage",
             "gap_flag",
+            "qknown_at",
             "vq",
             "nboost",
             "a_key",

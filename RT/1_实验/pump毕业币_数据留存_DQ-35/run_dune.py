@@ -51,7 +51,7 @@ def main() -> None:
     if cost is not None and float(cost) > 100:
         print("警告：单条费用超过审批阈值 100", flush=True)
     subprocess.run(
-        [sys.executable, "dune_get_stream.py", str(qid), label, sql_file],
+        [sys.executable, "dune_get_stream.py", str(qid), label, sql_file, eid],
         cwd=H,
         check=True,
     )

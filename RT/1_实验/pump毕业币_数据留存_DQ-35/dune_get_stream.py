@@ -1,7 +1,9 @@
 """DQ-29：流式下载大结果（10-02）。dune_get.py 把全部行放在内存里，388 万行时在 7 GB 机器上被系统结束；
 这里每 5 万行写一次 gzip CSV，内存只保留一块。核对规则与 dune_get.py 相同（保存的 SQL 必须与本地一致）。
 
-python dune_get_stream.py QUERY_ID LABEL SQL_FILE → raw/dune/LABEL.csv.gz（先写 .part，完成后改名）
+python dune_get_stream.py QUERY_ID LABEL SQL_FILE [EXECUTION_ID] → raw/dune/LABEL.csv.gz（先写 .part，完成后改名）
+10-06（DQ-35，GPT 批 1a-i 增量复核④）：给了 EXECUTION_ID 就下载这一次执行，不再取查询的“最新一次执行”，
+续传与首次下载都锁定冻结的执行号；没给时行为与旧版相同。
 """
 
 import gzip
@@ -19,10 +21,11 @@ CHUNK, PS = 50_000, 1000
 
 def main():
     qid, label, sql_file = sys.argv[1:4]
+    eid_fixed = sys.argv[4] if len(sys.argv) > 4 else None
     q = get(f"/query/{qid}")
     if norm(q.get("query_sql", "")) != norm((H / sql_file).read_text()):
         raise SystemExit("Dune 上保存的 SQL 与本地冻结版本不一致，停止")
-    eid = get(f"/query/{qid}/results?limit=1")["execution_id"]
+    eid = eid_fixed or get(f"/query/{qid}/results?limit=1")["execution_id"]
     st = get(f"/execution/{eid}/status")
     raw = H / "raw" / "dune"
     (raw / f"{label}_status.json").write_text(

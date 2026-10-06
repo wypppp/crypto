@@ -47,7 +47,8 @@
 | `build_curve_sql_v1.py`、`sql/CV1_*_示例.sql` | v1 的 SQL 生成器与示例（2026-07-27 周的 1 小时样本、2025-10-06 周的 T 层） |
 | `select_curve_weeks.py` | v1 的选周规则：6 个制度阶段、固定种子排序、最大余数法分配、只按数据缺失替补 |
 | `curve_rawdecode_v1.py`、`test_curve_rawdecode_v1.py` | 曲线 TradeEvent 原始字节解码（按 IDL 布局），手算测试按 IDL 拼字节并核对 SQL 偏移 |
-| [规则窗口_推断方法_v1.md](规则窗口_推断方法_v1.md)、`rule_window_infer.py`、`test_rule_window_infer.py` | 规则窗口推断方法（10-06，随批 1b 交 GPT）：冻结五样（f、机会日历、年机会数、门槛、推断设置）；施加零假设的 wild cluster bootstrap-t（Webb 六点）检验反演求 80% 下界，CR2＋t(G−1) 交叉核对，取较低者；手算测试 |
+| [规则窗口_推断方法_v1.md](规则窗口_推断方法_v1.md)、`rule_window_infer.py`、`test_rule_window_infer.py` | 规则窗口推断方法 v1.1（10-06，按 GPT 批 1b B 改）：y＝log(1＋f(R−1))，并发合并；多周块聚类；WCR 网格反演（查端点、非单调、零方差，失败记未判定）；CR2＋Bell–McCaffrey 自由度与有效簇数；压力回放与第一个窗口 ≤3,000 元；手算与反例测试 |
+| [评价契约_v1.1.md](评价契约_v1.1.md)、`eval_contract.py`、`test_eval_contract.py` | 评价契约 v1.1 合并版（10-06，只整理已定内容）；实现按 GPT 批 1b A 的七个反例修正，测试 20 项 |
 | `sql/PROBE1～3_*.sql`、`sql/SMK_*.sql` | 体量探针与冒烟（只数行数与字节；SMK 是 ord 转 varchar 之前的版本） |
 | `sql/CURVE_*_示例.sql` | 当前生成器对 2025-10-06 这一周生成的两层 SQL（交 GPT 审的就是它们；未执行） |
 | `run_dune.py`、`dune_get.py`、`dune_get_stream.py` | 执行、台账、流式下载（复制自 DQ-35） |
