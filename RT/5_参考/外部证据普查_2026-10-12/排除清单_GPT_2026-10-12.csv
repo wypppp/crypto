@@ -1,0 +1,23 @@
+﻿来源,原件链接或附件登记链接,本次阅读范围,不收录理由
+Measuring Memecoin Fragility,https://arxiv.org/html/2512.00377v2,原始正文/摘要已读,代表性成熟大币占主导；框架可作背景，但不单独收录以免偏离新发行/小币母体。
+Exposing Stealthy Wash Trading on Automated Market Maker Exchanges,https://doi.org/10.1145/3689631,只读检索条目/摘要；出版原件未取得,不把AMM关联检测候选当已核事实；未转录其数字。
+SEC v. Gotbit — 2024 Complaint,https://www.sec.gov/files/litigation/complaints/2024/comp-pr2024-166-gotbit.pdf,官方索引可读；原PDF读取超限,不冒充读过整份诉状；主表采用已读取的2025官方判刑公告，新增于X17。
+Flipside旧官方文档,https://docs.flipsidecrypto.xyz,原入口已打开但重定向；旧解析页部分404,当前schema/价格/访问未核；仅在相关代码依赖里保留复现缺口，不列作已核活跃供应商。
+CoinCLIP指定代码仓库,https://github.com/hwlongCUHK/CoinCLIP,公开仓库元数据读取返回404,论文保留，代码项不重复凑数；论文中承诺公开不等于当前能取得。
+Virtuals旧docs入口,https://docs.virtuals.io/,原入口不可读,改用官网链接的whitepaper.virtuals.io，不将旧Genesis及当前模块化发行拼为同一规则。
+Initial Coin Offerings: Financing Growth with Cryptocurrency Token Sales,https://academic.oup.com/rfs/article-abstract/33/9/3925/5610546,出版社原始摘要索引已读；直接原页/全文不可达,经典ICO候选；主要测issuer真实结果且原全文未核，本轮不补成普通参与者回收证据。
+X01 / pump.fun 官方费用文档,https://pump.fun/docs/fees,本次只读附件4b登记；未重新读取来源原文,现行pump/PumpSwap费率已核；不重新收同一费率。
+X02 / The Block 报道,https://www.theblock.co/post/347360/pump-fun-launches-dex-called-pumpswap-to-instantly-migrate-graduated-tokens,本次只读附件4b登记；未重新读取来源原文,PumpSwap上线事实已核；本轮改收迁移执行的新语义。
+X03 / pump 官方专项文档 Negative Virtual Quote Reserves；pump-public-docs README 与固定的 IDL,https://github.com/pump-fun/pump-public-docs/blob/main/docs/NEGATIVE_VIRTUAL_QUOTE_RESERVES.md ; https://github.com/pump-fun/pump-public-docs,本次只读附件4b登记；未重新读取来源原文,已核虚拟储备/签名语义不重录；E-PLT-01/E-COD-22只补新版本及费用留池/合成迁移。
+X04 / Marino 等，arXiv 2602.14860 v1,https://arxiv.org/abs/2602.14860,本次只读附件4b登记；未重新读取来源原文,已有样本/毕业率不重录；E-PAP-05仅补条件模型、费用与事后赢家定义。
+X05 / Kamat，arXiv 2607.02823 v4,https://arxiv.org/abs/2607.02823,本次只读附件4b登记；未重新读取来源原文,已有标签审计/性能不重录；E-PAP-12只补另一项采集覆盖及版本更正。
+X06 / arXiv 2502.10512 v2；EPJ Data Science,https://arxiv.org/abs/2502.10512,本次只读附件4b登记；未重新读取来源原文,ETH新池交易模拟已在4b；本轮其他rug检测论文有不同样本/标签。
+X07 / Keyrock 研究报告,https://keyrock.com/airdrops-in-the-barren-desert/,本次只读附件4b登记；未重新读取来源原文,62次空投跌价统计已核；不重复。E-REP-10是解锁研究而非同报告。
+X08 / Merkley 等，Review of Accounting Studies 29(3) 2024,https://link.springer.com/article/10.1007/s11142-024-09838-4 ; https://ideas.repec.org/a/spr/reaccs/v29y2024i3d10.1007_s11142-024-09838-4.html,本次只读附件4b登记；未重新读取来源原文,KOL事件研究已有；不把相同窗口数字重录。
+X19 / Digital Tulips，Journal of Corporate Finance 66（2021）101786,https://investigadores.uandes.cl/en/publications/digital-tulips-returns-to-investors-in-initial-coin-offerings/,本次只读附件4b登记；未重新读取来源原文,Digital Tulips ICO经典回报已在4b，不重复。
+X20 / Lee、Li、Shin，Review of Corporate Finance Studies 11(1) 2022，表 9,https://academic.oup.com/rcfs/article/11/1/1/6357054 ; https://doi.org/10.1093/rcfs/cfab014,本次只读附件4b登记；未重新读取来源原文,Lee/Li/Shin ICO回报已在4b，不重复。
+X21 / Hugging Face rucyfer/solmemes；论文 DOI,https://huggingface.co/datasets/rucyfer/solmemes ; https://doi.org/10.1145/3789982.3790023,本次只读附件4b登记；未重新读取来源原文,SOLMEMES字段/许可已核；不重新下载或列作新数据。Coin-Meme、MELT、MemeChain另有母体。
+X22 / Tessera 博客 Smart money doesn’t stay smart,https://tesseralytics.dev/blog/wallet-behaviour,本次只读附件4b登记；未重新读取来源原文,Tessera商业钱包延续性研究已在4b，不以其标题重录“所有钱包模型无效”。
+X23 / Azar、Olivas、Sinha，The Price of Processing: Information Frictions and Market Efficiency in DeFi，纽约联储 Staff Report 1153,https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr1153.pdf,本次只读附件4b登记；未重新读取来源原文,黑客告警交易线已暂缓，超出本任务。
+X27 / McLean、Pontiff，Journal of Finance 71(1) 2016,https://doi.org/10.1111/jofi.12365,本次只读附件4b登记；未重新读取来源原文,股票发表后衰减研究超出链上新币/小币范围。
+X28 / ACMA 正式警告（2025-07-02）与屏蔽公告,https://www.acma.gov.au/sites/default/files/2025-08/02.07.2025%20-%20Formal%20Warning%20-%20Adventure%20One%20QSS%20Inc.%20-%20Polymarket%20SIGNED_Redacted.pdf ; https://www.acma.gov.au/articles/2025-08/latest-illegal-online-gambling-websites-blocked,本次只读附件4b登记；未重新读取来源原文,Polymarket超出发行渠道与小币对象范围。
