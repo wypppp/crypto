@@ -1,0 +1,665 @@
+diff --git "a/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/a_riskset.py" "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/a_riskset.py"
+index b2f5ae2c..d0b294d5 100644
+--- "a/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/a_riskset.py"
++++ "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/a_riskset.py"
+@@ -6,8 +6,9 @@
+ 3. 成熟：买入时刻＋H 严格早于该币的观察终点（创建后 30 天与止日取早者）才算成熟；未成熟单列，不进检验。
+ 4. 自身触发按“逐事件”排除：由同一实体、同一笔交易、或同一 slot 内关联体触发的事件不算命中，
+    但窗内若还有外部事件，仍算命中。窗内有自身事件的买入标 self=1，置换时单独成层（不与普通行互换）。
+-5. 检验单位：同一实体在同一个币上的多笔买入先合成一行（状态取首笔买入，命中取“任一成熟买入命中”），
+-   减少同一行为簇被当成多个可交换位置（GPT 14）。
++5. 检验单位：同一实体在同一个币上只保留一笔事先规定的买入——按顺序键的首笔成熟买入；
++   状态、结果窗、命中与 self 都取这一笔（GPT 增量 05）。旧写法“状态取首笔、命中取任一笔”会让
++   多次买入者靠更多结果窗覆盖得到更多命中，而比较只控制首笔状态，层内不可交换（反例见测试）。
+ 6. 置换：在 (币, UTC 日, 状态分箱, self) 层内打乱命中标签。一个实体所在的层全都没有标签变化时，置换分布退化，记“不可检验”。
+ 7. 分辨率：置换的最小 p＝1/(1＋次数)；它大于族内最严的 Holm 门槛 α/m 时，整族记“分辨率不足”。
+    “不显著”“不可检验”“分辨率不足”分开记，后两类不能当作“显著实体为 0”（GPT 15）。
+@@ -86,16 +87,13 @@ def label(
+ 
+ 
+ def collapse(rows) -> list[dict]:
+-    """同一实体在同一币上的成熟买入合成一行：状态与日取首笔，命中与 self 取“任一”。未成熟行不进。"""
++    """同一实体在同一币上只留首笔成熟买入（按顺序键）；它的状态、日、命中、self 原样保留。未成熟行不进。
++    成熟只取决于“买入时刻＋H 早于该币观察终点”，所以首笔买入未成熟时，后面的也都未成熟。"""
+     groups: dict = {}
+     for r in sorted((r for r in rows if r["mature"]), key=lambda r: r["key"]):
+         k = (r["entity"], r["coin"])
+         if k not in groups:
+             groups[k] = dict(r)
+-        else:
+-            g = groups[k]
+-            g["hit"] = max(g["hit"], r["hit"])
+-            g["self"] = max(g["self"], r["self"])
+     out = []
+     for g in groups.values():
+         g["stratum"] = (g["coin"], g["day"], g["state"], g["self"])
+@@ -211,12 +209,14 @@ def v4_circular_rate(
+ #   4. 入选：候选按得分从高到低（并列按 sha256(实体) 定序），取 ⌈合格数 × TOP_FRAC⌉ 个。
+ # 检验（在 W+1 上，只用 W+1 创建的币）：统计量 T＝Σ 入选实体 (命中 − 同层期望)；
+ #   零分布：每个窗口对在自己的 W+1 分层内各自置换命中标签，再把各对的 T 相加（三对合并成一次检验）；
+-#   单侧 p＝(1＋#{置换 T ≥ 观测 T})/(1＋置换次数)；p ≤ α 为“显著为正”。
+-#   可计算：三对合计至少 MIN_ACTIVE 个入选实体在 W+1 有成熟行；否则“不可计算”。
++#   单侧 p＝(1＋#{置换 T ≥ 观测 T})/(1＋置换次数)；p ≤ ALPHA（2.5%，GPT 增量 08）为“显著为正”。
++#   可计算：入选且在 W+1 有成熟行的实体，按实体编号跨对去重后至少 MIN_ACTIVE 个；否则“不可计算”。
++#   同时报“实体 × 窗口对”数（GPT 增量 04：7 个实体出现在三对里，不能算 21 个实体）。
+ 
+ MIN_ROWS = 5
+ TOP_FRAC = 0.10
+ MIN_ACTIVE = 20
++ALPHA = 0.025
+ 
+ 
+ def _ekey(e: str) -> str:
+@@ -246,14 +246,21 @@ def set_statistic(rows, members: set) -> float:
+     return sum(obs.get(e, 0) - exp.get(e, 0.0) for e in members)
+ 
+ 
+-def set_test(pairs, n_perm: int = 9999, alpha: float = 0.05, seed: int = 0) -> dict:
+-    """pairs：[(W+1 上 collapse() 之后的行, W 上选出的实体集), …]。返回 T、p、活跃入选数、结论。
++def set_test(pairs, n_perm: int = 9999, alpha: float = ALPHA, seed: int = 0) -> dict:
++    """pairs：[(W+1 上 collapse() 之后的行, W 上选出的实体集), …]。返回 T、p、活跃入选实体数、结论。
+     层内置换下，落在入选实体行上的命中数服从超几何分布：从该层 n 行（其中 h 行命中）里随机取入选实体的 m 行。
+     所以每次置换只需在每个含入选行的层里抽一次，等价于逐行打乱，但快得多。"""
+-    rng = random.Random(seed)
+-    active = sum(len({r["entity"] for r in rows} & set(m)) for rows, m in pairs)
++    import numpy as np
++
++    active_pairs = [
++        (i, e)
++        for i, (rows, m) in enumerate(pairs)
++        for e in {r["entity"] for r in rows} & set(m)
++    ]
++    active = len({e for _, e in active_pairs})
++    out = {"active": active, "active_pairs": len(active_pairs)}
+     if active < MIN_ACTIVE:
+-        return {"T": None, "p": None, "active": active, "result": "not_computable"}
++        return dict(out, T=None, p=None, result="not_computable")
+     t_obs = sum(set_statistic(rows, set(m)) for rows, m in pairs)
+     groups = []  # (n, h, m)：层的行数、命中数、入选实体行数
+     e_total = 0.0
+@@ -267,22 +274,15 @@ def set_test(pairs, n_perm: int = 9999, alpha: float = 0.05, seed: int = 0) -> d
+             g[1] += r["hit"]
+             g[2] += r["entity"] in members
+         groups += [tuple(g) for g in agg.values() if g[2] > 0]
+-    ge = 0
+-    for _ in range(n_perm):
+-        hits = 0
+-        for n, h, m in groups:
+-            if h == 0:
+-                continue
+-            if h == n:
+-                hits += m
+-                continue
+-            hits += sum(1 for i in rng.sample(range(n), m) if i < h)
+-        if hits - e_total >= t_obs - 1e-9:
+-            ge += 1
++    rng = np.random.Generator(np.random.PCG64(seed))
++    hits = np.zeros(n_perm)
++    for n, h, m in groups:
++        if h == 0:
++            continue
++        if h == n:
++            hits += m
++            continue
++        hits += rng.hypergeometric(h, n - h, m, size=n_perm)
++    ge = int(np.sum(hits - e_total >= t_obs - 1e-9))
+     p = (1 + ge) / (1 + n_perm)
+-    return {
+-        "T": t_obs,
+-        "p": p,
+-        "active": active,
+-        "result": "positive" if p <= alpha else "not_positive",
+-    }
++    return dict(out, T=t_obs, p=p, result="positive" if p <= alpha else "not_positive")
+diff --git "a/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/calib_joint.py" "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/calib_joint.py"
+new file mode 100644
+index 00000000..a65322bc
+--- /dev/null
++++ "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/calib_joint.py"
+@@ -0,0 +1,203 @@
++#!/usr/bin/env python3
++"""DQ-43 §9.1 联合校准（10-13，总控第三轮、GPT 增量 07、08）。合成数据，不读真实数据。
++
++在同一个合成世界里同时算 S3 集合检验与 R2，直接统计最终 keep_main_line＝keep 的比例。
++三种无信号场景（任何实体都没有事件信息，收益是公平的）：
++- null：随机实体在随机时刻买入；事件时刻独立随机；币级收益冲击。
++- freq：GPT 增量 05 的固定频率场景：每个币上 20 个实体按固定时间表买 5 次，其余实体只买一次；首笔状态相同。
++- shock：GPT 增量 06 的共同冲击场景：同一创建日的币共享一个公平冲击（×0.5 或 ×1.5 等概率），
++  30 个实体每天同买当天的“热门币”，前十分位实体集中在少数共同冲击上。
++目标：每种场景 keep 比例不超过 5%。报 Clopper-Pearson 95% 区间。
++另跑两个有信号的对照（只报功效，不是目标）：
++- pow_s3：8 个知情实体在每个将毕业的币毕业前 600 秒买入；
++- pow_r2：30 个实体每周各买 10 个随机币，回收是公平的 1.5 倍。
++
++用法：python3 calib_joint.py [每场景次数，默认 400]  → runs/calib_joint.json
++"""
++
++from __future__ import annotations
++
++import json
++import math
++import random
++import sys
++from collections import defaultdict
++from concurrent.futures import ProcessPoolExecutor
++from pathlib import Path
++
++import a_riskset as A
++import t3_persist as P
++
++H = Path(__file__).resolve().parent
++DAY = 86400
++N_COINS = 60  # 每周
++UNIT = 100_000_000  # 每笔买入 0.1 SOL（lamports）
++FEE = 5_000  # 每笔签名费
++
++
++NULLS = ("null", "freq", "shock")
++SCENARIOS = NULLS + ("pow_s3", "pow_r2")
++
++
++def _lognorm_mean1(rng, sigma):
++    return math.exp(rng.gauss(-sigma * sigma / 2, sigma))
++
++
++def make_week(rng, week, scenario, day_shock):
++    """返回 (buys, events, cash)。cash：每笔买入一行 {entity, day, in_cost, out_held}。"""
++    buys, events, cash = [], [], []
++    bid = 0
++    for c in range(N_COINS):
++        coin = f"w{week}c{c}"
++        day = week * 7 + c % 7
++        t0 = day * DAY + (c // 7) * 600
++        if rng.random() < 0.5:
++            tg = t0 + rng.uniform(2000, 8000)
++            events.append(
++                A.Event(coin, "grad", tg, (int(tg), 9, 0, -1), f"g{coin}", "x")
++            )
++        m_coin = _lognorm_mean1(rng, 0.8) * (
++            day_shock[day] if scenario == "shock" else 1
++        )
++        plan = []  # (实体, 买入时刻)
++        if scenario == "freq":
++            for k in range(20):
++                first = t0 + rng.uniform(0, 9000)
++                plan += [(f"f{k}", first + j * 600) for j in range(5)]
++            plan += [
++                (f"o{rng.randrange(180)}", t0 + rng.uniform(0, 9000)) for _ in range(25)
++            ]
++        else:
++            plan += [
++                (f"e{rng.randrange(300)}", t0 + rng.uniform(0, 9000)) for _ in range(30)
++            ]
++            if scenario == "shock" and c < 7:  # 每天第一个币是热门币，30 个实体同买
++                plan += [(f"h{k}", t0 + rng.uniform(0, 3000)) for k in range(30)]
++            if scenario == "pow_s3" and events and events[-1].coin == coin:
++                plan += [(f"i{k}", events[-1].ts - 600) for k in range(8)]
++            if scenario == "pow_r2":
++                plan += [
++                    (f"s{k}", t0 + rng.uniform(0, 9000))
++                    for k in range(30)
++                    if rng.random() < 10 / N_COINS
++                ]
++        for ent, t in plan:
++            bid += 1
++            buys.append(
++                A.Buy(
++                    bid,
++                    ent,
++                    coin,
++                    t,
++                    (int(t), bid % 1000, 0, -1),
++                    f"t{coin}{bid}",
++                    ("s",),
++                    1e15,
++                )
++            )
++            edge = 1.5 if ent.startswith("s") else 1.0
++            out = int(UNIT * m_coin * edge * _lognorm_mean1(rng, 0.3))
++            cash.append(
++                {"entity": ent, "day": day, "in_cost": UNIT + FEE, "out_held": out}
++            )
++    return buys, events, cash
++
++
++def simulate(args):
++    scenario, seed = args
++    rng = random.Random(f"{scenario}-{seed}")
++    day_shock = defaultdict(lambda: 0.5 if rng.random() < 0.5 else 1.5)
++    pairs_s3, members, flows = [], [], []
++    for p in range(3):
++        bw, ew, cw = make_week(rng, 2 * p, scenario, day_shock)
++        bw1, ew1, cw1 = make_week(rng, 2 * p + 1, scenario, day_shock)
++        # S3
++        sel = A.select_set(A.collapse(A.label(bw, ew, "grad")))
++        pairs_s3.append((A.collapse(A.label(bw1, ew1, "grad")), sel))
++        # R2
++        net_w, net_w1 = defaultdict(int), defaultdict(int)
++        for r in cw:
++            net_w[r["entity"]] += r["out_held"] - r["in_cost"]
++        for r in cw1:
++            net_w1[r["entity"]] += r["out_held"] - r["in_cost"]
++        top = P.top_decile(dict(net_w))
++        for e in top:
++            act = e in net_w1
++            members.append(
++                {
++                    "pair": p,
++                    "entity": e,
++                    "active": act,
++                    "p_class": act and net_w[e] > 0 and net_w1[e] > 0,
++                }
++            )
++        tops = set(top)
++        agg = defaultdict(lambda: [0, 0])
++        for r in cw1:
++            if r["entity"] in tops:
++                a = agg[(r["entity"], r["day"])]
++                a[0] += r["in_cost"]
++                a[1] += r["out_held"]
++        flows += [
++            {"pair": p, "entity": e, "day": d, "in_cost": v[0], "out_held": v[1]}
++            for (e, d), v in agg.items()
++        ]
++    s3 = A.set_test(pairs_s3, n_perm=999, seed=seed)
++    r2 = P.r2_pooled(members, flows, seed=seed)
++    return {
++        "scenario": scenario,
++        "seed": seed,
++        "s3": s3["result"],
++        "s3_active": s3["active"],
++        "r2_computable": r2["computable"],
++        "r2_holds": r2["holds"],
++        "r2_n_active": r2["n_active"],
++        "r2_n_days": r2["n_days"],
++        "keep": P.keep_main_line(s3, r2) == "keep",
++    }
++
++
++def clopper_pearson(k, n, a=0.05):
++    from scipy.stats import beta
++
++    lo = 0.0 if k == 0 else float(beta.ppf(a / 2, k, n - k + 1))
++    hi = 1.0 if k == n else float(beta.ppf(1 - a / 2, k + 1, n - k))
++    return lo, hi
++
++
++def summarize(res):
++    out = {}
++    for sc in SCENARIOS:
++        rs = [r for r in res if r["scenario"] == sc]
++        n = len(rs)
++        k = sum(r["keep"] for r in rs)
++        out[sc] = {
++            "n": n,
++            "keep": k,
++            "keep_rate": k / n,
++            "keep_ci95": clopper_pearson(k, n),
++            "s3_positive": sum(r["s3"] == "positive" for r in rs),
++            "s3_not_computable": sum(r["s3"] == "not_computable" for r in rs),
++            "r2_holds": sum(r["r2_holds"] for r in rs),
++            "r2_not_computable": sum(not r["r2_computable"] for r in rs),
++            "median_s3_active": sorted(r["s3_active"] for r in rs)[n // 2],
++            "median_r2_active": sorted(r["r2_n_active"] for r in rs)[n // 2],
++        }
++    return out
++
++
++def main():
++    n = int(sys.argv[1]) if len(sys.argv) > 1 else 400
++    jobs = [(sc, s) for sc in SCENARIOS for s in range(n if sc in NULLS else n // 4)]
++    with ProcessPoolExecutor() as ex:
++        res = list(ex.map(simulate, jobs, chunksize=8))
++    summ = summarize(res)
++    (H / "runs").mkdir(exist_ok=True)
++    (H / "runs" / "calib_joint.json").write_text(
++        json.dumps({"n_per_scenario": n, "summary": summ}, ensure_ascii=False, indent=1)
++    )
++    print(json.dumps(summ, ensure_ascii=False, indent=1))
++
++
++if __name__ == "__main__":
++    main()
+diff --git "a/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/t3_persist.py" "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/t3_persist.py"
+index 17260fb9..d3a2d59d 100644
+--- "a/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/t3_persist.py"
++++ "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/t3_persist.py"
+@@ -1,20 +1,23 @@
+-#!/usr/bin/env python3
+-"""DQ-43 T3 与 R2（10-13，总控第二轮：R2 三对合并，进入 §9.1）。合成数据实现，不读真实数据。
++"""DQ-43 T3 与 R2（10-13，总控第二轮：R2 三对合并，进入 §9.1；GPT 增量 03、04、06、08 修改）。合成数据实现，不读真实数据。
+ 
+ - 排名：每个窗口对，只用 W+1 周一 00:00 UTC 之前发生的成交、未平仓按那一刻的 HELD 估值，算实体在 W 创建队列上的 NET；
+   取前十分位：⌈实体数 × 10%⌉ 个，并列按 sha256(实体) 定序。
+-- 结果：这些实体在 W+1 创建队列上的 IN＋COST 与 OUT＋HELD；W+1 没有任何成交的实体记“不活跃”，单列，不当作 MR＝0。
+-- R2（三对合并）：活跃的前十分位实体合计 MR＝Σ(OUT＋HELD)÷Σ(IN＋COST)，按实体聚类（同一实体跨对算一个簇）
+-  自助 2,000 次，取 2.5% 分位为 95% 下界；下界 >1 且 P 类（W 与 W+1 全成本净额都为正、不带 L、S、K）合计 ≥20 即成立。
+-  可计算：活跃的前十分位实体合计 ≥20；否则“不可计算”。
++- 结果：这些实体在 W+1 创建队列上的 IN＋COST 与 OUT＋HELD，按（实体, 币的创建 UTC 日）汇总成现金流行；
++  W+1 没有任何成交的实体记“不活跃”，单列，不当作 MR＝0。
++- R2（三对合并）：活跃的前十分位实体合计 MR＝Σ(OUT＋HELD)÷Σ(IN＋COST)。
++  区间用实体 × 创建日的双向重抽（pigeonhole 自助，Owen 2007）：每次独立地有放回抽实体（按实体编号跨对去重，
++  同一实体跨对的行一起进出）和创建日（同一天创建的币一起进出，保留共同冲击），格 (e, d) 的权重＝两边抽中次数之积；
++  2,000 次，取 2.5% 分位为下界（单侧 2.5% 水平，GPT 增量 08）。下界 >1 且 P 类实体 ≥20 即成立。
++- 人数一律按实体编号跨对去重（GPT 增量 04）；同时报“实体 × 窗口对”数。
++  P 类跨对合并规则：实体在任一对里是 P 类（该对 W 与 W+1 全成本净额都为正、不带 L、S、K），就算 1 个 P 类实体。
++- 可计算：活跃的前十分位实体（去重）≥20，且现金流行覆盖的创建日 ≥ MIN_DAYS（独立的共同冲击信息够，GPT 增量 06）；
++  否则“不可计算”。
+ """
+ 
+ from __future__ import annotations
+ 
+ import hashlib
+ import math
+-import random
+-from collections import defaultdict
+ from fractions import Fraction
+ 
+ MIN_ACTIVE = 20
+@@ -29,50 +32,56 @@ def top_decile(net_w: dict) -> list:
+     return order[: math.ceil(len(order) * 0.10)]
+ 
+ 
+-def r2_pooled(rows, n_boot: int = 2000, seed: int = 0) -> dict:
+-    """rows：前十分位实体在 W+1 的结果，每行 {pair, entity, in_cost, out_held, active, p_class}。"""
+-    act = [r for r in rows if r["active"]]
+-    n_p = sum(1 for r in rows if r["p_class"])
+-    if len(act) < MIN_ACTIVE:
+-        return {
+-            "computable": False,
+-            "mr": None,
+-            "lower": None,
+-            "n_active": len(act),
+-            "n_p": n_p,
+-            "holds": False,
+-        }
+-    num = sum(r["out_held"] for r in act)
+-    den = sum(r["in_cost"] for r in act)
+-    mr = Fraction(num, den) if den else None
+-    clusters = defaultdict(lambda: [0, 0])
+-    for r in act:
+-        clusters[r["entity"]][0] += r["out_held"]
+-        clusters[r["entity"]][1] += r["in_cost"]
+-    vals = list(clusters.values())
+-    rng = random.Random(seed)
+-    boots = []
+-    for _ in range(n_boot):
+-        s = [vals[rng.randrange(len(vals))] for _ in vals]
+-        d = sum(v[1] for v in s)
+-        if d:
+-            boots.append(sum(v[0] for v in s) / d)
+-    boots.sort()
+-    lower = boots[int(0.025 * len(boots))] if boots else None
+-    holds = mr is not None and lower is not None and lower > 1 and n_p >= MIN_P
+-    return {
+-        "computable": mr is not None,
+-        "mr": mr,
+-        "lower": lower,
+-        "n_active": len(act),
++MIN_DAYS = 10
++
++
++def r2_pooled(members, flows, n_boot: int = 2000, seed: int = 0) -> dict:
++    """members：前十分位实体，每行 {pair, entity, active, p_class}；
++    flows：活跃实体在 W+1 的现金流，每行 {pair, entity, day, in_cost, out_held}（day＝币的创建 UTC 日）。"""
++    import numpy as np
++
++    act = {(m["pair"], m["entity"]) for m in members if m["active"]}
++    n_active = len({e for _, e in act})
++    n_p = len({m["entity"] for m in members if m["p_class"]})
++    use = [f for f in flows if (f["pair"], f["entity"]) in act]
++    days = sorted({f["day"] for f in use})
++    out = {
++        "n_active": n_active,
++        "n_active_pairs": len(act),
+         "n_p": n_p,
+-        "holds": holds,
++        "n_days": len(days),
++        "mr": None,
++        "lower": None,
++        "holds": False,
+     }
++    num = sum(f["out_held"] for f in use)
++    den = sum(f["in_cost"] for f in use)
++    if n_active < MIN_ACTIVE or len(days) < MIN_DAYS or not den:
++        return dict(out, computable=False)
++    ents = sorted({f["entity"] for f in use})
++    ei = {e: i for i, e in enumerate(ents)}
++    di = {d: i for i, d in enumerate(days)}
++    o = np.zeros((len(ents), len(days)))
++    c = np.zeros((len(ents), len(days)))
++    for f in use:
++        o[ei[f["entity"]], di[f["day"]]] += f["out_held"]
++        c[ei[f["entity"]], di[f["day"]]] += f["in_cost"]
++    rng = np.random.Generator(np.random.PCG64(seed))
++    we = rng.multinomial(len(ents), [1 / len(ents)] * len(ents), size=n_boot)
++    wd = rng.multinomial(len(days), [1 / len(days)] * len(days), size=n_boot)
++    bn = np.einsum("be,ed,bd->b", we, o, wd)
++    bd = np.einsum("be,ed,bd->b", we, c, wd)
++    ok = bd > 0
++    boots = np.sort(bn[ok] / bd[ok])
++    lower = float(boots[int(0.025 * len(boots))]) if len(boots) else None
++    mr = Fraction(num, den)
++    holds = lower is not None and lower > 1 and n_p >= MIN_P
++    return dict(out, computable=True, mr=mr, lower=lower, holds=holds)
+ 
+ 
+ def keep_main_line(s3: dict, r2: dict) -> str:
+-    """§9.1 v2（总控第二轮）：两者都可计算，且 S3 显著为正或 R2 成立，才保持主线；其余一律降为观察线。"""
+-    both = s3.get("result") in ("positive", "not_positive") and r2.get("computable")
+-    if both and (s3["result"] == "positive" or r2["holds"]):
++    """§9.1 v3（GPT 增量 03，总控第三轮）：S3 显著为正，或 R2 可计算且成立，任一满足即保持主线；
++    另一项不可计算不否决有效阳性。两项都没有有效阳性则降为观察线。"""
++    if s3.get("result") == "positive" or (r2.get("computable") and r2.get("holds")):
+         return "keep"
+     return "downgrade"
+diff --git "a/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/test_s3_r2.py" "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/test_s3_r2.py"
+index 2f083450..4bc468cf 100644
+--- "a/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/test_s3_r2.py"
++++ "b/RT/1_\345\256\236\351\252\214/pump\345\205\250\347\250\213_\351\222\261\346\265\201\345\220\221\350\260\201\345\256\214\346\225\264\350\264\246_DQ-43/test_s3_r2.py"
+@@ -1,4 +1,4 @@
+-"""S3 集合检验、R2 三对合并与 §9.1 v2 的测试（10-13，总控第二轮）。合成数据，不读真实数据。"""
++"""S3 集合检验、R2 三对合并与 §9.1 v3 的测试（10-13，总控第二、三轮；GPT 增量 03～06 的反例）。合成数据，不读真实数据。"""
+ 
+ import random
+ from collections import defaultdict
+@@ -150,6 +150,75 @@ def test_power_with_persistent_informed():
+     assert sum(r["result"] == "positive" for r in res) >= 9
+ 
+ 
++def test_active_entities_deduplicated_across_pairs(monkeypatch):
++    """GPT 增量 04：同样 7 个实体出现在三对里，是 7 个实体、21 个“实体 × 窗口对”，不能冒充 21 个实体。"""
++    ents = [f"e{i}" for i in range(7)]
++    pairs = [([row(e, f"p{k}c", 0) for e in ents], ents) for k in range(3)]
++    r = A.set_test(pairs)
++    assert r["active"] == 7 and r["active_pairs"] == 21
++    assert r["result"] == "not_computable"
++    members = [
++        {"pair": k, "entity": e, "active": True, "p_class": True}
++        for k in range(3)
++        for e in ents
++    ]
++    flows = [
++        {"pair": k, "entity": e, "day": 7 * k + d, "in_cost": 100, "out_held": 150}
++        for k in range(3)
++        for e in ents
++        for d in range(7)
++    ]
++    r2 = P.r2_pooled(members, flows)
++    assert (r2["n_active"], r2["n_active_pairs"], r2["n_p"]) == (7, 21, 7)
++    assert not r2["computable"] and not r2["holds"]
++
++
++def _collapse_any(rows):
++    """被取代的合并写法（状态取首笔、命中取任一笔），只为复现 GPT 增量 05 的反例。"""
++    groups = {}
++    for r in sorted((r for r in rows if r["mature"]), key=lambda r: r["key"]):
++        k = (r["entity"], r["coin"])
++        if k not in groups:
++            groups[k] = dict(r)
++        else:
++            groups[k]["hit"] = max(groups[k]["hit"], r["hit"])
++            groups[k]["self"] = max(groups[k]["self"], r["self"])
++    for g in groups.values():
++        g["stratum"] = (g["coin"], g["day"], g["state"], g["self"])
++    return list(groups.values())
++
++
++def test_fixed_frequency_counterexample():
++    """GPT 增量 05：20 个实体每币按固定时间表买 5 次，其余只买一次，没有任何事件信息。
++    旧写法（命中取任一笔）几乎每次都“显著”；每个实体 × 币只留首笔成熟买入后不再显著。"""
++    import calib_joint as C
++
++    old = new = 0
++    for seed in range(5):
++        rng = random.Random(seed)
++        shock = defaultdict(lambda: 1.0)
++        po, pn = [], []
++        for k in range(3):
++            bw, ew, _ = C.make_week(rng, 2 * k, "freq", shock)
++            bw1, ew1, _ = C.make_week(rng, 2 * k + 1, "freq", shock)
++            lw, lw1 = A.label(bw, ew, "grad"), A.label(bw1, ew1, "grad")
++            po.append((_collapse_any(lw1), A.select_set(_collapse_any(lw))))
++            pn.append((A.collapse(lw1), A.select_set(A.collapse(lw))))
++        old += A.set_test(po, n_perm=999, seed=seed)["result"] == "positive"
++        new += A.set_test(pn, n_perm=999, seed=seed)["result"] == "positive"
++    assert old == 5 and new <= 1
++
++
++def test_collapse_keeps_first_buy_only():
++    b = [
++        A.Buy(1, "x", "c", 0, (0, 0, 0, -1), "t1", ("s",), 1e12),
++        A.Buy(2, "x", "c", 5000, (5000, 0, 0, -1), "t2", ("s2",), 1e12),
++    ]
++    ev = [A.Event("c", "grad", 6000, (6000, 0, 0, -1), "g", "o")]
++    rows = A.collapse(A.label(b, ev, "grad"))
++    assert len(rows) == 1 and rows[0]["hit"] == 0 and rows[0]["state"] == ("s",)
++
++
+ # ---------- R2 与 §9.1 ----------
+ 
+ 
+@@ -158,51 +227,88 @@ def test_top_decile_hand():
+     assert P.top_decile(net) == ["e24", "e23", "e22"]  # ⌈2.5⌉＝3
+ 
+ 
+-def r2rows(n, ratio, p_class=False, pair="a"):
+-    return [
++def r2data(n, ratio, p_class=True, n_pairs=1, days=10):
++    members = [
++        {"pair": k, "entity": f"e{i}", "active": True, "p_class": p_class}
++        for k in range(n_pairs)
++        for i in range(n)
++    ]
++    flows = [
+         {
+-            "pair": pair,
++            "pair": k,
+             "entity": f"e{i}",
++            "day": 100 * k + d,
+             "in_cost": 100,
+             "out_held": int(100 * ratio),
+-            "active": True,
+-            "p_class": p_class,
+         }
++        for k in range(n_pairs)
+         for i in range(n)
++        for d in range(days)
+     ]
++    return members, flows
+ 
+ 
+ def test_r2_hand():
+-    r = P.r2_pooled(r2rows(20, 1.5, p_class=True))
+-    assert r["mr"] == 1.5 and r["lower"] == 1.5 and r["holds"]
+-    assert not P.r2_pooled(r2rows(20, 1.5, p_class=False))["holds"]  # P 类不足 20
+-    assert not P.r2_pooled(r2rows(19, 1.5, p_class=True))["computable"]
+-    inactive = r2rows(20, 1.5, True) + [
+-        {
+-            "pair": "b",
+-            "entity": "z",
+-            "in_cost": 0,
+-            "out_held": 0,
+-            "active": False,
+-            "p_class": False,
+-        }
+-    ]
+-    assert P.r2_pooled(inactive)["n_active"] == 20  # 不活跃的单列，不当作 MR＝0
++    r = P.r2_pooled(*r2data(20, 1.5))
++    assert r["mr"] == 1.5 and r["lower"] == 1.5 and r["holds"] and r["n_days"] == 10
++    assert not P.r2_pooled(*r2data(20, 1.5, p_class=False))["holds"]  # P 类不足 20
++    assert not P.r2_pooled(*r2data(19, 1.5))["computable"]  # 活跃实体不足 20
++    assert not P.r2_pooled(*r2data(20, 1.5, days=9))["computable"]  # 创建日不足 10
++    m, f = r2data(20, 1.5)
++    m.append({"pair": 1, "entity": "z", "active": False, "p_class": False})
++    assert P.r2_pooled(m, f)["n_active"] == 20  # 不活跃的单列，不当作 MR＝0
++
++
++def test_r2_common_shock_counterexample(monkeypatch):
++    """GPT 增量 06：三对各有一个公平冲击，20 个实体每对同买一个币，投入 100，等概率收回 50 或 150。
++    事前平均回收恰为 1。旧写法（只按实体重抽）8 种组合里 4 种“成立”。
++    新写法：只有 3 个创建日，独立信息不足，8 种都不可计算；即使放开天数门槛，双向重抽也只在三对全涨时成立。"""
++    import itertools
++
++    def data(outcomes):
++        members = [
++            {"pair": k, "entity": f"e{i}", "active": True, "p_class": True}
++            for k in range(3)
++            for i in range(20)
++        ]
++        flows = [
++            {"pair": k, "entity": f"e{i}", "day": k, "in_cost": 100, "out_held": o}
++            for k, o in enumerate(outcomes)
++            for i in range(20)
++        ]
++        return members, flows
++
++    combos = list(itertools.product((50, 150), repeat=3))
++    assert all(not P.r2_pooled(*data(c))["computable"] for c in combos)
++    monkeypatch.setattr(P, "MIN_DAYS", 1)
++    held = [c for c in combos if P.r2_pooled(*data(c))["holds"]]
++    assert held == [
++        (150, 150, 150)
++    ]  # 两涨一跌（旧写法 MR＝7/6、下界 7/6 成立）不再成立
+ 
+ 
+ def test_keep_main_line_table():
+-    pos, neg, nc = (
+-        {"result": "positive"},
+-        {"result": "not_positive"},
+-        {"result": "not_computable"},
+-    )
+-    r2_ok, r2_no, r2_nc = (
+-        {"computable": True, "holds": True},
+-        {"computable": True, "holds": False},
+-        {"computable": False, "holds": False},
+-    )
+-    assert P.keep_main_line(pos, r2_no) == "keep"
+-    assert P.keep_main_line(neg, r2_ok) == "keep"
+-    assert P.keep_main_line(neg, r2_no) == "downgrade"
+-    assert P.keep_main_line(pos, r2_nc) == "downgrade"  # 两者都须可计算（总控原文）
+-    assert P.keep_main_line(nc, r2_ok) == "downgrade"
++    """§9.1 v3 完整 3×3（GPT 增量 03、总控第三轮）：S3 为正，或 R2 可计算且成立，任一满足即保持主线。"""
++    s3 = {
++        "pos": {"result": "positive"},
++        "neg": {"result": "not_positive"},
++        "nc": {"result": "not_computable"},
++    }
++    r2 = {
++        "ok": {"computable": True, "holds": True},
++        "no": {"computable": True, "holds": False},
++        "nc": {"computable": False, "holds": False},
++    }
++    expect = {
++        ("pos", "ok"): "keep",
++        ("pos", "no"): "keep",
++        ("pos", "nc"): "keep",  # 另一项不可计算不否决有效阳性
++        ("neg", "ok"): "keep",
++        ("neg", "no"): "downgrade",
++        ("neg", "nc"): "downgrade",
++        ("nc", "ok"): "keep",
++        ("nc", "no"): "downgrade",
++        ("nc", "nc"): "downgrade",
++    }
++    for (a, b), want in expect.items():
++        assert P.keep_main_line(s3[a], r2[b]) == want, (a, b)
