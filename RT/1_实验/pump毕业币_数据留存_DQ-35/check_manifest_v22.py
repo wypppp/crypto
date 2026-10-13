@@ -126,7 +126,7 @@ def content_rows(rows, layer, family):
             probs.append("identity_gap %s" % rows[0]["identity_gap"])
         k = Counter()
     elif family == "GRAD" and layer == "P":
-        total(("n_src_dup_7d", "n_vq_bad_7d"))
+        total(("n_src_dup_7d", "n_vq_bad_7d", "n_st_ovf_7d"))  # ③：状态事件键越界即失败
         nbad_cov = nbad_tt = 0
         for r in rows:
             c0 = float(r["created_t"])

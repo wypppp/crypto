@@ -3,11 +3,13 @@
 
 四条判据（识别“高频、早买、高费”的行为，不是真实的机器人数量；分别报，也报并集；都不满足的记“未覆盖”，不等于人工）：
 1. 单个 UTC 日买入 ≥50 个不同的币；
-2. 有 ≥20 个币完成了往返（首买到首卖），各币持有时长的中位数 ≤60 秒；
+2. 有 ≥20 个币在形成期内出现“首买到首卖”（测的是首买到首次卖出的时长，不要求清仓），各币该时长的中位数 ≤60 秒；
 3. 一半以上的首次买入在创建或建池后 2 个 slot 内；
-4. 优先费加小费的中位，在全体买家的第 90 百分位以上（全体分位只在允许域、形成期内计算）。
-事前标签：截至 as_of，只用 as_of 之前已经成熟的历史——买入与卖出都早于 as_of 的往返才算持有时长；
-之后的行为不影响 as_of 的标签。事后画像＝把 as_of 设为观察窗终点，只用于描述生态（T8）。
+4. 优先费加小费（两者之和；设计写“或”，改为实际付出的总额）的中位 >0，且不低于全体买家的第 90 百分位
+   （全体分位只在允许域、形成期内计算；并列值算“高”；全体为 0 时没有人满足，GPT 19）。
+事前标签：形成期 [form_start, as_of)，只用其中的行为；买入与卖出都在形成期内的往返才算持有时长；
+之后的行为不影响 as_of 的标签。形成期起止与更新频率在冻结卡写定（GPT 18）。实体归并由调用方按 as_of 的快照给出
+（Act.entity 已是截至 as_of 的实体），本模块不回看之后才发现的关联。事后画像＝把 as_of 设为观察窗终点，只用于描述生态（T8）。
 """
 
 from __future__ import annotations
@@ -36,9 +38,9 @@ def _pctl(xs, q: float) -> float:
     return xs[lo] + (xs[hi] - xs[lo]) * (k - lo)
 
 
-def labels(acts, as_of: float) -> dict:
-    """{实体: {'c1','c2','c3','c4' 各 bool, 'any': bool}}，只用 ts < as_of 的行为。"""
-    hist = [a for a in acts if a.ts < as_of]
+def labels(acts, as_of: float, form_start: float = float("-inf")) -> dict:
+    """{实体: {'c1','c2','c3','c4' 各 bool, 'any': bool}}，只用 form_start ≤ ts < as_of 的行为。"""
+    hist = [a for a in acts if form_start <= a.ts < as_of]
     by_ent = defaultdict(list)
     for a in hist:
         by_ent[a.entity].append(a)
@@ -72,6 +74,6 @@ def labels(acts, as_of: float) -> dict:
         c3 = bool(first_buy) and sum(
             1 for b in first_buy.values() if b.slot_after_open <= 2
         ) * 2 > len(first_buy)
-        c4 = e in fee_med and fee_med[e] >= p90
+        c4 = e in fee_med and fee_med[e] > 0 and fee_med[e] >= p90
         out[e] = {"c1": c1, "c2": c2, "c3": c3, "c4": c4, "any": c1 or c2 or c3 or c4}
     return out

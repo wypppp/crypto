@@ -113,3 +113,30 @@ def test_not_modified_counts_as_ok(tmp_path):
     w.flush()
     r = G.check_http(raw, T0, T0 + 900 * NS, {"gh": 300})
     assert r["gh"]["ok"] == 3 and r["gh"]["success_rate"] == 1.0
+
+
+def test_chain_windows_and_missed(tmp_path):
+    import g_chain
+
+    raw = tmp_path / "raw"
+    h0 = 1791856800  # 2026-10-13 02:00 UTC
+    (a1, b1), (a2, b2) = g_chain.window_for_hour(h0), g_chain.window_for_hour(h0 + 3600)
+    c = S.DayWriter(raw, "chain/mainnet")
+    c.write(
+        {
+            "kind": "conn",
+            "what": "window_open",
+            "t_utc_ns": a1 * NS,
+            "start": a1,
+            "end": b1,
+        },
+        a1 * NS,
+    )
+    for t in range(a1, b1, 30):  # 窗内每 30 秒一条
+        c.write({"kind": "event", "t_utc_ns": t * NS}, t * NS)
+    c.flush()
+    r = G.check_chain(raw, h0 * NS, (h0 + 7200) * NS)["mainnet"]
+    # 第二小时的窗应开没开：漏 1 个窗；窗外的 50 分钟不算沉默
+    assert r["windows"] == 1 and r["missed_windows"] == 1 and r["max_silent_s"] == 30.0
+    assert r["result"] == "fail"
+    _ = (a2, b2)

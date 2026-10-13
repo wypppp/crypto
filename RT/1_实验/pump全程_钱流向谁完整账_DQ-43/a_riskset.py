@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""DQ-43 A：剩余预测关联检验（10-13，WM2 v5 §4）。先在合成数据上实现与测试，不读真实数据。
+"""DQ-43 A：剩余预测关联检验的标签与置换（10-13 v2，按 GPT 门 1 第 12～15 条修改）。合成数据实现，不读真实数据。
 
 1. 风险集：窗口内每一笔买入都进风险集，不论买方是谁、之后有没有事件（零事件的币留在分母）。
-2. 标签：买入之后 horizon 秒内（默认 30 分钟），同一个币是否发生该类事件（毕业、InitBoost 分开做）。
-3. 排除自身触发：事件由这笔买入所在实体的交易、同一笔交易、或同一 slot 内关联体的交易直接触发的，
-   标签记 0，并标 self=1（自己买到毕业，不等于预知毕业）。
-4. 比较：每个实体的命中数，对比“同状态的随机买入”。在 (币, UTC 日, 买入当时可见状态) 分层内
-   置换命中标签，得到命中数的置换分布；p＝(1＋#{置换 ≥ 观测})/(1＋置换次数)。
-v4 的“超额命中率”先按事件挑出“事件前买入”再算事件率，结果由定义决定（循环筛选），保留为反例函数。
+2. 先后用完整链上顺序键 (slot, 交易序, 外层指令序, 内层指令序) 判断：事件的键大于买入的键，且事件时刻 ≤ 买入时刻＋H。
+3. 成熟：买入时刻＋H 严格早于该币的观察终点（创建后 30 天与止日取早者）才算成熟；未成熟单列，不进检验。
+4. 自身触发按“逐事件”排除：由同一实体、同一笔交易、或同一 slot 内关联体触发的事件不算命中，
+   但窗内若还有外部事件，仍算命中。窗内有自身事件的买入标 self=1，置换时单独成层（不与普通行互换）。
+5. 检验单位：同一实体在同一个币上的多笔买入先合成一行（状态取首笔买入，命中取“任一成熟买入命中”），
+   减少同一行为簇被当成多个可交换位置（GPT 14）。
+6. 置换：在 (币, UTC 日, 状态分箱, self) 层内打乱命中标签。一个实体所在的层全都没有标签变化时，置换分布退化，记“不可检验”。
+7. 分辨率：置换的最小 p＝1/(1＋次数)；它大于族内最严的 Holm 门槛 α/m 时，整族记“分辨率不足”。
+   “不显著”“不可检验”“分辨率不足”分开记，后两类不能当作“显著实体为 0”（GPT 15）。
 """
 
 from __future__ import annotations
@@ -23,9 +26,10 @@ class Buy:
     entity: str
     coin: str
     ts: float  # epoch 秒
-    slot: int
+    key: tuple  # (slot, 交易序, 外层指令序, 内层指令序)
     tx: str
-    state: tuple  # 买入当时可见的状态分箱：阶段、进度十分位、前 60 秒净买入档、本笔大小档、UTC 小时
+    state: tuple  # 买入当时可见的状态分箱
+    obs_end: float  # 该币观察终点（epoch 秒，不含）
 
 
 @dataclass(frozen=True)
@@ -33,15 +37,15 @@ class Event:
     coin: str
     kind: str  # grad / boost
     ts: float
-    slot: int
+    key: tuple
     tx: str
-    trigger_entity: str  # 触发交易的实体
+    trigger_entity: str
 
 
 def label(
     buys, events, kind: str, horizon: float = 1800.0, affiliates=None
 ) -> list[dict]:
-    """风险集：每笔买入一行，hit∈{0,1}，self∈{0,1}。affiliates：实体 → 关联体集合（截至时刻版本）。"""
+    """每笔买入一行：hit（窗内有外部事件）、self（窗内有自身触发的事件）、mature。"""
     affiliates = affiliates or {}
     by_coin = defaultdict(list)
     for e in events:
@@ -49,35 +53,54 @@ def label(
             by_coin[e.coin].append(e)
     rows = []
     for b in buys:
-        hit = self_ = 0
+        hit = own = 0
         for e in by_coin.get(b.coin, ()):
-            if not (b.ts < e.ts <= b.ts + horizon):
+            if not (e.key > b.key and e.ts <= b.ts + horizon):
                 continue
-            own = (
+            is_own = (
                 e.trigger_entity == b.entity
                 or e.tx == b.tx
                 or (
-                    e.slot == b.slot
+                    e.key[0] == b.key[0]
                     and e.trigger_entity in affiliates.get(b.entity, ())
                 )
             )
-            if own:
-                self_ = 1
+            if is_own:
+                own = 1
             else:
                 hit = 1
-        if self_:
-            hit = 0
-        day = int(b.ts // 86400)
         rows.append(
             {
                 "bid": b.bid,
                 "entity": b.entity,
-                "stratum": (b.coin, day, b.state),
+                "coin": b.coin,
+                "key": b.key,
+                "day": int(b.ts // 86400),
+                "state": b.state,
                 "hit": hit,
-                "self": self_,
+                "self": own,
+                "mature": b.ts + horizon < b.obs_end,
             }
         )
     return rows
+
+
+def collapse(rows) -> list[dict]:
+    """同一实体在同一币上的成熟买入合成一行：状态与日取首笔，命中与 self 取“任一”。未成熟行不进。"""
+    groups: dict = {}
+    for r in sorted((r for r in rows if r["mature"]), key=lambda r: r["key"]):
+        k = (r["entity"], r["coin"])
+        if k not in groups:
+            groups[k] = dict(r)
+        else:
+            g = groups[k]
+            g["hit"] = max(g["hit"], r["hit"])
+            g["self"] = max(g["self"], r["self"])
+    out = []
+    for g in groups.values():
+        g["stratum"] = (g["coin"], g["day"], g["state"], g["self"])
+        out.append(g)
+    return out
 
 
 def entity_hits(rows) -> dict:
@@ -88,7 +111,6 @@ def entity_hits(rows) -> dict:
 
 
 def expected_hits(rows) -> dict:
-    """同层随机买入给出的期望命中数：Σ 该实体每笔买入所在层的命中率。"""
     tot, n = defaultdict(int), defaultdict(int)
     for r in rows:
         tot[r["stratum"]] += r["hit"]
@@ -100,19 +122,21 @@ def expected_hits(rows) -> dict:
 
 
 def permutation_p(rows, n_perm: int = 999, seed: int = 0) -> dict:
-    """分层置换：每层内打乱命中标签。返回 {实体: (观测命中, 期望命中, p)}。"""
+    """rows 须已 collapse()。返回 {实体: {obs, exp, p, status}}；status：testable／untestable。"""
     rng = random.Random(seed)
     strata = defaultdict(list)
     for i, r in enumerate(rows):
         strata[r["stratum"]].append(i)
-    obs = entity_hits(rows)
-    exp = expected_hits(rows)
+    varying = {s for s, idx in strata.items() if len({rows[i]["hit"] for i in idx}) > 1}
+    obs, exp = entity_hits(rows), expected_hits(rows)
+    testable = {r["entity"] for r in rows if r["stratum"] in varying}
     ge = defaultdict(int)
     hits = [r["hit"] for r in rows]
     ents = [r["entity"] for r in rows]
     for _ in range(n_perm):
         perm = hits[:]
-        for idx in strata.values():
+        for s in varying:
+            idx = strata[s]
             vals = [hits[i] for i in idx]
             rng.shuffle(vals)
             for i, v in zip(idx, vals):
@@ -120,32 +144,58 @@ def permutation_p(rows, n_perm: int = 999, seed: int = 0) -> dict:
         cnt: dict = defaultdict(int)
         for e, h in zip(ents, perm):
             cnt[e] += h
-        for e in obs:
+        for e in testable:
             if cnt[e] >= obs[e]:
                 ge[e] += 1
-    return {e: (obs[e], exp[e], (1 + ge[e]) / (1 + n_perm)) for e in obs}
+    out = {}
+    for e in obs:
+        if e in testable:
+            out[e] = {
+                "obs": obs[e],
+                "exp": exp[e],
+                "p": (1 + ge[e]) / (1 + n_perm),
+                "status": "testable",
+            }
+        else:
+            out[e] = {"obs": obs[e], "exp": exp[e], "p": None, "status": "untestable"}
+    return out
+
+
+def holm_classify(res: dict, alpha: float, n_perm: int) -> dict:
+    """{实体: significant／not_significant／untestable／resolution_insufficient}。族＝可检验的实体。"""
+    tested = sorted((v["p"], e) for e, v in res.items() if v["status"] == "testable")
+    m = len(tested)
+    out = {e: "untestable" for e, v in res.items() if v["status"] != "testable"}
+    if m and 1 / (1 + n_perm) > alpha / m:
+        out.update({e: "resolution_insufficient" for _, e in tested})
+        return out
+    stop = False
+    for i, (p, e) in enumerate(tested):
+        if not stop and p <= alpha / (m - i):
+            out[e] = "significant"
+        else:
+            stop = True
+            out[e] = "not_significant"
+    return out
+
+
+def n_perm_for(m: int, alpha: float, factor: int = 20) -> int:
+    """与族规模匹配的置换次数：最小 p 至少比最严门槛 α/m 小 factor 倍。"""
+    return max(999, int(factor * m / alpha))
 
 
 def v4_circular_rate(
     buys, events, kind: str, entity: str, horizon: float = 1800.0
 ) -> float | None:
     """反例：v4 先挑“事件前 horizon 内的买入”，再算这些买入之后发生事件的比例——恒为 1。"""
-    sel = [
-        b
-        for b in buys
-        if b.entity == entity
-        and any(
+
+    def follows(b):
+        return any(
             e.kind == kind and e.coin == b.coin and b.ts < e.ts <= b.ts + horizon
             for e in events
         )
-    ]
+
+    sel = [b for b in buys if b.entity == entity and follows(b)]
     if not sel:
         return None
-    return sum(
-        1
-        for b in sel
-        if any(
-            e.kind == kind and e.coin == b.coin and b.ts < e.ts <= b.ts + horizon
-            for e in events
-        )
-    ) / len(sel)
+    return sum(1 for b in sel if follows(b)) / len(sel)

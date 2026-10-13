@@ -2,6 +2,7 @@
 """DQ-42 前向录制：链上事件到达时刻（G v2 §2.2，10-13）。只收不发。
 
 python g_chain.py --endpoint mainnet   常驻：订阅 pump 曲线程序与 PumpSwap 程序的日志（logsSubscribe，processed）
+按时间表抽样：每个 UTC 小时录 10 分钟，起点分钟由哈希事先写定（window_for_hour）；窗外不连接，心跳照常。
 
 每个通知记一行 kind=event：程序、交易签名、slot、是否失败、本机收到时刻（UTC 纳秒与单调钟纳秒）。
 来源端点见文件路径 raw/chain/<端点>/；订阅号记在 conn 行（每秒约 500 行，所以事件行只留必要字段）。
@@ -29,6 +30,30 @@ ENDPOINTS = {
     "publicnode": "wss://solana-rpc.publicnode.com",
 }
 STALL_S = 60  # 连上之后这么久没有任何消息，就断开重连并记 stall
+SAMPLE_TAG = "RT-DQ42-chain-sample-v1"
+SAMPLE_MIN = 10  # 每个 UTC 小时录 10 分钟（总控 10-13 第 1 条）
+
+
+def window_for_hour(hour_start: int) -> tuple[int, int]:
+    """该 UTC 小时的录制窗 [起, 止)（epoch 秒）。起点分钟＝sha256(TAG|小时 ISO) 首字节 mod 51，
+    即 0～50 分之间事先写定的一个分钟，避开整点附近定时活动造成的偏差。"""
+    import hashlib
+
+    iso = time.strftime("%Y-%m-%dT%H:00:00Z", time.gmtime(hour_start))
+    off = hashlib.sha256(f"{SAMPLE_TAG}|{iso}".encode()).digest()[0] % (
+        60 - SAMPLE_MIN + 1
+    )
+    start = hour_start + off * 60
+    return start, start + SAMPLE_MIN * 60
+
+
+def current_window(now: float) -> tuple[int, int]:
+    """now 所在小时的窗；若该窗已过，返回下一小时的窗。"""
+    h = int(now) // 3600 * 3600
+    s, e = window_for_hour(h)
+    if now >= e:
+        s, e = window_for_hour(h + 3600)
+    return s, e
 
 
 def sub_request(req_id: int, program: str, commitment: str = "processed") -> str:
@@ -113,6 +138,8 @@ class ChainRecorder:
         self.connected = False
         self.ws = None
         self.flush_every = flush_every_s
+        self.window_end = float("inf")
+        self.schedule = None  # 设为 current_window 即按时间表抽样
         self.stop = threading.Event()
 
     def conn(self, what: str, **kw) -> None:
@@ -187,6 +214,16 @@ class ChainRecorder:
             self.w.flush()
             if (
                 self.connected
+                and self.ws is not None
+                and time.time() >= self.window_end
+            ):
+                try:
+                    self.ws.close()
+                except Exception:
+                    pass
+                continue
+            if (
+                self.connected
                 and time.monotonic() - self.last_msg_mono > STALL_S
                 and self.ws is not None
             ):
@@ -204,6 +241,15 @@ class ChainRecorder:
         threading.Thread(target=self.watchdog, daemon=True).start()
         fails = 0
         while not self.stop.is_set():
+            if self.schedule is not None:
+                ws_, we_ = self.schedule(time.time())
+                if time.time() < ws_:
+                    self.stop.wait(min(ws_ - time.time(), 60))
+                    continue
+                if self.window_end != we_:
+                    self.window_end = we_
+                    self.conn("window_open", start=ws_, end=we_)
+                    fails = 0
             n0 = self.n_event
             self.ws = websocket.WebSocketApp(
                 self.url,
@@ -222,6 +268,9 @@ class ChainRecorder:
             except Exception as e:
                 self.on_error(None, e)
             self.connected = False
+            if self.schedule is not None and time.time() >= self.window_end:
+                self.conn("window_close", end=self.window_end)
+                continue
             # 这次连接收到过事件，说明是对端断开而不是连不上：退避清零，约 1 秒后重连
             fails = 1 if self.n_event > n0 else fails + 1
             w = wait_s(fails)
@@ -232,9 +281,16 @@ class ChainRecorder:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--endpoint", default="mainnet", choices=sorted(ENDPOINTS))
+    ap.add_argument(
+        "--continuous",
+        action="store_true",
+        help="连续录制（10-13 02:00 UTC 之前的做法）",
+    )
     a = ap.parse_args()
     write_pid(f"g_chain_{a.endpoint}")
-    rec = ChainRecorder(a.endpoint, ENDPOINTS[a.endpoint], PROGRAMS)
+    rec = ChainRecorder(a.endpoint, ENDPOINTS[a.endpoint], PROGRAMS, flush_every_s=2.0)
+    if not a.continuous:
+        rec.schedule = current_window
     hb = Heartbeat(
         f"g_chain_{a.endpoint}",
         lambda: {

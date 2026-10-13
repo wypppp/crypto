@@ -326,19 +326,26 @@ lq AS (
     WHERE evt_block_date BETWEEN DATE '{ev_start}' AND DATE '{ev_end}'
 ),
 st AS (
-    SELECT pool, created_at, ts, slot, txi, oix, iix, tx_id, side AS kind, q0, b0, q1, b1, vq, age_ms, ord, vq_src FROM k
+    /* ③（10-13）：状态事件键统一为 slot·1e10＋txi·1e5＋oix·1e3＋(iix＋1)，iix 缺失记 -1；
+       分量越界（txi∉[0,99999]、oix∉[0,99]、iix∉[-1,998]）记 st_ovf=1，P 层验收要求合计为 0 */
+    SELECT pool, created_at, ts, slot, txi, oix, iix, tx_id, side AS kind, q0, b0, q1, b1, vq, age_ms,
+           CAST(slot AS BIGINT) * 10000000000 + CAST(txi AS BIGINT) * 100000 + CAST(oix AS BIGINT) * 1000 + CAST(COALESCE(iix, -1) AS BIGINT) + 1 AS ord, vq_src,
+           CASE WHEN slot IS NULL OR txi IS NULL OR oix IS NULL OR txi < 0 OR txi >= 100000 OR oix < 0 OR oix >= 100 OR COALESCE(iix, -1) < -1 OR COALESCE(iix, -1) >= 999 THEN 1 ELSE 0 END AS st_ovf
+    FROM k
     UNION ALL
     SELECT l.pool, p.created_at, l.ts, l.slot, l.txi, l.oix, l.iix, l.tx_id, l.kind, l.q0, l.b0, l.q1, l.b1,
            CAST(NULL AS DECIMAL(38,0)), date_diff('millisecond', p.created_at, l.ts),
-           CAST(l.slot AS BIGINT) * 10000000000 + CAST(l.txi AS BIGINT) * 100000 + CAST(l.oix AS BIGINT) * 1000 + CAST(l.iix AS BIGINT),
-           'n/a'
+           CAST(l.slot AS BIGINT) * 10000000000 + CAST(l.txi AS BIGINT) * 100000 + CAST(l.oix AS BIGINT) * 1000 + CAST(COALESCE(l.iix, -1) AS BIGINT) + 1,
+           'n/a',
+           CASE WHEN l.slot IS NULL OR l.txi IS NULL OR l.oix IS NULL OR l.txi < 0 OR l.txi >= 100000 OR l.oix < 0 OR l.oix >= 100 OR COALESCE(l.iix, -1) < -1 OR COALESCE(l.iix, -1) >= 999 THEN 1 ELSE 0 END
     FROM lq l JOIN pools p ON p.pool = l.pool
     WHERE l.ts >= p.created_at AND l.ts < p.created_at + INTERVAL '7' DAY
     UNION ALL
     SELECT pool, created_at, created_at, c_slot, c_txi, c_oix, c_iix, c_tx, 'C', CAST(NULL AS DECIMAL(38,0)), CAST(NULL AS DECIMAL(38,0)),
            c_q, c_b, CAST(NULL AS DECIMAL(38,0)), 0,
-           CAST(c_slot AS BIGINT) * 10000000000 + CAST(c_txi AS BIGINT) * 100000 + CAST(c_oix AS BIGINT) * 1000 + CAST(c_iix AS BIGINT),
-           'n/a'
+           CAST(c_slot AS BIGINT) * 10000000000 + CAST(c_txi AS BIGINT) * 100000 + CAST(c_oix AS BIGINT) * 1000 + CAST(COALESCE(c_iix, -1) AS BIGINT) + 1,
+           'n/a',
+           CASE WHEN c_slot IS NULL OR c_txi IS NULL OR c_oix IS NULL OR c_txi < 0 OR c_txi >= 100000 OR c_oix < 0 OR c_oix >= 100 OR COALESCE(c_iix, -1) < -1 OR COALESCE(c_iix, -1) >= 999 THEN 1 ELSE 0 END
     FROM pools{boost_union}
 )"""
 
@@ -347,8 +354,9 @@ BOOST_UNION = """
     SELECT r.boost_pool, p.created_at, r.ts, r.slot, r.txi, r.oix, COALESCE(r.iix, -1), r.tx_id, r.kind,
            CAST(NULL AS DECIMAL(38,0)), CAST(NULL AS DECIMAL(38,0)), r.boost_q1, r.boost_b1, r.vq,
            date_diff('millisecond', p.created_at, r.ts),
-           CAST(r.slot AS BIGINT) * 10000000000 + CAST(r.txi AS BIGINT) * 100000 + CAST(r.oix AS BIGINT) * 1000 + CAST(COALESCE(r.iix, -1) AS BIGINT),
-           r.layout
+           CAST(r.slot AS BIGINT) * 10000000000 + CAST(r.txi AS BIGINT) * 100000 + CAST(r.oix AS BIGINT) * 1000 + CAST(COALESCE(r.iix, -1) AS BIGINT) + 1,
+           r.layout,
+           CASE WHEN r.slot IS NULL OR r.txi IS NULL OR r.oix IS NULL OR r.txi < 0 OR r.txi >= 100000 OR r.oix < 0 OR r.oix >= 100 OR COALESCE(r.iix, -1) < -1 OR COALESCE(r.iix, -1) >= 999 THEN 1 ELSE 0 END
     FROM rv r JOIN pools p ON p.pool = r.boost_pool
     WHERE r.kind IN ('I', 'U') AND r.ts >= p.created_at AND r.ts < p.created_at + INTERVAL '7' DAY"""
 
@@ -394,7 +402,8 @@ sn AS (
     SELECT pool, count_if(kind IN ('B', 'S')) AS n_7d, count_if(kind IN ('D', 'W')) AS n_lp_7d,
            count_if(kind IN ('I', 'U')) AS n_boost_7d,
            CAST(min(vq) AS varchar) AS vq_min_7d, CAST(max(vq) AS varchar) AS vq_max_7d,
-           count_if(n_skey > 1) AS n_src_dup_7d, count_if(vq_src IN ('unknown', 'missing')) AS n_vq_bad_7d{snap_cols}
+           count_if(n_skey > 1) AS n_src_dup_7d, count_if(vq_src IN ('unknown', 'missing')) AS n_vq_bad_7d,
+           sum(st_ovf) AS n_st_ovf_7d{snap_cols}
     FROM stt
     GROUP BY 1
 )
@@ -570,6 +579,7 @@ def build(layer, e_start, e_end, sample=None):
         "vq_max_7d",
         "n_src_dup_7d",
         "n_vq_bad_7d",
+        "n_st_ovf_7d",
     ]
     for o in OFFSETS:
         names_out += [

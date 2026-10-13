@@ -158,3 +158,19 @@ def test_bytes_message(tmp_path):
         ).encode(),
     )
     assert r.n_event == 1 and r.n_err == 0
+
+
+def test_window_schedule_hand():
+    import hashlib
+
+    h = 1791856800  # 2026-10-13 02:00 UTC
+    off = (
+        hashlib.sha256(b"RT-DQ42-chain-sample-v1|2026-10-13T02:00:00Z").digest()[0] % 51
+    )
+    assert C.window_for_hour(h) == (h + off * 60, h + off * 60 + 600)
+    s, e = C.window_for_hour(h)
+    assert C.current_window(h) == (s, e) or h < s
+    assert C.current_window(e) == C.window_for_hour(
+        h + 3600
+    )  # 本小时的窗过了，给下一小时
+    assert 0 <= off <= 50

@@ -85,6 +85,11 @@ def symbol_allowed(sym: str | None) -> bool:
 
 
 def coin_allowed(created_ts, symbol: str | None) -> bool:
+    """缺创建时刻报错；缺代号按 DQ-35 的做法排除（查不到代号的币保守排除，GPT 门 1 第 11 条）。"""
+    if created_ts is None:
+        raise ValueError("币缺曲线创建时刻")
+    if symbol is None:
+        return False
     t = to_utc(created_ts)
     return W.is_dev(t) and not F.is_forward(t) and t < CUTOFF and symbol_allowed(symbol)
 
@@ -108,21 +113,36 @@ def edge_allowed(transfer_ts, via_coin: tuple | None = None) -> bool:
 
 
 def entry(rows, branch: str, *, created="created_ts", symbol="symbol", ts="ts"):
-    """按支路过滤一组字典行。trade、raw_event、behavior、quantile、first_seen 用同一规则；
-    edge 的行可带 via_created / via_symbol。"""
+    """按支路过滤一组字典行。trade、raw_event、behavior、quantile、first_seen、cost、reward 用同一规则；
+    edge 的行必须带 source（transfer／trade），trade 来源必须带 via_created、via_symbol；fx 只看时刻。
+    这些过滤在 SQL 导出之前也要落实（GPT 11），这里是下载后的第二道。"""
     out = []
     for r in rows:
-        if branch in ("trade", "raw_event", "behavior", "quantile", "first_seen"):
+        if branch in (
+            "trade",
+            "raw_event",
+            "behavior",
+            "quantile",
+            "first_seen",
+            "cost",
+            "reward",
+        ):
             ok = trade_allowed(r[ts], r[created], r.get(symbol))
         elif branch == "coin":
             ok = coin_allowed(r[created], r.get(symbol))
         elif branch == "edge":
-            via = (
-                (r["via_created"], r.get("via_symbol"))
-                if r.get("via_created") is not None
-                else None
-            )
-            ok = edge_allowed(r[ts], via)
+            # 来源类型必填：独立转账（transfer）或取自成交（trade）；取自成交的必须带上该币，缺失报错
+            src = r.get("source")
+            if src == "transfer":
+                ok = edge_allowed(r[ts])
+            elif src == "trade":
+                if r.get("via_created") is None:
+                    raise ValueError("取自成交的边缺所在币的创建时刻")
+                ok = edge_allowed(r[ts], (r["via_created"], r.get("via_symbol")))
+            else:
+                raise ValueError("边缺来源类型（transfer／trade）")
+        elif branch == "fx":  # 汇率等全局序列：只看时刻
+            ok = before_cutoff(r[ts])
         else:
             raise ValueError("未知支路 %s" % branch)
         if ok:
@@ -152,10 +172,12 @@ def same_name_count(coins, name_key: str, name: str, before_ts) -> int:
 
 
 def label_status(trigger_ts, horizon: dt.timedelta, window_end=None) -> str:
-    """结果窗 [trigger, trigger+horizon] 是否成熟：终点须不晚于止日与观察窗终点。"""
+    """结果窗 (trigger, trigger+horizon] 是否成熟：终点须严格早于止日与观察窗终点。"""
     end = to_utc(trigger_ts) + horizon
     lim = CUTOFF if window_end is None else min(CUTOFF, to_utc(window_end))
-    return "mature" if end <= lim else "immature"
+    return (
+        "mature" if end < lim else "immature"
+    )  # 成交严格早于止日：终点恰在止日也看不到（GPT 12）
 
 
 def truncate(trade_rows, ts="ts", window_end=None):

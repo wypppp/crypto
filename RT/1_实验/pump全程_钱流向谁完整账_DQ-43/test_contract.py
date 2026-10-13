@@ -39,6 +39,39 @@ def test_trade_cutoff_strict():
     assert not CF.trade_allowed("2026-10-05T00:00:00Z", *c)
 
 
+def test_missing_metadata_not_passed():
+    """GPT 11：缺代号不放行；取自成交的边缺所在币报错；边缺来源类型报错。"""
+    assert not CF.coin_allowed("2026-06-01T12:00:00Z", None)
+    with pytest.raises(ValueError):
+        CF.coin_allowed(None, "ABCX")
+    with pytest.raises(ValueError):
+        CF.entry([{"ts": "2026-09-01T00:00:00Z", "source": "trade"}], "edge")
+    with pytest.raises(ValueError):
+        CF.entry([{"ts": "2026-09-01T00:00:00Z"}], "edge")
+    rows = [
+        {"ts": "2026-09-01T00:00:00Z", "source": "transfer"},
+        {
+            "ts": "2026-06-09T00:00:00Z",
+            "source": "trade",
+            "via_created": "2026-06-08T00:00:00Z",
+            "via_symbol": "ABCX",
+        },
+    ]
+    assert CF.entry(rows, "edge") == rows[:1]
+    assert CF.entry(
+        [{"ts": "2026-10-05T00:00:00Z"}, {"ts": "2026-10-04T00:00:00Z"}], "fx"
+    ) == [{"ts": "2026-10-04T00:00:00Z"}]
+
+
+def test_mixed_tx_cost_keeps_only_allowed_legs():
+    c = L.TxCost("t", "E", (("A", "curve"), ("P", "curve"), ("B", "amm")), 9, 0, 0)
+    a = L.allocate_tx_costs([c], keep_coin=lambda coin: coin != "P")  # P 是保护币
+    assert a == {
+        ("E", "A", "curve"): 3,
+        ("E", "B", "amm"): 3,
+    }  # 按 3 条腿均摊，P 的份额不输出
+
+
 def test_edge_domain():
     assert CF.edge_allowed("2026-09-01T00:00:00Z")
     assert not CF.edge_allowed("2026-10-05T00:00:01Z")
@@ -109,8 +142,10 @@ def test_same_name_count():
 
 def test_label_maturity():
     h = dt.timedelta(days=7)
-    assert CF.label_status("2026-09-28T00:00:00Z", h) == "mature"
-    assert CF.label_status("2026-09-28T00:00:01Z", h) == "immature"
+    assert CF.label_status("2026-09-27T23:59:59Z", h) == "mature"
+    assert (
+        CF.label_status("2026-09-28T00:00:00Z", h) == "immature"
+    )  # 终点恰在止日：看不到
     assert (
         CF.label_status("2026-08-01T00:00:00Z", h, window_end="2026-08-05T00:00:00Z")
         == "immature"
@@ -130,12 +165,16 @@ def test_pairs_hand():
     assert not CP.pair_ok(D(2026, 6, 1))  # W+1＝06-08 是检验周
     assert not CP.pair_ok(D(2026, 8, 24))  # 终点 10-07 晚于 10-05
     s = CP.select()
-    assert s["ab"] is None and len(s["late"]) == 2
-    assert all(w >= CP.LATE_FROM and CP.pair_ok(w) for w in s["late"])
-    assert CP.select() == s  # 确定性
+    assert s["ab"] is None and s["old"] == D(2026, 5, 25)
+    # 哈希顺序 07-27、08-03（共用 08-03 周，跳过）、07-20（共用 07-27 周，跳过）、08-10；GPT 独立复算同为 07-27、08-10
+    assert s["late"] == [D(2026, 7, 27), D(2026, 8, 10)]
+    weeks = [
+        w + dt.timedelta(days=7 * k) for w in [s["old"]] + s["late"] for k in (0, 1)
+    ]
+    assert len(set(weeks)) == 6  # 三对不共用创建周
 
 
-# ---------- 记账 ----------
+# ---------- 记账（10-13 v2，按 GPT 门 1 第 03～08 条） ----------
 
 
 def scenario():
@@ -158,54 +197,93 @@ def scenario():
         ),
     ]
     costs = [
-        L.TxCost("E", "t1", ("X",), 5000, 10000, 0),
-        L.TxCost("E", "t2", ("X",), 5000, 0, 0, failed=True),
-        L.TxCost("E", "t3", ("Y", "X"), 3, 0, 0),
+        L.TxCost("t1", "E", (("X", "curve"),), 5000, 10000, 0),
+        L.TxCost("t2", "E", (("X", "curve"),), 5000, 0, 0, failed=True),
+        L.TxCost("t3", "E", (("Y", "curve"), ("X", "amm")), 3, 0, 0),
     ]
-    rewards = [L.Reward("E", "X", 2 * E9 // 100)]
+    rewards = [L.Reward("E", "X", 2 * E9 // 100, "amm")]
     return f, costs, rewards
 
 
 def test_tx_cost_allocation_hand():
     _, costs, _ = scenario()
     a = L.allocate_tx_costs(costs)
-    assert (
-        a[("E", "X")] == 15000 + 5000 + 2 and a[("E", "Y")] == 1
-    )  # 3 拆成 2＋1，余数给排序第一的 X
+    # t3 的两条腿排序为 (X, amm)、(Y, curve)：3 拆成 2＋1，余数给第一腿
+    assert a == {
+        ("E", "X", "curve"): 20000,
+        ("E", "X", "amm"): 2,
+        ("E", "Y", "curve"): 1,
+    }
     b = L.allocate_tx_costs(costs, split=False)
-    assert b[("E", "X")] == 20003 and b[("E", "Y")] == 0
-    assert sum(a.values()) == sum(b.values()) == 20003  # 不重复分摊：15000＋5000＋3
+    assert b[("E", "X", "amm")] == 3 and b[("E", "Y", "curve")] == 0
+    assert sum(a.values()) == sum(b.values()) == 20003  # 15000＋5000＋3，不重复分摊
+
+
+def test_tx_cost_dedupe_and_conflict():
+    c = L.TxCost("t", "E", (("X", "amm"), ("X", "amm")), 10, 0, 0)  # 重复腿按集合
+    assert L.allocate_tx_costs([c, c]) == {("E", "X", "amm"): 10}  # 同一 tx_id 只记一次
+    with pytest.raises(ValueError):
+        L.allocate_tx_costs([c, L.TxCost("t", "E", (("X", "amm"),), 11, 0, 0)])
 
 
 def test_cycle_hand():
     f, costs, rewards = scenario()
-    val = lambda q: L.sell_out(q, 10 * E9, 10_000, cap=3 * E9 // 10)  # noqa: E731
-    c = L.cycle(f, L.allocate_tx_costs(costs), rewards, val)
+    val = lambda q: L.liquidation(q, 10 * E9, 10_000, cap=3 * E9 // 10, fee_bps=0)  # noqa: E731
+    c = L.cycle("E", "X", f, L.allocate_tx_costs(costs), rewards, val, "amm")
     assert c.IN == 1_500_000_000
     assert c.OUT == 900_000_000 + 400_000_000 + 10_000_000 + 20_000_000
     assert c.COST == 20002 and c.q_end == 500
-    assert c.HELD == 300_000_000  # 10e9·500/10500≈4.76e8，被真实储备 3e8 封顶
+    assert c.HELD == 300_000_000  # 定价毛额 10e9·500/10500≈4.76e8，被真实储备 3e8 封顶
     assert c.NET == 129_979_998
     assert c.RR == Fraction(1_330_000_000, 1_500_020_002)
     assert c.MR == Fraction(1_630_000_000, 1_500_020_002)
-    # 阶段分解：曲线 0.15e9 − 20002；两段之和等于整段
-    assert c.stage_net["curve"] == 150_000_000 - 20002
-    assert sum(c.stage_net.values()) == c.NET
+    # 实现阶段账：曲线 0.9e9＋结转 0.75e9−1.5e9−20000；毕业后 0.43e9＋0.3e9−0.75e9−2
+    assert c.stage_net("curve") == 149_980_000
+    assert c.stage_net("amm") == -20_000_002
+    assert c.stage_net("curve") + c.stage_net("amm") == c.NET
+    assert c.stage_mr("amm") == Fraction(730_000_000, 750_000_002)
     assert not c.cost_unknown
 
 
-def test_cycle_uncapped_and_mark():
-    f, costs, rewards = scenario()
-    c = L.cycle(
-        f,
-        L.allocate_tx_costs(costs),
-        rewards,
-        lambda q: L.sell_out(q, 10 * E9, 10_000),
-        lambda q: L.mark_value(q, 10 * E9, 10_000),
+def test_stage_costs_follow_stage():
+    """GPT 05 反例：毕业后买 100、卖 110、费用 5 → 曲线 0，毕业后 +5。"""
+    f = [
+        L.Fill("E", "X", 1, 0, 0, -1, "amm", "buy", sol=100, tok=10),
+        L.Fill("E", "X", 2, 0, 0, -1, "amm", "sell", sol=110, tok=10),
+    ]
+    a = L.allocate_tx_costs([L.TxCost("t", "E", (("X", "amm"),), 5, 0, 0)])
+    c = L.cycle("E", "X", f, a, [], lambda q: 0, "amm")
+    assert (c.stage_net("curve"), c.stage_net("amm"), c.NET) == (0, 5, 5)
+
+
+def test_realized_stage_attribution():
+    """GPT 08 例子：曲线买入成本 1、毕业后立即卖 10 → +9 全记在毕业后（按实现阶段归属）。"""
+    f = [
+        L.Fill("E", "X", 1, 0, 0, -1, "curve", "buy", sol=1, tok=10),
+        L.Fill("E", "X", 2, 0, 0, -1, "amm", "sell", sol=10, tok=10),
+    ]
+    c = L.cycle("E", "X", f, {}, [], lambda q: 0, "amm")
+    assert (c.stage_net("curve"), c.stage_net("amm")) == (0, 9)
+
+
+def test_held_from_curve_into_amm_carried():
+    f = [L.Fill("E", "X", 1, 0, 0, -1, "curve", "buy", sol=100, tok=10)]
+    c = L.cycle("E", "X", f, {}, [], lambda q: 150, "amm")
+    assert (c.stage_net("curve"), c.stage_net("amm"), c.NET) == (0, 50, 50)
+    with pytest.raises(ValueError):
+        L.cycle("E", "X", f, {}, [], lambda q: 150, "")  # 期末阶段必须显式给出
+
+
+def test_cost_only_and_reward_only_cycles():
+    """GPT 06：只有失败交易费用、第三方代付、只有奖励，也要有周期。"""
+    a = L.allocate_tx_costs(
+        [L.TxCost("t", "P", (("X", "curve"),), 5000, 0, 0, failed=True)]
     )
-    assert c.HELD == Fraction(10 * E9 * 500, 10_500)
-    assert c.HELD_mark == 500_000_000  # 标价：500·10e9/10000
-    assert sum(c.stage_net.values()) == c.NET
+    rw = [L.Reward("Q", "X", 7, "amm")]
+    assert L.cycle_keys([], a, rw) == {("P", "X"), ("Q", "X")}
+    cp = L.cycle("P", "X", [], a, rw, lambda q: 0, "curve")
+    cq = L.cycle("Q", "X", [], a, rw, lambda q: 0, "amm")
+    assert (cp.NET, cp.RR) == (-5000, 0) and (cq.NET, cq.RR) == (7, None)
 
 
 def test_cost_unknown_flags():
@@ -213,17 +291,30 @@ def test_cost_unknown_flags():
         L.Fill("E", "X", 1, 0, 0, -1, "curve", "xfer_in", tok=100),
         L.Fill("E", "X", 2, 0, 0, -1, "curve", "sell", sol=E9, tok=100),
     ]
-    assert L.cycle(f, {}, [], lambda q: 0).cost_unknown
+    assert L.cycle("E", "X", f, {}, [], lambda q: 0, "curve").cost_unknown
     g = [
         L.Fill("E", "X", 1, 0, 0, -1, "curve", "buy", sol=E9, tok=50),
         L.Fill("E", "X", 2, 0, 0, -1, "curve", "sell", sol=E9, tok=100),
     ]
-    assert L.cycle(g, {}, [], lambda q: 0).cost_unknown
+    assert L.cycle("E", "X", g, {}, [], lambda q: 0, "curve").cost_unknown
+    h = [
+        L.Fill("E", "X", 1, 0, 0, -1, "curve", "buy", sol=100, tok=10),
+        L.Fill("E", "X", 2, 0, 0, -1, "curve", "xfer_out", tok=4),
+    ]
+    c = L.cycle("E", "X", h, {}, [], lambda q: 0, "curve")
+    assert (
+        c.cost_unknown
+        and c.xfer_out_basis == 40
+        and c.stage_net("curve") == c.NET == -100
+    )
 
 
-def test_sell_out_fee_hand():
-    # 1% 费率：q'＝99，x·q'/(y+q')＝1000·99/1099
-    assert L.sell_out(100, 1000, 1000, fee_bps=100) == Fraction(1000 * 99, 1099)
+def test_liquidation_hand():
+    # 毛额 1000·100/1100＝1000/11；扣 1% 后 990/11＝90
+    assert L.liquidation(100, 1000, 1000, cap=10**9, fee_bps=100) == 90
+    # 封顶 50，再扣 1%：49.5 向下取整 49
+    assert L.liquidation(100, 1000, 1000, cap=50, fee_bps=100) == 49
+    assert L.mark_value(500, 10 * E9, 10_000) == 500_000_000
 
 
 def test_order_key_unique():
@@ -234,21 +325,19 @@ def test_order_key_unique():
     )
 
 
-def test_t2a_hand_and_double_counts():
-    rec = L.net_receipts(
-        {"protocol": 3, "creator": 4, "validator_jito": 5},
-        {"creator": 2, "protocol": 1},
-    )
-    assert rec == {"protocol": 2, "creator": 2, "validator_jito": 5}
-    # 买入 100、交易成本 5；卖出 60、返现 1、持有人奖励 2；池子真实储备 +33（含留在池里的 LP 费 1）
-    assert L.t2a_residual(100, 5, 63, rec, 33) == 0
-    with pytest.raises(ValueError):  # LP 费重复记
-        L.t2a_residual(100, 5, 63, {**rec, "lp": 1}, 33)
-    gross = {
-        "protocol": 2,
-        "creator": 4,
-        "validator_jito": 5,
-    }  # 忘了扣掉已分给持有人的 2
-    assert L.t2a_residual(100, 5, 63, gross, 33) == -2
-    with pytest.raises(KeyError):
-        L.net_receipts({"protocol": 3}, {"creator": 1})
+def test_t2a_flows_buyback_and_rewards():
+    """GPT 07 反例：交易者投入 100（回购费 10、进池 90），回购金库再花 6 买入。按账户类对账，不会重复记。"""
+    flows = [("trader", "pool", 90), ("trader", "buyback", 10), ("buyback", "pool", 6)]
+    net = L.class_nets(flows)
+    assert (net["trader"], net["pool"], net["buyback"]) == (-100, 96, 4) and sum(
+        net.values()
+    ) == 0
+    assert L.t2a_residual(100, 0, 0, flows) == 0
+    # 持有人奖励：创建者 → 奖励金库 → 交易者；事件口径 OUT 含奖励 2
+    flows2 = flows + [("creator", "holder_vault", 2), ("holder_vault", "trader", 2)]
+    assert L.t2a_residual(100, 0, 2, flows2) == 0
+    assert L.t2a_residual(100, 0, 0, flows2) == 2  # 事件口径漏记奖励：残差暴露出来
+    with pytest.raises(ValueError):
+        L.class_nets([("trader", "nowhere", 1)])
+    with pytest.raises(ValueError):
+        L.class_nets([("trader", "pool", -1)])

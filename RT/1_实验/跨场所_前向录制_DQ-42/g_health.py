@@ -20,7 +20,16 @@ import hashlib
 
 from g_store import MANIFESTS, RAW, utc_day
 
+NS_PER_S = 1_000_000_000
+
 ALLOWED_KEYS = {
+    "windows",
+    "missed_windows",
+    "recorders",
+    "alive",
+    "beat_age_s",
+    "limit_s",
+    "gap",
     "window_h",
     "generated_utc_day",
     "overall",
@@ -156,9 +165,13 @@ def check_http(raw: Path, since: int, until: int, expected: dict) -> dict:
 
 
 def check_chain(raw: Path, since: int, until: int) -> dict:
+    """按时间表抽样之后，只在录制窗内量“沉默”；连续录制时段按整段量。
+    missed_windows：抽样开始之后、完整落在检查期内、却没有 window_open 记录的窗数（进程不在的迹象）。"""
+    import g_chain
+
     out = {}
     for d in sorted((raw / "chain").glob("*")):
-        keep = ("kind", "what", "t_utc_ns")
+        keep = ("kind", "what", "t_utc_ns", "start", "end")
         rs = [
             r
             for p in files_in_window(d, since)
@@ -167,7 +180,33 @@ def check_chain(raw: Path, since: int, until: int) -> dict:
         ]
         ev = [r["t_utc_ns"] for r in rs if r["kind"] == "event"]
         conn = [r["what"] for r in rs if r["kind"] == "conn"]
-        gap = max_gap_s(ev, since, until)
+        opened = sorted(
+            (r["start"], r["end"])
+            for r in rs
+            if r["kind"] == "conn" and r["what"] == "window_open"
+        )
+        if opened:
+            first = opened[0][0] * NS_PER_S
+            # 抽样之前若有连续录制的事件，那一段按整段量；没有就不算
+            pre = [t for t in ev if t < first]
+            spans = [(max(since, min(pre)), min(first, until))] if pre else []
+            spans += [
+                (max(a * NS_PER_S, since), min(b * NS_PER_S, until)) for a, b in opened
+            ]
+            sched, h = [], (first // NS_PER_S) // 3600 * 3600
+            while h * NS_PER_S < until:
+                a, b = g_chain.window_for_hour(h)
+                if a * NS_PER_S >= first and b * NS_PER_S <= until:
+                    sched.append((a, b))
+                h += 3600
+            missed = len(set(sched) - set(opened))
+        else:
+            spans, missed = [(since, until)], 0
+        gaps = [
+            max_gap_s([t for t in ev if a <= t <= b], a, b) for a, b in spans if b > a
+        ]
+        gap = max(gaps) if gaps else None
+        good = bool(ev) and gap is not None and gap <= 300 and missed == 0
         out[d.name] = {
             "events": len(ev),
             "connects": conn.count("open"),
@@ -175,10 +214,10 @@ def check_chain(raw: Path, since: int, until: int) -> dict:
             "errors": conn.count("error"),
             "stalls": conn.count("stall"),
             "rpc_errors": conn.count("rpc_error"),
+            "windows": len(opened),
+            "missed_windows": missed,
             "max_silent_s": gap,
-            "result": "pass"
-            if ev and gap <= 300
-            else ("no_data" if not ev else "fail"),
+            "result": "pass" if good else ("no_data" if not ev else "fail"),
         }
     return out
 
@@ -226,6 +265,16 @@ def check_manifests(raw: Path, mdir: Path) -> dict:
     }
 
 
+def _recorders() -> dict:
+    """断档检查（g_gaps）：进程是否在、最近心跳距今秒数、门槛、是否断档。"""
+    import g_gaps
+
+    return {
+        s["name"]: {k: s[k] for k in ("alive", "beat_age_s", "limit_s", "gap")}
+        for s in g_gaps.status()
+    }
+
+
 def report(
     hours: float = 24,
     raw: Path = RAW,
@@ -245,6 +294,7 @@ def report(
     names |= {
         p.name for sub in ("http", "chain", "heartbeat") for p in (raw / sub).glob("*")
     }
+    names |= {"dq34_trades", "dq34_recorder"}  # g_gaps 的记录器名
     r = {
         "window_h": hours,
         "generated_utc_day": utc_day(until),
@@ -252,11 +302,13 @@ def report(
         "chain": check_chain(raw, since, until),
         "heartbeat": check_heartbeat(raw, since, until),
         "manifests": check_manifests(raw, mdir),
+        "recorders": _recorders() if raw == RAW else {},
     }
     parts = [
         v["result"] for sec in ("http", "chain", "heartbeat") for v in r[sec].values()
     ]
     parts.append(r["manifests"]["result"])
+    parts += ["fail" if v["gap"] else "pass" for v in r["recorders"].values()]
     r["overall"] = "pass" if parts and all(x == "pass" for x in parts) else "fail"
     dropped: list = []
     safe = whitelist(r, names, dropped)

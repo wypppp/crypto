@@ -215,6 +215,14 @@ def main(argv=None) -> None:
     sp.add_parser("verify")
     sp.add_parser("manifest")
     a = ap.parse_args(argv)
+    try:  # 断档提醒（总控 10-13 第 3 条）；检查本身出错不影响记录
+        from g_gaps import warn_text
+
+        w = warn_text()
+        if w:
+            print(w)
+    except Exception:
+        pass
     if a.cmd == "verify":
         print(json.dumps(verify(), ensure_ascii=False))
         return
