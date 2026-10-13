@@ -85,10 +85,11 @@ def symbol_allowed(sym: str | None) -> bool:
 
 
 def coin_allowed(created_ts, symbol: str | None) -> bool:
-    """缺创建时刻报错；缺代号按 DQ-35 的做法排除（查不到代号的币保守排除，GPT 门 1 第 11 条）。"""
+    """缺创建时刻报错；缺代号按 DQ-35 的做法排除（查不到代号的币保守排除，GPT 门 1 第 11 条）。
+    规范化后为空的代号（""、"   "、"$" 等）与缺失同样排除：CSV 等入口会把缺值变成空串（GPT 增量 01）。"""
     if created_ts is None:
         raise ValueError("币缺曲线创建时刻")
-    if symbol is None:
+    if norm_symbol(symbol) == "":
         return False
     t = to_utc(created_ts)
     return W.is_dev(t) and not F.is_forward(t) and t < CUTOFF and symbol_allowed(symbol)
@@ -178,6 +179,18 @@ def label_status(trigger_ts, horizon: dt.timedelta, window_end=None) -> str:
     return (
         "mature" if end < lim else "immature"
     )  # 成交严格早于止日：终点恰在止日也看不到（GPT 12）
+
+
+def boundary_exit_status(exit_boundary, covered_until, gap: bool = False) -> str:
+    """B 的固定退出按桶边界的收盘状态（GPT 增量 02）：mature／immature／gap。
+    边界须严格早于全局止日；数据须完整覆盖到边界（covered_until ≥ 边界，且所需桶无缺片）。
+    不比较 B 自己的观察终点：观察终点就是这条边界本身。A 的结果窗仍用 label_status 的严格规则。"""
+    b = to_utc(exit_boundary)
+    if b >= CUTOFF:
+        return "immature"
+    if gap or to_utc(covered_until) < b:
+        return "gap"
+    return "mature"
 
 
 def truncate(trade_rows, ts="ts", window_end=None):

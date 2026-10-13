@@ -6,8 +6,9 @@
 3. 成熟：买入时刻＋H 严格早于该币的观察终点（创建后 30 天与止日取早者）才算成熟；未成熟单列，不进检验。
 4. 自身触发按“逐事件”排除：由同一实体、同一笔交易、或同一 slot 内关联体触发的事件不算命中，
    但窗内若还有外部事件，仍算命中。窗内有自身事件的买入标 self=1，置换时单独成层（不与普通行互换）。
-5. 检验单位：同一实体在同一个币上的多笔买入先合成一行（状态取首笔买入，命中取“任一成熟买入命中”），
-   减少同一行为簇被当成多个可交换位置（GPT 14）。
+5. 检验单位：同一实体在同一个币上只保留一笔事先规定的买入——按顺序键的首笔成熟买入；
+   状态、结果窗、命中与 self 都取这一笔（GPT 增量 05）。旧写法“状态取首笔、命中取任一笔”会让
+   多次买入者靠更多结果窗覆盖得到更多命中，而比较只控制首笔状态，层内不可交换（反例见测试）。
 6. 置换：在 (币, UTC 日, 状态分箱, self) 层内打乱命中标签。一个实体所在的层全都没有标签变化时，置换分布退化，记“不可检验”。
 7. 分辨率：置换的最小 p＝1/(1＋次数)；它大于族内最严的 Holm 门槛 α/m 时，整族记“分辨率不足”。
    “不显著”“不可检验”“分辨率不足”分开记，后两类不能当作“显著实体为 0”（GPT 15）。
@@ -86,16 +87,13 @@ def label(
 
 
 def collapse(rows) -> list[dict]:
-    """同一实体在同一币上的成熟买入合成一行：状态与日取首笔，命中与 self 取“任一”。未成熟行不进。"""
+    """同一实体在同一币上只留首笔成熟买入（按顺序键）；它的状态、日、命中、self 原样保留。未成熟行不进。
+    成熟只取决于“买入时刻＋H 早于该币观察终点”，所以首笔买入未成熟时，后面的也都未成熟。"""
     groups: dict = {}
     for r in sorted((r for r in rows if r["mature"]), key=lambda r: r["key"]):
         k = (r["entity"], r["coin"])
         if k not in groups:
             groups[k] = dict(r)
-        else:
-            g = groups[k]
-            g["hit"] = max(g["hit"], r["hit"])
-            g["self"] = max(g["self"], r["self"])
     out = []
     for g in groups.values():
         g["stratum"] = (g["coin"], g["day"], g["state"], g["self"])
@@ -211,12 +209,14 @@ def v4_circular_rate(
 #   4. 入选：候选按得分从高到低（并列按 sha256(实体) 定序），取 ⌈合格数 × TOP_FRAC⌉ 个。
 # 检验（在 W+1 上，只用 W+1 创建的币）：统计量 T＝Σ 入选实体 (命中 − 同层期望)；
 #   零分布：每个窗口对在自己的 W+1 分层内各自置换命中标签，再把各对的 T 相加（三对合并成一次检验）；
-#   单侧 p＝(1＋#{置换 T ≥ 观测 T})/(1＋置换次数)；p ≤ α 为“显著为正”。
-#   可计算：三对合计至少 MIN_ACTIVE 个入选实体在 W+1 有成熟行；否则“不可计算”。
+#   单侧 p＝(1＋#{置换 T ≥ 观测 T})/(1＋置换次数)；p ≤ ALPHA（2.5%，GPT 增量 08）为“显著为正”。
+#   可计算：入选且在 W+1 有成熟行的实体，按实体编号跨对去重后至少 MIN_ACTIVE 个；否则“不可计算”。
+#   同时报“实体 × 窗口对”数（GPT 增量 04：7 个实体出现在三对里，不能算 21 个实体）。
 
 MIN_ROWS = 5
 TOP_FRAC = 0.10
 MIN_ACTIVE = 20
+ALPHA = 0.025
 
 
 def _ekey(e: str) -> str:
@@ -246,14 +246,21 @@ def set_statistic(rows, members: set) -> float:
     return sum(obs.get(e, 0) - exp.get(e, 0.0) for e in members)
 
 
-def set_test(pairs, n_perm: int = 9999, alpha: float = 0.05, seed: int = 0) -> dict:
-    """pairs：[(W+1 上 collapse() 之后的行, W 上选出的实体集), …]。返回 T、p、活跃入选数、结论。
+def set_test(pairs, n_perm: int = 9999, alpha: float = ALPHA, seed: int = 0) -> dict:
+    """pairs：[(W+1 上 collapse() 之后的行, W 上选出的实体集), …]。返回 T、p、活跃入选实体数、结论。
     层内置换下，落在入选实体行上的命中数服从超几何分布：从该层 n 行（其中 h 行命中）里随机取入选实体的 m 行。
     所以每次置换只需在每个含入选行的层里抽一次，等价于逐行打乱，但快得多。"""
-    rng = random.Random(seed)
-    active = sum(len({r["entity"] for r in rows} & set(m)) for rows, m in pairs)
+    import numpy as np
+
+    active_pairs = [
+        (i, e)
+        for i, (rows, m) in enumerate(pairs)
+        for e in {r["entity"] for r in rows} & set(m)
+    ]
+    active = len({e for _, e in active_pairs})
+    out = {"active": active, "active_pairs": len(active_pairs)}
     if active < MIN_ACTIVE:
-        return {"T": None, "p": None, "active": active, "result": "not_computable"}
+        return dict(out, T=None, p=None, result="not_computable")
     t_obs = sum(set_statistic(rows, set(m)) for rows, m in pairs)
     groups = []  # (n, h, m)：层的行数、命中数、入选实体行数
     e_total = 0.0
@@ -267,22 +274,15 @@ def set_test(pairs, n_perm: int = 9999, alpha: float = 0.05, seed: int = 0) -> d
             g[1] += r["hit"]
             g[2] += r["entity"] in members
         groups += [tuple(g) for g in agg.values() if g[2] > 0]
-    ge = 0
-    for _ in range(n_perm):
-        hits = 0
-        for n, h, m in groups:
-            if h == 0:
-                continue
-            if h == n:
-                hits += m
-                continue
-            hits += sum(1 for i in rng.sample(range(n), m) if i < h)
-        if hits - e_total >= t_obs - 1e-9:
-            ge += 1
+    rng = np.random.Generator(np.random.PCG64(seed))
+    hits = np.zeros(n_perm)
+    for n, h, m in groups:
+        if h == 0:
+            continue
+        if h == n:
+            hits += m
+            continue
+        hits += rng.hypergeometric(h, n - h, m, size=n_perm)
+    ge = int(np.sum(hits - e_total >= t_obs - 1e-9))
     p = (1 + ge) / (1 + n_perm)
-    return {
-        "T": t_obs,
-        "p": p,
-        "active": active,
-        "result": "positive" if p <= alpha else "not_positive",
-    }
+    return dict(out, T=t_obs, p=p, result="positive" if p <= alpha else "not_positive")

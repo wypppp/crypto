@@ -1,0 +1,93 @@
+{
+ "n_per_scenario": 1000,
+ "summary": {
+  "null": {
+   "n": 1000,
+   "keep": 24,
+   "keep_rate": 0.024,
+   "keep_ci95": [
+    0.01543638323350848,
+    0.03550063853135918
+   ],
+   "s3_positive": 20,
+   "s3_not_computable": 0,
+   "r2_holds": 4,
+   "r2_not_computable": 0,
+   "median_s3_active": 59,
+   "median_r2_active": 81
+  },
+  "freq": {
+   "n": 1000,
+   "keep": 45,
+   "keep_rate": 0.045,
+   "keep_ci95": [
+    0.033009625431148756,
+    0.05975283269340779
+   ],
+   "s3_positive": 27,
+   "s3_not_computable": 0,
+   "r2_holds": 18,
+   "r2_not_computable": 0,
+   "median_s3_active": 50,
+   "median_r2_active": 53
+  },
+  "shock": {
+   "n": 1000,
+   "keep": 32,
+   "keep_rate": 0.032,
+   "keep_ci95": [
+    0.02198884960564243,
+    0.044875902835009286
+   ],
+   "s3_positive": 21,
+   "s3_not_computable": 0,
+   "r2_holds": 12,
+   "r2_not_computable": 0,
+   "median_s3_active": 67,
+   "median_r2_active": 89
+  },
+  "pow_s3": {
+   "n": 250,
+   "keep": 250,
+   "keep_rate": 1.0,
+   "keep_ci95": [
+    0.9853528113643196,
+    1.0
+   ],
+   "s3_positive": 250,
+   "s3_not_computable": 0,
+   "r2_holds": 3,
+   "r2_not_computable": 0,
+   "median_s3_active": 48,
+   "median_r2_active": 84
+  },
+  "pow_r2": {
+   "n": 250,
+   "keep": 196,
+   "keep_rate": 0.784,
+   "keep_ci95": [
+    0.7277611190107558,
+    0.8333693383859028
+   ],
+   "s3_positive": 9,
+   "s3_not_computable": 0,
+   "r2_holds": 195,
+   "r2_not_computable": 0,
+   "median_s3_active": 67,
+   "median_r2_active": 77
+  }
+ },
+ "freq_combined": {
+  "n": 4000,
+  "seeds": "0–3999",
+  "keep": 180,
+  "keep_rate": 0.045,
+  "keep_ci95": [
+   0.038785225238933005,
+   0.05188979474842502
+  ],
+  "s3_positive": 94,
+  "r2_holds": 89
+ },
+ "note": "S3 每次置换 999 次（置换检验在任何次数下都精确）；R2 自助 2,000 次。freq 另跑种子 1000–3999，见 calib_joint_freq_extra.json。"
+}

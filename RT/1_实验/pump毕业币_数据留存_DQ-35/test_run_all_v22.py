@@ -128,12 +128,14 @@ def test_content_l_key_ignores_kind_hand():
 
 
 def test_runner_refuses_before_gate3_fixed(monkeypatch):
-    # 总控第二十二轮第三节：③ 修复并经 GPT 确认之前，运行器在取锁、读清单、执行查询之前就拒绝
+    # 总控第二十二轮第三节：③ 修复并经 GPT 确认之前，运行器在取锁、读清单、执行查询之前就拒绝。
+    # 10-13 GPT 确认 ③，GATE3_FIXED 改为 True；挡板逻辑仍在，这里把开关临时拨回 False 来测它。
     import pytest
 
     import run_all_v22 as R
 
-    assert R.GATE3_FIXED is False
+    assert R.GATE3_FIXED is True
+    monkeypatch.setattr(R, "GATE3_FIXED", False)
     monkeypatch.setattr(
         R, "_main", lambda: (_ for _ in ()).throw(AssertionError("不应运行"))
     )

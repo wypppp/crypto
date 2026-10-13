@@ -1,4 +1,4 @@
-"""S3 集合检验、R2 三对合并与 §9.1 v2 的测试（10-13，总控第二轮）。合成数据，不读真实数据。"""
+"""S3 集合检验、R2 三对合并与 §9.1 v3 的测试（10-13，总控第二、三轮；GPT 增量 03～06 的反例）。合成数据，不读真实数据。"""
 
 import random
 from collections import defaultdict
@@ -150,6 +150,75 @@ def test_power_with_persistent_informed():
     assert sum(r["result"] == "positive" for r in res) >= 9
 
 
+def test_active_entities_deduplicated_across_pairs(monkeypatch):
+    """GPT 增量 04：同样 7 个实体出现在三对里，是 7 个实体、21 个“实体 × 窗口对”，不能冒充 21 个实体。"""
+    ents = [f"e{i}" for i in range(7)]
+    pairs = [([row(e, f"p{k}c", 0) for e in ents], ents) for k in range(3)]
+    r = A.set_test(pairs)
+    assert r["active"] == 7 and r["active_pairs"] == 21
+    assert r["result"] == "not_computable"
+    members = [
+        {"pair": k, "entity": e, "active": True, "p_class": True}
+        for k in range(3)
+        for e in ents
+    ]
+    flows = [
+        {"pair": k, "entity": e, "day": 7 * k + d, "in_cost": 100, "out_held": 150}
+        for k in range(3)
+        for e in ents
+        for d in range(7)
+    ]
+    r2 = P.r2_pooled(members, flows)
+    assert (r2["n_active"], r2["n_active_pairs"], r2["n_p"]) == (7, 21, 7)
+    assert not r2["computable"] and not r2["holds"]
+
+
+def _collapse_any(rows):
+    """被取代的合并写法（状态取首笔、命中取任一笔），只为复现 GPT 增量 05 的反例。"""
+    groups = {}
+    for r in sorted((r for r in rows if r["mature"]), key=lambda r: r["key"]):
+        k = (r["entity"], r["coin"])
+        if k not in groups:
+            groups[k] = dict(r)
+        else:
+            groups[k]["hit"] = max(groups[k]["hit"], r["hit"])
+            groups[k]["self"] = max(groups[k]["self"], r["self"])
+    for g in groups.values():
+        g["stratum"] = (g["coin"], g["day"], g["state"], g["self"])
+    return list(groups.values())
+
+
+def test_fixed_frequency_counterexample():
+    """GPT 增量 05：20 个实体每币按固定时间表买 5 次，其余只买一次，没有任何事件信息。
+    旧写法（命中取任一笔）几乎每次都“显著”；每个实体 × 币只留首笔成熟买入后不再显著。"""
+    import calib_joint as C
+
+    old = new = 0
+    for seed in range(5):
+        rng = random.Random(seed)
+        shock = defaultdict(lambda: 1.0)
+        po, pn = [], []
+        for k in range(3):
+            bw, ew, _ = C.make_week(rng, 2 * k, "freq", shock)
+            bw1, ew1, _ = C.make_week(rng, 2 * k + 1, "freq", shock)
+            lw, lw1 = A.label(bw, ew, "grad"), A.label(bw1, ew1, "grad")
+            po.append((_collapse_any(lw1), A.select_set(_collapse_any(lw))))
+            pn.append((A.collapse(lw1), A.select_set(A.collapse(lw))))
+        old += A.set_test(po, n_perm=999, seed=seed)["result"] == "positive"
+        new += A.set_test(pn, n_perm=999, seed=seed)["result"] == "positive"
+    assert old == 5 and new <= 1
+
+
+def test_collapse_keeps_first_buy_only():
+    b = [
+        A.Buy(1, "x", "c", 0, (0, 0, 0, -1), "t1", ("s",), 1e12),
+        A.Buy(2, "x", "c", 5000, (5000, 0, 0, -1), "t2", ("s2",), 1e12),
+    ]
+    ev = [A.Event("c", "grad", 6000, (6000, 0, 0, -1), "g", "o")]
+    rows = A.collapse(A.label(b, ev, "grad"))
+    assert len(rows) == 1 and rows[0]["hit"] == 0 and rows[0]["state"] == ("s",)
+
+
 # ---------- R2 与 §9.1 ----------
 
 
@@ -158,51 +227,88 @@ def test_top_decile_hand():
     assert P.top_decile(net) == ["e24", "e23", "e22"]  # ⌈2.5⌉＝3
 
 
-def r2rows(n, ratio, p_class=False, pair="a"):
-    return [
-        {
-            "pair": pair,
-            "entity": f"e{i}",
-            "in_cost": 100,
-            "out_held": int(100 * ratio),
-            "active": True,
-            "p_class": p_class,
-        }
+def r2data(n, ratio, p_class=True, n_pairs=1, days=10):
+    members = [
+        {"pair": k, "entity": f"e{i}", "active": True, "p_class": p_class}
+        for k in range(n_pairs)
         for i in range(n)
     ]
+    flows = [
+        {
+            "pair": k,
+            "entity": f"e{i}",
+            "day": 100 * k + d,
+            "in_cost": 100,
+            "out_held": int(100 * ratio),
+        }
+        for k in range(n_pairs)
+        for i in range(n)
+        for d in range(days)
+    ]
+    return members, flows
 
 
 def test_r2_hand():
-    r = P.r2_pooled(r2rows(20, 1.5, p_class=True))
-    assert r["mr"] == 1.5 and r["lower"] == 1.5 and r["holds"]
-    assert not P.r2_pooled(r2rows(20, 1.5, p_class=False))["holds"]  # P 类不足 20
-    assert not P.r2_pooled(r2rows(19, 1.5, p_class=True))["computable"]
-    inactive = r2rows(20, 1.5, True) + [
-        {
-            "pair": "b",
-            "entity": "z",
-            "in_cost": 0,
-            "out_held": 0,
-            "active": False,
-            "p_class": False,
-        }
-    ]
-    assert P.r2_pooled(inactive)["n_active"] == 20  # 不活跃的单列，不当作 MR＝0
+    r = P.r2_pooled(*r2data(20, 1.5))
+    assert r["mr"] == 1.5 and r["lower"] == 1.5 and r["holds"] and r["n_days"] == 10
+    assert not P.r2_pooled(*r2data(20, 1.5, p_class=False))["holds"]  # P 类不足 20
+    assert not P.r2_pooled(*r2data(19, 1.5))["computable"]  # 活跃实体不足 20
+    assert not P.r2_pooled(*r2data(20, 1.5, days=9))["computable"]  # 创建日不足 10
+    m, f = r2data(20, 1.5)
+    m.append({"pair": 1, "entity": "z", "active": False, "p_class": False})
+    assert P.r2_pooled(m, f)["n_active"] == 20  # 不活跃的单列，不当作 MR＝0
+
+
+def test_r2_common_shock_counterexample(monkeypatch):
+    """GPT 增量 06：三对各有一个公平冲击，20 个实体每对同买一个币，投入 100，等概率收回 50 或 150。
+    事前平均回收恰为 1。旧写法（只按实体重抽）8 种组合里 4 种“成立”。
+    新写法：只有 3 个创建日，独立信息不足，8 种都不可计算；即使放开天数门槛，双向重抽也只在三对全涨时成立。"""
+    import itertools
+
+    def data(outcomes):
+        members = [
+            {"pair": k, "entity": f"e{i}", "active": True, "p_class": True}
+            for k in range(3)
+            for i in range(20)
+        ]
+        flows = [
+            {"pair": k, "entity": f"e{i}", "day": k, "in_cost": 100, "out_held": o}
+            for k, o in enumerate(outcomes)
+            for i in range(20)
+        ]
+        return members, flows
+
+    combos = list(itertools.product((50, 150), repeat=3))
+    assert all(not P.r2_pooled(*data(c))["computable"] for c in combos)
+    monkeypatch.setattr(P, "MIN_DAYS", 1)
+    held = [c for c in combos if P.r2_pooled(*data(c))["holds"]]
+    assert held == [
+        (150, 150, 150)
+    ]  # 两涨一跌（旧写法 MR＝7/6、下界 7/6 成立）不再成立
 
 
 def test_keep_main_line_table():
-    pos, neg, nc = (
-        {"result": "positive"},
-        {"result": "not_positive"},
-        {"result": "not_computable"},
-    )
-    r2_ok, r2_no, r2_nc = (
-        {"computable": True, "holds": True},
-        {"computable": True, "holds": False},
-        {"computable": False, "holds": False},
-    )
-    assert P.keep_main_line(pos, r2_no) == "keep"
-    assert P.keep_main_line(neg, r2_ok) == "keep"
-    assert P.keep_main_line(neg, r2_no) == "downgrade"
-    assert P.keep_main_line(pos, r2_nc) == "downgrade"  # 两者都须可计算（总控原文）
-    assert P.keep_main_line(nc, r2_ok) == "downgrade"
+    """§9.1 v3 完整 3×3（GPT 增量 03、总控第三轮）：S3 为正，或 R2 可计算且成立，任一满足即保持主线。"""
+    s3 = {
+        "pos": {"result": "positive"},
+        "neg": {"result": "not_positive"},
+        "nc": {"result": "not_computable"},
+    }
+    r2 = {
+        "ok": {"computable": True, "holds": True},
+        "no": {"computable": True, "holds": False},
+        "nc": {"computable": False, "holds": False},
+    }
+    expect = {
+        ("pos", "ok"): "keep",
+        ("pos", "no"): "keep",
+        ("pos", "nc"): "keep",  # 另一项不可计算不否决有效阳性
+        ("neg", "ok"): "keep",
+        ("neg", "no"): "downgrade",
+        ("neg", "nc"): "downgrade",
+        ("nc", "ok"): "keep",
+        ("nc", "no"): "downgrade",
+        ("nc", "nc"): "downgrade",
+    }
+    for (a, b), want in expect.items():
+        assert P.keep_main_line(s3[a], r2[b]) == want, (a, b)

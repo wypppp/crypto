@@ -152,6 +152,39 @@ def test_label_maturity():
     )
 
 
+@pytest.mark.parametrize("blank", ["", "   ", "$", " $ "])
+def test_blank_symbol_excluded_on_every_branch(blank):
+    """GPT 增量 01：规范化后为空的代号与缺失同样排除，币、成交、成本、奖励、取自成交的边都挡住。"""
+    c, t = "2026-06-01T12:00:00Z", "2026-06-02T00:00:00Z"
+    assert not CF.coin_allowed(c, blank)
+    assert not CF.trade_allowed(t, c, blank)
+    row = {"ts": t, "created_ts": c, "symbol": blank}
+    for branch in ("coin", "trade", "raw_event", "cost", "reward", "behavior"):
+        assert CF.entry([row], branch) == []
+    edge = {"ts": t, "source": "trade", "via_created": c, "via_symbol": blank}
+    assert CF.entry([edge], "edge") == []
+    assert CF.entry([dict(row, symbol="ABCX")], "cost") != []  # 对照：正常代号放行
+
+
+def test_boundary_exit_maturity():
+    """GPT 增量 02：B 的固定退出按桶边界收盘，单设成熟判定。"""
+    pool = dt.datetime(2026, 6, 2, tzinfo=dt.timezone.utc)
+    entry = pool + dt.timedelta(seconds=300)
+    exit7 = pool + dt.timedelta(days=7)
+    # A 的严格规则下，退出＝观察终点会被判未成熟（GPT 的反例）
+    assert CF.label_status(entry, exit7 - entry, window_end=exit7) == "immature"
+    # 正常 7 天退出：远早于止日、数据覆盖到边界
+    assert CF.boundary_exit_status(exit7, covered_until=exit7) == "mature"
+    # 恰到全局止日：未成熟；早 1 秒：成熟
+    assert CF.boundary_exit_status(CF.CUTOFF, covered_until=CF.CUTOFF) == "immature"
+    b = CF.CUTOFF - dt.timedelta(seconds=1)
+    assert CF.boundary_exit_status(b, covered_until=b) == "mature"
+    # 桶缺片或覆盖不到边界：单列缺片
+    assert CF.boundary_exit_status(exit7, covered_until=exit7, gap=True) == "gap"
+    early = exit7 - dt.timedelta(hours=1)
+    assert CF.boundary_exit_status(exit7, covered_until=early) == "gap"
+
+
 def test_lagged_week():
     assert CF.lagged_week(D(2026, 6, 1)) == D(2026, 5, 25)
     assert CF.lagged_week(D(2026, 6, 15)) is None  # 上一周 06-08 是检验周：缺失，不顶替
