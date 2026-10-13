@@ -1,0 +1,279 @@
+{
+ "_说明": "DQ-42 来源配置。decision＝录 的才轮询；理由见《来源决定表.md》。不放密钥。",
+ "host_min_gap_s": {
+  "api.dexscreener.com": 1.5,
+  "api.jup.ag": 3.0,
+  "api.github.com": 2.0
+ },
+ "sources": [
+  {
+   "key": "dexs_boosts_latest",
+   "url": "https://api.dexscreener.com/token-boosts/latest/v1",
+   "every_s": 60,
+   "host": "api.dexscreener.com",
+   "id_fields": [
+    "chainId",
+    "tokenAddress"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "dexs_boosts_top",
+   "url": "https://api.dexscreener.com/token-boosts/top/v1",
+   "every_s": 60,
+   "host": "api.dexscreener.com",
+   "id_fields": [
+    "chainId",
+    "tokenAddress"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "dexs_profiles_latest",
+   "url": "https://api.dexscreener.com/token-profiles/latest/v1",
+   "every_s": 60,
+   "host": "api.dexscreener.com",
+   "id_fields": [
+    "chainId",
+    "tokenAddress"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "dexs_profiles_updates",
+   "url": "https://api.dexscreener.com/token-profiles/recent-updates/v1",
+   "every_s": 60,
+   "host": "api.dexscreener.com",
+   "id_fields": [
+    "chainId",
+    "tokenAddress"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "dexs_cto_latest",
+   "url": "https://api.dexscreener.com/community-takeovers/latest/v1",
+   "every_s": 60,
+   "host": "api.dexscreener.com",
+   "id_fields": [
+    "chainId",
+    "tokenAddress"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "dexs_ads_latest",
+   "url": "https://api.dexscreener.com/ads/latest/v1",
+   "every_s": 60,
+   "host": "api.dexscreener.com",
+   "id_fields": [
+    "chainId",
+    "tokenAddress",
+    "date",
+    "type"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "dexs_metas_trending",
+   "url": "https://api.dexscreener.com/metas/trending/v1",
+   "every_s": 300,
+   "host": "api.dexscreener.com",
+   "id_fields": [
+    "slug"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptrending_5m",
+   "url": "https://api.jup.ag/tokens/v2/toptrending/5m?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptrending_1h",
+   "url": "https://api.jup.ag/tokens/v2/toptrending/1h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptrending_6h",
+   "url": "https://api.jup.ag/tokens/v2/toptrending/6h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptrending_24h",
+   "url": "https://api.jup.ag/tokens/v2/toptrending/24h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toporganicscore_5m",
+   "url": "https://api.jup.ag/tokens/v2/toporganicscore/5m?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toporganicscore_1h",
+   "url": "https://api.jup.ag/tokens/v2/toporganicscore/1h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toporganicscore_6h",
+   "url": "https://api.jup.ag/tokens/v2/toporganicscore/6h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toporganicscore_24h",
+   "url": "https://api.jup.ag/tokens/v2/toporganicscore/24h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptraded_5m",
+   "url": "https://api.jup.ag/tokens/v2/toptraded/5m?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptraded_1h",
+   "url": "https://api.jup.ag/tokens/v2/toptraded/1h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptraded_6h",
+   "url": "https://api.jup.ag/tokens/v2/toptraded/6h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_toptraded_24h",
+   "url": "https://api.jup.ag/tokens/v2/toptraded/24h?limit=100",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "jup_recent",
+   "url": "https://api.jup.ag/tokens/v2/recent",
+   "every_s": 300,
+   "host": "api.jup.ag",
+   "id_fields": [
+    "id"
+   ],
+   "decision": "录"
+  },
+  {
+   "key": "gh_weibo_commits",
+   "url": "https://api.github.com/repos/justjavac/weibo-trending-hot-search/commits?per_page=20",
+   "every_s": 300,
+   "host": "api.github.com",
+   "id_fields": [
+    "sha"
+   ],
+   "conditional": true,
+   "decision": "录"
+  },
+  {
+   "key": "gh_weibo_files",
+   "url": "-",
+   "every_s": 300,
+   "host": "api.github.com",
+   "decision": "录",
+   "note": "新提交的详情与 raw/*.json，由 gh_weibo_commits 触发"
+  },
+  {
+   "key": "gecko_trending",
+   "url": "https://api.geckoterminal.com/api/v2/networks/{solana,bsc,base}/trending_pools?duration={5m,1h,6h,24h}",
+   "decision": "待核",
+   "why": "免密钥版文档写明不适合定时轮询；免费 Demo key 要注册，限额未核"
+  },
+  {
+   "key": "pumpfun_frontend",
+   "url": "frontend-api-v3.pump.fun",
+   "decision": "不录",
+   "why": "服务条款 §21(h) 禁止未经许可的自动化访问；无官方公开接口"
+  },
+  {
+   "key": "terminals",
+   "url": "GMGN、Axiom、Photon、BullX",
+   "decision": "不录",
+   "why": "GMGN 读接口也要上传公钥、配签名私钥，违反研究环境禁令；其余无官方公开接口"
+  },
+  {
+   "key": "telegram",
+   "url": "t.me/s/<channel>",
+   "decision": "不录",
+   "why": "Telegram 条款（2026-02 新增）禁止抓取；官方接口要登录账号"
+  },
+  {
+   "key": "x",
+   "url": "X API",
+   "decision": "不录",
+   "why": "用户 10-13 默认不录 X（按量付费，约每月 150 美元）"
+  },
+  {
+   "key": "douyin_official",
+   "url": "抖音开放平台热点接口",
+   "decision": "待核",
+   "why": "需申请权限，约两小时刷新；用户 10-13 默认只拉 GitHub 微博存档"
+  },
+  {
+   "key": "cn_aggregators",
+   "url": "天行、UApiPro 等",
+   "decision": "不录",
+   "why": "付费、上游授权未核；用户 10-13 默认不加"
+  }
+ ]
+}

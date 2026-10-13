@@ -28,3 +28,8 @@ RT/1_实验/pump曲线_钱包盈亏对账_DQ-16/raw/helius/
 RT/1_实验/pump曲线_钱包盈亏对账_DQ-16/results/truth_*.csv
 # 论文全文有版权，只留本地（10-04）
 RT/5_参考/检索记录/SOLMEMES.pdf
+# DQ-42 前向录制（10-13）：原始数据、运行状态、日志与用户观察记录不进公开仓库；只提交 manifests/ 里的清单与哈希
+RT/1_实验/跨场所_前向录制_DQ-42/raw/
+RT/1_实验/跨场所_前向录制_DQ-42/state/
+RT/1_实验/跨场所_前向录制_DQ-42/logs/
+RT/1_实验/跨场所_前向录制_DQ-42/observations/
