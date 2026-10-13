@@ -28,3 +28,9 @@
 ## 门 1 之后（10-13 v2）
 
 GPT 门 1“修改后通过”，原文与逐条处理见 [门 1 交接与处理](../../3_审计/2026-10-13_GPT门1交接_WM2与B/处理记录.md)。现行草稿是 [卡片_冻结草稿_v2.md](卡片_冻结草稿_v2.md)；v1 移到 `过程/`。共同合同与 A、C、D 按门 1 修改，44 项测试。**C、D 移出本卡**（执行决定，可推翻），代码保留。§9.1 与 A 的检验方式待用户决定（处理记录 S1、S3）。
+
+## 总控第二轮之后（10-13）
+
+§9.1 改为 v2（只有正的证据才保持主线）；A 改为事前选集、事后整体检验（`a_riskset.select_set`、`set_test`）；R2 三对合并（`t3_persist.py`）；判定函数 `keep_main_line`。测试 `test_s3_r2.py`（9 项，含误报率与功效校准），DQ-43 共 53 项。
+
+Dune：`run_dune.py`、`dune_get.py`、`dune_get_stream.py` 复制自 DQ-37；费用记 `runs/dune_ledger.csv`；取回的原始数据在 `raw/`，不进仓库。`sql/PROBE01_dune_connectivity.sql`：10-13 连通探针（2.81 credits）。

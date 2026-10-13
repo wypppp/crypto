@@ -199,3 +199,90 @@ def v4_circular_rate(
     if not sel:
         return None
     return sum(1 for b in sel if follows(b)) / len(sel)
+
+
+# ---------- S3：事前选集、事后整体检验（10-13，总控第二轮采纳） ----------
+#
+# 选集规则（在 W 上，只用 W+1 周一 00:00 UTC 之前可得的信息；调用方把 W 的买入按
+# obs_end＝min(该币观察终点, W+1 周一) 标成熟，事件只取 W+1 周一之前发生的）：
+#   1. 合格：在 W 上至少有 MIN_ROWS 行（合并后的“实体 × 币”成熟行）；
+#   2. 得分：命中 − 同层期望（score＝obs − exp）；
+#   3. 候选：得分 > 0；
+#   4. 入选：候选按得分从高到低（并列按 sha256(实体) 定序），取 ⌈合格数 × TOP_FRAC⌉ 个。
+# 检验（在 W+1 上，只用 W+1 创建的币）：统计量 T＝Σ 入选实体 (命中 − 同层期望)；
+#   零分布：每个窗口对在自己的 W+1 分层内各自置换命中标签，再把各对的 T 相加（三对合并成一次检验）；
+#   单侧 p＝(1＋#{置换 T ≥ 观测 T})/(1＋置换次数)；p ≤ α 为“显著为正”。
+#   可计算：三对合计至少 MIN_ACTIVE 个入选实体在 W+1 有成熟行；否则“不可计算”。
+
+MIN_ROWS = 5
+TOP_FRAC = 0.10
+MIN_ACTIVE = 20
+
+
+def _ekey(e: str) -> str:
+    import hashlib
+
+    return hashlib.sha256(e.encode()).hexdigest()
+
+
+def select_set(rows_w) -> list:
+    """rows_w：W 上 collapse() 之后的行。返回入选实体列表（按得分排序）。"""
+    n_rows: dict = defaultdict(int)
+    for r in rows_w:
+        n_rows[r["entity"]] += 1
+    eligible = [e for e, n in n_rows.items() if n >= MIN_ROWS]
+    if not eligible:
+        return []
+    obs, exp = entity_hits(rows_w), expected_hits(rows_w)
+    cand = [e for e in eligible if obs[e] - exp[e] > 0]
+    cand.sort(key=lambda e: (-(obs[e] - exp[e]), _ekey(e)))
+    k = -(-len(eligible) * TOP_FRAC // 1)  # 向上取整
+    return cand[: int(k)]
+
+
+def set_statistic(rows, members: set) -> float:
+    exp = expected_hits(rows)
+    obs = entity_hits(rows)
+    return sum(obs.get(e, 0) - exp.get(e, 0.0) for e in members)
+
+
+def set_test(pairs, n_perm: int = 9999, alpha: float = 0.05, seed: int = 0) -> dict:
+    """pairs：[(W+1 上 collapse() 之后的行, W 上选出的实体集), …]。返回 T、p、活跃入选数、结论。
+    层内置换下，落在入选实体行上的命中数服从超几何分布：从该层 n 行（其中 h 行命中）里随机取入选实体的 m 行。
+    所以每次置换只需在每个含入选行的层里抽一次，等价于逐行打乱，但快得多。"""
+    rng = random.Random(seed)
+    active = sum(len({r["entity"] for r in rows} & set(m)) for rows, m in pairs)
+    if active < MIN_ACTIVE:
+        return {"T": None, "p": None, "active": active, "result": "not_computable"}
+    t_obs = sum(set_statistic(rows, set(m)) for rows, m in pairs)
+    groups = []  # (n, h, m)：层的行数、命中数、入选实体行数
+    e_total = 0.0
+    for rows, members in pairs:
+        members = set(members)
+        e_total += sum(v for e, v in expected_hits(rows).items() if e in members)
+        agg: dict = defaultdict(lambda: [0, 0, 0])
+        for r in rows:
+            g = agg[r["stratum"]]
+            g[0] += 1
+            g[1] += r["hit"]
+            g[2] += r["entity"] in members
+        groups += [tuple(g) for g in agg.values() if g[2] > 0]
+    ge = 0
+    for _ in range(n_perm):
+        hits = 0
+        for n, h, m in groups:
+            if h == 0:
+                continue
+            if h == n:
+                hits += m
+                continue
+            hits += sum(1 for i in rng.sample(range(n), m) if i < h)
+        if hits - e_total >= t_obs - 1e-9:
+            ge += 1
+    p = (1 + ge) / (1 + n_perm)
+    return {
+        "T": t_obs,
+        "p": p,
+        "active": active,
+        "result": "positive" if p <= alpha else "not_positive",
+    }
