@@ -81,6 +81,8 @@ LAYERS = (
     "EDGE",
     "CYCC",
     "CYCA",
+    "CYCCP",
+    "CYCAP",
     "COSTF",
     "VQ",
 )
@@ -121,7 +123,7 @@ def check_dates(c0, c1, e0, e1) -> None:
 
 # ---------- 母体（各层共用） ----------
 
-POP = """/* DQ-43 WM2 取数（冻结卡 v3，b8e1b2f4）：层 {layer}{smoke_tag}；曲线创建于 {c0}～{c1} 的 SOL 计价 pump 新币；事件 {e0}～{e1}；
+POP = """/* DQ-43 WM2 取数（冻结卡 v4、取数附录 v2）：层 {layer}{smoke_tag}；曲线创建于 {c0}～{c1} 的 SOL 计价 pump 新币；事件 {e0}～{e1}；
    只存不分析；由 build_wm2_sql.py 生成。保护过滤在导出之前：开发窗口周、止日 2026-10-05、代号缺失或为空、留出同名、非 SOL。 */
 WITH
 {names},
@@ -258,11 +260,13 @@ mig AS (
     GROUP BY 1
 ),
 out AS (
-    SELECT 'solana' AS chain, k.mint, to_unixtime(k.created_at) AS created_t, k.n_create, k.name, k.symbol, k.uri, k.creator,
-           k.create_user, k.create_signer, k.create_tx, k.c_slot, k.c_txi, k.c_oix, k.c_iix, k.bonding_curve, k.token_program,
-           k.is_mayhem_mode, k.is_cashback_enabled, k.quote_mint,
+    /* 10-14 精简（取数附录 v2 §3）：不出名称、URI、创建交易号、曲线账户、代币程序、计价币（都已在入口过滤或用不到）；
+       创建交易由 (c_slot, c_txi) 唯一确定 */
+    SELECT 'solana' AS chain, k.mint, to_unixtime(k.created_at) AS created_t, k.n_create, k.symbol, k.creator,
+           k.create_user, k.c_slot, k.c_txi, k.c_oix, k.c_iix,
+           k.is_mayhem_mode, k.is_cashback_enabled,
            CAST(k.vsr0 AS varchar) AS vsr0, CAST(k.vtr0 AS varchar) AS vtr0, CAST(k.rtr0 AS varchar) AS rtr0,
-           CAST(k.vqr0 AS varchar) AS vqr0, CAST(k.supply AS varchar) AS supply,
+           CAST(k.supply AS varchar) AS supply,
            cp.completed_t, cp.n_complete, cp.comp_slot, cp.comp_txi, cp.comp_oix, cp.comp_iix, cp.comp_tx, cp.comp_user,
            mg.migrated_t, mg.pool, mg.n_mig,
            k.created_at + INTERVAL '{hz}' DAY <= TIMESTAMP '{cutoff} 00:00:00' AS window_complete,
@@ -680,8 +684,8 @@ FROM out
 """
 
 COLS = {
-    "COIN": "chain mint created_t n_create name symbol uri creator create_user create_signer create_tx c_slot c_txi c_oix c_iix "
-    "bonding_curve token_program is_mayhem_mode is_cashback_enabled quote_mint vsr0 vtr0 rtr0 vqr0 supply completed_t n_complete "
+    "COIN": "chain mint created_t n_create symbol creator create_user c_slot c_txi c_oix c_iix "
+    "is_mayhem_mode is_cashback_enabled vsr0 vtr0 rtr0 supply completed_t n_complete "
     "comp_slot comp_txi comp_oix comp_iix comp_tx comp_user migrated_t pool n_mig window_complete n_key",
     "CTRADE": "chain mint created_t ts slot txi oix iix n_key tx_id signer usr is_buy sol tok vsr vtr rsr rtr f_pr f_cr f_cb f_bb "
     "fee_bps cfee_bps cb_bps bb_bps fee_recipient ev_creator mayhem ix_name track_volume q_mint q_amt vqr rqr hr_bps hr q_src xchk_ok",
@@ -693,23 +697,27 @@ COLS = {
     "res_v1 res_v2 res_v3",
     "FAIL": "chain tx_id ts slot txi signer fee priority_fee error n_mints mints n_key",
     "EDGE": "chain kind mint from_owner to_owner n amt first_t last_t first_tx fanout win_from win_cut n_key",
-    "CYCC": AG.CYC_COLS,
-    "CYCA": AG.CYC_COLS,
+    "CYCC": AG.CYC_Y_COLS,
+    "CYCA": AG.CYC_Y_COLS,
+    "CYCCP": AG.CYC_P_COLS,
+    "CYCAP": AG.CYC_P_COLS,
     "COSTF": AG.COSTF_COLS,
     "VQ": AG.VQ_COLS,
 }
 # 冒烟时要报缺失数的字段（承重字段）
 NULL_CHECK = {
-    "COIN": "creator symbol quote_mint bonding_curve token_program supply",
+    "COIN": "creator symbol supply vtr0 rtr0",
     "CTRADE": "sol tok vsr vtr rsr rtr f_pr f_cr f_cb f_bb fee_recipient ev_creator signer vqr hr",
     "MAY": "vtr_new vsr_new",
     "ATRADE": "q0 b0 q_user f_lp f_pr f_cr f_cb f_bb vq",
     "TX": "fee priority_fee d_trader",
     "FAIL": "fee priority_fee",
     "EDGE": "from_owner",
-    "CYCC": "m12",
-    "CYCA": "m12",
-    "COSTF": "signer cost",
+    "CYCC": "m12 u16 in_cash out_cash",
+    "CYCA": "m12 u16 in_cash out_cash",
+    "CYCCP": "z_r1 z_r2",
+    "CYCAP": "z_r1 z_r2",
+    "COSTF": "s16 cost",
     "VQ": "pool_tx",
 }
 SMOKE_EXTRA = {
@@ -725,13 +733,14 @@ SMOKE_EXTRA = {
     "FAIL": ", count(DISTINCT signer) AS n_signers, sum(n_mints) AS n_mint_links",
     "EDGE": ", count_if(kind = 'S') AS n_sol_edges, count_if(kind = 'F') AS n_funders, count_if(kind = 'F' AND fanout > 200) AS n_service, "
     "count_if(kind = 'C') AS n_creator_edges, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
-    "CYCC": ", count_if(kind = 'Y') AS n_y, count_if(kind = 'P') AS n_p, "
-    "count(DISTINCT usr) AS n_wallets, count_if(kind = 'Y' AND n_buy > 0 AND fb_slot IS NULL) AS n_fb_missing, "
-    "count_if(kind = 'Y' AND fb_slot IS NOT NULL AND fb_k IS NULL) AS n_k_noprior, count_if(fb_k) AS n_k, "
-    "count_if(fb_comp) AS n_fb_in_comp_tx, count_if(sb) AS n_sell_before_buy, count(DISTINCT m12) AS n_m12, "
-    "count_if(kind = 'Y' AND CAST(tok_sell AS DECIMAL(38,0)) > CAST(tok_buy AS DECIMAL(38,0))) AS n_sell_gt_buy, "
-    "count_if(kind = 'Y' AND (in_cash IS NULL OR out_cash IS NULL)) AS n_cash_null, "
-    "count_if(kind = 'P' AND z_cut = 'S') AS n_p_snap, count_if(kind = 'P' AND z_cut = 'E') AS n_p_end",
+    "CYCC": ", count(DISTINCT u16) AS n_wallets, count(DISTINCT m12) AS n_m12, "
+    "count_if(n_buy > 0 AND fb_slot IS NULL) AS n_fb_missing, "
+    "count_if(fb_slot IS NOT NULL AND fb_k IS NULL) AS n_k_noprior, count_if(fb_k = 1) AS n_k, "
+    "count_if(fb_comp = 1) AS n_fb_in_comp_tx, count_if(sb = 1) AS n_sell_before_buy, "
+    "count_if(CAST(tok_sell AS DECIMAL(38,0)) > CAST(tok_buy AS DECIMAL(38,0))) AS n_sell_gt_buy, "
+    "count_if(in_pre IS NULL) AS n_pre_null",
+    "CYCCP": ", count(DISTINCT m12) AS n_m12, count_if(z_cut = 'S') AS n_p_snap, count_if(z_cut = 'E') AS n_p_end, "
+    "count_if(z_bps1 IS NULL) AS n_bps1_null",
     "COSTF": ", count_if(kind = 'K') AS n_k, count_if(kind = 'F') AS n_f, count(DISTINCT signer) AS n_signers, "
     "sum(n_tx) AS n_leg_tx, sum(n_tx_clean) AS n_leg_tx_clean, sum(n_tx_unclean) AS n_leg_tx_unclean, "
     "count_if(CAST(cost_net AS DECIMAL(38,0)) + CAST(cost_tip AS DECIMAL(38,0)) > CAST(cost AS DECIMAL(38,0)) + 2) "
@@ -741,6 +750,7 @@ SMOKE_EXTRA = {
     "count_if(layout0) AS n_layout0",
 }
 SMOKE_EXTRA["CYCA"] = SMOKE_EXTRA["CYCC"]
+SMOKE_EXTRA["CYCAP"] = SMOKE_EXTRA["CYCCP"]
 
 
 def edge_window(c0, c1, e1, edge_from=None, edge_cut=None):
@@ -837,22 +847,25 @@ def build(
         samp=sample_where(p),
     )
     sql = POP.format(**f)
-    if layer in ("CYCC", "CYCA"):
+    if layer in ("CYCC", "CYCA", "CYCCP", "CYCAP"):
         snap = snap or (c1 + dt.timedelta(days=1))
         if snap <= c1:
             raise SystemExit("快照截点须晚于创建止日")
-        stage = "curve" if layer == "CYCC" else "amm"
+        stage = "curve" if layer.startswith("CYCC") else "amm"
+        if layer.endswith("P"):
+            out = AG.CYC_OUT_P
+        else:
+            out = AG.CYC_OUT_Y.format(
+                pre_cols=AG.CYC_PRE if with_pre else AG.CYC_NO_PRE
+            )
         g = dict(
             snap="%s 00:00:00" % snap.isoformat(),
-            stage=stage,
-            st1=stage[0],
             fb_state=AG.FB_STATE[stage],
-            pre_cols=AG.CYC_PRE if with_pre else AG.CYC_NO_PRE,
             yslice=slice_where("a.usr", part),
-            zpart=AG.CYC_Z_PART.format(st1=stage[0]) if part[0] == 0 else "",
+            out=out,
             **f,
         )
-        if layer == "CYCC":
+        if stage == "curve":
             sql += AG.CYC_EV_CURVE.format(**g)
         else:
             sql += POOLS.format(**f) + AG.CYC_EV_AMM.format(**g)
@@ -967,7 +980,7 @@ def build(
     extra = SMOKE_EXTRA.get(layer, "")
     if layer == "COIN":
         extra += COIN_SMOKE_EXTRA.format(**f)
-    if layer in ("CYCC", "CYCA", "COSTF", "VQ", "COIN", "EDGE"):
+    if layer in ("CYCC", "CYCA", "CYCCP", "CYCAP", "COSTF", "VQ", "COIN", "EDGE"):
         # 双跑比对（冻结前清单第 9 条；取数附录 v2 §7）：每行规范化成文本求哈希，行数、哈希和、哈希异或三项都一致才算逐行一致
         extra += AG.CHECKSUM.format(
             ck_cols=", ".join("COALESCE(CAST(%s AS varchar), '~')" % c for c in cols)

@@ -258,21 +258,25 @@ def test_cyca_cash_and_reserves_hand():
 
 
 def test_cyc_output_rows_and_keys():
-    """输出：每个“钱包 × 币”一行 Y，每币 S、E 两行 P；键不重复。"""
+    """输出：Y 每个“钱包 × 币”一行，P（单独的层）每币 S、E 两行；键不重复；币号、钱包号是前缀；W+1 不出截点前合计。"""
     con = db(curve_rows())
-    sql = B.build("CYCC", W10, W16, W10, E15)
-    out = named(con, sql, "out")
-    assert list(out[0]) == B.AG.CYC_COLS.split()
-    kinds = sorted((r["kind"], r["usr"] or "", r["z_cut"] or "") for r in out)
-    assert kinds == [
-        ("P", "", "E"),
-        ("P", "", "S"),
-        ("Y", A, ""),
-        ("Y", Bw, ""),
-        ("Y", C, ""),
-    ]
-    assert all(r["n_key"] == 1 for r in out)
-    assert {r["m12"] for r in out} == {"m1"}  # 币号＝mint 前 12 位
+    out = named(con, B.build("CYCC", W10, W16, W10, E15), "out")
+    assert list(out[0]) == B.AG.CYC_Y_COLS.split()
+    assert sorted(r["u16"] for r in out) == sorted(x[:16] for x in (A, Bw, C))
+    assert all(r["n_key"] == 1 and r["m12"] == "m1" for r in out)
+    a = [r for r in out if r["u16"] == A[:16]][0]
+    assert (a["sb"], a["fb_k"], a["fb_t"]) == (
+        1,
+        None,
+        int(s_(1).replace(tzinfo=dt.timezone.utc).timestamp()),
+    )
+    p = named(con, B.build("CYCCP", W10, W16, W10, E15), "out")
+    assert list(p[0]) == B.AG.CYC_P_COLS.split()
+    assert sorted(r["z_cut"] for r in p) == ["E", "S"] and all(
+        r["n_key"] == 1 for r in p
+    )
+    nopre = named(con, B.build("CYCC", W10, W16, W10, E15, with_pre=False), "out")
+    assert all(r["in_pre"] is None for r in nopre)
 
 
 # ---------- COSTF：交易表的构造（DuckDB 嵌套类型） ----------
@@ -435,9 +439,9 @@ def test_costf_allocation_hand():
     sql = B.build("COSTF", W10, W16, D(2026, 8, 12), D(2026, 8, 12), p=0.5)
     out = named(con, sql, "out", duck)
     assert list(out[0]) == B.AG.COSTF_COLS.split()
-    got = {(r["kind"], r["signer"], r["m12"], r["stage"]): r for r in out}
-    assert set(got) == {("K", A, M_IN[:12], "c"), ("F", "F", M_IN[:12], "c")}
-    k = got[("K", A, M_IN[:12], "c")]
+    got = {(r["kind"], r["s16"], r["m12"], r["stage"]): r for r in out}
+    assert set(got) == {("K", A[:16], M_IN[:12], "c"), ("F", "F", M_IN[:12], "c")}
+    k = got[("K", A[:16], M_IN[:12], "c")]
     assert k["n_tx"] == 2
     assert dec(k["cost"]) == 16000 + 3500
     assert dec(k["cost_net"]) == 5000 + 2500
