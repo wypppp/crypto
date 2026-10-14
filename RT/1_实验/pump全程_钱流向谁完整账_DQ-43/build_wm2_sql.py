@@ -547,11 +547,15 @@ out AS (
 # ---------- 实体边与代币转移 ----------
 
 EDGE = """,
+kc AS (
+    /* 截点之前创建的母体币（10-14，GPT 窄范围复核 04）：未来的币与未来的创建者不进种子、C 边与 T 边 */
+    SELECT * FROM coins WHERE created_at < TIMESTAMP '{xcut}'
+),
 seed AS (
-    /* 取边种子：截点之前、逐币窗口内的曲线用户与 PumpSwap 用户（10-14，GPT 03），加母体币的创建者 */
+    /* 取边种子：截点之前、逐币窗口内的曲线用户与 PumpSwap 用户（10-14，GPT 03），加截点之前创建的币的创建者 */
     SELECT DISTINCT CAST(t."user" AS varchar) AS usr
     FROM pumpdotfun_solana.pump_evt_tradeevent t
-    JOIN coins k ON k.mint = t.mint
+    JOIN kc k ON k.mint = t.mint
     WHERE t.evt_block_date BETWEEN DATE '{e0}' AND DATE '{s1}'
       AND t.evt_block_time >= k.created_at AND t.evt_block_time < k.created_at + INTERVAL '{hz}' DAY
       AND t.evt_block_time < TIMESTAMP '{xcut}' AND t.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
@@ -564,9 +568,10 @@ seed AS (
            WHERE evt_block_date BETWEEN DATE '{e0}' AND DATE '{s1}') a
     JOIN pools p ON p.pool = a.pool
     WHERE a.evt_block_time >= p.created_at AND a.evt_block_time < p.coin_created_at + INTERVAL '{hz}' DAY
+      AND p.coin_created_at < TIMESTAMP '{xcut}'
       AND a.evt_block_time < TIMESTAMP '{xcut}' AND a.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
     UNION
-    SELECT DISTINCT creator FROM coins
+    SELECT DISTINCT creator FROM kc
 ),
 nat AS (
     /* 顶层 System Program 的 SOL 转账 ≥ {edge_min}（DQ-26 E1），建边窗口 [{x0}, 截点) 内，止日之前 */
@@ -600,7 +605,7 @@ c_edges AS (
     SELECT k.mint, x.from_owner, x.to_owner, count(*) AS n, sum(x.amount_display) AS amt,
            min(x.block_time) AS t0, max(x.block_time) AS t1, min_by(x.tx_id, x.block_time) AS tx0
     FROM tokens_solana.transfers x
-    JOIN coins k ON (x.from_owner = k.creator OR x.to_owner = k.creator)
+    JOIN kc k ON (x.from_owner = k.creator OR x.to_owner = k.creator)
     WHERE x.block_date BETWEEN DATE '{cd0}' AND DATE '{c1}'
       AND x.block_time >= k.created_at - INTERVAL '7' DAY AND x.block_time < k.created_at
       AND x.token_version = 'native' AND x.action = 'transfer'
@@ -612,7 +617,7 @@ t_edges AS (
     SELECT x.token_mint_address AS mint, x.from_owner, x.to_owner, count(*) AS n, sum(x.amount_display) AS amt,
            min(x.block_time) AS t0, max(x.block_time) AS t1, min_by(x.tx_id, x.block_time) AS tx0
     FROM tokens_solana.transfers x
-    JOIN coins k ON k.mint = x.token_mint_address
+    JOIN kc k ON k.mint = x.token_mint_address
     WHERE x.block_date BETWEEN DATE '{e0}' AND DATE '{s1}'
       AND x.block_time >= k.created_at AND x.block_time < k.created_at + INTERVAL '{hz}' DAY
       AND x.block_time < TIMESTAMP '{xcut}' AND x.block_time < TIMESTAMP '{cutoff} 00:00:00'
@@ -684,6 +689,19 @@ SMOKE_EXTRA = {
     "EDGE": ", count_if(kind = 'S') AS n_sol_edges, count_if(kind = 'F') AS n_funders, count_if(kind = 'F' AND fanout > 200) AS n_service, "
     "count_if(kind = 'C') AS n_creator_edges, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
 }
+
+
+def edge_window(c0, c1, e1, edge_from=None, edge_cut=None):
+    """建边窗口 [x0, 截点)：x0 默认＝创建起日前 7 天；截点默认＝事件止日次日 00:00（全窗版本，只作事后描述）。
+    T3、S3 用的事前图把截点设为 W+1 周一 00:00 UTC（取数附录 §4）。
+    创建范围不得跨过截点（10-14，GPT 窄范围复核 04）：W+1 创建的币，创建者关联按各币自己的创建时刻另调一次。"""
+    x0 = edge_from or (c0 - dt.timedelta(days=7))
+    xcut = edge_cut or (e1 + dt.timedelta(days=1))
+    if xcut > CUTOFF or x0 >= xcut:
+        raise SystemExit("建边窗口不对：起点须早于截点，截点不晚于止日")
+    if c1 >= xcut:
+        raise SystemExit("创建范围跨过截点：创建止日 %s 须早于截点 %s" % (c1, xcut))
+    return x0, xcut
 
 
 def build(layer, c0, c1, e0, e1, smoke=False, edge_from=None, edge_cut=None):
@@ -778,12 +796,7 @@ def build(layer, c0, c1, e0, e1, smoke=False, edge_from=None, edge_cut=None):
     elif layer == "FAIL":
         sql += FAIL.format(**f)
     elif layer == "EDGE":
-        # 建边窗口 [x0, 截点)：x0 默认＝创建起日前 7 天；截点默认＝事件止日次日 00:00（全窗版本，只作事后描述）。
-        # T3、S3 用的事前图把截点设为 W+1 周一 00:00 UTC（取数附录 §4）。
-        x0 = edge_from or (c0 - dt.timedelta(days=7))
-        xcut = edge_cut or (e1 + dt.timedelta(days=1))
-        if xcut > CUTOFF or x0 >= xcut:
-            raise SystemExit("建边窗口不对：起点须早于截点，截点不晚于止日")
+        x0, xcut = edge_window(c0, c1, e1, edge_from, edge_cut)
         s1 = min(e1, xcut - dt.timedelta(days=1))
         sql += POOLS.format(**f) + EDGE.format(
             x0="%s 00:00:00" % x0.isoformat(),

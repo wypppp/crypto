@@ -89,8 +89,10 @@ def test_event_tables_joined_to_filtered_coins():
     sqls = all_sql(False)
     for layer in ("CTRADE", "TX", "EDGE"):
         s = sqls[layer]
+        # EDGE 用截点之前创建的币（GPT 窄范围复核 04）
+        k = "kc" if layer == "EDGE" else "coins"
         assert s.count("pump_evt_tradeevent") == s.count(
-            "pump_evt_tradeevent t\n    JOIN coins k ON k.mint = t.mint"
+            "pump_evt_tradeevent t\n    JOIN %s k ON k.mint = t.mint" % k
         ), layer
     for layer in ("ATRADE", "TX"):
         s = sqls[layer]

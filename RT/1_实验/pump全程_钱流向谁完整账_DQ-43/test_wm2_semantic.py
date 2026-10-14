@@ -4,7 +4,8 @@
 - 01 毕业、迁移、建池事件逐币限在创建后 30 天内（同批较早创建的币不得纳入第 34 天的事件）；
 - 02 原始字节入口只进允许事件键（同笔混合交易里的其他事件、界外事件都不进）；
 - 03 只在 PumpSwap 交易的钱包也进取边种子；
-- 04 建边先按窗口过滤再汇总：创建前 7 天的关联体按逐币窗口判定（GPT 的反例），截点之后的转账不进事前图。
+- 04 建边先按窗口过滤再汇总：创建前 7 天的关联体按逐币窗口判定（GPT 的反例），截点之后的转账不进事前图；
+  截点之后创建的币与它的创建者不进事前图（GPT 窄范围复核 04 的反例），F 扇出与 T 代币边也按截点截断。
 限制：原始字节的判别符条件（bytearray_substring）在 DuckDB 里换成 TRUE，这里只核“按允许键筛选”的连接；
 留出名单换成一个构造名。不连 Dune、不读数据。
 """
@@ -321,3 +322,88 @@ def test_04_snapshot_cut_excludes_later_transfers():
 def test_edge_window_guard():
     with pytest.raises(SystemExit):
         B.build("EDGE", W10, W16, W10, D(2026, 8, 20), edge_cut=D(2026, 10, 6))
+
+
+W23, CUT17 = (
+    D(2026, 8, 23),
+    D(2026, 8, 17),
+)  # W+1 周日；事前图截点＝W+1 周一 08-17 00:00
+FUT = "creatorF"
+
+
+def cross_rows():
+    """GPT 窄范围复核 04 的反例：m1 08-11 创建（创建者 A）；m2 08-20 创建（未来创建者 F）。
+    F 与 Y 在 08-19 转账（m2 创建前 7 天内、截点之后）；F 与 X 在 08-12 转账（截点之前）。"""
+    return {
+        "pumpdotfun_solana.pump_evt_createevent": [
+            coin("m1", T(2026, 8, 11, 0)),
+            coin("m2", T(2026, 8, 20, 0), creator=FUT),
+        ],
+        "tokens_solana.transfers": [xfer(FUT, Y, 19), xfer(FUT, X, 12)],
+    }
+
+
+def test_04_creation_range_crossing_cut_is_rejected():
+    """GPT 的调用：创建 08-10～08-23、事件同上、截点 08-17。跨过截点，拒绝。"""
+    with pytest.raises(SystemExit):
+        B.build("EDGE", W10, W23, W10, W23, edge_cut=CUT17)
+    B.build("EDGE", W10, W16, W10, W23, edge_cut=CUT17)  # 创建止日 08-16 早于截点，接受
+
+
+def test_04_future_coin_and_creator_not_in_pre_graph(monkeypatch):
+    """第二道防线：即使绕过参数守卫，08-20 创建的币与它的创建者也不进事前图的种子、C 边、S 边。"""
+    monkeypatch.setattr(
+        B,
+        "edge_window",
+        lambda *a, **k: (D(2026, 8, 3), CUT17),
+        raising=False,
+    )
+    con = db(cross_rows())
+    sql = B.build("EDGE", W10, W23, W10, W23, edge_from=D(2026, 8, 3), edge_cut=CUT17)
+    assert FUT not in {r[0] for r in run(con, sql, "seed")}
+    assert run(con, sql, "c_edges") == []  # 08-19 的转账不进
+    assert run(con, sql, "s_edges") == []  # 08-12 的转账不因未来创建者进 S 边
+
+
+def test_04_w1_creator_affiliation_computed_separately():
+    """W+1 创建的币另调一次（创建范围 W+1、截点为全窗默认），按它自己的创建时刻取 C 边。"""
+    con = db(cross_rows())
+    sql = B.build("EDGE", CUT17, W23, CUT17, D(2026, 8, 30))
+    c = run(con, sql, "c_edges")
+    assert [(r[0], r[1], r[2]) for r in c] == [("m2", FUT, Y)]
+
+
+def test_04_fanout_uses_cut():
+    """F 扇出只数截点之前的接收方：S0 在 08-12 转给种子 A 与 P，08-18 转给 Q，扇出＝2；
+    S1 只在截点之后转给种子，不进 F。"""
+    rows = {
+        "pumpdotfun_solana.pump_evt_createevent": [coin("m1", T(2026, 8, 11, 0))],
+        "tokens_solana.transfers": [
+            xfer("S0", CREATOR, 12),
+            xfer("S0", "P", 12),
+            xfer("S0", "Q", 18),
+            xfer("S1", CREATOR, 18),
+        ],
+    }
+    con = db(rows)
+    sql = B.build("EDGE", W10, W16, W10, W23, edge_from=D(2026, 8, 3), edge_cut=CUT17)
+    assert run(con, sql, "f_fan") == [("S0", 2)]
+
+
+def test_04_token_edges_use_cut():
+    """T 代币边只取截点之前：m1 在 08-12 与 08-18 各有一笔直接转移，只进 08-12 那笔。"""
+
+    def tok(a, b, day):
+        r = xfer(a, b, day, amt=100.0, version="spl_token")
+        r["token_mint_address"] = "m1"
+        r["outer_executing_account"] = B.TOKEN_PROGRAMS[0]
+        return r
+
+    rows = {
+        "pumpdotfun_solana.pump_evt_createevent": [coin("m1", T(2026, 8, 11, 0))],
+        "tokens_solana.transfers": [tok(X, Y, 12), tok(X, Z, 18)],
+    }
+    con = db(rows)
+    sql = B.build("EDGE", W10, W16, W10, W23, edge_from=D(2026, 8, 3), edge_cut=CUT17)
+    t = run(con, sql, "t_edges")
+    assert [(r[0], r[1], r[2], r[3]) for r in t] == [("m1", X, Y, 1)]
