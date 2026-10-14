@@ -518,3 +518,66 @@ def test_stratum_of_61_rows_is_inexact_and_flagged():
     assert R.compare(sql, ref) == []
     assert any(v[2] > 0 for v in sql["C"].values())  # 有不精确项
     assert R.certain(sql["C"], sql["N"]["k_sel"]) == []
+
+
+def test_smoke_glue_prep_and_check(tmp_path, monkeypatch):
+    """s3_smoke 的读写：EDGE 下载 → 映射 → SQL 与批准；统计量与明细的 CSV（空串＝空值）→ 核对全部为真。"""
+    import csv as _csv
+
+    import pandas as pd
+
+    import paid_guard as PG
+    import s3_smoke as SM
+
+    for d in ("raw/dune", "runs", "sql"):
+        (tmp_path / d).mkdir(parents=True)
+    monkeypatch.setattr(SM, "H", tmp_path)
+    monkeypatch.setattr(PG, "H", tmp_path)
+    monkeypatch.setattr(PG, "APPROVALS", tmp_path / "runs" / "批准.csv")
+    with open(PG.APPROVALS, "w", newline="") as fh:
+        _csv.writer(fh).writerow(PG.FIELDS)
+    cex = tmp_path / "cex.csv.gz"
+    pd.DataFrame({"address": ["cexaddr"]}).to_csv(cex, index=False)
+    monkeypatch.setattr(SM, "CEX", cex)
+    monkeypatch.setattr(SM, "P", None)
+    f, _ = gen(0)
+    edges = pd.DataFrame(
+        [
+            {"kind": "S", "mint": "", "a": "w01", "b": "w00", "x": ""},
+            {"kind": "G", "mint": "", "a": "fund", "b": "w02", "x": "5"},
+            {"kind": "G", "mint": "", "a": "fund", "b": "w03", "x": "5"},
+        ]
+    )
+    edges.to_csv(tmp_path / "raw" / "dune" / (SM.EDGE + ".csv.gz"), index=False)
+    SM.prep()
+    emap = {"w00": "w00", "w01": "w00", "w02": "w02", "w03": "w02"}
+    import json
+
+    assert (
+        json.loads((tmp_path / "runs" / "s3_smoke_emap.json").read_text())["emap"]
+        == emap
+    )
+    assert [r["编号"] for r in PG._rows(PG.APPROVALS)] == ["A7-04", "A7-05", "A7-06"]
+    con = f.con()
+    for label, det in (
+        (SM.STATS + "_r1", False),
+        (SM.STATS + "_r2", False),
+        (SM.DETAIL, True),
+    ):
+        rows = run(
+            con,
+            S.build_s3(
+                W0, CUT, W1E, None, S.emap_values(emap), detail=det, obs_cap=CAP
+            ),
+        )
+        pd.DataFrame(rows).to_csv(
+            tmp_path / "raw" / "dune" / (label + ".csv.gz"), index=False
+        )
+    SM.check()
+    out = json.loads((tmp_path / "runs" / "s3_smoke_check.json").read_text())
+    assert out["double_run_identical"] and out["diff_sql_vs_reference"] == []
+    assert (
+        out["selection_certain"]
+        and out["frozen_select_set_same"]
+        and out["T_from_G_equals_frozen"]
+    )
