@@ -17,6 +17,7 @@ python run_dune.py <标签> <sql 文件> --approve=<批准编号> [--engine=medi
 import csv
 import datetime as dt
 import json
+import math
 import sys
 import time
 from decimal import Decimal
@@ -89,6 +90,8 @@ def budget_gate(u, cap: float) -> str:
     if u is None:
         return "读不到账户用量，不跑"
     used, included = u
+    if not all(math.isfinite(v) and v >= 0 for v in (used, included, cap)):
+        return "账户用量或本条上限无效，不跑"
     if used + cap > included:
         return "已用 %.1f＋本条上限 %.0f 超过本期额度 %.0f，不跑" % (
             used,

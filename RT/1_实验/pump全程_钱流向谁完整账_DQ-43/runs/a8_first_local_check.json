@@ -1,0 +1,31 @@
+{
+  "scope": "Local compression of filtered A7-06 sample; new first-buy SQL not executed on Dune",
+  "full_rows": 16145,
+  "compact_rows": 4540,
+  "kind_bytes": {
+    "A": {
+      "rows": 903,
+      "csv_bytes": 128888
+    },
+    "B": {
+      "rows": 3483,
+      "csv_bytes": 612286
+    },
+    "E": {
+      "rows": 3,
+      "csv_bytes": 479
+    },
+    "K": {
+      "rows": 151,
+      "csv_bytes": 10308
+    }
+  },
+  "csv_bytes_with_original_tx_prefix": 751811,
+  "gzip_bytes_with_original_tx_prefix": 330696,
+  "full_tx_delta_max_per_row": 72,
+  "csv_bytes_full_tx_upper": 1067819,
+  "differences": {},
+  "frozen_select_same": true,
+  "remove_w1_keeps_selection": true,
+  "real_nonempty_C_G_covered": false
+}

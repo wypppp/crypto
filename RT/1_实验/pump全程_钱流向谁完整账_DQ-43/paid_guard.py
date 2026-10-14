@@ -22,6 +22,7 @@ import datetime as dt
 import fcntl
 import hashlib
 import json
+import math
 import re
 import urllib.request
 from decimal import Decimal, InvalidOperation
@@ -210,6 +211,11 @@ def check(
         raise Refused("批准 %s 已经用过；一条批准只用一次" % approval)
     ticket = Ticket(approval, float(r["执行费上限"]), float(r["下载上限MB"]))
     ticket.download_cap = float(r.get("下载费上限") or "5")
+    if not all(
+        math.isfinite(v) and v >= 0
+        for v in (ticket["cap"], ticket["max_mb"], ticket.download_cap)
+    ):
+        raise Refused("批准上限须为有限非负数，不跑")
     return ticket
 
 

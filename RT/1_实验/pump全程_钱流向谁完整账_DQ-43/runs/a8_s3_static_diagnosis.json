@@ -1,0 +1,314 @@
+{
+  "S3P_STATS_0811_p002": {
+    "sql_bytes": 49605,
+    "logical_inlined_leaf_counts": {
+      "pump_evt_tradeevent": 81,
+      "pump_evt_createevent": 408,
+      "pump_amm_evt_createpoolevent": 81,
+      "pump_amm_evt_buyevent": 81,
+      "pump_evt_completeevent": 82
+    },
+    "cte_expansions": {
+      "out": 1,
+      "w1": 2,
+      "rx": 12,
+      "sr": 34,
+      "lb": 81,
+      "fr": 81,
+      "ub": 81,
+      "tw": 81,
+      "tr": 81,
+      "pump_evt_tradeevent": 81,
+      "cw": 246,
+      "coins": 408,
+      "pop": 408,
+      "c1": 408,
+      "c0": 408,
+      "pump_evt_createevent": 408,
+      "excl": 408,
+      "bn": 408,
+      "emap": 245,
+      "pools": 81,
+      "cp": 81,
+      "pump_amm_evt_createpoolevent": 81,
+      "pump_amm_evt_buyevent": 81,
+      "ce": 82,
+      "pump_evt_completeevent": 82,
+      "bd": 47,
+      "wq": 47,
+      "ss": 12,
+      "sel": 2,
+      "cd": 4,
+      "el": 9,
+      "sc": 10,
+      "kq": 5,
+      "a1": 1
+    },
+    "direct_references": {
+      "bn": {},
+      "excl": {
+        "bn": 1
+      },
+      "c0": {
+        "pump_evt_createevent": 1
+      },
+      "c1": {
+        "c0": 1,
+        "excl": 1
+      },
+      "pop": {
+        "c1": 1
+      },
+      "coins": {
+        "pop": 1
+      },
+      "cp": {
+        "pump_amm_evt_createpoolevent": 1,
+        "coins": 1
+      },
+      "pools": {
+        "cp": 1,
+        "coins": 1
+      },
+      "emap": {},
+      "cw": {
+        "coins": 1
+      },
+      "tr": {
+        "pump_evt_tradeevent": 1,
+        "cw": 1
+      },
+      "tw": {
+        "tr": 1
+      },
+      "ub": {
+        "tw": 1,
+        "emap": 2,
+        "pools": 1,
+        "cw": 1,
+        "pump_amm_evt_buyevent": 1
+      },
+      "fr": {
+        "ub": 1
+      },
+      "ce": {
+        "pump_evt_completeevent": 1,
+        "cw": 1,
+        "emap": 1
+      },
+      "lb": {
+        "fr": 1,
+        "ce": 1
+      },
+      "wq": {
+        "lb": 1
+      },
+      "bd": {
+        "wq": 1
+      },
+      "sr": {
+        "lb": 1,
+        "bd": 1
+      },
+      "ss": {
+        "sr": 1
+      },
+      "rx": {
+        "sr": 1,
+        "ss": 1
+      },
+      "sc": {
+        "rx": 1
+      },
+      "el": {
+        "sc": 1
+      },
+      "kq": {
+        "el": 1
+      },
+      "cd": {
+        "el": 1
+      },
+      "sel": {
+        "cd": 1,
+        "kq": 1
+      },
+      "w1": {
+        "rx": 1,
+        "sel": 1
+      },
+      "a1": {
+        "w1": 1
+      },
+      "out": {
+        "w1": 1,
+        "cd": 2,
+        "kq": 3,
+        "a1": 1,
+        "bd": 13,
+        "sr": 10,
+        "ce": 1,
+        "cw": 2,
+        "emap": 1,
+        "sc": 1
+      }
+    },
+    "global_window_count": 1,
+    "values_rows_emap": 185,
+    "no_physical_plan": true
+  },
+  "S3P_DETAIL_0811_p002": {
+    "sql_bytes": 48898,
+    "logical_inlined_leaf_counts": {
+      "pump_evt_createevent": 6,
+      "pump_evt_completeevent": 1,
+      "pump_evt_tradeevent": 1,
+      "pump_amm_evt_createpoolevent": 1,
+      "pump_amm_evt_buyevent": 1
+    },
+    "cte_expansions": {
+      "out": 1,
+      "cw": 4,
+      "coins": 6,
+      "pop": 6,
+      "c1": 6,
+      "c0": 6,
+      "pump_evt_createevent": 6,
+      "excl": 6,
+      "bn": 6,
+      "pump_evt_completeevent": 1,
+      "tr": 1,
+      "pump_evt_tradeevent": 1,
+      "pools": 1,
+      "cp": 1,
+      "pump_amm_evt_createpoolevent": 1,
+      "pump_amm_evt_buyevent": 1
+    },
+    "direct_references": {
+      "bn": {},
+      "excl": {
+        "bn": 1
+      },
+      "c0": {
+        "pump_evt_createevent": 1
+      },
+      "c1": {
+        "c0": 1,
+        "excl": 1
+      },
+      "pop": {
+        "c1": 1
+      },
+      "coins": {
+        "pop": 1
+      },
+      "cp": {
+        "pump_amm_evt_createpoolevent": 1,
+        "coins": 1
+      },
+      "pools": {
+        "cp": 1,
+        "coins": 1
+      },
+      "emap": {},
+      "cw": {
+        "coins": 1
+      },
+      "tr": {
+        "pump_evt_tradeevent": 1,
+        "cw": 1
+      },
+      "tw": {
+        "tr": 1
+      },
+      "ub": {
+        "tw": 1,
+        "emap": 2,
+        "pools": 1,
+        "cw": 1,
+        "pump_amm_evt_buyevent": 1
+      },
+      "fr": {
+        "ub": 1
+      },
+      "ce": {
+        "pump_evt_completeevent": 1,
+        "cw": 1,
+        "emap": 1
+      },
+      "lb": {
+        "fr": 1,
+        "ce": 1
+      },
+      "wq": {
+        "lb": 1
+      },
+      "bd": {
+        "wq": 1
+      },
+      "sr": {
+        "lb": 1,
+        "bd": 1
+      },
+      "ss": {
+        "sr": 1
+      },
+      "rx": {
+        "sr": 1,
+        "ss": 1
+      },
+      "sc": {
+        "rx": 1
+      },
+      "el": {
+        "sc": 1
+      },
+      "kq": {
+        "el": 1
+      },
+      "cd": {
+        "el": 1
+      },
+      "sel": {
+        "cd": 1,
+        "kq": 1
+      },
+      "w1": {
+        "rx": 1,
+        "sel": 1
+      },
+      "a1": {
+        "w1": 1
+      },
+      "out": {
+        "cw": 3,
+        "pump_evt_completeevent": 1,
+        "tr": 1,
+        "pools": 1,
+        "pump_amm_evt_buyevent": 1
+      }
+    },
+    "global_window_count": 1,
+    "values_rows_emap": 185,
+    "no_physical_plan": true
+  },
+  "A8P_EDGE_SGT_0811_p002_4d_SMK": {
+    "logical_inlined_leaf_counts": {
+      "transfers": 5,
+      "pump_evt_createevent": 49,
+      "pump_evt_tradeevent": 12,
+      "pump_amm_evt_createpoolevent": 12,
+      "pump_amm_evt_buyevent": 12,
+      "pump_amm_evt_sellevent": 12
+    },
+    "date_bounds_per_table": [
+      {
+        "table": "transfers"
+      }
+    ],
+    "native_days": 4,
+    "token_days": 1,
+    "seed_creation_days": 1,
+    "physical_scan_count_unverified": true
+  }
+}

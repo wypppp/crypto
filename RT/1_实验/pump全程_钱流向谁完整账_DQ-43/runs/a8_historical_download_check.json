@@ -1,0 +1,82 @@
+{
+  "recorded_download": {
+    "source": "冒烟结果_汇总版_20260812.md §2",
+    "claim_mb": 2.56,
+    "claim_delta": 6,
+    "account_reading_timestamps_missing": true
+  },
+  "available_execution_intervals_02utc": [
+    {
+      "file": "WM2AGG_COIN_SMK_20260812_r1_status.json",
+      "execution_id": "01M4W4EW1YEMX6BCHXTYKCNM4A",
+      "start": "2026-10-14T02:39:29.776150425Z",
+      "end": "2026-10-14T02:39:38.118172568Z",
+      "cost": 0.152147059
+    },
+    {
+      "file": "WM2AGG_COIN_LIST_20260812_status.json",
+      "execution_id": "01M4W4GQQB14X971ENSHNBQK56",
+      "start": "2026-10-14T02:40:30.835427522Z",
+      "end": "2026-10-14T02:40:37.644897067Z",
+      "cost": 0.482852942
+    },
+    {
+      "file": "WM2AGG_CYCC_SMK_20260812_r1_status.json",
+      "execution_id": "01M4W4SVWH5WRKYE39X3CH9F04",
+      "start": "2026-10-14T02:45:30.028790445Z",
+      "end": "2026-10-14T02:45:41.748955867Z",
+      "cost": 0.715441177
+    },
+    {
+      "file": "WM2AGG_CYCC_SMK2_20260812_r1_status.json",
+      "execution_id": "01M4W5218V46PNB2NHWCMPCWR6",
+      "start": "2026-10-14T02:49:57.72540531Z",
+      "end": "2026-10-14T02:50:12.455486604Z",
+      "cost": 0.750735295
+    },
+    {
+      "file": "WM2AGG_CYCC_SMK2_20260812_r2_status.json",
+      "execution_id": "01M4W537DZ7XZXAGZXV8WF59KH",
+      "start": "2026-10-14T02:50:36.667980674Z",
+      "end": "2026-10-14T02:50:47.258552441Z",
+      "cost": 0.608617648
+    },
+    {
+      "file": "WM2AGG_CYCA_SMK2_20260812_r1_status.json",
+      "execution_id": "01M4W54YEENGJG4Z46NH6HZC9P",
+      "start": "2026-10-14T02:51:33.181197054Z",
+      "end": "2026-10-14T02:52:04.186622932Z",
+      "cost": 2.713088236
+    },
+    {
+      "file": "WM2AGG_CYCA_SMK2_20260812_r2_status.json",
+      "execution_id": "01M4W56RN93PRDN9HT6RA4JQQB",
+      "start": "2026-10-14T02:52:32.619829402Z",
+      "end": "2026-10-14T02:52:56.329074707Z",
+      "cost": 1.273088236
+    },
+    {
+      "file": "WM2AGG_VQ_SMK_20260812_r1_status.json",
+      "execution_id": "01M4W58CZ582GJVBAKV5JM3CTM",
+      "start": "2026-10-14T02:53:26.178149695Z",
+      "end": "2026-10-14T02:53:47.804779463Z",
+      "cost": 0.683088236
+    },
+    {
+      "file": "WM2AGG_VQ_SMK_20260812_r2_status.json",
+      "execution_id": "01M4W5BF4DVEF7QC57K5Y9XEWS",
+      "start": "2026-10-14T02:55:06.792429952Z",
+      "end": "2026-10-14T02:55:38.56385371Z",
+      "cost": 1.153088236
+    }
+  ],
+  "last_download_file": {
+    "csv_bytes": 2564243,
+    "gzip_bytes": 949205,
+    "gzip_start_utc": "2026-10-14T02:42:30+00:00",
+    "file_end_utc": "2026-10-14T02:43:29.772878+00:00",
+    "known_overlap_dq43": false,
+    "account_wide_other_executions_unverified": true
+  },
+  "date_correction": "Known download is 2026-10-14, not 10-13; before/after usage samples of +6 absent."
+}

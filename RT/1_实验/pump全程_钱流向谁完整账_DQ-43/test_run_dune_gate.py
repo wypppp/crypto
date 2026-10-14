@@ -13,6 +13,8 @@ def test_budget_gate_uses_live_usage_only_hand():
     assert R.budget_gate((1468.8, 2500.0), 1031.2) == ""  # 恰好用满额度
     assert R.budget_gate((1468.8, 2500.0), 1031.3) != ""
     assert R.budget_gate((0.0, 2500.0), 2600.0) != ""
+    assert R.budget_gate((float("nan"), 2500), 10)
+    assert R.budget_gate((100, 2500), float("inf"))
 
 
 def _approvals(tmp_path, sql_rel, sha):
