@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """DQ-43（WM2）取数 SQL 生成器（10-13，冻结卡 v3 §5、§6；GPT 审 SQL 之前不跑全量）。
 
-python build_wm2_sql.py <层> <创建起日> <创建止日> <事件起日> <事件止日> <标签> [建边起日 建边截日] [--smoke]  → sql/<标签>.sql
+python build_wm2_sql.py <层> <创建起日> <创建止日> <事件起日> <事件止日> <标签> [建边起日 建边截日] [--smoke]
+  [--p=抽样率] [--snap=快照截日] [--part=i/n] [--tpart=i/n]  → sql/<标签>.sql
 
 层：
   COIN    母体：曲线创建于 [创建起日, 创建止日] 的 SOL 计价 pump 新币，每币一行（含毕业与迁移）。
@@ -12,6 +13,8 @@ python build_wm2_sql.py <层> <创建起日> <创建止日> <事件起日> <事�
   FAIL    失败交易：触及母体币、调用 pump 或 PumpSwap 程序的失败交易（全成本含失败交易，冻结卡 §6）。
   EDGE    实体边：顶层 System Program 的 SOL 转账 ≥0.05（DQ-26 E1 规则），一端是母体成交的交易者；
           以及母体币的直接代币转移（顶层代币程序或关联账户程序，不含成交腿）。
+  汇总版（10-14，取数附录 v2；模板在 wm2_agg_sql.py）：CYCC、CYCA（钱包 × 币的阶段合计与首笔买入状态，每币两个时点的定价状态）、
+  COSTF（一天一条：成功交易的链上费用与未解释负残差、失败交易费用，按腿均摊）、VQ（每池 InitBoost 的 vq）。
 
 保护边界在 SQL 里先落实（冻结卡 §5，过滤在导出之前）：
 - 币：创建时刻在 [创建起日, 创建止日]，这些日子必须全在 DQ-43 的六个窗口周内（都是 DQ-37 开发周）；早于 2026-10-05；
@@ -40,6 +43,7 @@ import build_curve_sql_v1 as C37  # noqa: E402
 import build_grad_sql_v22 as G35  # noqa: E402
 import contract_pairs as CP  # noqa: E402
 import weeks as W  # noqa: E402
+import wm2_agg_sql as AG  # noqa: E402
 
 CUTOFF = dt.date(2026, 10, 5)
 LAST_EVENT_DAY = dt.date(2026, 10, 4)
@@ -67,7 +71,23 @@ TOKEN_PROGRAMS = (
     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
 )
 EDGE_MIN_SOL = 0.05  # DQ-26 E1
-LAYERS = ("COIN", "CTRADE", "MAY", "ATRADE", "TX", "FAIL", "EDGE")
+LAYERS = (
+    "COIN",
+    "CTRADE",
+    "MAY",
+    "ATRADE",
+    "TX",
+    "FAIL",
+    "EDGE",
+    "CYCC",
+    "CYCA",
+    "COSTF",
+    "VQ",
+)
+VQ_FROM = dt.date(
+    2026, 7, 15
+)  # DQ-35 §1d：vq 字段在 07-15 升级时上线，之前建的池 vq＝0（layout0）
+D_INIT = "0xae7c4af90451f611"  # DQ-35 过程/build_boostscan_sql.py：InitBoost 判别符
 
 
 def window_days() -> set[dt.date]:
@@ -137,7 +157,8 @@ c1 AS (
     WHERE created_at >= TIMESTAMP '{c0} 00:00:00' AND created_at < TIMESTAMP '{c1} 00:00:00' + INTERVAL '1' DAY
       AND created_at < TIMESTAMP '{cutoff} 00:00:00'
 ),
-coins AS (SELECT * FROM c1 WHERE pop_class = 'in')"""
+pop AS (SELECT * FROM c1 WHERE pop_class = 'in'),
+coins AS (SELECT * FROM pop{samp})"""
 
 # ---------- 曲线成交 ----------
 
@@ -214,7 +235,12 @@ out AS (
 COIN = """,
 comp AS (
     /* 10-14（GPT 01）：聚合前 JOIN coins，逐币限 created_at ≤ 事件 < created_at＋30 天，并保留全局止日 */
-    SELECT e.mint, to_unixtime(min(e.evt_block_time)) AS completed_t, count(*) AS n_complete
+    SELECT e.mint, to_unixtime(min(e.evt_block_time)) AS completed_t, count(*) AS n_complete,
+           /* 10-14（汇总版）：毕业事件的键、交易与触发者，A 的命中与自身触发要用 */
+           min_by(e.evt_block_slot, e.evt_block_time) AS comp_slot, min_by(e.evt_tx_index, e.evt_block_time) AS comp_txi,
+           min_by(e.evt_outer_instruction_index, e.evt_block_time) AS comp_oix,
+           min_by(COALESCE(e.evt_inner_instruction_index, -1), e.evt_block_time) AS comp_iix,
+           min_by(e.evt_tx_id, e.evt_block_time) AS comp_tx, min_by(CAST(e."user" AS varchar), e.evt_block_time) AS comp_user
     FROM pumpdotfun_solana.pump_evt_completeevent e
     JOIN coins k ON k.mint = e.mint
     WHERE e.evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
@@ -237,7 +263,8 @@ out AS (
            k.is_mayhem_mode, k.is_cashback_enabled, k.quote_mint,
            CAST(k.vsr0 AS varchar) AS vsr0, CAST(k.vtr0 AS varchar) AS vtr0, CAST(k.rtr0 AS varchar) AS rtr0,
            CAST(k.vqr0 AS varchar) AS vqr0, CAST(k.supply AS varchar) AS supply,
-           cp.completed_t, cp.n_complete, mg.migrated_t, mg.pool, mg.n_mig,
+           cp.completed_t, cp.n_complete, cp.comp_slot, cp.comp_txi, cp.comp_oix, cp.comp_iix, cp.comp_tx, cp.comp_user,
+           mg.migrated_t, mg.pool, mg.n_mig,
            k.created_at + INTERVAL '{hz}' DAY <= TIMESTAMP '{cutoff} 00:00:00' AS window_complete,
            count(*) OVER (PARTITION BY k.mint) AS n_key
     FROM coins k
@@ -257,7 +284,9 @@ COIN_SMOKE_EXTRA = """,
 POOLS = """,
 cp AS (
     /* 10-14（GPT 01）：建池事件聚合前 JOIN coins，逐币 30 天窗口与全局止日 */
-    SELECT c.pool, min(c.evt_block_time) AS created_at, max(c.base_mint) AS mint, max(c.quote_mint) AS quote_mint,
+    SELECT c.pool, min(c.evt_block_time) AS created_at, min_by(c.evt_block_slot, c.evt_block_time) AS pool_slot,
+           min_by(c.evt_tx_id, c.evt_block_time) AS pool_tx,
+           max(c.base_mint) AS mint, max(c.quote_mint) AS quote_mint,
            max(c.base_mint_decimals) AS bd, max(c.quote_mint_decimals) AS qd, count(*) AS n_cp
     FROM pumpdotfun_solana.pump_amm_evt_createpoolevent c
     JOIN coins k ON k.mint = c.base_mint
@@ -653,7 +682,7 @@ FROM out
 COLS = {
     "COIN": "chain mint created_t n_create name symbol uri creator create_user create_signer create_tx c_slot c_txi c_oix c_iix "
     "bonding_curve token_program is_mayhem_mode is_cashback_enabled quote_mint vsr0 vtr0 rtr0 vqr0 supply completed_t n_complete "
-    "migrated_t pool n_mig window_complete n_key",
+    "comp_slot comp_txi comp_oix comp_iix comp_tx comp_user migrated_t pool n_mig window_complete n_key",
     "CTRADE": "chain mint created_t ts slot txi oix iix n_key tx_id signer usr is_buy sol tok vsr vtr rsr rtr f_pr f_cr f_cb f_bb "
     "fee_bps cfee_bps cb_bps bb_bps fee_recipient ev_creator mayhem ix_name track_volume q_mint q_amt vqr rqr hr_bps hr q_src xchk_ok",
     "MAY": "chain mint ts slot txi oix iix n_key tx_id vtr_old vsr_old vtr_new vsr_new rtr rsr",
@@ -664,6 +693,10 @@ COLS = {
     "res_v1 res_v2 res_v3",
     "FAIL": "chain tx_id ts slot txi signer fee priority_fee error n_mints mints n_key",
     "EDGE": "chain kind mint from_owner to_owner n amt first_t last_t first_tx fanout win_from win_cut n_key",
+    "CYCC": AG.CYC_COLS,
+    "CYCA": AG.CYC_COLS,
+    "COSTF": AG.COSTF_COLS,
+    "VQ": AG.VQ_COLS,
 }
 # 冒烟时要报缺失数的字段（承重字段）
 NULL_CHECK = {
@@ -674,6 +707,10 @@ NULL_CHECK = {
     "TX": "fee priority_fee d_trader",
     "FAIL": "fee priority_fee",
     "EDGE": "from_owner",
+    "CYCC": "mint",
+    "CYCA": "mint",
+    "COSTF": "signer cost",
+    "VQ": "pool_tx",
 }
 SMOKE_EXTRA = {
     "COIN": ", count(DISTINCT mint) AS n_coins, count_if(completed_t IS NOT NULL) AS n_completed, "
@@ -688,6 +725,19 @@ SMOKE_EXTRA = {
     "FAIL": ", count(DISTINCT signer) AS n_signers, sum(n_mints) AS n_mint_links",
     "EDGE": ", count_if(kind = 'S') AS n_sol_edges, count_if(kind = 'F') AS n_funders, count_if(kind = 'F' AND fanout > 200) AS n_service, "
     "count_if(kind = 'C') AS n_creator_edges, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
+    "CYCC": ", count_if(kind = 'Y') AS n_y, count_if(kind = 'P') AS n_p, count(DISTINCT mint) AS n_coins, "
+    "count(DISTINCT usr) AS n_wallets, count_if(kind = 'Y' AND n_buy > 0 AND fb_slot IS NULL) AS n_fb_missing, "
+    "count_if(kind = 'Y' AND fb_nprior > 0 AND fb_p99 IS NULL) AS n_p99_missing, count_if(sb) AS n_sell_before_buy, "
+    "count_if(kind = 'Y' AND CAST(tok_sell AS DECIMAL(38,0)) > CAST(tok_buy AS DECIMAL(38,0))) AS n_sell_gt_buy, "
+    "count_if(kind = 'Y' AND (in_cash IS NULL OR out_cash IS NULL)) AS n_cash_null, "
+    "count_if(kind = 'P' AND z_cut = 'S') AS n_p_snap, count_if(kind = 'P' AND z_cut = 'E') AS n_p_end",
+    "COSTF": ", count_if(kind = 'K') AS n_k, count_if(kind = 'F') AS n_f, count(DISTINCT signer) AS n_signers, "
+    "sum(n_tx) AS n_leg_tx, sum(n_tx_clean) AS n_leg_tx_clean, sum(n_tx_unclean) AS n_leg_tx_unclean, "
+    "count_if(CAST(cost_net AS DECIMAL(38,0)) + CAST(cost_tip AS DECIMAL(38,0)) > CAST(cost AS DECIMAL(38,0)) + 2) "
+    "AS n_parts_gt_total, count_if(CAST(cost AS DECIMAL(38,0)) < 0 OR CAST(res_neg AS DECIMAL(38,0)) < 0) AS n_negative",
+    "VQ": ", count_if(NOT layout0 AND n_init = 0) AS n_new_pool_no_init, count_if(n_init > 1) AS n_multi_init, "
+    "sum(n_pool_mismatch) AS n_pool_mismatch, sum(n_ovf) AS n_vq_ovf, count_if(vq_min <> vq_max) AS n_vq_varies, "
+    "count_if(layout0) AS n_layout0",
 }
 
 
@@ -704,7 +754,61 @@ def edge_window(c0, c1, e1, edge_from=None, edge_cut=None):
     return x0, xcut
 
 
-def build(layer, c0, c1, e0, e1, smoke=False, edge_from=None, edge_cut=None):
+SAMPLE_SALT = "RT-DQ43-coin-sample-v1|"
+
+
+def sample_where(p) -> str:
+    """取数附录 §2：sha256(盐 ‖ mint) 前 8 字节取低 63 位，模 10000 小于 10000·p 的币纳入。p 为 None 时不抽样。"""
+    if p is None:
+        return ""
+    m = round(p * 10000)
+    if not (0 < m <= 10000) or abs(m - p * 10000) > 1e-9:
+        raise SystemExit("抽样率须为 (0, 1] 内、精确到万分之一")
+    if m == 10000:
+        return ""
+    return (
+        "\n    WHERE mod(bitwise_and(from_big_endian_64(substr(sha256(to_utf8('%s' || mint)), 1, 8)), "
+        "9223372036854775807), 10000) < %d" % (SAMPLE_SALT, m)
+    )
+
+
+def in_sample(mint: str, p: float) -> bool:
+    """Python 参照实现（冒烟核对与测试用），与 sample_where 同一规则。"""
+    import hashlib
+
+    h = hashlib.sha256((SAMPLE_SALT + mint).encode()).digest()[:8]
+    return (int.from_bytes(h, "big") & (2**63 - 1)) % 10000 < round(p * 10000)
+
+
+def slice_where(col: str, part) -> str:
+    """输出按钱包哈希分片（只为控制单条导出量；分片之前的计算用全部数据）。part＝(第几片, 共几片)。"""
+    i, n = part
+    if not (0 <= i < n):
+        raise SystemExit("分片编号不对")
+    if n == 1:
+        return ""
+    return (
+        "\n    WHERE mod(bitwise_and(from_big_endian_64(xxhash64(to_utf8(%s))), 9223372036854775807), %d) = %d"
+        % (col, n, i)
+    )
+
+
+def build(
+    layer,
+    c0,
+    c1,
+    e0,
+    e1,
+    smoke=False,
+    edge_from=None,
+    edge_cut=None,
+    p=None,
+    snap=None,
+    part=(0, 1),
+    tpart=(0, 1),
+):
+    """snap：CYC 的快照截点（默认创建止日次日 00:00，即 W+1 周一）；part：CYC 输出按钱包分片；
+    tpart：COSTF 把一个事件日按小时等分（第几段, 共几段），只许单日。"""
     if layer not in LAYERS:
         raise SystemExit("层只能是 %s" % "、".join(LAYERS))
     check_dates(c0, c1, e0, e1)
@@ -726,9 +830,49 @@ def build(layer, c0, c1, e0, e1, smoke=False, edge_from=None, edge_cut=None):
         jito=q(JITO),
         token_programs=q(TOKEN_PROGRAMS),
         edge_min=EDGE_MIN_SOL,
+        samp=sample_where(p),
     )
     sql = POP.format(**f)
-    if layer == "COIN":
+    if layer in ("CYCC", "CYCA"):
+        snap = snap or (c1 + dt.timedelta(days=1))
+        if snap <= c1:
+            raise SystemExit("快照截点须晚于创建止日")
+        stage = "curve" if layer == "CYCC" else "amm"
+        g = dict(
+            snap="%s 00:00:00" % snap.isoformat(),
+            stage=stage,
+            yslice=slice_where("a.usr", part),
+            zpart=AG.CYC_Z_PART.format(stage=stage) if part[0] == 0 else "",
+            **f,
+        )
+        if layer == "CYCC":
+            sql += AG.CYC_EV_CURVE.format(**g)
+        else:
+            sql += POOLS.format(**f) + AG.CYC_EV_AMM.format(**g)
+        sql += AG.CYC_AGG.format(**g)
+    elif layer == "COSTF":
+        i, n = tpart
+        if e0 != e1 or not (0 <= i < n) or 24 % n:
+            raise SystemExit("COSTF 一次只取一个事件日；时段数须整除 24")
+        h0 = dt.datetime.combine(e0, dt.time()) + dt.timedelta(hours=24 // n * i)
+        h1 = h0 + dt.timedelta(hours=24 // n)
+        sql += POOLS.format(**f) + AG.COSTF.format(
+            t0=h0.strftime("%Y-%m-%d %H:%M:%S"),
+            t1=h1.strftime("%Y-%m-%d %H:%M:%S"),
+            **f,
+        )
+    elif layer == "VQ":
+        v0 = max(c0, VQ_FROM)
+        if v0 > e1:
+            raise SystemExit("VQ：事件止日早于 07-15，所有池都是 layout0，不必取")
+        sql += POOLS.format(**f) + AG.VQ.format(
+            vq_from=VQ_FROM.isoformat(),
+            v0=v0.isoformat(),
+            v1=e1.isoformat(),
+            d_init=D_INIT,
+            **f,
+        )
+    elif layer == "COIN":
         sql += COIN.format(**f)
     elif layer == "CTRADE":
         r0 = max(e0, QUOTE_FIELDS_FROM)
@@ -816,6 +960,11 @@ def build(layer, c0, c1, e0, e1, smoke=False, edge_from=None, edge_cut=None):
     extra = SMOKE_EXTRA.get(layer, "")
     if layer == "COIN":
         extra += COIN_SMOKE_EXTRA.format(**f)
+    if layer in ("CYCC", "CYCA", "COSTF", "VQ", "COIN", "EDGE"):
+        # 双跑比对（冻结前清单第 9 条；取数附录 v2 §7）：每行规范化成文本求哈希，行数、哈希和、哈希异或三项都一致才算逐行一致
+        extra += AG.CHECKSUM.format(
+            ck_cols=", ".join("COALESCE(CAST(%s AS varchar), '~')" % c for c in cols)
+        )
     return sql + SMOKE.format(
         layer=layer,
         nulls=nulls,
@@ -826,15 +975,36 @@ def build(layer, c0, c1, e0, e1, smoke=False, edge_from=None, edge_cut=None):
 
 
 def main():
+    """python build_wm2_sql.py <层> <创建起> <创建止> <事件起> <事件止> <标签> [建边起 建边截]
+    [--smoke] [--p=0.10] [--snap=YYYY-MM-DD] [--part=i/n] [--tpart=i/n]"""
     a = sys.argv[1:]
-    smoke = "--smoke" in a
-    a = [x for x in a if x != "--smoke"]
+    opt = {x.split("=")[0]: (x.split("=") + [""])[1] for x in a if x.startswith("--")}
+    a = [x for x in a if not x.startswith("--")]
     layer = a[0]
     c0, c1, e0, e1 = (dt.date.fromisoformat(x) for x in a[1:5])
     label = a[5]
     ew = [dt.date.fromisoformat(x) for x in a[6:8]] if len(a) >= 8 else [None, None]
+
+    def frac(k):
+        return tuple(int(x) for x in opt[k].split("/")) if k in opt else (0, 1)
+
     out = H / "sql" / ("%s.sql" % label)
-    out.write_text(build(layer, c0, c1, e0, e1, smoke, ew[0], ew[1]))
+    out.write_text(
+        build(
+            layer,
+            c0,
+            c1,
+            e0,
+            e1,
+            "--smoke" in opt,
+            ew[0],
+            ew[1],
+            p=float(opt["--p"]) if "--p" in opt else None,
+            snap=dt.date.fromisoformat(opt["--snap"]) if "--snap" in opt else None,
+            part=frac("--part"),
+            tpart=frac("--tpart"),
+        )
+    )
     print(out.relative_to(H))
 
 

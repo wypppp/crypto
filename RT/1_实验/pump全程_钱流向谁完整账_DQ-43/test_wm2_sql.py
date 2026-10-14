@@ -18,7 +18,11 @@ def all_sql(smoke):
         if smoke
         else (D(2026, 8, 10), D(2026, 8, 16), D(2026, 8, 10), D(2026, 9, 14))
     )
-    return {layer: B.build(layer, *args, smoke=smoke) for layer in B.LAYERS}
+    # COSTF 一次只取一个事件日
+    return {
+        layer: B.build(layer, *(SMOKE if layer == "COSTF" else args), smoke=smoke)
+        for layer in B.LAYERS
+    }
 
 
 def test_window_days_are_the_six_frozen_weeks():
@@ -76,7 +80,8 @@ def test_every_layer_filters_before_export(smoke):
             "upper(trim(replace(symbol, '$', ''))) IN (SELECT base FROM excl)" in sql
         ), layer
         assert "quote_mint <> '%s'" % B.SYS in sql, layer
-        assert "coins AS (SELECT * FROM c1 WHERE pop_class = 'in')" in sql, layer
+        assert "pop AS (SELECT * FROM c1 WHERE pop_class = 'in')" in sql, layer
+        assert "coins AS (SELECT * FROM pop" in sql, layer
         # 止日：每层至少一处“严格早于 2026-10-05”
         assert "< TIMESTAMP '2026-10-05 00:00:00'" in sql, layer
         # 分区日期全部早于止日
@@ -115,6 +120,52 @@ def test_smoke_outputs_only_structure():
     """冒烟只出计数、缺失数与估计字节（TX 另出资金路径的地址与交易数），不出金额汇总。"""
     for layer, sql in all_sql(True).items():
         tail = sql[sql.rindex("\nSELECT") :]
+        # 双跑比对的逐行哈希和（取数附录 v2 §7）是唯一允许的求和，它不是金额
+        tail = tail.replace(
+            "sum(CAST(bitwise_and(from_big_endian_64(xxhash64(", "ck_hash_sum("
+        )
         assert (
             "sum(CAST(" not in tail and "sum(sol" not in tail and "sum(amt" not in tail
         ), layer
+
+
+def test_agg_layers_guards_and_entrances():
+    """汇总版四层（10-14）：COSTF 只许单日、时段整除 24；CYC 截点晚于创建止日；VQ 只读允许池建池交易里的 InitBoost；
+    曲线与 PumpSwap 的事件都经过 coins 或 pools；抽样条件在 coins 里。"""
+    one = SMOKE
+    with pytest.raises(SystemExit):
+        B.build("COSTF", D(2026, 8, 10), D(2026, 8, 16), D(2026, 8, 12), D(2026, 8, 13))
+    with pytest.raises(SystemExit):
+        B.build("COSTF", *one, tpart=(0, 5))
+    with pytest.raises(SystemExit):
+        B.build(
+            "CYCC",
+            D(2026, 8, 10),
+            D(2026, 8, 16),
+            D(2026, 8, 10),
+            D(2026, 9, 14),
+            snap=D(2026, 8, 16),
+        )
+    with pytest.raises(SystemExit):
+        B.build("CYCC", *one, part=(4, 4))
+    vq = B.build("VQ", *one)
+    assert "JOIN vp ON vp.pool_tx = c.tx_id" in vq and "= 0xae7c4af90451f611" in vq
+    assert (
+        "bytearray_substring(c.data, 121, 8)" in vq
+        and "bytearray_substring(c.data, 89, 32)" in vq
+    )
+    cyc = B.build("CYCC", *one, p=0.1)
+    assert "pump_evt_tradeevent t\n    JOIN coins k ON k.mint = t.mint" in cyc
+    assert (
+        "FROM pop\n    WHERE mod(bitwise_and(from_big_endian_64(substr(sha256(to_utf8('RT-DQ43-coin-sample-v1|' || mint))"
+        in cyc
+    )
+    assert "% 10000" not in cyc and ", 10000) < 1000" in cyc
+    cya = B.build("CYCA", *one)
+    assert "JOIN pools p ON p.pool = a.pool" in cya
+    cost = B.build("COSTF", *one, tpart=(1, 4))
+    assert (
+        "TIMESTAMP '2026-08-12 06:00:00'" in cost
+        and "TIMESTAMP '2026-08-12 12:00:00'" in cost
+    )
+    assert cost.count("FROM solana.transactions") == 1

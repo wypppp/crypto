@@ -30,21 +30,31 @@ TABLES = {
         "virtual_sol_reserves virtual_token_reserves real_token_reserves virtual_quote_reserves token_total_supply",
         "is_mayhem_mode is_cashback_enabled",
     ),
-    "pumpdotfun_solana.pump_evt_completeevent": ("mint", "", ""),
+    "pumpdotfun_solana.pump_evt_completeevent": (
+        "mint user evt_tx_id",
+        "evt_block_slot evt_tx_index evt_outer_instruction_index evt_inner_instruction_index",
+        "",
+    ),
     "pumpdotfun_solana.pump_evt_completepumpammmigrationevent": ("mint pool", "", ""),
     "pumpdotfun_solana.pump_amm_evt_createpoolevent": (
-        "pool base_mint quote_mint evt_outer_executing_account",
-        "base_mint_decimals quote_mint_decimals index",
+        "pool base_mint quote_mint evt_outer_executing_account evt_tx_id",
+        "base_mint_decimals quote_mint_decimals index evt_block_slot",
         "",
     ),
     "pumpdotfun_solana.pump_amm_evt_buyevent": (
         "evt_tx_id pool user",
-        "evt_outer_instruction_index evt_inner_instruction_index user_quote_amount_in",
+        "evt_outer_instruction_index evt_inner_instruction_index user_quote_amount_in "
+        "evt_block_slot evt_tx_index quote_amount_in_with_lp_fee base_amount_out protocol_fee coin_creator_fee lp_fee "
+        "pool_quote_token_reserves pool_base_token_reserves lp_fee_basis_points protocol_fee_basis_points "
+        "coin_creator_fee_basis_points",
         "",
     ),
     "pumpdotfun_solana.pump_amm_evt_sellevent": (
         "evt_tx_id pool user",
-        "evt_outer_instruction_index evt_inner_instruction_index user_quote_amount_out",
+        "evt_outer_instruction_index evt_inner_instruction_index user_quote_amount_out "
+        "evt_block_slot evt_tx_index quote_amount_out base_amount_in protocol_fee coin_creator_fee lp_fee cashback "
+        "buyback_fee pool_quote_token_reserves pool_base_token_reserves lp_fee_basis_points protocol_fee_basis_points "
+        "coin_creator_fee_basis_points",
         "",
     ),
     "pumpdotfun_solana.pump_evt_tradeevent": (
@@ -107,10 +117,24 @@ def upto(sql: str, name: str) -> str:
         q,
         flags=re.S,
     )
+    # 抽样哈希：先换成占位函数，转写后再换成 DuckDB 的写法（sha256 十六进制前 16 位＝前 8 字节）
+    q = re.sub(
+        r"mod\(bitwise_and\(from_big_endian_64\(substr\(sha256\(to_utf8\('([^']*)' \|\| mint\)\), 1, 8\)\), "
+        r"9223372036854775807\), 10000\)",
+        "samph__(mint)",
+        q,
+    )
     # 原始字节判别符在 DuckDB 里无法计算：只核按允许键筛选的连接
     q = re.sub(r"\n\s*AND bytearray_substring\(c\.data, [19], 8\) = [^\n]*", "", q)
     q = q.replace("bytearray_substring(c.data, 9, 8) AS disc", "c.data AS disc")
-    return sqlglot.transpile(q, read="trino", write="duckdb")[0]
+    out = sqlglot.transpile(q, read="trino", write="duckdb")[0]
+    return re.sub(
+        r"(?i)samph__\(mint\)",
+        "((('0x' || substr(sha256('"
+        + B.SAMPLE_SALT
+        + "' || mint), 1, 16))::UBIGINT & 9223372036854775807::UBIGINT) % 10000)",
+        out,
+    )
 
 
 def run(con, sql, name):
@@ -407,3 +431,22 @@ def test_04_token_edges_use_cut():
     sql = B.build("EDGE", W10, W16, W10, W23, edge_from=D(2026, 8, 3), edge_cut=CUT17)
     t = run(con, sql, "t_edges")
     assert [(r[0], r[1], r[2], r[3]) for r in t] == [("m1", X, Y, 1)]
+
+
+def test_coin_hash_sample_matches_python_reference():
+    """取数附录 §2 的抽样规则：SQL 选中的币与 Python 参照实现逐个一致（p＝10%、25%）。"""
+    mints = ["mint%03d" % i for i in range(200)]
+    rows = {
+        "pumpdotfun_solana.pump_evt_createevent": [
+            coin(m, T(2026, 8, 11, 0)) for m in mints
+        ]
+    }
+    con = db(rows)
+    for p in (0.10, 0.25):
+        sql = B.build("COIN", W10, W16, W10, W16, p=p)
+        got = {r[0] for r in run(con, sql, "coins")}
+        want = {m for m in mints if B.in_sample(m, p)}
+        assert got == want and 0 < len(want) < len(mints)
+    assert B.sample_where(None) == "" and B.sample_where(1.0) == ""
+    with pytest.raises(SystemExit):
+        B.sample_where(0.12345)
