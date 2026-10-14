@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-10-14T09:06:44.894953+00:00",
+  "usage": {
+    "private_queries": 0,
+    "private_dashboards": 0,
+    "bytes_used": 0,
+    "bytes_allowed": 15000000000,
+    "billing_periods": [
+      {
+        "start_date": "2026-10-14",
+        "end_date": "2026-10-28",
+        "credits_used": 1503.546,
+        "credits_included": 2500
+      },
+      {
+        "start_date": "2026-10-28",
+        "end_date": "2026-10-14",
+        "credits_used": 0,
+        "credits_included": 0
+      }
+    ]
+  }
+}

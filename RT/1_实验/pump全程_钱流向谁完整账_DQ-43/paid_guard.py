@@ -58,15 +58,21 @@ FIELDS = [
 
 
 def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
-    """总控第七轮：已实耗（执行与下载）＋本条批准上限 ≤50。须在提交前的锁内调用。"""
+    """总控第七、八轮各自 ≤50：已实耗＋本条执行与下载上限。锁内调用。"""
     approvals = APPROVALS if approvals is None else approvals
     used = USED if used is None else used
     actual = ACTUAL if actual is None else actual
-    group = {
-        r["编号"]: r for r in _rows(approvals) if r["批准来源"].startswith("总控第七轮")
-    }
-    if approval not in group:
+    rows = _rows(approvals)
+    hit = [r for r in rows if r["编号"] == approval]
+    if len(hit) != 1:
+        return "批准编号不存在或重复，不跑"
+    source = next(
+        (s for s in ("总控第七轮", "总控第八轮") if hit[0]["批准来源"].startswith(s)),
+        None,
+    )
+    if source is None:
         return ""
+    group = {r["编号"]: r for r in rows if r["批准来源"].startswith(source)}
     spent = {r["编号"]: r for r in _rows(actual)}
     total = Decimal(0)
     for k in {r["编号"] for r in _rows(used)} & group.keys():
@@ -88,7 +94,7 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
     ):
         return "本条上限无效，不跑"
     if total + cap > 50:
-        return "总控第七轮已实耗 %s＋本条上限 %s 超过 50，不跑" % (total, cap)
+        return "%s已实耗 %s＋本条上限 %s 超过 50，不跑" % (source, total, cap)
     return ""
 
 

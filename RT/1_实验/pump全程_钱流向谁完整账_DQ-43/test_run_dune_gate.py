@@ -113,6 +113,21 @@ def test_user_extra_download_cap_hand(tmp_path):
     assert "超过 50" in PG.round_gate("next", *paths)
 
 
+def test_round_eight_separate_from_seven_and_includes_download(tmp_path):
+    paths = _round_files(tmp_path, {"old1": "49", "old2": "36"})
+    rows = PG._rows(paths[0])
+    for row in rows:
+        if row["编号"] in ("old2", "next"):
+            row["批准来源"] = "总控第八轮（续）"
+    with paths[0].open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=PG.FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+    assert "超过 50" in PG.round_gate("next", *paths)  # 36＋10＋5
+    _csv(paths[2], ["编号", "合计实耗"], [["old1", "49"], ["old2", "35"]])
+    assert PG.round_gate("next", *paths) == ""  # 第七轮的 49 不计入第八轮
+
+
 @pytest.mark.parametrize("value", ["", "NaN", "Infinity", "-1", "执行中"])
 def test_round_budget_refuses_unresolved_actual(tmp_path, value):
     paths = _round_files(tmp_path, {"old1": value})
