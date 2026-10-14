@@ -320,7 +320,7 @@ def test_04_creator_affiliation_uses_per_coin_window():
     con = db(rows)
     sql = B.build("EDGE", W10, W16, W10, D(2026, 8, 20), edge_from=D(2026, 8, 1))
     c = run(con, sql, "c_edges")
-    assert [(r[0], r[2], r[3]) for r in c] == [("m1", Y, 1)]
+    assert [(r[0], r[2], r[4]) for r in c] == [("m1", Y, 1)]  # mint, 收款方, 笔数
 
 
 def test_04_snapshot_cut_excludes_later_transfers():
@@ -397,21 +397,89 @@ def test_04_w1_creator_affiliation_computed_separately():
     assert [(r[0], r[1], r[2]) for r in c] == [("m2", FUT, Y)]
 
 
+def trade(mint, usr, day):
+    return {
+        "mint": mint,
+        "user": usr,
+        "evt_tx_id": "tr_%s_%d" % (usr, day),
+        "evt_block_time": T(2026, 8, day, 3),
+    }
+
+
 def test_04_fanout_uses_cut():
-    """F 扇出只数截点之前的接收方：S0 在 08-12 转给种子 A 与 P，08-18 转给 Q，扇出＝2；
-    S1 只在截点之后转给种子，不进 F。"""
+    """共同第一笔来源 S0 的扇出只数截点之前的接收方：08-12 转给种子 X、Y 与非种子 P，08-18 转给 Q，扇出＝3。
+    S1 只在截点之后转给种子，不是任何种子的第一笔来源。"""
     rows = {
         "pumpdotfun_solana.pump_evt_createevent": [coin("m1", T(2026, 8, 11, 0))],
+        "pumpdotfun_solana.pump_evt_tradeevent": [
+            trade("m1", X, 12),
+            trade("m1", Y, 12),
+        ],
         "tokens_solana.transfers": [
-            xfer("S0", CREATOR, 12),
+            xfer("S0", X, 12),
+            xfer("S0", Y, 12),
             xfer("S0", "P", 12),
             xfer("S0", "Q", 18),
-            xfer("S1", CREATOR, 18),
+            xfer("S1", X, 18),
         ],
     }
     con = db(rows)
     sql = B.build("EDGE", W10, W16, W10, W23, edge_from=D(2026, 8, 3), edge_cut=CUT17)
-    assert run(con, sql, "f_fan") == [("S0", 2)]
+    assert run(con, sql, "f_fan") == [("S0", 3)]
+
+
+def edge_v3_rows():
+    """种子 X、Y、Z（m1 的交易者）与创建者 A。SOL：X→Y（种子之间）、X→N（非种子）、F→X 与 F→Y（F 是两人的第一笔来源）、
+    H→Z（只是 Z 的第一笔来源）。创建前 7 天：A→Q（非种子，之后把 m1 转给 Y）、A→R（非种子，无代币往来）、A→X（种子）。"""
+    return {
+        "pumpdotfun_solana.pump_evt_createevent": [coin("m1", T(2026, 8, 11, 0))],
+        "pumpdotfun_solana.pump_evt_tradeevent": [
+            trade("m1", u, 12) for u in (X, Y, Z)
+        ],
+        "tokens_solana.transfers": [
+            xfer("F", X, 5),
+            xfer("F", Y, 6),
+            xfer("H", Z, 6),
+            xfer(X, Y, 13),
+            xfer(X, "N", 13),
+            xfer(CREATOR, "Q", 9),
+            xfer(CREATOR, "R", 9),
+            xfer(CREATOR, X, 10),
+            dict(
+                xfer("Q", Y, 13, amt=100.0, version="spl_token"),
+                token_mint_address="m1",
+                outer_executing_account=B.TOKEN_PROGRAMS[0],
+            ),
+        ],
+    }
+
+
+def test_edge_v3_exports_only_merge_relevant_edges():
+    """10-14 EDGE v3：只导出能连起两个种子的边——种子之间（S）、共同的第一笔来源（G）、对手是种子或代币转出方的创建者边（C）、代币边（T）。"""
+    con = db(edge_v3_rows())
+    sql = B.build("EDGE", W10, W16, W10, W23, edge_from=D(2026, 8, 3), edge_cut=CUT17)
+    out = sorted((r[0], r[2], r[3]) for r in run(con, sql, "out"))
+    assert out == sorted(
+        [
+            ("S", X, Y),
+            ("S", CREATOR, X),  # 创建者也是种子
+            ("G", "F", X),
+            ("G", "F", Y),
+            ("C", CREATOR, "Q"),
+            ("C", CREATOR, X),
+            ("T", "Q", Y),
+        ]
+    )
+    g = [r for r in run(con, sql, "out") if r[0] == "G"]
+    assert {r[8] for r in g} == {2} and {r[9] for r in g} == {
+        2
+    }  # F 的扇出 2（X、Y），是 2 个种子的第一笔来源
+
+
+def test_edge_ct_only_for_w1_coins():
+    con = db(edge_v3_rows())
+    sql = B.build("EDGE", W10, W16, W10, W23, edge_kinds="CT")
+    assert {r[0] for r in run(con, sql, "out")} == {"C", "T"}
 
 
 def test_04_token_edges_use_cut():

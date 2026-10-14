@@ -26,7 +26,7 @@ PAIRS = [
     (D(2026, 7, 27), D(2026, 8, 3)),
     (D(2026, 8, 10), D(2026, 8, 17)),
 ]
-# 每层每个创建周的分片数（单条导出预计 ≤ 约 80 credits；10-14 冒烟实测后定，见取数附录 v2 §6）
+# 每层每个创建周的分片数（单条导出预计 ≤ 约 80 credits；按 10-14 冒烟实测，见取数附录 v3 §6）
 PARTS = {"CYCC": 4, "CYCA": 4}
 EST = {
     "COIN": 15,
@@ -36,7 +36,7 @@ EST = {
     "CYCC": 90,
     "CYCA": 90,
     "EDGE": 90,
-    "COSTF": 90,
+    "COSTF": 160,  # 10-14 冒烟实测 155／天；取法待定（取数附录 v3 §6），默认顺序不含它
 }
 
 
@@ -68,21 +68,15 @@ def jobs():
                             {"part": (i, n), "with_pre": is_w},
                         )
                     )
+    # 实体边（取数附录 v3 §4）：W 的事前图出 S、G、C、T；W+1 只出 C、T（按各币自己的创建时刻取创建者关联）；
+    # W 的全窗图只作事后描述，第一轮不取
     for w, w1 in PAIRS:
         c0, c1, e0, e1 = week_range(w)
-        tag = w.strftime("%m%d")
+        pre = (c0, c1, e0, e1, False, w - dt.timedelta(days=7), w1)
+        out.append(("EDGE", "WM2F_EDGE_PRE_%s" % w.strftime("%m%d"), pre, {}))
+        ct = week_range(w1)
         out.append(
-            (
-                "EDGE",
-                "WM2F_EDGE_PRE_%s" % tag,
-                (c0, c1, e0, e1, False, w - dt.timedelta(days=7), w1),
-                {},
-            )
-        )
-        out.append(("EDGE", "WM2F_EDGE_ALL_%s" % tag, (c0, c1, e0, e1), {}))
-        c0, c1, e0, e1 = week_range(w1)
-        out.append(
-            ("EDGE", "WM2F_EDGE_ALL_%s" % w1.strftime("%m%d"), (c0, c1, e0, e1), {})
+            ("EDGE", "WM2F_EDGE_CT_%s" % w1.strftime("%m%d"), ct, {"edge_kinds": "CT"})
         )
     # 交易成本：一天一条；创建范围＝该组窗口周里不晚于当天的部分（组一 05-25～06-07，组二 07-27～08-23）
     for g0, g1 in ((D(2026, 5, 25), D(2026, 6, 7)), (D(2026, 7, 27), D(2026, 8, 23))):
@@ -109,7 +103,10 @@ def main():
     only = next(
         (x.split("=")[1].split(",") for x in a if x.startswith("--only=")), None
     )
-    js = [j for j in jobs() if only is None or j[0] in only]
+    if only is None:
+        js = [j for j in jobs() if j[0] != "COSTF"]
+    else:
+        js = [j for j in jobs() if j[0] in only]
     total = 0
     for lay, label, args, kw in js:
         done = (H / "raw" / "dune" / ("%s.csv.gz" % label)).exists()

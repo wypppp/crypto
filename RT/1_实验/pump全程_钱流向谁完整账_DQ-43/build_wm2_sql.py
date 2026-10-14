@@ -618,30 +618,44 @@ nat AS (
       AND x.from_owner <> x.to_owner
 ),
 s_edges AS (
-    /* S：一端是种子的边，在截点之前先过滤、再按地址对汇总（10-14，GPT 04） */
+    /* 一端是种子的 SOL 边（≥0.05），在截点之前先过滤、再按地址对汇总（10-14，GPT 04）。只在本 CTE 内部用，不整体导出 */
     SELECT from_owner, to_owner, count(*) AS n, sum(amt) AS amt, min(block_time) AS t0, max(block_time) AS t1,
-           min_by(tx_id, block_time) AS tx0
+           from_owner IN (SELECT usr FROM seed) AS from_seed, to_owner IN (SELECT usr FROM seed) AS to_seed
     FROM nat
     WHERE from_owner IN (SELECT usr FROM seed) OR to_owner IN (SELECT usr FROM seed)
     GROUP BY 1, 2
 ),
+s2 AS (
+    /* 10-14 EDGE v3（取数附录 v3 §4）：只导出能把两个种子连起来的边（DQ-26 的三类）。
+       第一笔资金来源＝种子在窗口内最早的入账地址对（按首次时刻、再按地址定序） */
+    SELECT s.*,
+           CASE WHEN s.to_seed THEN row_number() OVER (PARTITION BY s.to_owner ORDER BY s.t0, s.from_owner) END AS r_in
+    FROM s_edges s
+),
+s3 AS (
+    SELECT s2.*, count_if(r_in = 1) OVER (PARTITION BY from_owner) AS n_first_of
+    FROM s2
+),
+s_keep AS (
+    /* S＝两端都是种子的边；G＝种子的第一笔来源，且这个来源是至少两个种子的第一笔来源 */
+    SELECT * FROM s3 WHERE (from_seed AND to_seed) OR (r_in = 1 AND n_first_of >= 2)
+),
 f_fan AS (
-    /* F：向种子转过钱、自己不是种子的来源地址，在同一窗口内的扇出（不同接收方数；>200 视为服务节点）。
-       10-14：交易所等大来源的接收方上百万，精确去重太贵，改用 approx_distinct（标准误约 2%，只用来和 200 比） */
+    /* 共同第一笔来源的扇出（不同接收方数，全部接收方，不只种子；>200 视为服务节点）。
+       交易所等大来源接收方很多，用 approx_distinct（标准误约 2%，只用来和 200 比） */
     SELECT n.from_owner, approx_distinct(n.to_owner) AS fanout
     FROM nat n
-    WHERE n.from_owner IN (SELECT from_owner FROM s_edges WHERE to_owner IN (SELECT usr FROM seed))
-      AND n.from_owner NOT IN (SELECT usr FROM seed)
+    WHERE n.from_owner IN (SELECT from_owner FROM s_keep WHERE r_in = 1 AND n_first_of >= 2)
     GROUP BY 1
 ),
 c_edges AS (
     /* C：创建者关联体——每个币创建前 7 天内与创建者的直接 SOL 往来，逐币窗口先过滤再汇总（不设 0.05 下限）。
        10-14：原写法按“付款方或收款方是创建者”的 OR 连接，Trino 无法哈希连接，冒烟 12 分钟扣 1,087.6 credits；
-       改为两条等值连接再合并（付款方与收款方不同，同一条转账不会在两边同一个币下重复） */
-    SELECT mint, from_owner, to_owner, count(*) AS n, sum(amount_display) AS amt,
-           min(block_time) AS t0, max(block_time) AS t1, min_by(tx_id, block_time) AS tx0
+       改为两条等值连接再合并（付款方与收款方不同，同一条转账不会在两边同一个币下重复）。cp＝创建者的对手 */
+    SELECT mint, from_owner, to_owner, cp, count(*) AS n, sum(amount_display) AS amt,
+           min(block_time) AS t0, max(block_time) AS t1
     FROM (
-        SELECT k.mint, x.from_owner, x.to_owner, x.amount_display, x.block_time, x.tx_id
+        SELECT k.mint, x.from_owner, x.to_owner, x.to_owner AS cp, x.amount_display, x.block_time
         FROM tokens_solana.transfers x
         JOIN kc k ON x.from_owner = k.creator
         WHERE x.block_date BETWEEN DATE '{cd0}' AND DATE '{c1}'
@@ -649,7 +663,7 @@ c_edges AS (
           AND x.token_version = 'native' AND x.action = 'transfer'
           AND x.outer_executing_account = '{sys}' AND x.from_owner <> x.to_owner
         UNION ALL
-        SELECT k.mint, x.from_owner, x.to_owner, x.amount_display, x.block_time, x.tx_id
+        SELECT k.mint, x.from_owner, x.to_owner, x.from_owner, x.amount_display, x.block_time
         FROM tokens_solana.transfers x
         JOIN kc k ON x.to_owner = k.creator
         WHERE x.block_date BETWEEN DATE '{cd0}' AND DATE '{c1}'
@@ -657,12 +671,12 @@ c_edges AS (
           AND x.token_version = 'native' AND x.action = 'transfer'
           AND x.outer_executing_account = '{sys}' AND x.from_owner <> x.to_owner
     )
-    GROUP BY 1, 2, 3
+    GROUP BY 1, 2, 3, 4
 ),
 t_edges AS (
     /* T：母体币的直接代币转移（不含成交腿），逐币窗口内，截点之前 */
     SELECT x.token_mint_address AS mint, x.from_owner, x.to_owner, count(*) AS n, sum(x.amount_display) AS amt,
-           min(x.block_time) AS t0, max(x.block_time) AS t1, min_by(x.tx_id, x.block_time) AS tx0
+           min(x.block_time) AS t0, max(x.block_time) AS t1
     FROM tokens_solana.transfers x
     JOIN kc k ON k.mint = x.token_mint_address
     WHERE x.block_date BETWEEN DATE '{e0}' AND DATE '{s1}'
@@ -673,22 +687,36 @@ t_edges AS (
       AND x.from_owner <> x.to_owner
     GROUP BY 1, 2, 3
 ),
-out AS (
-    SELECT 'solana' AS chain, 'S' AS kind, CAST(NULL AS varchar) AS mint, from_owner, to_owner, n, CAST(amt AS varchar) AS amt,
-           to_unixtime(t0) AS first_t, to_unixtime(t1) AS last_t, tx0 AS first_tx, CAST(NULL AS BIGINT) AS fanout,
-           '{x0}' AS win_from, '{xcut}' AS win_cut, 1 AS n_key
-    FROM s_edges
-    UNION ALL
-    SELECT 'solana', 'F', NULL, from_owner, NULL, NULL, NULL, NULL, NULL, NULL, fanout, '{x0}', '{xcut}', 1 FROM f_fan
-    UNION ALL
-    SELECT 'solana', 'C', mint, from_owner, to_owner, n, CAST(amt AS varchar), to_unixtime(t0), to_unixtime(t1), tx0, NULL,
-           'created-7d', 'created', 1
-    FROM c_edges
-    UNION ALL
-    SELECT 'solana', 'T', mint, from_owner, to_owner, n, CAST(amt AS varchar), to_unixtime(t0), to_unixtime(t1), tx0, NULL,
-           'created', '{xcut}', 1
-    FROM t_edges
+c_keep AS (
+    /* 只留对手是种子、或是本币代币转出方（关联体的一跳）的 C 边；x＝该币创建者在窗口内的对手数（近似，>200 视为服务节点） */
+    SELECT c.*, approx_distinct(c.cp) OVER (PARTITION BY c.mint) AS n_cp
+    FROM c_edges c
+),
+out AS ({edge_out}
 )"""
+
+EDGE_OUT_S = """
+    SELECT 'S' AS kind, CAST(NULL AS varchar) AS mint, from_owner AS a, to_owner AS b, n, CAST(amt AS varchar) AS amt,
+           CAST(to_unixtime(t0) AS bigint) AS first_t, CAST(to_unixtime(t1) AS bigint) AS last_t,
+           CAST(NULL AS BIGINT) AS x, CAST(NULL AS BIGINT) AS y, 1 AS n_key
+    FROM s_keep WHERE from_seed AND to_seed
+    UNION ALL
+    SELECT 'G', NULL, k.from_owner, k.to_owner, k.n, CAST(k.amt AS varchar), CAST(to_unixtime(k.t0) AS bigint),
+           CAST(to_unixtime(k.t1) AS bigint), f.fanout, k.n_first_of, 1
+    FROM s_keep k LEFT JOIN f_fan f ON f.from_owner = k.from_owner
+    WHERE k.r_in = 1 AND k.n_first_of >= 2
+    UNION ALL"""
+
+EDGE_OUT_CT = """
+    SELECT 'C' AS kind, mint, from_owner AS a, to_owner AS b, n, CAST(amt AS varchar) AS amt,
+           CAST(to_unixtime(t0) AS bigint) AS first_t, CAST(to_unixtime(t1) AS bigint) AS last_t,
+           n_cp AS x, CAST(NULL AS BIGINT) AS y, 1 AS n_key
+    FROM c_keep
+    WHERE cp IN (SELECT usr FROM seed) OR (mint, cp) IN (SELECT mint, from_owner FROM t_edges)
+    UNION ALL
+    SELECT 'T', mint, from_owner, to_owner, n, CAST(amt AS varchar), CAST(to_unixtime(t0) AS bigint),
+           CAST(to_unixtime(t1) AS bigint), NULL, NULL, 1
+    FROM t_edges"""
 
 # 冒烟：通用结构核对（每层的 out）
 SMOKE = """
@@ -710,7 +738,7 @@ COLS = {
     "n_curve n_amm signer_is_user cash_v1 cash_v2 cash_v3 d_trader tip_jito d_fee_recip d_other d_all d_other_pos d_pool keys_aligned keys_ok scope_complete n_key "
     "res_v1 res_v2 res_v3",
     "FAIL": "chain tx_id ts slot txi signer fee priority_fee error n_mints mints n_key",
-    "EDGE": "chain kind mint from_owner to_owner n amt first_t last_t first_tx fanout win_from win_cut n_key",
+    "EDGE": "kind mint a b n amt first_t last_t x y n_key",
     "CYCC": AG.CYC_Y_COLS,
     "CYCA": AG.CYC_Y_COLS,
     "CYCCP": AG.CYC_P_COLS,
@@ -726,7 +754,7 @@ NULL_CHECK = {
     "ATRADE": "q0 b0 q_user f_lp f_pr f_cr f_cb f_bb vq",
     "TX": "fee priority_fee d_trader",
     "FAIL": "fee priority_fee",
-    "EDGE": "from_owner",
+    "EDGE": "a b",
     "CYCC": "m12 u16 in_cash out_cash",
     "CYCA": "m12 u16 in_cash out_cash",
     "CYCCP": "z_r1 z_r2",
@@ -745,8 +773,10 @@ SMOKE_EXTRA = {
     "count_if(vq_src = 'unknown') AS n_vq_unknown, count_if(vq_ovf = 1) AS n_vq_ovf, count_if(ovf = 1) AS n_ord_ovf, "
     "count_if(xchk_ok = 0) AS n_xchk_fail, count_if(slot IS NULL OR txi IS NULL OR oix IS NULL) AS n_key_null",
     "FAIL": ", count(DISTINCT signer) AS n_signers, sum(n_mints) AS n_mint_links",
-    "EDGE": ", count_if(kind = 'S') AS n_sol_edges, count_if(kind = 'F') AS n_funders, count_if(kind = 'F' AND fanout > 200) AS n_service, "
-    "count_if(kind = 'C') AS n_creator_edges, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
+    "EDGE": ", count_if(kind = 'S') AS n_seed_edges, count_if(kind = 'G') AS n_first_funder_links, "
+    "count(DISTINCT IF(kind = 'G', a)) AS n_shared_funders, count_if(kind = 'G' AND x > 200) AS n_service_funders, "
+    "count_if(kind = 'G' AND x IS NULL) AS n_fanout_missing, count_if(kind = 'C') AS n_creator_edges, "
+    "count_if(kind = 'C' AND x > 200) AS n_creator_service_rows, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
     "CYCC": ", count(DISTINCT u16) AS n_wallets, count(DISTINCT m12) AS n_m12, "
     "count_if(n_buy > 0 AND fb_slot IS NULL) AS n_fb_missing, "
     "count_if(fb_slot IS NOT NULL AND fb_k IS NULL) AS n_k_noprior, count_if(fb_k = 1) AS n_k, "
@@ -833,12 +863,16 @@ def build(
     part=(0, 1),
     tpart=(0, 1),
     with_pre=True,
+    edge_kinds="all",
 ):
     """snap：CYC 的快照截点（默认创建止日次日 00:00，即 W+1 周一）；with_pre：是否输出截点前合计（W+1 的币不用）；
     part：CYC 输出按钱包分片；
-    tpart：COSTF 把一个事件日按小时等分（第几段, 共几段），只许单日。"""
+    tpart：COSTF 把一个事件日按小时等分（第几段, 共几段），只许单日。
+    edge_kinds：EDGE 输出哪几类（"all"＝S、G、C、T；"CT"＝只出 C、T，给 W+1 的币按自己的创建时刻取创建者关联）。"""
     if layer not in LAYERS:
         raise SystemExit("层只能是 %s" % "、".join(LAYERS))
+    if edge_kinds not in ("all", "CT"):
+        raise SystemExit("edge_kinds 只能是 all 或 CT")
     check_dates(c0, c1, e0, e1)
     names = (G35.H / "sql" / "_holdout_names.sqlpart").read_text().rstrip().rstrip(",")
     f = dict(
@@ -983,6 +1017,7 @@ def build(
             xd1=(xcut - dt.timedelta(days=1)).isoformat(),
             cd0=(c0 - dt.timedelta(days=7)).isoformat(),
             s1=s1.isoformat(),
+            edge_out=(EDGE_OUT_S if edge_kinds == "all" else "") + EDGE_OUT_CT,
             **f,
         )
     if not smoke:
