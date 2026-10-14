@@ -169,3 +169,79 @@ def test_runner_round_gate_refuses_before_any_query_request(tmp_path, monkeypatc
     monkeypatch.setattr("sys.argv", ["run_dune.py", "x", "s.sql", "--approve=next"])
     with pytest.raises(SystemExit, match="超过 50"):
         R.main()
+
+
+def runner_fixture(tmp_path, monkeypatch):
+    (tmp_path / "runs").mkdir()
+    (tmp_path / "s.sql").write_text("SELECT 1")
+    monkeypatch.setattr(R, "H", tmp_path)
+    monkeypatch.setattr(R, "STATES", tmp_path / "runs/states.csv")
+    monkeypatch.setattr(PG, "APPROVALS", tmp_path / "approvals.csv")
+    monkeypatch.setattr(PG, "ACTUAL", tmp_path / "actual.csv")
+    ticket = PG.Ticket("next", 10, 2)
+    monkeypatch.setattr(PG, "check", lambda *a: ticket)
+    lock = PG.one_at_a_time
+    monkeypatch.setattr(PG, "one_at_a_time", lambda t: lock(t, tmp_path / "lock"))
+    monkeypatch.setattr(PG, "round_gate", lambda *a: "")
+    monkeypatch.setattr(PG, "mark_used", lambda *a: None)
+    monkeypatch.setattr(R, "usage", lambda: (100, 2500))
+    monkeypatch.setattr(R.time, "sleep", lambda *a: None)
+    monkeypatch.setattr(
+        "sys.argv", ["run_dune.py", "fixture", "s.sql", "--approve=next"]
+    )
+    return ticket
+
+
+def test_runner_skips_paired_cost_cancel_before_usage_or_query(tmp_path, monkeypatch):
+    runner_fixture(tmp_path, monkeypatch)
+    _csv(
+        PG.APPROVALS,
+        ["编号", "双跑组", "SQL_sha256"],
+        [["first", "pair", "sha"], ["next", "pair", "sha"]],
+    )
+    R.execution_state("first", "eid1", "QUERY_STATE_CANCELLED", "费用取消")
+
+    def forbidden(*a, **k):
+        pytest.fail("费用取消后配对条仍访问了 Dune")
+
+    monkeypatch.setattr(R, "usage", forbidden)
+    monkeypatch.setattr(R, "call", forbidden)
+    with pytest.raises(SystemExit, match="自动跳过"):
+        R.main()
+    assert PG._rows(R.STATES)[-1]["平台状态"] == "SKIPPED"
+
+
+def test_85_percent_requests_cancel_once_and_waits_for_terminal(tmp_path, monkeypatch):
+    runner_fixture(tmp_path, monkeypatch)
+    calls = []
+
+    def call(method, path, body, ticket=None):
+        calls.append(path)
+        if path == "/query":
+            return {"query_id": 1}
+        if path.endswith("/execute"):
+            return {"execution_id": "eid"}
+        assert path == "/execution/eid/cancel"
+        return {}
+
+    statuses = iter(
+        [
+            {"state": "QUERY_STATE_EXECUTING", "execution_cost_credits": 8.49},
+            {"state": "QUERY_STATE_EXECUTING", "execution_cost_credits": 8.5},
+            {"state": "QUERY_STATE_EXECUTING", "execution_cost_credits": 8.7},
+            {"state": "QUERY_STATE_CANCELLED", "execution_cost_credits": 8.8},
+        ]
+    )
+    monkeypatch.setattr(R, "call", call)
+    monkeypatch.setattr(R, "get", lambda *a: next(statuses))
+    monkeypatch.setattr(R, "fetch", lambda *a: pytest.fail("取消查询仍下载"))
+    with pytest.raises(SystemExit):
+        R.main()
+    assert calls.count("/execution/eid/cancel") == 1
+    assert PG._rows(R.STATES)[-1]["原因"] == "费用取消"
+    assert PG._rows(PG.ACTUAL)[0]["合计实耗"] == ""  # 未核清增量，下一条须拒绝
+
+
+def test_threshold_hand():
+    assert R.cancel_threshold(10) == 8.5
+    assert R.cancel_threshold(14.95) == __import__("decimal").Decimal("12.7075")

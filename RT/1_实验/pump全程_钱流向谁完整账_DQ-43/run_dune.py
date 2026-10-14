@@ -8,7 +8,8 @@ python run_dune.py <标签> <sql 文件> --approve=<批准编号> [--engine=medi
 - 没有批准不跑（paid_guard.check：编号存在、SQL 的 sha256 与批准时一致、未用过）；执行与下载共用这一条批准。
 - 同一时间只跑一条（paid_guard.one_at_a_time，本机文件锁，拿不到就拒绝）；不自动重试、不自动提交下一条。
 - 预算只看用量接口的实时读数：读不到，或“已用＋本条执行费上限”超过本期额度，都不跑。
-- 运行中每 10 秒读已扣费用，超过批准的上限就在 Dune 上取消；按时间取消只作第二道。
+- 运行中每 2 秒读费用，到执行批准的 85% 请求取消；状态与撤单有延迟，不能保证硬上限。
+- 同一双跑组首条因费用取消，配对条在创建查询前自动跳过。
 - 结果大于批准的下载上限（MB）就不下载，只报大小。
 - 总控第七轮：同来源的已实耗＋本条执行上限＋下载上限 5 超过 50 就不提交；实耗缺失也拒绝。
 """
@@ -18,10 +19,45 @@ import datetime as dt
 import json
 import sys
 import time
+from decimal import Decimal
 
 import paid_guard as PG
 from dune_get import H, get
 from dune_get_stream import fetch
+
+STATES = H / "runs/付费执行状态.csv"
+
+
+def execution_state(approval, eid, state, cause):
+    new = not STATES.exists()
+    with STATES.open("a", newline="") as f:
+        w = csv.writer(f)
+        if new:
+            w.writerow(["编号", "execution_id", "平台状态", "原因"])
+        w.writerow([approval, eid, state, cause])
+
+
+def pair_gate(approval):
+    """双跑组明确登记；费用取消记录先于配对条的任何 API 请求。"""
+    rows = PG._rows(PG.APPROVALS)
+    hit = next((r for r in rows if r["编号"] == approval), {})
+    group = hit.get("双跑组")
+    if not group:
+        return ""
+    pair = [r for r in rows if r.get("双跑组") == group]
+    if len(pair) != 2 or len({r["SQL_sha256"] for r in pair}) != 1:
+        return "双跑组须恰好两条且 SQL 相同，不跑"
+    ids = {r["编号"] for r in pair} - {approval}
+    if any(
+        r["编号"] in ids and r["原因"] in ("费用取消", "费用越界完成")
+        for r in PG._rows(STATES)
+    ):
+        return "配对查询因费用停止，自动跳过；停下报告"
+    return ""
+
+
+def cancel_threshold(cap):
+    return Decimal(str(cap)) * Decimal("0.85")
 
 
 def call(method: str, path: str, body: dict, ticket=None) -> dict:
@@ -81,8 +117,12 @@ def main() -> None:
         )
     ap = PG.check(approval, sql_file)
     with PG.one_at_a_time(ap):
+        why = pair_gate(approval)
+        if why:
+            execution_state(approval, "", "SKIPPED", why)
+            raise SystemExit(why)
         u0 = usage()
-        why = budget_gate(u0, ap["cap"])
+        why = budget_gate(u0, ap["cap"] + ap.download_cap)
         if why:
             raise SystemExit(why)
         why = PG.round_gate(approval)
@@ -101,26 +141,33 @@ def main() -> None:
         print(label, "批准", approval, "query", qid, "execution", eid, flush=True)
         cost = None
         try:
-            t0, cancelled = time.time(), ""
+            t0, cancelled, cause = time.time(), "", ""
             while True:
                 st = get(f"/execution/{eid}/status")
                 if st["state"] not in ("QUERY_STATE_PENDING", "QUERY_STATE_EXECUTING"):
                     break
                 spent = float(st.get("execution_cost_credits") or 0)
-                if not cancelled and spent > ap["cap"]:
+                if not cancelled and Decimal(str(spent)) >= cancel_threshold(ap["cap"]):
                     call("POST", f"/execution/{eid}/cancel", {})
-                    cancelled = "运行中费用超过批准上限，主动取消"
+                    cause = "费用取消"
+                    cancelled = "运行中费用到批准上限85%，主动取消"
+                    execution_state(approval, eid, st["state"], cause)
                     print(
                         label,
-                        "已扣 %.1f，超过批准上限 %.0f，已请求取消" % (spent, ap["cap"]),
+                        "已扣 %.3f，触发点 %s，已请求取消"
+                        % (spent, cancel_threshold(ap["cap"])),
                         flush=True,
                     )
                 elif not cancelled and time.time() - t0 > max_min * 60:
                     call("POST", f"/execution/{eid}/cancel", {})
                     cancelled = "超时主动取消"
+                    cause = "超时取消"
                     print(label, f"超过 {max_min:g} 分钟，已请求取消", flush=True)
-                time.sleep(10)
+                time.sleep(2)
             cost = st.get("execution_cost_credits")
+            if cost is not None and float(cost) > ap["cap"] and not cause:
+                cause = "费用越界完成"
+            execution_state(approval, eid, st["state"], cause or st["state"])
             with open(H / "runs" / "dune_ledger.csv", "a", newline="") as f:
                 note = "公开查询；引擎 %s；批准 %s%s；执行前用量 %.3f" % (
                     engine,
@@ -135,6 +182,8 @@ def main() -> None:
             if st["state"] != "QUERY_STATE_COMPLETED":
                 print(json.dumps(st.get("error"), ensure_ascii=False), flush=True)
                 sys.exit(1)
+            if cost is None or float(cost) > ap["cap"]:
+                raise SystemExit("完成费用未知或超过批准上限，停止下载并报告")
             mb = (
                 float((st.get("result_metadata") or {}).get("result_set_bytes") or 0)
                 / 1e6
