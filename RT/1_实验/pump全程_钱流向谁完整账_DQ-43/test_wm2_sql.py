@@ -203,4 +203,7 @@ def test_no_or_join_conditions():
         for layer, sql in all_sql(smoke).items():
             for line in sql.splitlines():
                 if re.search(r"\bJOIN\b", line) and " ON " in line:
-                    assert not re.search(r"\bOR\b", line.split(" ON ", 1)[1]), (layer, line)
+                    assert not re.search(r"\bOR\b", line.split(" ON ", 1)[1]), (
+                        layer,
+                        line,
+                    )
