@@ -626,23 +626,37 @@ s_edges AS (
     GROUP BY 1, 2
 ),
 f_fan AS (
-    /* F：向种子转过钱、自己不是种子的来源地址，在同一窗口内的扇出（不同接收方数；>200 视为服务节点） */
-    SELECT n.from_owner, count(DISTINCT n.to_owner) AS fanout
+    /* F：向种子转过钱、自己不是种子的来源地址，在同一窗口内的扇出（不同接收方数；>200 视为服务节点）。
+       10-14：交易所等大来源的接收方上百万，精确去重太贵，改用 approx_distinct（标准误约 2%，只用来和 200 比） */
+    SELECT n.from_owner, approx_distinct(n.to_owner) AS fanout
     FROM nat n
     WHERE n.from_owner IN (SELECT from_owner FROM s_edges WHERE to_owner IN (SELECT usr FROM seed))
       AND n.from_owner NOT IN (SELECT usr FROM seed)
     GROUP BY 1
 ),
 c_edges AS (
-    /* C：创建者关联体——每个币创建前 7 天内与创建者的直接 SOL 往来，逐币窗口先过滤再汇总（不设 0.05 下限） */
-    SELECT k.mint, x.from_owner, x.to_owner, count(*) AS n, sum(x.amount_display) AS amt,
-           min(x.block_time) AS t0, max(x.block_time) AS t1, min_by(x.tx_id, x.block_time) AS tx0
-    FROM tokens_solana.transfers x
-    JOIN kc k ON (x.from_owner = k.creator OR x.to_owner = k.creator)
-    WHERE x.block_date BETWEEN DATE '{cd0}' AND DATE '{c1}'
-      AND x.block_time >= k.created_at - INTERVAL '7' DAY AND x.block_time < k.created_at
-      AND x.token_version = 'native' AND x.action = 'transfer'
-      AND x.outer_executing_account = '{sys}' AND x.from_owner <> x.to_owner
+    /* C：创建者关联体——每个币创建前 7 天内与创建者的直接 SOL 往来，逐币窗口先过滤再汇总（不设 0.05 下限）。
+       10-14：原写法按“付款方或收款方是创建者”的 OR 连接，Trino 无法哈希连接，冒烟 12 分钟扣 1,087.6 credits；
+       改为两条等值连接再合并（付款方与收款方不同，同一条转账不会在两边同一个币下重复） */
+    SELECT mint, from_owner, to_owner, count(*) AS n, sum(amount_display) AS amt,
+           min(block_time) AS t0, max(block_time) AS t1, min_by(tx_id, block_time) AS tx0
+    FROM (
+        SELECT k.mint, x.from_owner, x.to_owner, x.amount_display, x.block_time, x.tx_id
+        FROM tokens_solana.transfers x
+        JOIN kc k ON x.from_owner = k.creator
+        WHERE x.block_date BETWEEN DATE '{cd0}' AND DATE '{c1}'
+          AND x.block_time >= k.created_at - INTERVAL '7' DAY AND x.block_time < k.created_at
+          AND x.token_version = 'native' AND x.action = 'transfer'
+          AND x.outer_executing_account = '{sys}' AND x.from_owner <> x.to_owner
+        UNION ALL
+        SELECT k.mint, x.from_owner, x.to_owner, x.amount_display, x.block_time, x.tx_id
+        FROM tokens_solana.transfers x
+        JOIN kc k ON x.to_owner = k.creator
+        WHERE x.block_date BETWEEN DATE '{cd0}' AND DATE '{c1}'
+          AND x.block_time >= k.created_at - INTERVAL '7' DAY AND x.block_time < k.created_at
+          AND x.token_version = 'native' AND x.action = 'transfer'
+          AND x.outer_executing_account = '{sys}' AND x.from_owner <> x.to_owner
+    )
     GROUP BY 1, 2, 3
 ),
 t_edges AS (

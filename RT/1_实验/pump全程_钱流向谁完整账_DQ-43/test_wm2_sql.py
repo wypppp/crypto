@@ -195,3 +195,12 @@ def test_smoke_extras_reference_output_columns():
         words = set(re.findall(r"\b[a-z_][a-z0-9_]*\b", ex))
         bad = {w for w in words - set(cols.split()) - kw if not w.startswith("n_")}
         assert bad <= {"layout0", "fanout", "n"}, (lay, bad)
+
+
+def test_no_or_join_conditions():
+    """10-14 EDGE 冒烟事故：连接条件里带 OR，Trino 无法哈希连接，12 分钟扣 1,087.6 credits。任何一层都不许再出现。"""
+    for smoke in (False, True):
+        for layer, sql in all_sql(smoke).items():
+            for line in sql.splitlines():
+                if re.search(r"\bJOIN\b", line) and " ON " in line:
+                    assert not re.search(r"\bOR\b", line.split(" ON ", 1)[1]), (layer, line)
