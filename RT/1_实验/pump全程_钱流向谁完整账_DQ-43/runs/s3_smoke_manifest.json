@@ -1,0 +1,179 @@
+{
+  "baseline_usage": 1468.771,
+  "final_usage": 1503.546,
+  "billing_period": [
+    "2026-10-14",
+    "2026-10-28"
+  ],
+  "included": 2500,
+  "round_usage": 34.775,
+  "remaining": 996.454,
+  "runs": [
+    {
+      "approval": "A7-01",
+      "label": "S3P_EDGE_SGT_0811_p10_SMK_r1",
+      "query_id": "8944955",
+      "execution_id": "01M4WQQ8WA7JZWVEFBSCEWA7WH",
+      "state": "QUERY_STATE_COMPLETED",
+      "sql_file": "sql/S3P_EDGE_SGT_0811_p10_SMK.sql",
+      "sql_sha256": "8ef08fc1e0a17cfe6717e27f804c4da8908a8f810fc758f5a09676b24babd14b",
+      "execution_cost_credits": "4.6825",
+      "usage_before": "1468.771",
+      "usage_after": "1473.454",
+      "row_count": 1,
+      "result_set_bytes": 148,
+      "downloaded": true,
+      "csv_gz_sha256": "93200a23d7645c0eb94a9b27050aac8aebd261e443a9dd895d7a51b124127a7c",
+      "status_sha256": "6806d11a6819d2d066d371f94a4077d0b9086a6c6ad77dc89a00520a27892b59"
+    },
+    {
+      "approval": "A7-02",
+      "label": "S3P_EDGE_SGT_0811_p10_SMK_r2",
+      "query_id": "8944974",
+      "execution_id": "01M4WR02977BS2MQPKE4YFN3PV",
+      "state": "QUERY_STATE_COMPLETED",
+      "sql_file": "sql/S3P_EDGE_SGT_0811_p10_SMK.sql",
+      "sql_sha256": "8ef08fc1e0a17cfe6717e27f804c4da8908a8f810fc758f5a09676b24babd14b",
+      "execution_cost_credits": "4.195441177",
+      "usage_before": "1473.454",
+      "usage_after": "1477.649",
+      "row_count": 1,
+      "result_set_bytes": 148,
+      "downloaded": true,
+      "csv_gz_sha256": "ba6b8d31fa8611475124fc98563154d6d35bcc8dea8fcc99a680becd5d5410e1",
+      "status_sha256": "0a5a253cce94262db6efbb5b1f9a55ca51f8afcd4a5ca53ff0415f20eee2fc39"
+    },
+    {
+      "approval": "A7-03",
+      "label": "S3P_EDGE_SGT_0811_p002",
+      "query_id": "8944983",
+      "execution_id": "01M4WR45V0AC8F54ZS6Y34DNPZ",
+      "state": "QUERY_STATE_COMPLETED",
+      "sql_file": "sql/S3P_EDGE_SGT_0811_p002.sql",
+      "sql_sha256": "6c730017728d89d841637a00095b844c388fbb24787e595cd7b7d25a1c401b9b",
+      "execution_cost_credits": "3.433088236",
+      "usage_before": "1477.649",
+      "usage_after": "1481.082",
+      "row_count": 815,
+      "result_set_bytes": 117588,
+      "downloaded": true,
+      "csv_gz_sha256": "1c4de00ebc72800c7fce0c150838f3a12b7f52311021df66452091c2abb089cb",
+      "status_sha256": "c440e32d7f65f11129afdaa174e536283dcacef4dc5ad51c1ac657abfb384a5f"
+    },
+    {
+      "approval": "A7-04",
+      "label": "S3P_STATS_0811_p002_r1",
+      "query_id": "8944996",
+      "execution_id": "01M4WRBH8HABRBYSR8R5707RWR",
+      "state": "QUERY_STATE_CANCELLED",
+      "sql_file": "sql/S3P_STATS_0811_p002.sql",
+      "sql_sha256": "bdbc142a9e7a7a8f013d23b3b295e72dd94057d06e235a7ca5931c7c10e4da7f",
+      "execution_cost_credits": "10.9825",
+      "usage_before": "1481.082",
+      "usage_after": "1492.065",
+      "row_count": null,
+      "result_set_bytes": null,
+      "downloaded": false,
+      "csv_gz_sha256": null,
+      "status_sha256": "6001cb389b17b6639b80826b5cd0cc76561f0604eae08a72020da6a961cd329b"
+    },
+    {
+      "approval": "A7-05",
+      "label": "S3P_STATS_0811_p002_r2",
+      "query_id": "8945003",
+      "execution_id": "01M4WRGNM42KZNKHQT1F8BCD1S",
+      "state": "QUERY_STATE_CANCELLED",
+      "sql_file": "sql/S3P_STATS_0811_p002.sql",
+      "sql_sha256": "bdbc142a9e7a7a8f013d23b3b295e72dd94057d06e235a7ca5931c7c10e4da7f",
+      "execution_cost_credits": "10.8625",
+      "usage_before": "1492.065",
+      "usage_after": "1502.927",
+      "row_count": null,
+      "result_set_bytes": null,
+      "downloaded": false,
+      "csv_gz_sha256": null,
+      "status_sha256": "f0b7c0943a91510d9684e3bdf2fc7171829a94387a961189a7ef011da029816f"
+    },
+    {
+      "approval": "A7-06",
+      "label": "S3P_DETAIL_0811_p002",
+      "query_id": "8945017",
+      "execution_id": "01M4WRPTY8WDKX1NVCQJNCAW8R",
+      "state": "QUERY_STATE_COMPLETED",
+      "sql_file": "sql/S3P_DETAIL_0811_p002.sql",
+      "sql_sha256": "d8847d275a9bee733064c7c21b08928e47d280bb33eca9aaed64eac97f81141d",
+      "execution_cost_credits": "0.619088236",
+      "usage_before": "1502.927",
+      "usage_after": "1503.546",
+      "row_count": 16145,
+      "result_set_bytes": 2952326,
+      "downloaded": true,
+      "csv_gz_sha256": "ee8c45f49c4d858a11c34c6e8abec99dcee7cf1794fa295a1602fa70b39e2805",
+      "status_sha256": "a900123518e80e04138e85299ba07656ad90ed3bde2ee1a1008e4ab325c6b49d"
+    }
+  ],
+  "edge_execution_linear_three_pairs": [
+    1233.459706038,
+    1376.655
+  ],
+  "edge_export_MB_linear_three_pairs": [
+    1728.5436,
+    4646.12169
+  ],
+  "edge_export_credits_at_2_per_MB": [
+    3457.0872,
+    9292.24338
+  ],
+  "s3_cancelled_cost_date_linear_three_pairs": [
+    716.925,
+    724.845
+  ],
+  "forecast_is_scenario_not_completed_cost": true,
+  "s3_export_and_total_completed_cost": null,
+  "raw_data_committed": false,
+  "upload_performed": false,
+  "billing_source": "https://docs.dune.com/api-reference/overview/billing",
+  "user_extra_download": {
+    "approval": "A7-07",
+    "execution_id": "01M4WRPTY8WDKX1NVCQJNCAW8R",
+    "max_MB": 3,
+    "download_cap_credits": 7.5,
+    "usage_increment": 0,
+    "downloaded_rows": 16145,
+    "result_set_bytes": 2952326,
+    "raw_sha256": "ee8c45f49c4d858a11c34c6e8abec99dcee7cf1794fa295a1602fa70b39e2805"
+  },
+  "download_charge_not_identified": true,
+  "local_real_replay": {
+    "scope": "DuckDB replay of statistics on already filtered detail; not Dune/Trino acceptance",
+    "detail_kinds": {
+      "K": 151,
+      "T": 12138,
+      "E": 3,
+      "A": 3853
+    },
+    "local_double_run_identical": true,
+    "diff_sql_vs_reference": {},
+    "selection_certain": true,
+    "frozen_select_set_same": true,
+    "T_from_G_equals_frozen": true,
+    "remove_W1_keeps_selection": true,
+    "N_structure": {
+      "n_el": 4,
+      "k_sel": 1,
+      "n_ent_w": 1940,
+      "n_rows_w": 2178,
+      "n_rows_w1": 2002,
+      "n_amm_rows": 802,
+      "chk_amm_event": 0,
+      "chk_state_null": 0,
+      "chk_hit_and_slf": 0,
+      "n_coins_w": 82,
+      "n_coins_w1": 69,
+      "n_events": 3,
+      "n_mapped_w": 55
+    },
+    "n_C": 0,
+    "n_G": 0
+  }
+}

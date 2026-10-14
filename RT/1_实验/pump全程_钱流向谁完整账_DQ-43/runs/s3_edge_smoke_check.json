@@ -1,0 +1,58 @@
+{
+  "double_run_identical": false,
+  "structure_r1": {
+    "layer": "EDGE",
+    "n_rows": "91625",
+    "n_dup_key": "0",
+    "null_a": "0",
+    "null_b": "0",
+    "n_seed_edges": "13098",
+    "n_first_funder_links": "13552",
+    "n_shared_funders": "817",
+    "n_service_funders": "10367",
+    "n_fanout_missing": "0",
+    "n_creator_edges": "0",
+    "n_creator_service_rows": "0",
+    "n_tok_edges": "64975",
+    "n_transfers": "126094",
+    "ck_rows": "91625",
+    "ck_sum": "423948195518611190338834",
+    "ck_xor": "-4452759042669293600",
+    "est_csv_bytes": "15802885"
+  },
+  "structure_r2": {
+    "layer": "EDGE",
+    "n_rows": "91625",
+    "n_dup_key": "0",
+    "null_a": "0",
+    "null_b": "0",
+    "n_seed_edges": "13098",
+    "n_first_funder_links": "13552",
+    "n_shared_funders": "817",
+    "n_service_funders": "10367",
+    "n_fanout_missing": "0",
+    "n_creator_edges": "0",
+    "n_creator_service_rows": "0",
+    "n_tok_edges": "64975",
+    "n_transfers": "126094",
+    "ck_rows": "91625",
+    "ck_sum": "423961381072048418150882",
+    "ck_xor": "4786371556298297000",
+    "est_csv_bytes": "15803135"
+  },
+  "diff_fields": {
+    "ck_sum": [
+      "423948195518611190338834",
+      "423961381072048418150882"
+    ],
+    "ck_xor": [
+      "-4452759042669293600",
+      "4786371556298297000"
+    ],
+    "est_csv_bytes": [
+      "15802885",
+      "15803135"
+    ]
+  },
+  "inference": "金额的浮点求和是首要嫌疑，尚未通过逐行双跑定位；不能把计数相等当作完整边输出一致。"
+}

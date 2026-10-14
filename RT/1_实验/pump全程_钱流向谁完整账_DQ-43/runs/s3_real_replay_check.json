@@ -1,0 +1,32 @@
+{
+  "scope": "DuckDB replay of statistics on already filtered detail; not Dune/Trino acceptance",
+  "detail_kinds": {
+    "K": 151,
+    "T": 12138,
+    "E": 3,
+    "A": 3853
+  },
+  "local_double_run_identical": true,
+  "diff_sql_vs_reference": {},
+  "selection_certain": true,
+  "frozen_select_set_same": true,
+  "T_from_G_equals_frozen": true,
+  "remove_W1_keeps_selection": true,
+  "N_structure": {
+    "n_el": 4,
+    "k_sel": 1,
+    "n_ent_w": 1940,
+    "n_rows_w": 2178,
+    "n_rows_w1": 2002,
+    "n_amm_rows": 802,
+    "chk_amm_event": 0,
+    "chk_state_null": 0,
+    "chk_hit_and_slf": 0,
+    "n_coins_w": 82,
+    "n_coins_w1": 69,
+    "n_events": 3,
+    "n_mapped_w": 55
+  },
+  "n_C": 0,
+  "n_G": 0
+}
