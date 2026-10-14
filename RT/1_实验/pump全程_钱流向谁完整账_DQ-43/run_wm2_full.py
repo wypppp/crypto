@@ -3,16 +3,14 @@
 
 python run_wm2_full.py --dry            → 列出全部任务与预计 credits，不执行
 python run_wm2_full.py --gen            → 只生成全部 SQL（sql/<标签>.sql），供先入库
-python run_wm2_full.py [--only=COIN,VQ] → 按顺序执行；已取回的（raw/dune/<标签>.csv.gz 存在）跳过
-
-每条任务：SQL 必须已入库（git 跟踪且与生成器当前输出一致）→ run_dune.py（预算闸门、超时取消、台账）→ 下载。
+10-14 总控第六轮：本脚本**不再提交任何查询**（不用自动提交的脚本）。每条查询单独报批，用
+python run_dune.py <标签> sql/<标签>.sql --approve=<批准编号> 一条一条跑。
 闸门不放行（额度或硬停）时整个驱动停下，先报用户。抽样率 p＝10%（冻结卡 v4 §5）。
 """
 
 from __future__ import annotations
 
 import datetime as dt
-import subprocess
 import sys
 from pathlib import Path
 
@@ -98,7 +96,6 @@ def jobs():
 
 def main():
     a = sys.argv[1:]
-    dry = "--dry" in a
     gen = "--gen" in a
     only = next(
         (x.split("=")[1].split(",") for x in a if x.startswith("--only=")), None
@@ -111,35 +108,10 @@ def main():
     for lay, label, args, kw in js:
         done = (H / "raw" / "dune" / ("%s.csv.gz" % label)).exists()
         total += 0 if done else EST[lay]
-        if dry:
-            print(("已取 " if done else "待取 ") + label, EST[lay])
-            continue
-        sql = B.build(lay, *args, p=P, **kw)
-        f = H / "sql" / ("%s.sql" % label)
         if gen:
-            f.write_text(sql)
-            continue
-        if done:
-            continue
-        tracked = subprocess.run(
-            ["git", "ls-files", "--error-unmatch", str(f)], cwd=H, capture_output=True
-        )
-        if tracked.returncode != 0 or f.read_text() != sql:
-            raise SystemExit("%s 未入库或与生成器不一致，先 --gen 并提交" % f.name)
-        r = subprocess.run(
-            [
-                sys.executable,
-                "run_dune.py",
-                label,
-                "sql/%s.sql" % label,
-                "medium",
-                "12",
-                str(EST[lay]),
-            ],
-            cwd=H,
-        )
-        if r.returncode != 0:
-            raise SystemExit("任务 %s 没有完成（闸门、超时或失败），驱动停下" % label)
+            (H / "sql" / ("%s.sql" % label)).write_text(B.build(lay, *args, p=P, **kw))
+        else:
+            print(("已取 " if done else "待取 ") + label, EST[lay])
     print("任务 %d 条；待取部分预计约 %d credits" % (len(js), total))
 
 
