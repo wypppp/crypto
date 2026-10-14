@@ -741,7 +741,7 @@ SMOKE_EXTRA = {
     "count_if(in_pre IS NULL) AS n_pre_null",
     "CYCCP": ", count(DISTINCT m12) AS n_m12, count_if(z_cut = 'S') AS n_p_snap, count_if(z_cut = 'E') AS n_p_end, "
     "count_if(z_bps1 IS NULL) AS n_bps1_null",
-    "COSTF": ", count_if(kind = 'K') AS n_k, count_if(kind = 'F') AS n_f, count(DISTINCT signer) AS n_signers, "
+    "COSTF": ", count_if(kind = 'K') AS n_k, count_if(kind = 'F') AS n_f, count(DISTINCT s16) AS n_signers, "
     "sum(n_tx) AS n_leg_tx, sum(n_tx_clean) AS n_leg_tx_clean, sum(n_tx_unclean) AS n_leg_tx_unclean, "
     "count_if(CAST(cost_net AS DECIMAL(38,0)) + CAST(cost_tip AS DECIMAL(38,0)) > CAST(cost AS DECIMAL(38,0)) + 2) "
     "AS n_parts_gt_total, count_if(CAST(cost AS DECIMAL(38,0)) < 0 OR CAST(res_neg AS DECIMAL(38,0)) < 0) AS n_negative",

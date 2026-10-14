@@ -169,3 +169,29 @@ def test_agg_layers_guards_and_entrances():
         and "TIMESTAMP '2026-08-12 12:00:00'" in cost
     )
     assert cost.count("FROM solana.transactions") == 1
+
+
+def test_smoke_extras_reference_output_columns():
+    """冒烟的计数与缺失检查只引用该层输出里有的列（10-14：COSTF 改列名后冒烟引用旧列，Dune 编译失败）。"""
+    kw = {
+        "count_if",
+        "count",
+        "sum",
+        "distinct",
+        "as",
+        "and",
+        "or",
+        "not",
+        "is",
+        "null",
+        "cast",
+        "decimal",
+        "in",
+    }
+    for lay, cols in B.COLS.items():
+        ex = re.sub(
+            r"'[^']*'", "", B.SMOKE_EXTRA.get(lay, "") + " " + B.NULL_CHECK[lay]
+        )
+        words = set(re.findall(r"\b[a-z_][a-z0-9_]*\b", ex))
+        bad = {w for w in words - set(cols.split()) - kw if not w.startswith("n_")}
+        assert bad <= {"layout0", "fanout", "n"}, (lay, bad)
