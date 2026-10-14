@@ -68,7 +68,7 @@ def prep():
         for k, f, note in new:
             if k not in have:
                 w.writerow(
-                    [k, "2026-10-14", SRC, f, PG.sha(H / f), "10", "2", note, "15"]
+                    [k, "2026-10-14", SRC, f, PG.sha(H / f), "10", "2", note, "15", "5"]
                 )
     print(json.dumps(n, ensure_ascii=False))
     for k, label, run in (
@@ -81,15 +81,42 @@ def prep():
 
 
 def check():
+    expected = [STATS + "_r1", STATS + "_r2", DETAIL]
+    available = {
+        label
+        for label in expected
+        if (H / "raw" / "dune" / (label + ".csv.gz")).exists()
+    }
+    missing = sorted(set(expected) - available)
+    emap_file = H / "runs" / "s3_smoke_emap.json"
+    if (
+        not emap_file.exists()
+        or DETAIL not in available
+        or not ({STATS + "_r1", STATS + "_r2"} & available)
+    ):
+        out = {"status": "incomplete", "missing_results": missing}
+        (H / "runs" / "s3_smoke_check.json").write_text(
+            json.dumps(out, ensure_ascii=False, indent=1)
+        )
+        print(json.dumps(out, ensure_ascii=False, indent=1))
+        raise SystemExit("缺少试跑结果，核对未完成")
     emap = json.loads((H / "runs" / "s3_smoke_emap.json").read_text())["emap"]
-    r1, r2 = raw(STATS + "_r1"), raw(STATS + "_r2")
+    r1 = raw(STATS + "_r1") if STATS + "_r1" in available else None
+    r2 = raw(STATS + "_r2") if STATS + "_r2" in available else None
     key = lambda rows: sorted(tuple(r[c] for c in S.OUT_COLS) for r in rows)  # noqa: E731
-    sql = R.parse_out(r1)
+    sql = R.parse_out(r1 if r1 is not None else r2)
     ref = R.reference(raw(DETAIL), emap, W0, CUT, W1E, CAP)
     fc = R.frozen_check(ref)
     out = {
-        "double_run_identical": key(r1) == key(r2),
-        "diff_sql_vs_reference": [list(map(str, d)) for d in R.compare(sql, ref)],
+        "missing_results": missing,
+        "double_run_identical": key(r1) == key(r2)
+        if r1 is not None and r2 is not None
+        else None,
+        # 只报差异类别与个数，避免失败时输出实体地址、得分或分箱边界。
+        "diff_sql_vs_reference": [
+            [kind, sum(d[0] == kind for d in R.compare(sql, ref))]
+            for kind in sorted({d[0] for d in R.compare(sql, ref)})
+        ],
         "selection_certain": R.certain(sql["C"], sql["N"]["k_sel"]) == [],
         "frozen_select_set_same": fc["select_set_same"],
         # 冒烟只出结构核对（冻结卡 v4 §5）：T 只报两种算法是否相等，不报数值
@@ -115,10 +142,25 @@ def check():
         "n_C": len(sql["C"]),
         "n_G": len(sql["G"]),
     }
+    passed = (
+        all(
+            out[k] is True
+            for k in (
+                "double_run_identical",
+                "selection_certain",
+                "frozen_select_set_same",
+                "T_from_G_equals_frozen",
+            )
+        )
+        and out["diff_sql_vs_reference"] == []
+    )
+    out["status"] = "incomplete" if missing else "passed" if passed else "failed"
     (H / "runs" / "s3_smoke_check.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1)
     )
     print(json.dumps(out, ensure_ascii=False, indent=1))
+    if out["status"] != "passed":
+        raise SystemExit("S3 核对未通过或未完成")
 
 
 if __name__ == "__main__":

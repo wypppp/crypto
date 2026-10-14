@@ -53,6 +53,7 @@ FIELDS = [
     "下载上限MB",
     "范围说明",
     "预计 credits",
+    "下载费上限",
 ]
 
 
@@ -76,9 +77,15 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
         except (KeyError, InvalidOperation, ValueError):
             return "批准 %s 的实耗未核清，不跑" % k
         total += value
-    # 第七轮明确批准下载费 ≤5。预计值不作为批准上限。
-    cap = Decimal(group[approval]["执行费上限"]) + Decimal(5)
-    if not cap.is_finite() or cap < 5:
+    # 原批准下载费 ≤5；用户追加的下载额度单独登记。预计值不作为批准上限。
+    download_cap = Decimal(group[approval].get("下载费上限") or "5")
+    cap = Decimal(group[approval]["执行费上限"]) + download_cap
+    if (
+        not cap.is_finite()
+        or not download_cap.is_finite()
+        or cap < 0
+        or download_cap < 0
+    ):
         return "本条上限无效，不跑"
     if total + cap > 50:
         return "总控第七轮已实耗 %s＋本条上限 %s 超过 50，不跑" % (total, cap)
@@ -139,6 +146,7 @@ class Ticket(dict):
         super().__init__(cap=cap, max_mb=max_mb)
         self.approval = approval
         self.locked = False
+        self.download_cap = 5.0
 
 
 def is_free(method: str, path: str) -> bool:
@@ -194,7 +202,9 @@ def check(
         raise Refused("%s 的内容与批准时不一致（sha256 不同），不跑" % sql_file)
     if any(u["编号"] == approval for u in _rows(used)):
         raise Refused("批准 %s 已经用过；一条批准只用一次" % approval)
-    return Ticket(approval, float(r["执行费上限"]), float(r["下载上限MB"]))
+    ticket = Ticket(approval, float(r["执行费上限"]), float(r["下载上限MB"]))
+    ticket.download_cap = float(r.get("下载费上限") or "5")
+    return ticket
 
 
 def mark_used(approval: str, execution_id: str, cost, used: Path = USED) -> None:

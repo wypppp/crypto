@@ -20,11 +20,11 @@ from dune_get import H, get, norm, page
 CHUNK, PS = 50_000, 1000
 
 
-def fetch(qid, label, sql_file, ticket):
+def fetch(qid, label, sql_file, ticket, execution_id=None):
     q = get(f"/query/{qid}")
     if norm(q.get("query_sql", "")) != norm((H / sql_file).read_text()):
         raise SystemExit("Dune 上保存的 SQL 与本地冻结版本不一致，停止")
-    eid = get(f"/query/{qid}/results?limit=1", ticket)["execution_id"]
+    eid = execution_id or get(f"/query/{qid}/results?limit=1", ticket)["execution_id"]
     st = get(f"/execution/{eid}/status")
     raw = H / "raw" / "dune"
     (raw / f"{label}_status.json").write_text(
@@ -76,8 +76,30 @@ def main():
         raise SystemExit("下载也付费：没有 --approve=<批准编号>，不下载")
     ticket = PG.check(opt["--approve"], sql_file)
     with PG.one_at_a_time(ticket):
-        PG.mark_used(opt["--approve"], "下载 query %s" % qid, "下载")
-        fetch(qid, label, sql_file, ticket)
+        from run_dune import budget_gate, usage
+
+        u0 = usage()
+        why = budget_gate(u0, ticket.download_cap) or PG.round_gate(opt["--approve"])
+        if why:
+            raise SystemExit(why)
+        eid = opt.get("--execution")
+        if eid:
+            st = get(f"/execution/{eid}/status")
+            mb = (
+                float((st.get("result_metadata") or {}).get("result_set_bytes") or 0)
+                / 1e6
+            )
+            if st["state"] != "QUERY_STATE_COMPLETED" or mb > ticket["max_mb"]:
+                raise SystemExit("执行未完成或超过本条下载上限，不下载")
+        PG.mark_used(opt["--approve"], eid or "下载 query %s" % qid, "下载")
+        try:
+            fetch(qid, label, sql_file, ticket, execution_id=eid)
+        finally:
+            u1 = usage()
+            PG.record_actual(
+                opt["--approve"], eid or qid, u0[0], None if u1 is None else u1[0], 0
+            )
+            print("下载用量", u0[0], "→", None if u1 is None else u1[0], flush=True)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,8 @@
 import csv
 import gzip
 
+import paid_guard as PG
+import run_dune as R
 import dune_get_stream as S
 
 
@@ -32,3 +34,42 @@ def test_nullable_integer_csv_is_exact(tmp_path, monkeypatch):
             {"slot": "9223372036854775807", "x": "200"},
             {"slot": "", "x": ""},
         ]
+
+
+def test_authorized_download_reuses_execution_and_records_actual(tmp_path, monkeypatch):
+    ticket = PG.Ticket("extra", 0, 3)
+    ticket.download_cap = 7.5
+    monkeypatch.setattr(PG, "check", lambda *args: ticket)
+    lock = PG.one_at_a_time
+    monkeypatch.setattr(PG, "one_at_a_time", lambda t: lock(t, tmp_path / "lock"))
+    monkeypatch.setattr(PG, "round_gate", lambda *args: "")
+    monkeypatch.setattr(PG, "mark_used", lambda *args: None)
+    monkeypatch.setattr(PG, "ACTUAL", tmp_path / "actual.csv")
+    readings = iter([(100.0, 2500), (106.0, 2500)])
+    monkeypatch.setattr(R, "usage", lambda: next(readings))
+    paths, downloads = [], []
+
+    def status(path, ticket=None):
+        paths.append(path)
+        return {
+            "state": "QUERY_STATE_COMPLETED",
+            "result_metadata": {"result_set_bytes": 2952326},
+        }
+
+    monkeypatch.setattr(S, "get", status)
+    monkeypatch.setattr(S, "fetch", lambda *args, **kwargs: downloads.append(kwargs))
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "dune_get_stream.py",
+            "1",
+            "detail",
+            "s.sql",
+            "--approve=extra",
+            "--execution=eid",
+        ],
+    )
+    S.main()
+    assert paths == ["/execution/eid/status"]
+    assert downloads == [{"execution_id": "eid"}]
+    assert PG._rows(PG.ACTUAL)[0]["合计实耗"] == "6.0"

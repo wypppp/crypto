@@ -98,6 +98,21 @@ def test_round_budget_hand_includes_download_and_excludes_other_sources(tmp_path
     assert PG.round_gate("other", *paths) == ""
 
 
+def test_user_extra_download_cap_hand(tmp_path):
+    paths = _round_files(tmp_path, {"old1": "42.5"})
+    rows = PG._rows(paths[0])
+    for row in rows:
+        if row["编号"] == "next":
+            row.update({"执行费上限": "0", "下载上限MB": "3", "下载费上限": "7.5"})
+    with paths[0].open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=PG.FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+    assert PG.round_gate("next", *paths) == ""  # 42.5＋7.5＝50
+    _csv(paths[2], ["编号", "合计实耗"], [["old1", "42.501"]])
+    assert "超过 50" in PG.round_gate("next", *paths)
+
+
 @pytest.mark.parametrize("value", ["", "NaN", "Infinity", "-1", "执行中"])
 def test_round_budget_refuses_unresolved_actual(tmp_path, value):
     paths = _round_files(tmp_path, {"old1": value})

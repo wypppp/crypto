@@ -535,6 +535,19 @@ def test_stratum_of_61_rows_is_inexact_and_flagged():
     assert R.certain(sql["C"], sql["N"]["k_sel"]) == []
 
 
+def test_smoke_missing_results_is_incomplete(tmp_path, monkeypatch):
+    import json
+    import s3_smoke as SM
+
+    (tmp_path / "runs").mkdir()
+    monkeypatch.setattr(SM, "H", tmp_path)
+    with pytest.raises(SystemExit, match="核对未完成"):
+        SM.check()
+    out = json.loads((tmp_path / "runs/s3_smoke_check.json").read_text())
+    assert out["status"] == "incomplete"
+    assert len(out["missing_results"]) == 3
+
+
 def test_smoke_glue_prep_and_check(tmp_path, monkeypatch):
     """s3_smoke 的读写：EDGE 下载 → 映射 → SQL 与批准；统计量与明细的 CSV（空串＝空值）→ 核对全部为真。"""
     import csv as _csv
