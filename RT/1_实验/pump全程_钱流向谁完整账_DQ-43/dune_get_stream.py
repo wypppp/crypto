@@ -53,7 +53,8 @@ def fetch(qid, label, sql_file, ticket):
                 for p in ex.map(lambda o: page(eid, o, min(PS, n - o), ticket), offs)
                 for r in p
             ]
-            df = pd.DataFrame(rows, columns=cols)
+            # 可空整数列保留 Python int；默认 dtype 会转浮点，写成 .0 并可能丢低位。
+            df = pd.DataFrame(rows, columns=cols, dtype=object)
             df.to_csv(fh, index=False, header=(c0 == 0))
             done += len(df)
             print(time.strftime("%H:%M:%S"), "rows", done, "/", n, flush=True)
