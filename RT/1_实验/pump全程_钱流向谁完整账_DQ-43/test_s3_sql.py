@@ -490,6 +490,21 @@ def test_entities_union_find_hand():
     assert n["skip_G"] == 4 and n["skip_T"] == 202 and n["multi_entities"] == 2
 
 
+def test_entities_nullable_integer_csv_hand():
+    edges = [
+        {"kind": "G", "a": "fund", "b": "u1", "x": "200.0"},
+        {"kind": "G", "a": "fund", "b": "u2", "x": "200.0"},
+        {"kind": "G", "a": "hub", "b": "u3", "x": "463.0"},
+        {"kind": "G", "a": "missing", "b": "u4", "x": ""},
+    ]
+    emap, counts = R.entities(edges)
+    assert emap == {"u1": "u1", "u2": "u1"}
+    assert counts["used_G"] == 2 and counts["skip_G"] == 2
+    for bad in ("199.5", "NaN", "Infinity", "-1"):
+        with pytest.raises(ValueError, match="非负整数"):
+            R.entities([dict(edges[0], x=bad)])
+
+
 def test_t_stat_hand():
     # 一层 n＝4、K＝2，入选实体 1 行命中：k − m·K/n ＝ 1 − 1/2
     assert R.t_stat([("c", 4, 2, 1, 1)]) == Fraction(1, 2)

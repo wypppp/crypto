@@ -13,6 +13,7 @@ import calendar
 import datetime as dt
 import hashlib
 from collections import Counter, defaultdict
+from decimal import Decimal
 from fractions import Fraction
 
 import a_riskset as A
@@ -73,7 +74,15 @@ def entities(edges, cex=frozenset()) -> tuple[dict, dict]:
             n["used_" + k] += 1
         elif k == "G":
             x = e.get("x")
-            if x is None or int(x) > HUB or a in cex:
+            # 下载 CSV 的可空整数列会写成 463.0；按精确十进制解析，禁止截断小数。
+            fanout = None if x in (None, "") else Decimal(str(x))
+            if fanout is not None and (
+                not fanout.is_finite()
+                or fanout < 0
+                or fanout != fanout.to_integral_value()
+            ):
+                raise ValueError("G 边扇出须为非负整数")
+            if fanout is None or fanout > HUB or a in cex:
                 n["skip_G"] += 1
                 continue
             funders[a].append(b)
