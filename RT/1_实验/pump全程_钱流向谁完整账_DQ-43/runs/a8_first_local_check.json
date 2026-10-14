@@ -27,5 +27,13 @@
   "differences": {},
   "frozen_select_same": true,
   "remove_w1_keeps_selection": true,
-  "real_nonempty_C_G_covered": false
+  "real_nonempty_C_G_covered": false,
+  "edge_min_download_A7_sample": {
+    "input_rows": 815,
+    "output_rows": 237,
+    "csv_bytes": 22536,
+    "gzip_bytes": 7552,
+    "same_entity_map": true,
+    "new_Dune_SQL_not_executed": true
+  }
 }
