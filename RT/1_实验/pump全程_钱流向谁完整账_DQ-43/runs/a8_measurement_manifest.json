@@ -1,0 +1,58 @@
+{
+  "observed_at_utc": "2026-10-14T09:54:52.227153+00:00",
+  "approval_source": "总控第八轮",
+  "baseline_usage": 1503.546,
+  "final_usage": 1523.859,
+  "included": 2500.0,
+  "remaining": 976.141,
+  "round_usage": 20.313,
+  "runs": [
+    {
+      "label": "A8P_EDGE_SGT_0811_p002_4d_SMK_r1",
+      "query_id": 8945456,
+      "execution_id": "01M4WWZ6KS0FS9TEAQBJQNVDHC",
+      "execution_cost_credits": 13.040147059,
+      "state": "QUERY_STATE_COMPLETED",
+      "row_count": 1,
+      "result_set_bytes": 120,
+      "csv_gz_sha256": "8d2f39a21ad35cda37deee2a1f44f9043b90803a13609ba1d2273829b38540f0"
+    },
+    {
+      "label": "A8P_EDGE_SGT_0811_p002_4d_SMK_r2",
+      "query_id": 8945471,
+      "execution_id": "01M4WX6FYM80CF1GD305V6VYDT",
+      "execution_cost_credits": 7.273088236,
+      "state": "QUERY_STATE_COMPLETED",
+      "row_count": 1,
+      "result_set_bytes": 120,
+      "csv_gz_sha256": "a5082dd0f2fa7a1d2b14199dfe7489572e93909f81ffa52e72cc2b995c053c61"
+    }
+  ],
+  "double_run_identical": true,
+  "differences": {},
+  "structure": {
+    "n_rows": "1126",
+    "n_s": "185",
+    "n_g": "912",
+    "n_t": "29",
+    "n_dup_key": "0",
+    "n_null_address": "0",
+    "n_missing_fanout": "0",
+    "ck_full_hex": "52b2a03197882e47",
+    "ck_compact_hex": "002572a23c4202f6",
+    "est_compact_csv_bytes": "108274",
+    "est_prefix16_csv_bytes": "45347",
+    "est_full_csv_bytes": "155132",
+    "n_prefix16_collisions": "0"
+  },
+  "scan_days": 4,
+  "average_window_day_costs": [
+    3.26003676475,
+    1.818272059
+  ],
+  "execution_sum": "20.313235295",
+  "sql_file": "sql/A8P_EDGE_SGT_0811_p002_4d_SMK.sql",
+  "sql_sha256": "c6be1cde30feecd3e6ee5364ff7a28593c94adee2f0184b7f95b36f63a69f04e",
+  "full_not_executed": true,
+  "raw_not_committed": true
+}

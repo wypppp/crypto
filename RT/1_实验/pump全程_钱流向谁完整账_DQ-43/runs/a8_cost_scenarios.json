@@ -1,0 +1,43 @@
+{
+  "scope": "S3 three pairs at frozen p=10%; forecasts only; full not approved",
+  "models_not_confidence_intervals": true,
+  "edge_execution_once": [
+    76.367426478,
+    177.03905798431265
+  ],
+  "edge_seed_ratio_from_old_probe": 1.292996358774625,
+  "first_execution_once": [
+    132.64447072800002,
+    165.023294304
+  ],
+  "first_csv_mb_baseline": 1121.20995,
+  "edge_min_csv_mb_baseline": 331.2792,
+  "edge_gross_4d_model_mb": 397.90695,
+  "edge_gross_10pct_model_mb": 2586.024,
+  "combined_execution_once": [
+    209.01189720600001,
+    342.06235228831264
+  ],
+  "combined_csv_mb_scenarios_once": [
+    1452.4891499999999,
+    5949.65385
+  ],
+  "download_zero_scenario_total_once": [
+    209.01189720600001,
+    342.06235228831264
+  ],
+  "download_2_per_mb_total_once": [
+    3113.9901972059997,
+    12241.370052288312
+  ],
+  "double_run_zero_scenario_total": [
+    418.02379441200003,
+    684.1247045766253
+  ],
+  "double_run_2_per_mb_total": [
+    6227.980394411999,
+    24482.740104576624
+  ],
+  "minimum_export_route": "effective EDGE + C/G/N; statistics execution cost unknown; no completion quote",
+  "upload_not_required_in_local_first_route": true
+}

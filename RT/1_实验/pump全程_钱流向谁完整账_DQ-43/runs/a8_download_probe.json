@@ -1,0 +1,42 @@
+{
+  "approval": "A8-01",
+  "execution_id": "01M4WRPTY8WDKX1NVCQJNCAW8R",
+  "query_id": "8945017",
+  "no_query_executed": true,
+  "isolation_lock_held": true,
+  "observations": [
+    {
+      "phase": "before",
+      "at_utc": "2026-10-14T09:15:43.010141+00:00",
+      "used": 1503.546,
+      "included": 2500.0
+    },
+    {
+      "phase": "immediate",
+      "at_utc": "2026-10-14T09:16:02.821051+00:00",
+      "used": 1503.546,
+      "included": 2500.0
+    },
+    {
+      "phase": "after_monotonic_wait",
+      "at_utc": "2026-10-14T09:45:23.205965+00:00",
+      "used": 1503.546,
+      "included": 2500.0
+    },
+    {
+      "phase": "after_30_min_wall_confirm",
+      "at_utc": "2026-10-14T09:47:29.439214+00:00",
+      "used": 1503.546,
+      "included": 2500.0
+    }
+  ],
+  "result_mb": 2.952326,
+  "observe_until_utc": "2026-10-14T09:46:02.821553+00:00",
+  "immediate_delta": 0.0,
+  "after_30_min_delta": 0.0,
+  "raw_gzip_sha256": "de4653f1c13c74eba953849f0febf991f3c6a5c964c39655d1052be4f8bff324",
+  "csv_bytes": 2862969,
+  "csv_sha256": "a4f589203862685f3a60c75a0e761fb84e35b072228c9f7dc9ac4684be1cb86c",
+  "same_csv_as_A7_06": true,
+  "timing_note": "Monotonic wait completed, but first recorded wall timestamp preceded target by 39 seconds; supplemented a free usage read beyond wall deadline. No new execution/download between."
+}
