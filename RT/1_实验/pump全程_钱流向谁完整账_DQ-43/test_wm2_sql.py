@@ -95,7 +95,7 @@ def test_event_tables_joined_to_filtered_coins():
     for layer in ("ATRADE", "TX"):
         s = sqls[layer]
         assert (
-            "base_mint IN (SELECT mint FROM coins)" in s
+            "JOIN coins k ON k.mint = c.base_mint" in s
             and "JOIN pools p ON p.pool" in s
         ), layer
 

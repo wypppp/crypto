@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """DQ-43（WM2）取数 SQL 生成器（10-13，冻结卡 v3 §5、§6；GPT 审 SQL 之前不跑全量）。
 
-python build_wm2_sql.py <层> <创建起日> <创建止日> <事件起日> <事件止日> <标签> [--smoke]  → sql/<标签>.sql
+python build_wm2_sql.py <层> <创建起日> <创建止日> <事件起日> <事件止日> <标签> [建边起日 建边截日] [--smoke]  → sql/<标签>.sql
 
 层：
   COIN    母体：曲线创建于 [创建起日, 创建止日] 的 SOL 计价 pump 新币，每币一行（含毕业与迁移）。
@@ -213,17 +213,22 @@ out AS (
 
 COIN = """,
 comp AS (
-    SELECT mint, to_unixtime(min(evt_block_time)) AS completed_t, count(*) AS n_complete
-    FROM pumpdotfun_solana.pump_evt_completeevent
-    WHERE evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
-      AND evt_block_time < TIMESTAMP '{cutoff} 00:00:00' AND mint IN (SELECT mint FROM coins)
+    /* 10-14（GPT 01）：聚合前 JOIN coins，逐币限 created_at ≤ 事件 < created_at＋30 天，并保留全局止日 */
+    SELECT e.mint, to_unixtime(min(e.evt_block_time)) AS completed_t, count(*) AS n_complete
+    FROM pumpdotfun_solana.pump_evt_completeevent e
+    JOIN coins k ON k.mint = e.mint
+    WHERE e.evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
+      AND e.evt_block_time >= k.created_at AND e.evt_block_time < k.created_at + INTERVAL '{hz}' DAY
+      AND e.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
     GROUP BY 1
 ),
 mig AS (
-    SELECT mint, to_unixtime(min(evt_block_time)) AS migrated_t, min_by(pool, evt_block_time) AS pool, count(*) AS n_mig
-    FROM pumpdotfun_solana.pump_evt_completepumpammmigrationevent
-    WHERE evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
-      AND evt_block_time < TIMESTAMP '{cutoff} 00:00:00' AND mint IN (SELECT mint FROM coins)
+    SELECT e.mint, to_unixtime(min(e.evt_block_time)) AS migrated_t, min_by(e.pool, e.evt_block_time) AS pool, count(*) AS n_mig
+    FROM pumpdotfun_solana.pump_evt_completepumpammmigrationevent e
+    JOIN coins k ON k.mint = e.mint
+    WHERE e.evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
+      AND e.evt_block_time >= k.created_at AND e.evt_block_time < k.created_at + INTERVAL '{hz}' DAY
+      AND e.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
     GROUP BY 1
 ),
 out AS (
@@ -251,13 +256,16 @@ COIN_SMOKE_EXTRA = """,
 
 POOLS = """,
 cp AS (
-    SELECT pool, min(evt_block_time) AS created_at, max(base_mint) AS mint, max(quote_mint) AS quote_mint,
-           max(base_mint_decimals) AS bd, max(quote_mint_decimals) AS qd, count(*) AS n_cp
-    FROM pumpdotfun_solana.pump_amm_evt_createpoolevent
-    WHERE evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
-      AND evt_outer_executing_account = '{pump}'
-      AND index = 0
-      AND base_mint IN (SELECT mint FROM coins)
+    /* 10-14（GPT 01）：建池事件聚合前 JOIN coins，逐币 30 天窗口与全局止日 */
+    SELECT c.pool, min(c.evt_block_time) AS created_at, max(c.base_mint) AS mint, max(c.quote_mint) AS quote_mint,
+           max(c.base_mint_decimals) AS bd, max(c.quote_mint_decimals) AS qd, count(*) AS n_cp
+    FROM pumpdotfun_solana.pump_amm_evt_createpoolevent c
+    JOIN coins k ON k.mint = c.base_mint
+    WHERE c.evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
+      AND c.evt_outer_executing_account = '{pump}'
+      AND c.index = 0
+      AND c.evt_block_time >= k.created_at AND c.evt_block_time < k.created_at + INTERVAL '{hz}' DAY
+      AND c.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
     GROUP BY 1
 ),
 pools AS (
@@ -265,6 +273,59 @@ pools AS (
     FROM cp JOIN coins k ON k.mint = cp.mint
     WHERE cp.quote_mint = '{wsol}'
 )"""
+
+AMM_KEYS = """,
+ak AS (
+    /* 10-14（GPT 02）：允许的 PumpSwap 事件键（允许池、逐币窗口内的买卖），原始字节先按它筛选再解码 */
+    SELECT DISTINCT 'B' AS side, a.evt_tx_id AS tx_id, a.evt_outer_instruction_index AS oix, a.evt_inner_instruction_index AS iix0
+    FROM pumpdotfun_solana.pump_amm_evt_buyevent a
+    JOIN pools p ON p.pool = a.pool
+    WHERE a.evt_block_date BETWEEN DATE '{r_start}' AND DATE '{e1}'
+      AND a.evt_block_time >= p.created_at AND a.evt_block_time < p.coin_created_at + INTERVAL '{hz}' DAY
+      AND a.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
+    UNION ALL
+    SELECT DISTINCT 'S', a.evt_tx_id, a.evt_outer_instruction_index, a.evt_inner_instruction_index
+    FROM pumpdotfun_solana.pump_amm_evt_sellevent a
+    JOIN pools p ON p.pool = a.pool
+    WHERE a.evt_block_date BETWEEN DATE '{r_start}' AND DATE '{e1}'
+      AND a.evt_block_time >= p.created_at AND a.evt_block_time < p.coin_created_at + INTERVAL '{hz}' DAY
+      AND a.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
+)"""
+
+AMM_IC = """ic AS (
+    /* 10-14（GPT 02）：只读允许事件键对应的原始记录；boost 原始记录本层不用，不读 */
+    SELECT c.tx_id, c.block_slot AS slot, c.tx_index AS txi, c.outer_instruction_index AS oix, c.inner_instruction_index AS iix,
+           c.block_time AS ts, c.data AS b, bytearray_substring(c.data, 9, 8) AS disc
+    FROM solana.instruction_calls c
+    JOIN ak ON ak.tx_id = c.tx_id AND ak.oix = c.outer_instruction_index AND ak.iix0 = c.inner_instruction_index
+    WHERE c.block_date BETWEEN DATE '{r_start}' AND DATE '{e1}'
+      AND c.executing_account = '{amm}'
+      AND c.is_inner = true AND c.tx_success = true
+      AND bytearray_substring(c.data, 1, 8) = 0xe445a52e51cb9a1d
+      AND bytearray_substring(c.data, 9, 8) = CASE ak.side WHEN 'B' THEN {d_buy} ELSE {d_sell} END
+)"""
+
+CURVE_IC = """ic AS (
+    /* 10-14（GPT 02）：只读允许曲线事件键（tr 里逐币窗口内的成交）对应的原始记录，同笔交易的其他事件不进 */
+    SELECT c.tx_id, c.outer_instruction_index AS oix, c.inner_instruction_index AS iix, c.block_slot AS slot,
+           c.tx_index AS txi, c.data AS b
+    FROM solana.instruction_calls c
+    JOIN (SELECT DISTINCT tx_id, oix, iix0 FROM tr WHERE ts >= TIMESTAMP '{r0} 00:00:00') rk
+      ON rk.tx_id = c.tx_id AND rk.oix = c.outer_instruction_index AND rk.iix0 = c.inner_instruction_index
+    WHERE c.block_date BETWEEN DATE '{r0}' AND DATE '{t1}'
+      AND c.executing_account = '{program}' AND c.is_inner = true AND c.tx_success = true
+      AND bytearray_substring(c.data, 1, 8) = 0xe445a52e51cb9a1d
+      AND bytearray_substring(c.data, 9, 8) = {d_trade}
+)"""
+
+
+def _swap_ic(raw: str, new_ic: str, end_marker: str) -> str:
+    """把复用模板里的 ic CTE 换成按允许事件键筛选的版本（其余解码逻辑原样复用）。"""
+    i = raw.index("ic AS (")
+    j = raw.index(end_marker, i)
+    assert raw.count("ic AS (") == 1
+    return raw[:i] + new_ic + raw[j:]
+
 
 AMM_OUT = """,
 out AS (
@@ -301,7 +362,7 @@ cl AS (
       AND t.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
 ),
 al AS (
-    SELECT a.evt_tx_id AS tx_id, CAST(a."user" AS varchar) AS usr, a.side,
+    SELECT a.evt_tx_id AS tx_id, p.mint, CAST(a."user" AS varchar) AS usr, a.side,
            CAST(a.q_user AS DECIMAL(38,0)) AS q_user
     FROM (
         SELECT evt_tx_id, "user", 'B' AS side, user_quote_amount_in AS q_user, pool, evt_block_time
@@ -313,18 +374,18 @@ al AS (
         WHERE evt_block_date BETWEEN DATE '{e0}' AND DATE '{e1}'
     ) a
     JOIN pools p ON p.pool = a.pool
-    WHERE a.evt_block_time < p.coin_created_at + INTERVAL '{hz}' DAY
+    WHERE a.evt_block_time >= p.created_at AND a.evt_block_time < p.coin_created_at + INTERVAL '{hz}' DAY
       AND a.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
 ),
 legs AS (
-    SELECT tx_id, usr, 'C' AS venue,
+    SELECT tx_id, mint, usr, 'C' AS venue,
            CASE WHEN is_buy THEN -(sol + f_pr + f_cr) ELSE sol - f_pr - f_cr END AS cash_v1,
            CASE WHEN is_buy THEN -(sol + f_pr + f_cr + f_bb) ELSE sol - f_pr - f_cr - f_bb END AS cash_v2,
            CASE WHEN is_buy THEN -(sol + f_pr + f_cr + f_bb) + f_cb ELSE sol - f_pr - f_cr - f_bb + f_cb END AS cash_v3,
            fee_recipient
     FROM cl
     UNION ALL
-    SELECT tx_id, usr, 'A',
+    SELECT tx_id, mint, usr, 'A',
            CASE WHEN side = 'B' THEN -q_user ELSE q_user END,
            CASE WHEN side = 'B' THEN -q_user ELSE q_user END,
            CASE WHEN side = 'B' THEN -q_user ELSE q_user END,
@@ -335,7 +396,8 @@ lt AS (
     SELECT tx_id, count(*) AS n_legs, count(DISTINCT usr) AS n_users, max(usr) AS usr1,
            count_if(venue = 'C') AS n_curve, count_if(venue = 'A') AS n_amm,
            sum(cash_v1) AS cash_v1, sum(cash_v2) AS cash_v2, sum(cash_v3) AS cash_v3,
-           array_distinct(array_agg(fee_recipient) FILTER (WHERE fee_recipient IS NOT NULL)) AS fee_recips
+           array_distinct(array_agg(fee_recipient) FILTER (WHERE fee_recipient IS NOT NULL)) AS fee_recips,
+           array_distinct(array_agg(mint)) AS mints
     FROM legs{tx_sample}
     GROUP BY 1
 ),
@@ -347,18 +409,26 @@ bal AS (
            s.fee - 5000 * s.required_signatures AS priority_fee, s.required_signatures, s.compute_units_consumed,
            s.transaction_config.compute_unit_limit AS cu_limit,
            cardinality(s.account_keys) = cardinality(s.pre_balances) AS keys_aligned,
+           /* 10-14（GPT 11）：用最终账户键同时核前、后余额长度、唯一性与非空 */
+           cardinality(fk.keys) = cardinality(s.pre_balances) AND cardinality(fk.keys) = cardinality(s.post_balances)
+             AND cardinality(array_distinct(fk.keys)) = cardinality(fk.keys)
+             AND NOT any_match(fk.keys, x -> x IS NULL) AS keys_ok,
+           /* 10-14（GPT 07）：范围完整＝签名者名下的代币账户只涉及本交易的允许币与 WSOL（只用币种元数据，不读保护币的现金） */
+           NOT (COALESCE(any_match(s.pre_token_balances, b -> b.owner = s.signer AND b.mint <> '{wsol}' AND NOT contains(l.mints, b.mint)), false)
+                OR COALESCE(any_match(s.post_token_balances, b -> b.owner = s.signer AND b.mint <> '{wsol}' AND NOT contains(l.mints, b.mint)), false))
+             AS scope_complete,
            u.acct, CAST(u.post AS DECIMAL(38,0)) - CAST(u.pre AS DECIMAL(38,0)) AS d,
            COALESCE(any_match(s.pre_token_balances, b -> b.account = u.acct AND b.owner = s.signer), false)
              OR COALESCE(any_match(s.post_token_balances, b -> b.account = u.acct AND b.owner = s.signer), false) AS signer_owned,
            element_at(transform(filter(s.post_token_balances, b -> b.account = u.acct), b -> b.owner), 1) AS tok_owner
     FROM solana.transactions s
-    CROSS JOIN UNNEST(
+    JOIN lt l ON l.tx_id = s.id
+    CROSS JOIN UNNEST(ARRAY[
         CASE WHEN cardinality(s.account_keys) = cardinality(s.pre_balances) THEN s.account_keys
              ELSE concat(s.account_keys, COALESCE(s.loaded_addresses.writable, CAST(ARRAY[] AS array(varchar))),
-                         COALESCE(s.loaded_addresses.readonly, CAST(ARRAY[] AS array(varchar)))) END,
-        s.pre_balances, s.post_balances) AS u(acct, pre, post)
+                         COALESCE(s.loaded_addresses.readonly, CAST(ARRAY[] AS array(varchar)))) END]) AS fk(keys)
+    CROSS JOIN UNNEST(fk.keys, s.pre_balances, s.post_balances) AS u(acct, pre, post)
     WHERE s.block_date BETWEEN DATE '{e0}' AND DATE '{e1}'
-      AND s.id IN (SELECT tx_id FROM lt)
 ),
 cls AS (
     /* 账户类：交易者（签名者＋签名者名下的代币账户）、Jito、池子（曲线账户、PumpSwap 池名下的代币账户）、
@@ -379,7 +449,8 @@ agg AS (
            arbitrary(signer) AS signer, arbitrary(success) AS success, arbitrary(fee) AS fee,
            arbitrary(priority_fee) AS priority_fee, arbitrary(required_signatures) AS required_signatures,
            arbitrary(compute_units_consumed) AS compute_units_consumed, arbitrary(cu_limit) AS cu_limit,
-           bool_and(keys_aligned) AS keys_aligned, count(*) AS n_acct,
+           bool_and(keys_aligned) AS keys_aligned, bool_and(keys_ok) AS keys_ok, bool_and(scope_complete) AS scope_complete,
+           count(*) AS n_acct,
            sum(IF(cls = 'trader', d, 0)) AS d_trader,
            sum(IF(cls = 'jito' AND d > 0, d, 0)) AS tip_jito,
            sum(IF(cls = 'fee_recipient', d, 0)) AS d_fee_recip,
@@ -398,7 +469,7 @@ out AS (
            CAST(x.d_trader AS varchar) AS d_trader, CAST(x.tip_jito AS varchar) AS tip_jito,
            CAST(x.d_fee_recip AS varchar) AS d_fee_recip, CAST(x.d_other AS varchar) AS d_other, CAST(x.d_all AS varchar) AS d_all,
            CAST(x.d_other_pos AS varchar) AS d_other_pos, CAST(x.d_pool AS varchar) AS d_pool,
-           x.keys_aligned, 1 AS n_key,
+           x.keys_aligned, x.keys_ok, x.scope_complete, 1 AS n_key,
            /* T2a 交易者残差（lamports）：流水口径的交易者净变化＋签名费＋Jito 小费 − 事件口径的交易者现金 */
            CAST(x.d_trader + x.fee + x.tip_jito - l.cash_v1 AS varchar) AS res_v1,
            CAST(x.d_trader + x.fee + x.tip_jito - l.cash_v2 AS varchar) AS res_v2,
@@ -413,8 +484,15 @@ SELECT 'solana' AS chain, '{e0}' AS e0, '{e1}' AS e1,
        (SELECT count(*) FROM lt) AS n_trade_tx_from_events,
        count(*) AS n_tx_rows, count_if(n_key > 1) AS n_dup_key, count_if(NOT success) AS n_failed_in_set,
        count_if(NOT keys_aligned) AS n_keys_misaligned,
-       count_if(CAST(fee AS DECIMAL(38,0)) = 5000 * required_signatures + COALESCE(CAST(priority_fee AS DECIMAL(38,0)), 0)) AS n_fee_eq_base_plus_prio,
-       count_if(priority_fee IS NULL) AS n_prio_null,
+       count_if(NOT keys_ok) AS n_keys_not_ok,
+       /* 优先费按定义＝总费 − 5000 × 签名数，下面只是算式一致性，另报异常（GPT 11） */
+       count_if(CAST(priority_fee AS DECIMAL(38,0)) < 0) AS n_prio_negative,
+       count_if(required_signatures IS NULL OR fee IS NULL) AS n_fee_or_sigs_null,
+       count_if(scope_complete) AS n_scope_complete,
+       count_if(signer_is_user AND scope_complete) AS n_clean_complete,
+       count_if(signer_is_user AND scope_complete AND CAST(res_v1 AS DECIMAL(38,0)) = 0) AS n_res0_v1_complete,
+       count_if(signer_is_user AND scope_complete AND CAST(res_v1 AS DECIMAL(38,0)) < 0) AS n_res_v1_neg_complete,
+       count_if(signer_is_user AND scope_complete AND CAST(res_v1 AS DECIMAL(38,0)) > 0) AS n_res_v1_pos_complete,
        count_if(CAST(tip_jito AS DECIMAL(38,0)) > 0) AS n_with_jito_tip,
        count_if(signer_is_user) AS n_clean,
        count_if(signer_is_user AND CAST(res_v1 AS DECIMAL(38,0)) = 0) AS n_res0_v1,
@@ -469,42 +547,95 @@ out AS (
 # ---------- 实体边与代币转移 ----------
 
 EDGE = """,
-trd AS (
+seed AS (
+    /* 取边种子：截点之前、逐币窗口内的曲线用户与 PumpSwap 用户（10-14，GPT 03），加母体币的创建者 */
     SELECT DISTINCT CAST(t."user" AS varchar) AS usr
     FROM pumpdotfun_solana.pump_evt_tradeevent t
     JOIN coins k ON k.mint = t.mint
-    WHERE t.evt_block_date BETWEEN DATE '{e0}' AND DATE '{e1}'
+    WHERE t.evt_block_date BETWEEN DATE '{e0}' AND DATE '{s1}'
       AND t.evt_block_time >= k.created_at AND t.evt_block_time < k.created_at + INTERVAL '{hz}' DAY
-      AND t.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
+      AND t.evt_block_time < TIMESTAMP '{xcut}' AND t.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
+    UNION
+    SELECT DISTINCT CAST(a."user" AS varchar)
+    FROM (SELECT "user", pool, evt_block_time FROM pumpdotfun_solana.pump_amm_evt_buyevent
+           WHERE evt_block_date BETWEEN DATE '{e0}' AND DATE '{s1}'
+          UNION ALL
+          SELECT "user", pool, evt_block_time FROM pumpdotfun_solana.pump_amm_evt_sellevent
+           WHERE evt_block_date BETWEEN DATE '{e0}' AND DATE '{s1}') a
+    JOIN pools p ON p.pool = a.pool
+    WHERE a.evt_block_time >= p.created_at AND a.evt_block_time < p.coin_created_at + INTERVAL '{hz}' DAY
+      AND a.evt_block_time < TIMESTAMP '{xcut}' AND a.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
     UNION
     SELECT DISTINCT creator FROM coins
 ),
-xs AS (
-    SELECT 'S' AS kind, x.from_owner, x.to_owner, CAST(NULL AS varchar) AS mint, x.amount_display AS amt,
-           x.block_time, x.tx_id, x.block_slot AS slot
+nat AS (
+    /* 顶层 System Program 的 SOL 转账 ≥ {edge_min}（DQ-26 E1），建边窗口 [{x0}, 截点) 内，止日之前 */
+    SELECT x.from_owner, x.to_owner, x.amount_display AS amt, x.block_time, x.tx_id
     FROM tokens_solana.transfers x
-    WHERE x.block_date BETWEEN DATE '{x0}' AND DATE '{x1}'
+    WHERE x.block_date BETWEEN DATE '{xd0}' AND DATE '{xd1}'
+      AND x.block_time >= TIMESTAMP '{x0}' AND x.block_time < TIMESTAMP '{xcut}'
       AND x.block_time < TIMESTAMP '{cutoff} 00:00:00'
       AND x.token_version = 'native' AND x.action = 'transfer'
       AND x.outer_executing_account = '{sys}' AND x.amount_display >= {edge_min}
       AND x.from_owner <> x.to_owner
-      AND (x.from_owner IN (SELECT usr FROM trd) OR x.to_owner IN (SELECT usr FROM trd))
-    UNION ALL
-    SELECT 'T', x.from_owner, x.to_owner, x.token_mint_address, x.amount_display, x.block_time, x.tx_id, x.block_slot
+),
+s_edges AS (
+    /* S：一端是种子的边，在截点之前先过滤、再按地址对汇总（10-14，GPT 04） */
+    SELECT from_owner, to_owner, count(*) AS n, sum(amt) AS amt, min(block_time) AS t0, max(block_time) AS t1,
+           min_by(tx_id, block_time) AS tx0
+    FROM nat
+    WHERE from_owner IN (SELECT usr FROM seed) OR to_owner IN (SELECT usr FROM seed)
+    GROUP BY 1, 2
+),
+f_fan AS (
+    /* F：向种子转过钱、自己不是种子的来源地址，在同一窗口内的扇出（不同接收方数；>200 视为服务节点） */
+    SELECT n.from_owner, count(DISTINCT n.to_owner) AS fanout
+    FROM nat n
+    WHERE n.from_owner IN (SELECT from_owner FROM s_edges WHERE to_owner IN (SELECT usr FROM seed))
+      AND n.from_owner NOT IN (SELECT usr FROM seed)
+    GROUP BY 1
+),
+c_edges AS (
+    /* C：创建者关联体——每个币创建前 7 天内与创建者的直接 SOL 往来，逐币窗口先过滤再汇总（不设 0.05 下限） */
+    SELECT k.mint, x.from_owner, x.to_owner, count(*) AS n, sum(x.amount_display) AS amt,
+           min(x.block_time) AS t0, max(x.block_time) AS t1, min_by(x.tx_id, x.block_time) AS tx0
+    FROM tokens_solana.transfers x
+    JOIN coins k ON (x.from_owner = k.creator OR x.to_owner = k.creator)
+    WHERE x.block_date BETWEEN DATE '{cd0}' AND DATE '{c1}'
+      AND x.block_time >= k.created_at - INTERVAL '7' DAY AND x.block_time < k.created_at
+      AND x.token_version = 'native' AND x.action = 'transfer'
+      AND x.outer_executing_account = '{sys}' AND x.from_owner <> x.to_owner
+    GROUP BY 1, 2, 3
+),
+t_edges AS (
+    /* T：母体币的直接代币转移（不含成交腿），逐币窗口内，截点之前 */
+    SELECT x.token_mint_address AS mint, x.from_owner, x.to_owner, count(*) AS n, sum(x.amount_display) AS amt,
+           min(x.block_time) AS t0, max(x.block_time) AS t1, min_by(x.tx_id, x.block_time) AS tx0
     FROM tokens_solana.transfers x
     JOIN coins k ON k.mint = x.token_mint_address
-    WHERE x.block_date BETWEEN DATE '{e0}' AND DATE '{e1}'
-      AND x.block_time < TIMESTAMP '{cutoff} 00:00:00'
+    WHERE x.block_date BETWEEN DATE '{e0}' AND DATE '{s1}'
       AND x.block_time >= k.created_at AND x.block_time < k.created_at + INTERVAL '{hz}' DAY
+      AND x.block_time < TIMESTAMP '{xcut}' AND x.block_time < TIMESTAMP '{cutoff} 00:00:00'
       AND x.token_version <> 'native' AND x.action = 'transfer'
       AND x.outer_executing_account IN ({token_programs})
       AND x.from_owner <> x.to_owner
+    GROUP BY 1, 2, 3
 ),
 out AS (
-    SELECT 'solana' AS chain, kind, from_owner, to_owner, mint,
-           count(*) AS n, CAST(sum(amt) AS varchar) AS amt, to_unixtime(min(block_time)) AS first_t, to_unixtime(max(block_time)) AS last_t,
-           min_by(tx_id, block_time) AS first_tx, 1 AS n_key
-    FROM xs GROUP BY 1, 2, 3, 4, 5
+    SELECT 'solana' AS chain, 'S' AS kind, CAST(NULL AS varchar) AS mint, from_owner, to_owner, n, CAST(amt AS varchar) AS amt,
+           to_unixtime(t0) AS first_t, to_unixtime(t1) AS last_t, tx0 AS first_tx, CAST(NULL AS BIGINT) AS fanout,
+           '{x0}' AS win_from, '{xcut}' AS win_cut, 1 AS n_key
+    FROM s_edges
+    UNION ALL
+    SELECT 'solana', 'F', NULL, from_owner, NULL, NULL, NULL, NULL, NULL, NULL, fanout, '{x0}', '{xcut}', 1 FROM f_fan
+    UNION ALL
+    SELECT 'solana', 'C', mint, from_owner, to_owner, n, CAST(amt AS varchar), to_unixtime(t0), to_unixtime(t1), tx0, NULL,
+           'created-7d', 'created', 1
+    FROM c_edges
+    UNION ALL
+    SELECT 'solana', 'T', mint, from_owner, to_owner, n, CAST(amt AS varchar), to_unixtime(t0), to_unixtime(t1), tx0, NULL,
+           'created', '{xcut}', 1
+    FROM t_edges
 )"""
 
 # 冒烟：通用结构核对（每层的 out）
@@ -524,10 +655,10 @@ COLS = {
     "ATRADE": "chain mint pool created_t pool_t ts slot txi oix iix n_key tx_id side usr q0 b0 q1 b1 q_pool b_amt q_user q_gross_out "
     "f_lp f_pr f_cr f_cb f_bb vq vq_src vq_ovf ovf xchk_ok bd qd",
     "TX": "chain tx_id ts slot txi signer success fee priority_fee required_signatures compute_units_consumed cu_limit n_legs n_users "
-    "n_curve n_amm signer_is_user cash_v1 cash_v2 cash_v3 d_trader tip_jito d_fee_recip d_other d_all d_other_pos d_pool keys_aligned n_key "
+    "n_curve n_amm signer_is_user cash_v1 cash_v2 cash_v3 d_trader tip_jito d_fee_recip d_other d_all d_other_pos d_pool keys_aligned keys_ok scope_complete n_key "
     "res_v1 res_v2 res_v3",
     "FAIL": "chain tx_id ts slot txi signer fee priority_fee error n_mints mints n_key",
-    "EDGE": "chain kind from_owner to_owner mint n amt first_t last_t first_tx n_key",
+    "EDGE": "chain kind mint from_owner to_owner n amt first_t last_t first_tx fanout win_from win_cut n_key",
 }
 # 冒烟时要报缺失数的字段（承重字段）
 NULL_CHECK = {
@@ -537,7 +668,7 @@ NULL_CHECK = {
     "ATRADE": "q0 b0 q_user f_lp f_pr f_cr f_cb f_bb vq",
     "TX": "fee priority_fee d_trader",
     "FAIL": "fee priority_fee",
-    "EDGE": "amt",
+    "EDGE": "from_owner",
 }
 SMOKE_EXTRA = {
     "COIN": ", count(DISTINCT mint) AS n_coins, count_if(completed_t IS NOT NULL) AS n_completed, "
@@ -550,11 +681,12 @@ SMOKE_EXTRA = {
     "count_if(vq_src = 'unknown') AS n_vq_unknown, count_if(vq_ovf = 1) AS n_vq_ovf, count_if(ovf = 1) AS n_ord_ovf, "
     "count_if(xchk_ok = 0) AS n_xchk_fail, count_if(slot IS NULL OR txi IS NULL OR oix IS NULL) AS n_key_null",
     "FAIL": ", count(DISTINCT signer) AS n_signers, sum(n_mints) AS n_mint_links",
-    "EDGE": ", count_if(kind = 'S') AS n_sol_edges, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
+    "EDGE": ", count_if(kind = 'S') AS n_sol_edges, count_if(kind = 'F') AS n_funders, count_if(kind = 'F' AND fanout > 200) AS n_service, "
+    "count_if(kind = 'C') AS n_creator_edges, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
 }
 
 
-def build(layer, c0, c1, e0, e1, smoke=False):
+def build(layer, c0, c1, e0, e1, smoke=False, edge_from=None, edge_cut=None):
     if layer not in LAYERS:
         raise SystemExit("层只能是 %s" % "、".join(LAYERS))
     check_dates(c0, c1, e0, e1)
@@ -595,7 +727,12 @@ def build(layer, c0, c1, e0, e1, smoke=False):
             u64_hrb=C37.u64("base + 56"),
             u64_hr=C37.u64("base + 64"),
         )
-        sql += CURVE.format(raw=C37.RAW.format(**f37) if use_raw else "", **f)
+        raw = (
+            _swap_ic(C37.RAW.format(**f37), CURVE_IC.format(**f37), ",\nicn AS (")
+            if use_raw
+            else ""
+        )
+        sql += CURVE.format(raw=raw, **f)
         sql += CURVE_OUT.format(
             raw_cols=RAW_COLS.format(**f37) if use_raw else NO_RAW_COLS,
             raw_join="\n    LEFT JOIN rv ON rv.tx_id = r.tx_id AND rv.oix = r.oix AND rv.iix IS NOT DISTINCT FROM r.iix0"
@@ -605,8 +742,19 @@ def build(layer, c0, c1, e0, e1, smoke=False):
     elif layer == "MAY":
         sql += MAY.format(**f)
     elif layer == "ATRADE":
-        raw, ex, _ = G35.raw_parts(e0, e1)
-        sql += POOLS.format(**f) + raw
+        raw, ex, has = G35.raw_parts(e0, e1)
+        sql += POOLS.format(**f)
+        if has:
+            r_start = max(e0, G35.VQ_START).isoformat()
+            sql += AMM_KEYS.format(r_start=r_start, **f)
+            raw = _swap_ic(
+                raw,
+                AMM_IC.format(
+                    r_start=r_start, d_buy=G35.DISC["buy"], d_sell=G35.DISC["sell"], **f
+                ),
+                ",\nicp AS (",
+            )
+        sql += raw
         sql += G35.EVENTS.format(
             horizon=HORIZON_DAYS, ev_start=f["e0"], ev_end=f["e1"], **ex
         )
@@ -630,9 +778,22 @@ def build(layer, c0, c1, e0, e1, smoke=False):
     elif layer == "FAIL":
         sql += FAIL.format(**f)
     elif layer == "EDGE":
-        x0 = max(c0 - dt.timedelta(days=7), dt.date(2025, 1, 1)) if not smoke else e0
-        x1 = e1
-        sql += EDGE.format(x0=x0.isoformat(), x1=x1.isoformat(), **f)
+        # 建边窗口 [x0, 截点)：x0 默认＝创建起日前 7 天；截点默认＝事件止日次日 00:00（全窗版本，只作事后描述）。
+        # T3、S3 用的事前图把截点设为 W+1 周一 00:00 UTC（取数附录 §4）。
+        x0 = edge_from or (c0 - dt.timedelta(days=7))
+        xcut = edge_cut or (e1 + dt.timedelta(days=1))
+        if xcut > CUTOFF or x0 >= xcut:
+            raise SystemExit("建边窗口不对：起点须早于截点，截点不晚于止日")
+        s1 = min(e1, xcut - dt.timedelta(days=1))
+        sql += POOLS.format(**f) + EDGE.format(
+            x0="%s 00:00:00" % x0.isoformat(),
+            xcut="%s 00:00:00" % xcut.isoformat(),
+            xd0=x0.isoformat(),
+            xd1=(xcut - dt.timedelta(days=1)).isoformat(),
+            cd0=(c0 - dt.timedelta(days=7)).isoformat(),
+            s1=s1.isoformat(),
+            **f,
+        )
     if not smoke:
         return sql + "\nSELECT * FROM out\n"
     cols = COLS[layer].split()
@@ -658,8 +819,9 @@ def main():
     layer = a[0]
     c0, c1, e0, e1 = (dt.date.fromisoformat(x) for x in a[1:5])
     label = a[5]
+    ew = [dt.date.fromisoformat(x) for x in a[6:8]] if len(a) >= 8 else [None, None]
     out = H / "sql" / ("%s.sql" % label)
-    out.write_text(build(layer, c0, c1, e0, e1, smoke))
+    out.write_text(build(layer, c0, c1, e0, e1, smoke, ew[0], ew[1]))
     print(out.relative_to(H))
 
 

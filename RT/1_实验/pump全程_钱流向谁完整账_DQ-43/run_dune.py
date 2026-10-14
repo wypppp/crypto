@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """DQ-43（10-13 复制自 DQ-37）：执行一条已入库的 Dune SQL（公开查询）→ 台账 → 流式下载（10-02；同 DQ-34 hl_dune.py）。
-python run_dune.py <标签> <sql 文件> [medium|large]；结果 raw/dune/<标签>.csv.gz，费用记 runs/dune_ledger.csv。
+python run_dune.py <标签> <sql 文件> [medium|large] [最长分钟数]；结果 raw/dune/<标签>.csv.gz，费用记 runs/dune_ledger.csv。
 单条预计 >100 credits 的查询须先经用户批准，不在这里跑；实际费用 >100 时打印警告。
 10-13：引擎按查询大小选（总控第三轮），默认 medium；扫原始指令表或交易表的重查询显式传 large。台账备注记引擎。
+10-14（总控第四轮第四节）：执行超过“最长分钟数”（默认 12）就主动取消，避免再出现 30 分钟超时仍扣 104 credits；
+取消后仍记台账（状态与已扣费用照实）。
 """
 
 import csv
@@ -29,6 +31,7 @@ def call(method: str, path: str, body: dict) -> dict:
 def main() -> None:
     label, sql_file = sys.argv[1], sys.argv[2]
     engine = sys.argv[3] if len(sys.argv) > 3 else "medium"
+    max_min = float(sys.argv[4]) if len(sys.argv) > 4 else 12.0
     if engine not in ("medium", "large"):
         raise SystemExit("引擎只能是 medium 或 large")
     sql = (H / sql_file).read_text()
@@ -38,15 +41,29 @@ def main() -> None:
         {"name": f"DQ-43 {label}", "query_sql": sql, "is_private": False},
     )["query_id"]
     eid = call("POST", f"/query/{qid}/execute", {"performance": engine})["execution_id"]
+    t0 = time.time()
+    cancelled = False
     while True:
         st = get(f"/execution/{eid}/status")
         if st["state"] not in ("QUERY_STATE_PENDING", "QUERY_STATE_EXECUTING"):
             break
+        if not cancelled and time.time() - t0 > max_min * 60:
+            call("POST", f"/execution/{eid}/cancel", {})
+            cancelled = True
+            print(label, f"超过 {max_min:g} 分钟，已请求取消", flush=True)
         time.sleep(15)
     cost = st.get("execution_cost_credits")
     with open(H / "runs" / "dune_ledger.csv", "a", newline="") as f:
         csv.writer(f).writerow(
-            [qid, sql_file, eid, st["state"], cost, "", "公开查询；引擎 " + engine]
+            [
+                qid,
+                sql_file,
+                eid,
+                st["state"],
+                cost,
+                "",
+                "公开查询；引擎 " + engine + ("；超时主动取消" if cancelled else ""),
+            ]
         )
     print(label, qid, st["state"], cost, flush=True)
     if st["state"] != "QUERY_STATE_COMPLETED":
