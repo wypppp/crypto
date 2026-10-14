@@ -718,6 +718,13 @@ EDGE_OUT_CT = """
            CAST(to_unixtime(t1) AS bigint), NULL, NULL, 1
     FROM t_edges"""
 
+# 10-14 总控第七轮：S3 的实体归并只用 S、G、T 三类（DQ-26 的规则），不出 C（C 只给 L 标签用），省去创建者往来的扫表
+EDGE_OUT_T = """
+    SELECT 'T' AS kind, mint, from_owner AS a, to_owner AS b, n, CAST(amt AS varchar) AS amt,
+           CAST(to_unixtime(t0) AS bigint) AS first_t, CAST(to_unixtime(t1) AS bigint) AS last_t,
+           CAST(NULL AS BIGINT) AS x, CAST(NULL AS BIGINT) AS y, 1 AS n_key
+    FROM t_edges"""
+
 # 冒烟：通用结构核对（每层的 out）
 SMOKE = """
 SELECT '{layer}' AS layer, count(*) AS n_rows, count_if(n_key > 1) AS n_dup_key{nulls}{extra},
@@ -849,6 +856,31 @@ def slice_where(col: str, part) -> str:
     )
 
 
+def fields(layer, c0, c1, e0, e1, smoke=False, p=None) -> dict:
+    """各层共用的模板字段（日期守卫在这里做）。S3 层（s3_sql.py）也用它。"""
+    check_dates(c0, c1, e0, e1)
+    names = (G35.H / "sql" / "_holdout_names.sqlpart").read_text().rstrip().rstrip(",")
+    return dict(
+        layer=layer,
+        smoke_tag="（冒烟：只出结构核对）" if smoke else "",
+        names=names,
+        c0=c0.isoformat(),
+        c1=c1.isoformat(),
+        e0=e0.isoformat(),
+        e1=e1.isoformat(),
+        cutoff=CUTOFF.isoformat(),
+        hz=HORIZON_DAYS,
+        sys=SYS,
+        pump=PUMP,
+        amm=AMM,
+        wsol=WSOL,
+        jito=q(JITO),
+        token_programs=q(TOKEN_PROGRAMS),
+        edge_min=EDGE_MIN_SOL,
+        samp=sample_where(p),
+    )
+
+
 def build(
     layer,
     c0,
@@ -868,32 +900,13 @@ def build(
     """snap：CYC 的快照截点（默认创建止日次日 00:00，即 W+1 周一）；with_pre：是否输出截点前合计（W+1 的币不用）；
     part：CYC 输出按钱包分片；
     tpart：COSTF 把一个事件日按小时等分（第几段, 共几段），只许单日。
-    edge_kinds：EDGE 输出哪几类（"all"＝S、G、C、T；"CT"＝只出 C、T，给 W+1 的币按自己的创建时刻取创建者关联）。"""
+    edge_kinds：EDGE 输出哪几类（"all"＝S、G、C、T；"CT"＝只出 C、T，给 W+1 的币按自己的创建时刻取创建者关联；
+    "SGT"＝只出 S、G、T，S3 的实体归并用，总控第七轮）。"""
     if layer not in LAYERS:
         raise SystemExit("层只能是 %s" % "、".join(LAYERS))
-    if edge_kinds not in ("all", "CT"):
-        raise SystemExit("edge_kinds 只能是 all 或 CT")
-    check_dates(c0, c1, e0, e1)
-    names = (G35.H / "sql" / "_holdout_names.sqlpart").read_text().rstrip().rstrip(",")
-    f = dict(
-        layer=layer,
-        smoke_tag="（冒烟：只出结构核对）" if smoke else "",
-        names=names,
-        c0=c0.isoformat(),
-        c1=c1.isoformat(),
-        e0=e0.isoformat(),
-        e1=e1.isoformat(),
-        cutoff=CUTOFF.isoformat(),
-        hz=HORIZON_DAYS,
-        sys=SYS,
-        pump=PUMP,
-        amm=AMM,
-        wsol=WSOL,
-        jito=q(JITO),
-        token_programs=q(TOKEN_PROGRAMS),
-        edge_min=EDGE_MIN_SOL,
-        samp=sample_where(p),
-    )
+    if edge_kinds not in ("all", "CT", "SGT"):
+        raise SystemExit("edge_kinds 只能是 all、CT 或 SGT")
+    f = fields(layer, c0, c1, e0, e1, smoke, p)
     sql = POP.format(**f)
     if layer in ("CYCC", "CYCA", "CYCCP", "CYCAP"):
         snap = snap or (c1 + dt.timedelta(days=1))
@@ -1017,7 +1030,11 @@ def build(
             xd1=(xcut - dt.timedelta(days=1)).isoformat(),
             cd0=(c0 - dt.timedelta(days=7)).isoformat(),
             s1=s1.isoformat(),
-            edge_out=(EDGE_OUT_S if edge_kinds == "all" else "") + EDGE_OUT_CT,
+            edge_out={
+                "all": EDGE_OUT_S + EDGE_OUT_CT,
+                "CT": EDGE_OUT_CT,
+                "SGT": EDGE_OUT_S + EDGE_OUT_T,
+            }[edge_kinds],
             **f,
         )
     if not smoke:

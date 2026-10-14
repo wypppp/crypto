@@ -20,11 +20,11 @@ from dune_get import H, get, norm, page
 CHUNK, PS = 50_000, 1000
 
 
-def fetch(qid, label, sql_file):
+def fetch(qid, label, sql_file, ticket):
     q = get(f"/query/{qid}")
     if norm(q.get("query_sql", "")) != norm((H / sql_file).read_text()):
         raise SystemExit("Dune 上保存的 SQL 与本地冻结版本不一致，停止")
-    eid = get(f"/query/{qid}/results?limit=1")["execution_id"]
+    eid = get(f"/query/{qid}/results?limit=1", ticket)["execution_id"]
     st = get(f"/execution/{eid}/status")
     raw = H / "raw" / "dune"
     (raw / f"{label}_status.json").write_text(
@@ -50,7 +50,7 @@ def fetch(qid, label, sql_file):
             offs = range(c0, min(c0 + CHUNK, n), PS)
             rows = [
                 r
-                for p in ex.map(lambda o: page(eid, o, min(PS, n - o)), offs)
+                for p in ex.map(lambda o: page(eid, o, min(PS, n - o), ticket), offs)
                 for r in p
             ]
             df = pd.DataFrame(rows, columns=cols)
@@ -73,10 +73,10 @@ def main():
     qid, label, sql_file = [x for x in a if not x.startswith("--")][:3]
     if "--approve" not in opt:
         raise SystemExit("下载也付费：没有 --approve=<批准编号>，不下载")
-    PG.check(opt["--approve"], sql_file)
-    with PG.one_at_a_time():
+    ticket = PG.check(opt["--approve"], sql_file)
+    with PG.one_at_a_time(ticket):
         PG.mark_used(opt["--approve"], "下载 query %s" % qid, "下载")
-        fetch(qid, label, sql_file)
+        fetch(qid, label, sql_file, ticket)
 
 
 if __name__ == "__main__":

@@ -1,112 +1,37 @@
-"""DQ-26（复制自 DQ-24，原 DQ-21）：核对并下载一次已完成的 Dune 执行（基于 DQ-20 dune_get.py；加了 SQL 核对与并行分页）。
+"""DQ-43 的 Dune 读取小工具（源自 DQ-20／DQ-26 的 dune_get.py）。
 
-python dune_get.py QUERY_ID LABEL SQL_FILE [MAX_MB] [PAGE_ROWS]
-- 先取 Dune 上保存的 SQL，与本地 SQL_FILE 忽略空白后比较，不一致就停止；
-- 取该查询最近一次执行的状态与费用；
-- 每页 40 行，8 线程并行；402 时该页改用更小的页重取；
-- 结果存 raw/dune/LABEL.csv.gz，状态存 raw/dune/LABEL_status.json。
-DUNE_API_KEY 按键名从工作区 .env 读取，不打印、不写出。
+10-14 总控第七轮补 1：密钥只由 paid_guard 读取，本文件不再单独下载（main 已关闭）。
+只剩三个函数：get（经 paid_guard.request，付费接口要锁内的批准）、norm（SQL 去空白比较）、page（取一页结果，不重试）。
+下载用 run_dune.py，或 dune_get_stream.py --approve=<批准编号>。
 """
 
-import http.client
-import json
 import re
-import sys
-import time
-import urllib.error
-import urllib.request
-from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
 
-import pandas as pd
+import paid_guard as PG
 
-H = Path(__file__).resolve().parent
-API = "https://api.dune.com/api/v1"
-_m = re.search(
-    r"^\s*DUNE_API_KEY\s*=\s*['\"]?([^'\"\s]+)",
-    (H.parents[2] / ".env").read_text(),
-    re.M,
-)
-if _m is None:
-    raise RuntimeError("DUNE_API_KEY not found")
-KEY = _m.group(1)
+H = PG.H
 
 
-def get(path, tries=6):
-    req = urllib.request.Request(API + path, headers={"X-Dune-API-Key": KEY})
-    for attempt in range(tries):
-        try:
-            with urllib.request.urlopen(req, timeout=90) as r:
-                return json.load(r)
-        except urllib.error.HTTPError as e:
-            # DQ-26：403 多为并行下载触发的限流，退避重试；402、404 照旧抛出
-            if e.code in (402, 404) or attempt == tries - 1:
-                raise
-            time.sleep(5 * (attempt + 1) if e.code == 403 else 1 + 2 * attempt)
-        except (ConnectionError, TimeoutError, OSError, http.client.HTTPException):
-            if attempt == tries - 1:
-                raise
-            time.sleep(1 + 2 * attempt)
+def get(path, ticket=None):
+    """10-14 总控第七轮补 1：经 paid_guard.request（付费接口要锁内的批准），不重试。"""
+    return PG.request("GET", path, ticket=ticket)
 
 
 def norm(sql):
     return re.sub(r"\s+", "", sql)
 
 
-def page(eid, offset, n):
+def page(eid, offset, n, ticket):
     # 10-14 总控第六轮：结果页付费，失败（含 402）不自动重试、不拆页重取，直接停下
-    return get(f"/execution/{eid}/results?limit={n}&offset={offset}", tries=1)[
-        "result"
-    ]["rows"]
+    return get(f"/execution/{eid}/results?limit={n}&offset={offset}", ticket)["result"][
+        "rows"
+    ]
 
 
 def main():
-    qid, label, sql_file = sys.argv[1:4]
-    max_mb = float(sys.argv[4]) if len(sys.argv) > 4 else 5.0
-    q = get(f"/query/{qid}")
-    same = norm(q.get("query_sql", "")) == norm((H / sql_file).read_text())
-    print("saved SQL matches", sql_file, ":", same)
-    if not same:
-        raise SystemExit("Dune 上保存的 SQL 与本地冻结版本不一致，停止")
-    eid = get(f"/query/{qid}/results?limit=1")["execution_id"]
-    st = get(f"/execution/{eid}/status")
-    raw = H / "raw" / "dune"
-    raw.mkdir(parents=True, exist_ok=True)
-    (raw / f"{label}_status.json").write_text(
-        json.dumps(st, ensure_ascii=False, indent=2)
+    raise SystemExit(
+        "10-14 总控第七轮：本脚本不再单独下载；用 run_dune.py 或 dune_get_stream.py --approve=<批准编号>"
     )
-    meta = st.get("result_metadata") or {}
-    n, nbytes = meta.get("total_row_count"), meta.get("result_set_bytes")
-    print(
-        "execution",
-        eid,
-        "state",
-        st.get("state"),
-        "rows",
-        n,
-        "bytes",
-        nbytes,
-        "cost",
-        st.get("execution_cost_credits"),
-    )
-    if (
-        st.get("state") != "QUERY_STATE_COMPLETED"
-        or n is None
-        or nbytes is None
-        or nbytes > max_mb * 1e6
-    ):
-        raise SystemExit("未下载：未完成或超过大小上限")
-    # DQ-26：第 5 个参数为页大小（默认 40；10-01 实测 1,000 行一页可用）
-    ps = int(sys.argv[5]) if len(sys.argv) > 5 else 40
-    offsets = list(range(0, n, ps))
-    with ThreadPoolExecutor(4 if ps > 40 else 8) as ex:
-        parts = list(ex.map(lambda o: page(eid, o, min(ps, n - o)), offsets))
-    rows = [r for p in parts for r in p]
-    if len(rows) != n:
-        raise RuntimeError(f"expected {n} rows, got {len(rows)}")
-    df = pd.DataFrame(rows)
-    df.to_csv(raw / f"{label}.csv.gz", index=False)
-    print("saved", raw / f"{label}.csv.gz", df.shape)
 
 
 if __name__ == "__main__":

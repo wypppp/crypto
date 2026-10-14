@@ -17,22 +17,15 @@ import datetime as dt
 import json
 import sys
 import time
-import urllib.request
 
 import paid_guard as PG
-from dune_get import API, H, KEY, get
+from dune_get import H, get
 from dune_get_stream import fetch
 
 
-def call(method: str, path: str, body: dict) -> dict:
-    req = urllib.request.Request(
-        API + path,
-        data=json.dumps(body).encode(),
-        method=method,
-        headers={"X-Dune-API-Key": KEY, "Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=90) as r:
-        return json.load(r)
+def call(method: str, path: str, body: dict, ticket=None) -> dict:
+    """经 paid_guard.request：付费接口（执行等）要锁内的批准。"""
+    return PG.request(method, path, body, ticket)
 
 
 def usage():
@@ -86,7 +79,7 @@ def main() -> None:
             "没有 --approve=<批准编号>，不跑（总控第六轮：没有明确批准不跑任何付费查询）"
         )
     ap = PG.check(approval, sql_file)
-    with PG.one_at_a_time():
+    with PG.one_at_a_time(ap):
         u0 = usage()
         why = budget_gate(u0, ap["cap"])
         if why:
@@ -97,7 +90,7 @@ def main() -> None:
             "/query",
             {"name": f"DQ-43 {label}", "query_sql": sql, "is_private": False},
         )["query_id"]
-        eid = call("POST", f"/query/{qid}/execute", {"performance": engine})[
+        eid = call("POST", f"/query/{qid}/execute", {"performance": engine}, ap)[
             "execution_id"
         ]
         PG.mark_used(approval, eid, "执行中")
@@ -140,7 +133,7 @@ def main() -> None:
                 "结果 %.1f MB 超过批准的下载上限 %.1f MB，不下载；先报批"
                 % (mb, ap["max_mb"])
             )
-        fetch(str(qid), label, sql_file)
+        fetch(str(qid), label, sql_file, ap)
         u1 = usage()
         print(
             label,
