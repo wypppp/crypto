@@ -1,4 +1,4 @@
-/* DQ-43 WM2 取数（冻结卡 v3，b8e1b2f4）：层 COSTF（冒烟：只出结构核对）；曲线创建于 2026-08-12～2026-08-12 的 SOL 计价 pump 新币；事件 2026-08-12～2026-08-12；
+/* DQ-43 WM2 取数（冻结卡 v3，b8e1b2f4）：层 CYCC（冒烟：只出结构核对）；曲线创建于 2026-08-12～2026-08-12 的 SOL 计价 pump 新币；事件 2026-08-12～2026-08-12；
    只存不分析；由 build_wm2_sql.py 生成。保护过滤在导出之前：开发窗口周、止日 2026-10-05、代号缺失或为空、留出同名、非 SOL。 */
 WITH
 bn(base) AS (
@@ -791,178 +791,138 @@ c1 AS (
 pop AS (SELECT * FROM c1 WHERE pop_class = 'in'),
 coins AS (SELECT * FROM pop
     WHERE mod(bitwise_and(from_big_endian_64(substr(sha256(to_utf8('RT-DQ43-coin-sample-v1|' || mint)), 1, 8)), 9223372036854775807), 10000) < 1000),
-cp AS (
-    /* 10-14（GPT 01）：建池事件聚合前 JOIN coins，逐币 30 天窗口与全局止日 */
-    SELECT c.pool, min(c.evt_block_time) AS created_at, min_by(c.evt_block_slot, c.evt_block_time) AS pool_slot,
-           min_by(c.evt_tx_id, c.evt_block_time) AS pool_tx,
-           max(c.base_mint) AS mint, max(c.quote_mint) AS quote_mint,
-           max(c.base_mint_decimals) AS bd, max(c.quote_mint_decimals) AS qd, count(*) AS n_cp
-    FROM pumpdotfun_solana.pump_amm_evt_createpoolevent c
-    JOIN coins k ON k.mint = c.base_mint
-    WHERE c.evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-      AND c.evt_outer_executing_account = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'
-      AND c.index = 0
-      AND c.evt_block_time >= k.created_at AND c.evt_block_time < k.created_at + INTERVAL '30' DAY
-      AND c.evt_block_time < TIMESTAMP '2026-10-05 00:00:00'
-    GROUP BY 1
-),
-pools AS (
-    SELECT cp.*, k.created_at AS coin_created_at
-    FROM cp JOIN coins k ON k.mint = cp.mint
-    WHERE cp.quote_mint = 'So11111111111111111111111111111111111111112'
-),
-lg0 AS (
-    /* 抽样币的成交腿（成功交易；事件表），本时段 [2026-08-12 00:00:00, 2026-08-13 00:00:00)。交易者现金：曲线按 v1（买入为负），PumpSwap 用用户报价金额 */
-    SELECT t.evt_tx_id AS tx_id, t.mint, 'curve' AS stage, CAST(t."user" AS varchar) AS usr,
-           CASE WHEN COALESCE(t.is_buy, t.isBuy)
-                THEN -(CAST(COALESCE(t.sol_amount, t.solAmount) AS DECIMAL(38,0)) + COALESCE(CAST(t.fee AS DECIMAL(38,0)), 0)
-                       + COALESCE(CAST(t.creator_fee AS DECIMAL(38,0)), 0))
-                ELSE CAST(COALESCE(t.sol_amount, t.solAmount) AS DECIMAL(38,0)) - COALESCE(CAST(t.fee AS DECIMAL(38,0)), 0)
-                       - COALESCE(CAST(t.creator_fee AS DECIMAL(38,0)), 0) END AS cash
+ev AS (
+    /* 曲线成交（事件表）：抽样币、逐币 30 天窗口、止日之前。
+       现金按 T2a 候选口径 v1（冒烟结果 §3）：买入付出 sol＋协议费＋创建者费，卖出到手 sol−两费。
+       r1～r4＝成交后的虚拟 SOL、虚拟代币、真实 SOL、真实代币储备；bps1、bps2＝协议费率、创建者费率 */
+    SELECT t.mint, t.evt_block_time AS ts, t.evt_block_slot AS slot, t.evt_tx_index AS txi,
+           t.evt_outer_instruction_index AS oix, COALESCE(t.evt_inner_instruction_index, -1) AS iix,
+           t.evt_tx_id AS tx_id, CAST(t."user" AS varchar) AS usr, COALESCE(t.is_buy, t.isBuy) AS is_buy,
+           CAST(COALESCE(t.sol_amount, t.solAmount) AS DECIMAL(38,0)) AS amt,
+           CAST(COALESCE(t.token_amount, t.tokenAmount) AS DECIMAL(38,0)) AS tok,
+           COALESCE(CAST(t.fee AS DECIMAL(38,0)), 0) AS f_pr, COALESCE(CAST(t.creator_fee AS DECIMAL(38,0)), 0) AS f_cr,
+           CAST(0 AS DECIMAL(38,0)) AS f_lp,
+           CAST(t.cashback AS DECIMAL(38,0)) AS f_cb, CAST(t.buyback_fee AS DECIMAL(38,0)) AS f_bb,
+           CAST(COALESCE(t.virtual_sol_reserves, t.virtualSolReserves) AS DECIMAL(38,0)) AS r1,
+           CAST(COALESCE(t.virtual_token_reserves, t.virtualTokenReserves) AS DECIMAL(38,0)) AS r2,
+           CAST(t.real_sol_reserves AS DECIMAL(38,0)) AS r3, CAST(t.real_token_reserves AS DECIMAL(38,0)) AS r4,
+           CAST(t.fee_basis_points AS DECIMAL(38,0)) AS bps1, CAST(t.creator_fee_basis_points AS DECIMAL(38,0)) AS bps2,
+           CAST(NULL AS DECIMAL(38,0)) AS bps3
     FROM pumpdotfun_solana.pump_evt_tradeevent t
     JOIN coins k ON k.mint = t.mint
     WHERE t.evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-      AND t.evt_block_time >= TIMESTAMP '2026-08-12 00:00:00' AND t.evt_block_time < TIMESTAMP '2026-08-13 00:00:00'
       AND t.evt_block_time >= k.created_at AND t.evt_block_time < k.created_at + INTERVAL '30' DAY
       AND t.evt_block_time < TIMESTAMP '2026-10-05 00:00:00'
+),
+e1 AS (
+    SELECT ev.*, CASE WHEN is_buy THEN amt + f_pr + f_cr ELSE amt - f_pr - f_cr END AS cash
+    FROM ev
+),
+ag AS (
+    /* 每个“钱包 × 币”的本阶段合计；pre＝快照截点 2026-08-13 00:00:00 之前（T3 排名用）；
+       sb＝本阶段内首笔卖出早于末笔买入（“先卖后买”，阶段结转近似的敏感性打标，取数附录 §5） */
+    SELECT usr, mint,
+           count_if(is_buy) AS n_buy, count_if(NOT is_buy) AS n_sell,
+           sum(IF(is_buy, cash, 0)) AS in_cash, sum(IF(is_buy, 0, cash)) AS out_cash,
+           sum(IF(is_buy, tok, 0)) AS tok_buy, sum(IF(is_buy, 0, tok)) AS tok_sell,
+           sum(IF(is_buy AND ts < TIMESTAMP '2026-08-13 00:00:00', cash, 0)) AS in_pre,
+           sum(IF(NOT is_buy AND ts < TIMESTAMP '2026-08-13 00:00:00', cash, 0)) AS out_pre,
+           sum(IF(is_buy AND ts < TIMESTAMP '2026-08-13 00:00:00', tok, 0)) AS tok_buy_pre,
+           sum(IF(NOT is_buy AND ts < TIMESTAMP '2026-08-13 00:00:00', tok, 0)) AS tok_sell_pre,
+           sum(f_cb) AS f_cb, sum(f_bb) AS f_bb,
+           min(IF(NOT is_buy, ARRAY[slot, txi, oix, iix])) < max(IF(is_buy, ARRAY[slot, txi, oix, iix])) AS sb,
+           to_unixtime(min(ts)) AS first_t
+    FROM e1
+    GROUP BY 1, 2
+),
+w AS (
+    /* 买入当时可见的状态（a_riskset 的分箱输入）：前 60 秒净买入＝顺序键在前、时刻晚于 t−60 秒的成交净额（进出池子的 SOL） */
+    SELECT x.*,
+           sum(sg) OVER (PARTITION BY mint ORDER BY slot, txi, oix, iix ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS cum_x,
+           sum(sg) OVER (PARTITION BY mint ORDER BY ts RANGE BETWEEN UNBOUNDED PRECEDING AND INTERVAL '60' SECOND PRECEDING) AS cum_60
+    FROM (SELECT e1.*, CASE WHEN is_buy THEN amt ELSE -amt END AS sg FROM e1) x
+),
+wb AS (
+    /* K 标签的输入：本阶段截至这笔之前全部买入（现金口径）的第 99 百分位（近似分位，取数附录 §5 第 3 条）与笔数 */
+    SELECT w.*,
+           approx_percentile(CAST(cash AS double), 0.99) OVER (PARTITION BY mint ORDER BY slot, txi, oix, iix
+               ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS p99_prior,
+           count(*) OVER (PARTITION BY mint ORDER BY slot, txi, oix, iix
+               ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS n_prior,
+           row_number() OVER (PARTITION BY usr, mint ORDER BY slot, txi, oix, iix) AS rb
+    FROM w
+    WHERE is_buy
+),
+fb AS (SELECT * FROM wb WHERE rb = 1),
+cmp AS (
+    /* 毕业事件所在交易（A 的自身触发：首笔买入就在毕业交易里） */
+    SELECT e.mint, min_by(e.evt_tx_id, e.evt_block_time) AS comp_tx
+    FROM pumpdotfun_solana.pump_evt_completeevent e
+    JOIN coins k ON k.mint = e.mint
+    WHERE e.evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
+      AND e.evt_block_time >= k.created_at AND e.evt_block_time < k.created_at + INTERVAL '30' DAY
+      AND e.evt_block_time < TIMESTAMP '2026-10-05 00:00:00'
+    GROUP BY 1
+),
+y AS (
+    /* 10-14 冒烟后精简（取数附录 v2 §3）：首笔买入只留分箱、K、命中与自身触发要用的字段 */
+    SELECT a.*, f.slot AS fb_slot, f.txi AS fb_txi, f.oix AS fb_oix, f.iix AS fb_iix, to_unixtime(f.ts) AS fb_t,
+           f.cash AS fb_cash, f.tok AS fb_tok,
+           CASE WHEN f.usr IS NOT NULL THEN f.r4 END AS fb_r,
+           CASE WHEN f.usr IS NOT NULL THEN COALESCE(f.cum_x, 0) - COALESCE(f.cum_60, 0) END AS fb_net60,
+           CASE WHEN f.n_prior > 0 THEN f.cash >= f.p99_prior END AS fb_k,
+           CASE WHEN f.usr IS NOT NULL THEN f.tx_id = c.comp_tx END AS fb_comp
+    FROM ag a
+    LEFT JOIN fb f ON f.usr = a.usr AND f.mint = a.mint
+    LEFT JOIN cmp c ON c.mint = a.mint
+),
+z AS (
+    /* 每币两个时点的定价状态：S＝快照截点之前最后一笔成交后，E＝观察窗内最后一笔成交后；E 另附本阶段费用合计与笔数 */
+    SELECT mint, 'S' AS z_cut, slot, txi, oix, iix, ts, r1, r2, r3, r4, bps1, bps2, bps3,
+           CAST(NULL AS DECIMAL(38,0)) AS zf_pr, CAST(NULL AS DECIMAL(38,0)) AS zf_cr, CAST(NULL AS DECIMAL(38,0)) AS zf_lp,
+           CAST(NULL AS BIGINT) AS z_n
+    FROM (SELECT e1.*, row_number() OVER (PARTITION BY mint ORDER BY slot DESC, txi DESC, oix DESC, iix DESC) AS rz
+          FROM e1 WHERE ts < TIMESTAMP '2026-08-13 00:00:00')
+    WHERE rz = 1
     UNION ALL
-    SELECT a.tx_id, p.mint, 'amm', a.usr, a.cash
-    FROM (
-        SELECT evt_tx_id AS tx_id, pool, evt_block_time AS ts, CAST("user" AS varchar) AS usr,
-               -CAST(user_quote_amount_in AS DECIMAL(38,0)) AS cash
-        FROM pumpdotfun_solana.pump_amm_evt_buyevent
-        WHERE evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-          AND evt_block_time >= TIMESTAMP '2026-08-12 00:00:00' AND evt_block_time < TIMESTAMP '2026-08-13 00:00:00'
-        UNION ALL
-        SELECT evt_tx_id, pool, evt_block_time, CAST("user" AS varchar), CAST(user_quote_amount_out AS DECIMAL(38,0))
-        FROM pumpdotfun_solana.pump_amm_evt_sellevent
-        WHERE evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-          AND evt_block_time >= TIMESTAMP '2026-08-12 00:00:00' AND evt_block_time < TIMESTAMP '2026-08-13 00:00:00'
-    ) a
-    JOIN pools p ON p.pool = a.pool
-    WHERE a.ts >= p.created_at AND a.ts < p.coin_created_at + INTERVAL '30' DAY
-      AND a.ts < TIMESTAMP '2026-10-05 00:00:00'
-),
-lt AS (
-    SELECT tx_id, count(DISTINCT usr) AS n_users, max(usr) AS usr1, sum(cash) AS cash,
-           array_distinct(array_agg(mint)) AS mints,
-           array_distinct(array_agg(mint || '|' || stage)) AS slegs
-    FROM lg0
-    GROUP BY 1
-),
-la AS (
-    /* 同一批交易里的全部 pump 腿（任何币；只用来数腿与定序，不读金额）：腿号＝币|阶段；非抽样币的 PumpSwap 腿用池地址代币 */
-    SELECT DISTINCT t.evt_tx_id AS tx_id, t.mint || '|curve' AS leg
-    FROM pumpdotfun_solana.pump_evt_tradeevent t
-    WHERE t.evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-      AND t.evt_block_time >= TIMESTAMP '2026-08-12 00:00:00' AND t.evt_block_time < TIMESTAMP '2026-08-13 00:00:00'
-      AND t.evt_tx_id IN (SELECT tx_id FROM lt)
-    UNION
-    SELECT DISTINCT a.evt_tx_id, COALESCE(p.mint, a.pool) || '|amm'
-    FROM (SELECT evt_tx_id, pool FROM pumpdotfun_solana.pump_amm_evt_buyevent
-           WHERE evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-             AND evt_block_time >= TIMESTAMP '2026-08-12 00:00:00' AND evt_block_time < TIMESTAMP '2026-08-13 00:00:00'
-          UNION ALL
-          SELECT evt_tx_id, pool FROM pumpdotfun_solana.pump_amm_evt_sellevent
-           WHERE evt_block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-             AND evt_block_time >= TIMESTAMP '2026-08-12 00:00:00' AND evt_block_time < TIMESTAMP '2026-08-13 00:00:00') a
-    LEFT JOIN pools p ON p.pool = a.pool
-    WHERE a.evt_tx_id IN (SELECT tx_id FROM lt)
-),
-ln AS (SELECT tx_id, array_sort(array_agg(leg)) AS alegs FROM la GROUP BY 1),
-sk AS (
-    /* 抽样币与它的建池时刻：失败交易按时刻归阶段（建池之后为 PumpSwap） */
-    SELECT k.mint, p.created_at AS pool_t FROM coins k LEFT JOIN pools p ON p.mint = k.mint
-),
-s AS (
-    /* 交易表只扫一次：成功的成交交易（在 lt 里）＋调用 pump 或 PumpSwap 的失败交易 */
-    SELECT s.id AS tx_id, s.block_time, s.signer, s.success, CAST(s.fee AS DECIMAL(38,0)) AS fee, s.required_signatures,
-           s.pre_balances, s.post_balances, s.pre_token_balances, s.post_token_balances, fk.keys,
-           l.n_users, l.usr1, l.cash, l.slegs, n.alegs,
-           cardinality(fk.keys) = cardinality(s.pre_balances) AND cardinality(fk.keys) = cardinality(s.post_balances)
-             AND cardinality(array_distinct(fk.keys)) = cardinality(fk.keys)
-             AND NOT any_match(fk.keys, x -> x IS NULL) AS keys_ok,
-           NOT (COALESCE(any_match(s.pre_token_balances, b -> b.owner = s.signer AND b.mint <> 'So11111111111111111111111111111111111111112' AND NOT contains(l.mints, b.mint)), false)
-                OR COALESCE(any_match(s.post_token_balances, b -> b.owner = s.signer AND b.mint <> 'So11111111111111111111111111111111111111112' AND NOT contains(l.mints, b.mint)), false))
-             AS scope_complete
-    FROM solana.transactions s
-    LEFT JOIN lt l ON l.tx_id = s.id
-    LEFT JOIN ln n ON n.tx_id = s.id
-    CROSS JOIN UNNEST(ARRAY[
-        CASE WHEN cardinality(s.account_keys) = cardinality(s.pre_balances) THEN s.account_keys
-             ELSE concat(s.account_keys, COALESCE(s.loaded_addresses.writable, CAST(ARRAY[] AS array(varchar))),
-                         COALESCE(s.loaded_addresses.readonly, CAST(ARRAY[] AS array(varchar)))) END]) AS fk(keys)
-    WHERE s.block_date BETWEEN DATE '2026-08-12' AND DATE '2026-08-12'
-      AND s.block_time >= TIMESTAMP '2026-08-12 00:00:00' AND s.block_time < TIMESTAMP '2026-08-13 00:00:00'
-      AND s.block_time < TIMESTAMP '2026-10-05 00:00:00'
-      AND (l.tx_id IS NOT NULL
-           OR (s.success = false
-               AND (contains(s.account_keys, '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P') OR contains(s.account_keys, 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA')
-                    OR contains(COALESCE(s.loaded_addresses.readonly, CAST(ARRAY[] AS array(varchar))), '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P')
-                    OR contains(COALESCE(s.loaded_addresses.readonly, CAST(ARRAY[] AS array(varchar))), 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'))))
-),
-u AS (
-    SELECT s.tx_id, s.block_time, s.signer, s.success, s.fee, s.required_signatures, s.n_users, s.usr1, s.cash,
-           s.slegs, s.alegs, s.keys_ok, s.scope_complete, x.acct,
-           CAST(x.post AS DECIMAL(38,0)) - CAST(x.pre AS DECIMAL(38,0)) AS d,
-           s.success AND (x.acct = s.signer
-             OR COALESCE(any_match(s.pre_token_balances, b -> b.account = x.acct AND b.owner = s.signer), false)
-             OR COALESCE(any_match(s.post_token_balances, b -> b.account = x.acct AND b.owner = s.signer), false)) AS is_trader,
-           kp.mint AS pop_mint,
-           CASE WHEN ks.mint IS NULL THEN NULL
-                WHEN ks.pool_t IS NOT NULL AND s.block_time >= ks.pool_t THEN ks.mint || '|amm'
-                ELSE ks.mint || '|curve' END AS f_leg
-    FROM s
-    CROSS JOIN UNNEST(s.keys, s.pre_balances, s.post_balances) AS x(acct, pre, post)
-    LEFT JOIN pop kp ON kp.mint = x.acct AND NOT s.success
-    LEFT JOIN sk ks ON ks.mint = x.acct AND NOT s.success
-),
-g AS (
-    SELECT tx_id, arbitrary(signer) AS signer, arbitrary(success) AS success, arbitrary(fee) AS fee,
-           arbitrary(required_signatures) AS sigs, arbitrary(n_users) AS n_users, arbitrary(usr1) AS usr1,
-           arbitrary(cash) AS cash, arbitrary(slegs) AS slegs, arbitrary(alegs) AS alegs,
-           bool_and(keys_ok) AS keys_ok, bool_and(scope_complete) AS scope_complete,
-           sum(IF(is_trader, d, 0)) AS d_trader,
-           sum(IF(acct IN ('96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5', 'HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe', 'Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY', 'ADaUMid9yfUytqMBgopwjb2DTLSokTSzL1zt6iGPaS49', 'DfXygSm4jCyNCybVYYK6DwvWqjKee8pbDmJGcLWNDXjh', 'ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt', 'DttWaMuVvTiduZRnguLF7jNxTgiMBZ1hyAumKUiL2KRL', '3AVi9Tg9Uo68tJfuvoKvqKNWKkC5wPdSSdeBnizKZ6jT') AND d > 0, d, 0)) AS tip,
-           array_distinct(array_agg(f_leg) FILTER (WHERE f_leg IS NOT NULL)) AS flegs,
-           array_sort(array_distinct(array_agg(pop_mint) FILTER (WHERE pop_mint IS NOT NULL))) AS pops
-    FROM u
-    GROUP BY 1
-),
-v AS (
-    /* 每条腿一行（成功交易的抽样腿，或失败交易触及的抽样币）。
-       成功：总费＋小费按全部 pump 腿数 n 均摊，余数给排序第一的腿（contract_ledger.allocate_tx_costs）；
-       未解释负残差（v1：交易者净变化＋总费＋小费−事件现金 <0）只在“范围完整、唯一用户就是签名者、账户键无误”的交易里计，同样均摊。
-       失败：总费按触及的母体币数均摊，余数给排序第一的币 */
-    SELECT g.signer, split_part(leg, '|', 1) AS mint, split_part(leg, '|', 2) AS stage, g.success,
-           CASE WHEN g.success THEN cardinality(g.alegs) ELSE cardinality(g.pops) END AS n,
-           CASE WHEN g.success THEN array_position(g.alegs, leg) = 1
-                ELSE array_position(g.pops, split_part(leg, '|', 1)) = 1 END AS first_leg,
-           CASE WHEN g.success THEN g.fee + g.tip ELSE g.fee END AS c_tot,
-           CASE WHEN g.success THEN CAST(5000 * g.sigs AS DECIMAL(38,0)) ELSE CAST(0 AS DECIMAL(38,0)) END AS c_net,
-           CASE WHEN g.success THEN g.tip ELSE CAST(0 AS DECIMAL(38,0)) END AS c_tip,
-           g.success AND g.scope_complete AND g.keys_ok AND g.n_users = 1 AND g.usr1 = g.signer AS clean,
-           CASE WHEN g.success AND g.scope_complete AND g.keys_ok AND g.n_users = 1 AND g.usr1 = g.signer
-                     AND g.d_trader + g.fee + g.tip - g.cash < 0
-                THEN -(g.d_trader + g.fee + g.tip - g.cash) ELSE CAST(0 AS DECIMAL(38,0)) END AS r_tot
-    FROM g
-    CROSS JOIN UNNEST(CASE WHEN g.success THEN g.slegs ELSE g.flegs END) AS lv(leg)
+    SELECT mint, 'E', slot, txi, oix, iix, ts, r1, r2, r3, r4, bps1, bps2, bps3, zf_pr, zf_cr, zf_lp, z_n
+    FROM (SELECT e1.*, row_number() OVER (PARTITION BY mint ORDER BY slot DESC, txi DESC, oix DESC, iix DESC) AS rz,
+                 sum(f_pr) OVER (PARTITION BY mint) AS zf_pr, sum(f_cr) OVER (PARTITION BY mint) AS zf_cr,
+                 sum(f_lp) OVER (PARTITION BY mint) AS zf_lp, count(*) OVER (PARTITION BY mint) AS z_n
+          FROM e1)
+    WHERE rz = 1
 ),
 out AS (
-    SELECT 'solana' AS chain, CASE WHEN success THEN 'K' ELSE 'F' END AS kind, '2026-08-12' AS day, '2026-08-12 00:00:00' AS t_from,
-           signer, mint, stage, count(*) AS n_tx,
-           CAST(sum((c_tot - mod(c_tot, n)) / n + IF(first_leg, mod(c_tot, n), 0)) AS varchar) AS cost,
-           CAST(sum((c_net - mod(c_net, n)) / n + IF(first_leg, mod(c_net, n), 0)) AS varchar) AS cost_net,
-           CAST(sum((c_tip - mod(c_tip, n)) / n + IF(first_leg, mod(c_tip, n), 0)) AS varchar) AS cost_tip,
-           CAST(sum((r_tot - mod(r_tot, n)) / n + IF(first_leg, mod(r_tot, n), 0)) AS varchar) AS res_neg,
-           count_if(clean) AS n_tx_clean, count_if(success AND NOT clean) AS n_tx_unclean,
-           count(*) OVER (PARTITION BY CASE WHEN success THEN 'K' ELSE 'F' END, signer, mint, stage) AS n_key
-    FROM v
-    GROUP BY success, signer, mint, stage
+    /* 币号取 mint 前 12 位（58^12 种，母体内唯一性由 COIN 层在 Python 里核）；阶段记 c／a */
+    SELECT 'Y' AS kind, 'c' AS stage, substr(mint, 1, 12) AS m12, usr,
+           n_buy, n_sell, CAST(in_cash AS varchar) AS in_cash, CAST(out_cash AS varchar) AS out_cash,
+           CAST(tok_buy AS varchar) AS tok_buy, CAST(tok_sell AS varchar) AS tok_sell,
+           CAST(in_pre AS varchar) AS in_pre, CAST(out_pre AS varchar) AS out_pre,
+           CAST(tok_buy_pre AS varchar) AS tok_buy_pre, CAST(tok_sell_pre AS varchar) AS tok_sell_pre,
+           CAST(f_cb AS varchar) AS f_cb, CAST(f_bb AS varchar) AS f_bb, sb, first_t,
+           fb_slot, fb_txi, fb_oix, fb_iix, fb_t, CAST(fb_cash AS varchar) AS fb_cash, CAST(fb_tok AS varchar) AS fb_tok,
+           CAST(fb_r AS varchar) AS fb_r, CAST(fb_net60 AS varchar) AS fb_net60, fb_k, fb_comp,
+           CAST(NULL AS varchar) AS z_cut, CAST(NULL AS BIGINT) AS z_slot, CAST(NULL AS BIGINT) AS z_txi,
+           CAST(NULL AS BIGINT) AS z_oix, CAST(NULL AS BIGINT) AS z_iix, CAST(NULL AS double) AS z_t,
+           CAST(NULL AS varchar) AS z_r1, CAST(NULL AS varchar) AS z_r2, CAST(NULL AS varchar) AS z_r3, CAST(NULL AS varchar) AS z_r4,
+           CAST(NULL AS varchar) AS z_bps1, CAST(NULL AS varchar) AS z_bps2, CAST(NULL AS varchar) AS z_bps3,
+           CAST(NULL AS varchar) AS zf_pr, CAST(NULL AS varchar) AS zf_cr, CAST(NULL AS varchar) AS zf_lp, CAST(NULL AS BIGINT) AS z_n,
+           count(*) OVER (PARTITION BY mint, usr) AS n_key
+    FROM y
+    UNION ALL
+    SELECT 'P', 'c', substr(mint, 1, 12), NULL,
+           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+           z_cut, slot, txi, oix, iix, to_unixtime(ts),
+           CAST(r1 AS varchar), CAST(r2 AS varchar), CAST(r3 AS varchar), CAST(r4 AS varchar),
+           CAST(bps1 AS varchar), CAST(bps2 AS varchar), CAST(bps3 AS varchar),
+           CAST(zf_pr AS varchar), CAST(zf_cr AS varchar), CAST(zf_lp AS varchar), z_n,
+           count(*) OVER (PARTITION BY mint, z_cut)
+    FROM z
 )
-SELECT 'COSTF' AS layer, count(*) AS n_rows, count_if(n_key > 1) AS n_dup_key, count_if(signer IS NULL) AS null_signer, count_if(cost IS NULL) AS null_cost, count_if(kind = 'K') AS n_k, count_if(kind = 'F') AS n_f, count(DISTINCT signer) AS n_signers, sum(n_tx) AS n_leg_tx, sum(n_tx_clean) AS n_leg_tx_clean, sum(n_tx_unclean) AS n_leg_tx_unclean, count_if(CAST(cost_net AS DECIMAL(38,0)) + CAST(cost_tip AS DECIMAL(38,0)) > CAST(cost AS DECIMAL(38,0)) + 2) AS n_parts_gt_total, count_if(CAST(cost AS DECIMAL(38,0)) < 0 OR CAST(res_neg AS DECIMAL(38,0)) < 0) AS n_negative,
+SELECT 'CYCC' AS layer, count(*) AS n_rows, count_if(n_key > 1) AS n_dup_key, count_if(m12 IS NULL) AS null_m12, count_if(kind = 'Y') AS n_y, count_if(kind = 'P') AS n_p, count(DISTINCT usr) AS n_wallets, count_if(kind = 'Y' AND n_buy > 0 AND fb_slot IS NULL) AS n_fb_missing, count_if(kind = 'Y' AND fb_slot IS NOT NULL AND fb_k IS NULL) AS n_k_noprior, count_if(fb_k) AS n_k, count_if(fb_comp) AS n_fb_in_comp_tx, count_if(sb) AS n_sell_before_buy, count(DISTINCT m12) AS n_m12, count_if(kind = 'Y' AND CAST(tok_sell AS DECIMAL(38,0)) > CAST(tok_buy AS DECIMAL(38,0))) AS n_sell_gt_buy, count_if(kind = 'Y' AND (in_cash IS NULL OR out_cash IS NULL)) AS n_cash_null, count_if(kind = 'P' AND z_cut = 'S') AS n_p_snap, count_if(kind = 'P' AND z_cut = 'E') AS n_p_end,
        count(*) AS ck_rows,
-       sum(CAST(bitwise_and(from_big_endian_64(xxhash64(to_utf8(concat_ws('|', COALESCE(CAST(chain AS varchar), '~'), COALESCE(CAST(kind AS varchar), '~'), COALESCE(CAST(day AS varchar), '~'), COALESCE(CAST(t_from AS varchar), '~'), COALESCE(CAST(signer AS varchar), '~'), COALESCE(CAST(mint AS varchar), '~'), COALESCE(CAST(stage AS varchar), '~'), COALESCE(CAST(n_tx AS varchar), '~'), COALESCE(CAST(cost AS varchar), '~'), COALESCE(CAST(cost_net AS varchar), '~'), COALESCE(CAST(cost_tip AS varchar), '~'), COALESCE(CAST(res_neg AS varchar), '~'), COALESCE(CAST(n_tx_clean AS varchar), '~'), COALESCE(CAST(n_tx_unclean AS varchar), '~'), COALESCE(CAST(n_key AS varchar), '~'))))), 9223372036854775807) AS DECIMAL(38,0))) AS ck_sum,
-       bitwise_xor_agg(from_big_endian_64(xxhash64(to_utf8(concat_ws('|', COALESCE(CAST(chain AS varchar), '~'), COALESCE(CAST(kind AS varchar), '~'), COALESCE(CAST(day AS varchar), '~'), COALESCE(CAST(t_from AS varchar), '~'), COALESCE(CAST(signer AS varchar), '~'), COALESCE(CAST(mint AS varchar), '~'), COALESCE(CAST(stage AS varchar), '~'), COALESCE(CAST(n_tx AS varchar), '~'), COALESCE(CAST(cost AS varchar), '~'), COALESCE(CAST(cost_net AS varchar), '~'), COALESCE(CAST(cost_tip AS varchar), '~'), COALESCE(CAST(res_neg AS varchar), '~'), COALESCE(CAST(n_tx_clean AS varchar), '~'), COALESCE(CAST(n_tx_unclean AS varchar), '~'), COALESCE(CAST(n_key AS varchar), '~')))))) AS ck_xor,
-       sum(length(concat_ws(',', CAST(chain AS varchar), CAST(kind AS varchar), CAST(day AS varchar), CAST(t_from AS varchar), CAST(signer AS varchar), CAST(mint AS varchar), CAST(stage AS varchar), CAST(n_tx AS varchar), CAST(cost AS varchar), CAST(cost_net AS varchar), CAST(cost_tip AS varchar), CAST(res_neg AS varchar), CAST(n_tx_clean AS varchar), CAST(n_tx_unclean AS varchar), CAST(n_key AS varchar)))) + count(*) * 15 AS est_csv_bytes
+       sum(CAST(bitwise_and(from_big_endian_64(xxhash64(to_utf8(concat_ws('|', COALESCE(CAST(kind AS varchar), '~'), COALESCE(CAST(stage AS varchar), '~'), COALESCE(CAST(m12 AS varchar), '~'), COALESCE(CAST(usr AS varchar), '~'), COALESCE(CAST(n_buy AS varchar), '~'), COALESCE(CAST(n_sell AS varchar), '~'), COALESCE(CAST(in_cash AS varchar), '~'), COALESCE(CAST(out_cash AS varchar), '~'), COALESCE(CAST(tok_buy AS varchar), '~'), COALESCE(CAST(tok_sell AS varchar), '~'), COALESCE(CAST(in_pre AS varchar), '~'), COALESCE(CAST(out_pre AS varchar), '~'), COALESCE(CAST(tok_buy_pre AS varchar), '~'), COALESCE(CAST(tok_sell_pre AS varchar), '~'), COALESCE(CAST(f_cb AS varchar), '~'), COALESCE(CAST(f_bb AS varchar), '~'), COALESCE(CAST(sb AS varchar), '~'), COALESCE(CAST(first_t AS varchar), '~'), COALESCE(CAST(fb_slot AS varchar), '~'), COALESCE(CAST(fb_txi AS varchar), '~'), COALESCE(CAST(fb_oix AS varchar), '~'), COALESCE(CAST(fb_iix AS varchar), '~'), COALESCE(CAST(fb_t AS varchar), '~'), COALESCE(CAST(fb_cash AS varchar), '~'), COALESCE(CAST(fb_tok AS varchar), '~'), COALESCE(CAST(fb_r AS varchar), '~'), COALESCE(CAST(fb_net60 AS varchar), '~'), COALESCE(CAST(fb_k AS varchar), '~'), COALESCE(CAST(fb_comp AS varchar), '~'), COALESCE(CAST(z_cut AS varchar), '~'), COALESCE(CAST(z_slot AS varchar), '~'), COALESCE(CAST(z_txi AS varchar), '~'), COALESCE(CAST(z_oix AS varchar), '~'), COALESCE(CAST(z_iix AS varchar), '~'), COALESCE(CAST(z_t AS varchar), '~'), COALESCE(CAST(z_r1 AS varchar), '~'), COALESCE(CAST(z_r2 AS varchar), '~'), COALESCE(CAST(z_r3 AS varchar), '~'), COALESCE(CAST(z_r4 AS varchar), '~'), COALESCE(CAST(z_bps1 AS varchar), '~'), COALESCE(CAST(z_bps2 AS varchar), '~'), COALESCE(CAST(z_bps3 AS varchar), '~'), COALESCE(CAST(zf_pr AS varchar), '~'), COALESCE(CAST(zf_cr AS varchar), '~'), COALESCE(CAST(zf_lp AS varchar), '~'), COALESCE(CAST(z_n AS varchar), '~'), COALESCE(CAST(n_key AS varchar), '~'))))), 9223372036854775807) AS DECIMAL(38,0))) AS ck_sum,
+       bitwise_xor_agg(from_big_endian_64(xxhash64(to_utf8(concat_ws('|', COALESCE(CAST(kind AS varchar), '~'), COALESCE(CAST(stage AS varchar), '~'), COALESCE(CAST(m12 AS varchar), '~'), COALESCE(CAST(usr AS varchar), '~'), COALESCE(CAST(n_buy AS varchar), '~'), COALESCE(CAST(n_sell AS varchar), '~'), COALESCE(CAST(in_cash AS varchar), '~'), COALESCE(CAST(out_cash AS varchar), '~'), COALESCE(CAST(tok_buy AS varchar), '~'), COALESCE(CAST(tok_sell AS varchar), '~'), COALESCE(CAST(in_pre AS varchar), '~'), COALESCE(CAST(out_pre AS varchar), '~'), COALESCE(CAST(tok_buy_pre AS varchar), '~'), COALESCE(CAST(tok_sell_pre AS varchar), '~'), COALESCE(CAST(f_cb AS varchar), '~'), COALESCE(CAST(f_bb AS varchar), '~'), COALESCE(CAST(sb AS varchar), '~'), COALESCE(CAST(first_t AS varchar), '~'), COALESCE(CAST(fb_slot AS varchar), '~'), COALESCE(CAST(fb_txi AS varchar), '~'), COALESCE(CAST(fb_oix AS varchar), '~'), COALESCE(CAST(fb_iix AS varchar), '~'), COALESCE(CAST(fb_t AS varchar), '~'), COALESCE(CAST(fb_cash AS varchar), '~'), COALESCE(CAST(fb_tok AS varchar), '~'), COALESCE(CAST(fb_r AS varchar), '~'), COALESCE(CAST(fb_net60 AS varchar), '~'), COALESCE(CAST(fb_k AS varchar), '~'), COALESCE(CAST(fb_comp AS varchar), '~'), COALESCE(CAST(z_cut AS varchar), '~'), COALESCE(CAST(z_slot AS varchar), '~'), COALESCE(CAST(z_txi AS varchar), '~'), COALESCE(CAST(z_oix AS varchar), '~'), COALESCE(CAST(z_iix AS varchar), '~'), COALESCE(CAST(z_t AS varchar), '~'), COALESCE(CAST(z_r1 AS varchar), '~'), COALESCE(CAST(z_r2 AS varchar), '~'), COALESCE(CAST(z_r3 AS varchar), '~'), COALESCE(CAST(z_r4 AS varchar), '~'), COALESCE(CAST(z_bps1 AS varchar), '~'), COALESCE(CAST(z_bps2 AS varchar), '~'), COALESCE(CAST(z_bps3 AS varchar), '~'), COALESCE(CAST(zf_pr AS varchar), '~'), COALESCE(CAST(zf_cr AS varchar), '~'), COALESCE(CAST(zf_lp AS varchar), '~'), COALESCE(CAST(z_n AS varchar), '~'), COALESCE(CAST(n_key AS varchar), '~')))))) AS ck_xor,
+       sum(length(concat_ws(',', CAST(kind AS varchar), CAST(stage AS varchar), CAST(m12 AS varchar), CAST(usr AS varchar), CAST(n_buy AS varchar), CAST(n_sell AS varchar), CAST(in_cash AS varchar), CAST(out_cash AS varchar), CAST(tok_buy AS varchar), CAST(tok_sell AS varchar), CAST(in_pre AS varchar), CAST(out_pre AS varchar), CAST(tok_buy_pre AS varchar), CAST(tok_sell_pre AS varchar), CAST(f_cb AS varchar), CAST(f_bb AS varchar), CAST(sb AS varchar), CAST(first_t AS varchar), CAST(fb_slot AS varchar), CAST(fb_txi AS varchar), CAST(fb_oix AS varchar), CAST(fb_iix AS varchar), CAST(fb_t AS varchar), CAST(fb_cash AS varchar), CAST(fb_tok AS varchar), CAST(fb_r AS varchar), CAST(fb_net60 AS varchar), CAST(fb_k AS varchar), CAST(fb_comp AS varchar), CAST(z_cut AS varchar), CAST(z_slot AS varchar), CAST(z_txi AS varchar), CAST(z_oix AS varchar), CAST(z_iix AS varchar), CAST(z_t AS varchar), CAST(z_r1 AS varchar), CAST(z_r2 AS varchar), CAST(z_r3 AS varchar), CAST(z_r4 AS varchar), CAST(z_bps1 AS varchar), CAST(z_bps2 AS varchar), CAST(z_bps3 AS varchar), CAST(zf_pr AS varchar), CAST(zf_cr AS varchar), CAST(zf_lp AS varchar), CAST(z_n AS varchar), CAST(n_key AS varchar)))) + count(*) * 47 AS est_csv_bytes
 FROM out

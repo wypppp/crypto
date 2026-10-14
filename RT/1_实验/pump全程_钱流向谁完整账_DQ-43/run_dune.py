@@ -128,7 +128,7 @@ def main() -> None:
     u1 = usage()
     print(
         label,
-        "用量 %.3f → %s" % (u0, "读不到" if u1 is None else "%.3f" % u1),
+        "用量 %.3f → %s" % (u0[0], "读不到" if u1 is None else "%.3f" % u1[0]),
         flush=True,
     )
 

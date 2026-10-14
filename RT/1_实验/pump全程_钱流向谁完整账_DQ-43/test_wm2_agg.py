@@ -9,7 +9,7 @@ import re
 from decimal import Decimal
 
 import build_wm2_sql as B
-from test_wm2_semantic import D, T, W10, W16, coin, db, run, upto
+from test_wm2_semantic import D, T, W10, W16, coin, db, upto
 
 A, Bw, C = "walletA", "walletB", "walletC"
 E15 = D(2026, 9, 15)
@@ -81,91 +81,84 @@ def dec(x):
     return None if x is None else Decimal(str(x))
 
 
+def named(con, sql, name, rewrite=lambda q: q):
+    cur = con.execute(rewrite(upto(sql, name)))
+    cols = [d[0] for d in cur.description]
+    return [dict(zip(cols, r)) for r in cur.fetchall()]
+
+
 def test_cycc_wallet_coin_totals_hand():
     con = db(curve_rows())
     sql = B.build("CYCC", W10, W16, W10, E15)
-    ag = {r[0]: r for r in run(con, sql, "ag")}
-    # 列序：usr mint n_buy n_sell in_cash out_cash tok_buy tok_sell amt_buy amt_sell in_pre out_pre tok_buy_pre tok_sell_pre ...
+    ag = {r["usr"]: r for r in named(con, sql, "ag")}
     a = ag[A]
-    assert (a[2], a[3]) == (2, 1)
-    assert dec(a[4]) == 102 + 22  # 买入现金＝sol＋两费
-    assert dec(a[5]) == 50 - 2  # 卖出到手＝sol−两费
-    assert (dec(a[6]), dec(a[7])) == (1150, 400)
-    assert (dec(a[10]), dec(a[11]), dec(a[12]), dec(a[13])) == (
-        102,
-        48,
-        1000,
-        400,
-    )  # 截点之前
-    assert dec(ag[C][4]) == 12  # 第 31 天的那笔不进
+    assert (a["n_buy"], a["n_sell"]) == (2, 1)
+    assert dec(a["in_cash"]) == 102 + 22  # 买入现金＝sol＋两费
+    assert dec(a["out_cash"]) == 50 - 2  # 卖出到手＝sol−两费
+    assert (dec(a["tok_buy"]), dec(a["tok_sell"])) == (1150, 400)
+    pre = (a["in_pre"], a["out_pre"], a["tok_buy_pre"], a["tok_sell_pre"])
+    assert tuple(dec(x) for x in pre) == (102, 48, 1000, 400)  # 截点 08-17 之前
+    assert dec(ag[C]["in_cash"]) == 12  # 第 31 天的那笔不进
     assert set(ag) == {A, Bw, C}
 
 
 def test_cycc_first_buy_state_hand():
     """C 的首笔买入（01:01:10）：顺序键在前的成交 A＋100、B−40，净 60；其中 t−60 秒（01:00:10）之前的只有 A＋100，
-    所以前 60 秒净买入＝60−100＝−40。之前的买入只有 A 一笔（现金 102）：笔数 1，第 99 百分位 102。
-    A 的首笔买入之前没有成交：净买入 0，笔数 0，分位为空。A 先卖（01:02）后买（08-17），sb 为真。"""
+    所以前 60 秒净买入＝60−100＝−40。之前的买入只有 A 一笔（现金 102）；C 的现金 12 低于它，K 为假。
+    A 的首笔买入之前没有成交：净买入 0，没有先前买入，K 为空。A 先卖（01:02）后买（08-17），sb 为真。
+    首笔买入的状态＝成交后的真实代币储备（构造值 500）。"""
     con = db(curve_rows())
     sql = B.build("CYCC", W10, W16, W10, E15)
-    names = [
-        "usr",
-        "mint",
-        "n_buy",
-        "n_sell",
-        "in_cash",
-        "out_cash",
-        "tok_buy",
-        "tok_sell",
-        "amt_buy",
-        "amt_sell",
-        "in_pre",
-        "out_pre",
-        "tok_buy_pre",
-        "tok_sell_pre",
-        "f_cb",
-        "f_bb",
-        "n_cb_null",
-        "sb",
-        "first_t",
-        "last_t",
-        "fb_slot",
-        "fb_txi",
-        "fb_oix",
-        "fb_iix",
-        "fb_t",
-        "fb_tx",
-        "fb_cash",
-        "fb_amt",
-        "fb_tok",
-        "fb_r1",
-        "fb_r2",
-        "fb_r3",
-        "fb_r4",
-        "fb_net60",
-        "fb_p99",
-        "fb_nprior",
-    ]
-    y = {r[0]: dict(zip(names, r)) for r in run(con, sql, "y")}
+    y = {r["usr"]: r for r in named(con, sql, "y")}
     c = y[C]
     assert dec(c["fb_net60"]) == -40
-    assert (c["fb_nprior"], c["fb_p99"]) == (1, 102.0)
-    assert (dec(c["fb_cash"]), dec(c["fb_amt"]), dec(c["fb_tok"])) == (12, 10, 90)
+    assert c["fb_k"] is False
+    assert (dec(c["fb_cash"]), dec(c["fb_tok"]), dec(c["fb_r"])) == (12, 90, 500)
     assert c["fb_t"] == s_(1, 1, 10).replace(tzinfo=dt.timezone.utc).timestamp()
+    assert c["fb_comp"] is None  # 这个币没有毕业
     a = y[A]
-    assert (dec(a["fb_net60"]), a["fb_nprior"], a["fb_p99"]) == (0, 0, None)
-    assert a["sb"] is True and y[C]["sb"] is None  # C 没有卖出：比较为空
-    assert y[Bw]["fb_slot"] is None and y[Bw]["sb"] is None  # 只卖不买
-    assert y[Bw]["fb_net60"] is None
+    assert (dec(a["fb_net60"]), a["fb_k"]) == (0, None)
+    assert a["sb"] is True and c["sb"] is None  # C 没有卖出：比较为空
+    b = y[Bw]
+    assert (
+        b["fb_slot"] is None and b["sb"] is None and b["fb_net60"] is None
+    )  # 只卖不买
+
+
+def test_cycc_k_label_and_completion_tx_hand():
+    """K：D 的首笔买入现金 1000＋2，高于之前全部买入（102、12）的第 99 百分位，K 为真。
+    毕业：m1 在 D 那笔交易里毕业，D 的首笔买入 fb_comp 为真，其他人为假。"""
+    rows = curve_rows()
+    t = s_(1, 3)
+    rows["pumpdotfun_solana.pump_evt_tradeevent"].append(
+        ctr("m1", "walletD", t, True, 1000, 5000)
+    )
+    rows["pumpdotfun_solana.pump_evt_completeevent"] = [
+        {
+            "mint": "m1",
+            "user": "walletD",
+            "evt_tx_id": "tx_walletD_%s" % t.isoformat(),
+            "evt_block_time": t,
+        }
+    ]
+    con = db(rows)
+    sql = B.build("CYCC", W10, W16, W10, E15)
+    y = {r["usr"]: r for r in named(con, sql, "y")}
+    assert y["walletD"]["fb_k"] is True and y["walletD"]["fb_comp"] is True
+    assert y[C]["fb_comp"] is False
 
 
 def test_cycc_price_state_snapshots_hand():
     """P 行：S＝快照截点 08-17 00:00 之前最后一笔（A 01:02 卖出）；E＝窗口内最后一笔（A 08-17 买入）。"""
     con = db(curve_rows())
     sql = B.build("CYCC", W10, W16, W10, E15)
-    z = {r[1]: r for r in run(con, sql, "z")}
-    assert z["S"][6] == s_(1, 2) and z["E"][6] == s_(1, day=17)
-    assert z["E"][-1] == 5  # 窗口内 5 笔（第 31 天那笔不算）
-    assert (dec(z["E"][-4]), dec(z["E"][-3])) == (5, 5)  # 协议费、创建者费合计
+    z = {r["z_cut"]: r for r in named(con, sql, "z")}
+    assert z["S"]["ts"] == s_(1, 2) and z["E"]["ts"] == s_(1, day=17)
+    assert z["E"]["z_n"] == 5  # 窗口内 5 笔（第 31 天那笔不算）
+    assert (dec(z["E"]["zf_pr"]), dec(z["E"]["zf_cr"])) == (
+        5,
+        5,
+    )  # 协议费、创建者费合计
 
 
 def test_cycc_snapshot_cut_must_follow_creation():
@@ -242,37 +235,35 @@ def amm_rows():
 def test_cyca_cash_and_reserves_hand():
     con = db(amm_rows())
     sql = B.build("CYCA", W10, W16, W10, E15)
-    ev = sorted(run(con, sql, "ev"), key=lambda r: r[1])
-    # 列序：mint ts slot txi oix iix tx_id usr is_buy amt tok f_pr f_cr f_lp f_cb f_bb r1 r2 r3 r4 bps1 bps2 bps3 cash
-    buy, sell = ev
-    assert (dec(buy[9]), dec(buy[23])) == (102, 104)  # 进池 102，用户付 104
-    assert (dec(buy[16]), dec(buy[17]), dec(buy[18]), dec(buy[19])) == (
+    buy, sell = sorted(named(con, sql, "ev"), key=lambda r: r["ts"])
+    assert (dec(buy["amt"]), dec(buy["cash"])) == (102, 104)  # 进池 102，用户付 104
+    assert tuple(dec(buy[k]) for k in ("r1", "r2", "r3", "r4")) == (
         1000,
         9000,
         1102,
         8500,
     )
-    assert (dec(sell[9]), dec(sell[23])) == (58, 56)  # 出池 60−LP 费 2＝58，到手 56
-    assert (dec(sell[18]), dec(sell[19])) == (1102 - 58, 8700)
-    ag = run(con, sql, "ag")
-    assert len(ag) == 1
-    a = ag[0]
-    assert (dec(a[4]), dec(a[5]), dec(a[6]), dec(a[7]), dec(a[14])) == (
-        104,
+    assert (dec(sell["amt"]), dec(sell["cash"])) == (
+        58,
         56,
-        500,
-        200,
-        3,
+    )  # 出池 60−LP 费 2＝58，到手 56
+    assert (dec(sell["r3"]), dec(sell["r4"])) == (1102 - 58, 8700)
+    (a,) = named(con, sql, "ag")
+    got = tuple(
+        dec(a[k]) for k in ("in_cash", "out_cash", "tok_buy", "tok_sell", "f_cb")
     )
+    assert got == (104, 56, 500, 200, 3)
+    (y,) = named(con, sql, "y")
+    assert dec(y["fb_r"]) == 1000  # PumpSwap 首笔买入的状态＝成交前的池报价储备
 
 
 def test_cyc_output_rows_and_keys():
     """输出：每个“钱包 × 币”一行 Y，每币 S、E 两行 P；键不重复。"""
     con = db(curve_rows())
     sql = B.build("CYCC", W10, W16, W10, E15)
-    out = run(con, sql, "out")
-    col = B.AG.CYC_COLS.split()
-    kinds = sorted((r[1], r[4] or "", r[col.index("z_cut")] or "") for r in out)
+    out = named(con, sql, "out")
+    assert list(out[0]) == B.AG.CYC_COLS.split()
+    kinds = sorted((r["kind"], r["usr"] or "", r["z_cut"] or "") for r in out)
     assert kinds == [
         ("P", "", "E"),
         ("P", "", "S"),
@@ -280,7 +271,8 @@ def test_cyc_output_rows_and_keys():
         ("Y", Bw, ""),
         ("Y", C, ""),
     ]
-    assert all(r[-1] == 1 for r in out)
+    assert all(r["n_key"] == 1 for r in out)
+    assert {r["m12"] for r in out} == {"m1"}  # 币号＝mint 前 12 位
 
 
 # ---------- COSTF：交易表的构造（DuckDB 嵌套类型） ----------
@@ -359,10 +351,6 @@ def tx_db(rows: dict, txs: list):
             [t[k] for k in keys],
         )
     return con
-
-
-def crun(con, sql, name):
-    return con.execute(duck(upto(sql, name))).fetchall()
 
 
 M_IN, M_OUT = "m_in0", "a_out0"  # p＝50% 时 m_in0 入样、a_out0 不入样（B.in_sample）
@@ -445,24 +433,16 @@ def test_costf_allocation_hand():
     rows, txs = cost_case()
     con = tx_db(rows, txs)
     sql = B.build("COSTF", W10, W16, D(2026, 8, 12), D(2026, 8, 12), p=0.5)
-    out = crun(con, sql, "out")
-    col = B.AG.COSTF_COLS.split()
-    got = {
-        (
-            r[col.index("kind")],
-            r[col.index("signer")],
-            r[col.index("mint")],
-            r[col.index("stage")],
-        ): r
-        for r in out
-    }
-    assert set(got) == {("K", A, M_IN, "curve"), ("F", "F", M_IN, "curve")}
-    k = dict(zip(col, got[("K", A, M_IN, "curve")]))
+    out = named(con, sql, "out", duck)
+    assert list(out[0]) == B.AG.COSTF_COLS.split()
+    got = {(r["kind"], r["signer"], r["m12"], r["stage"]): r for r in out}
+    assert set(got) == {("K", A, M_IN[:12], "c"), ("F", "F", M_IN[:12], "c")}
+    k = got[("K", A, M_IN[:12], "c")]
     assert k["n_tx"] == 2
     assert dec(k["cost"]) == 16000 + 3500
     assert dec(k["cost_net"]) == 5000 + 2500
     assert dec(k["cost_tip"]) == 10000
     assert dec(k["res_neg"]) == 500
     assert (k["n_tx_clean"], k["n_tx_unclean"]) == (1, 1)
-    f = dict(zip(col, got[("F", "F", M_IN, "curve")]))
+    f = got[("F", "F", M_IN[:12], "c")]
     assert (f["n_tx"], dec(f["cost"]), dec(f["res_neg"])) == (1, 2500, 0)

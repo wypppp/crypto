@@ -95,14 +95,13 @@ ag AS (
            count_if(is_buy) AS n_buy, count_if(NOT is_buy) AS n_sell,
            sum(IF(is_buy, cash, 0)) AS in_cash, sum(IF(is_buy, 0, cash)) AS out_cash,
            sum(IF(is_buy, tok, 0)) AS tok_buy, sum(IF(is_buy, 0, tok)) AS tok_sell,
-           sum(IF(is_buy, amt, 0)) AS amt_buy, sum(IF(is_buy, 0, amt)) AS amt_sell,
            sum(IF(is_buy AND ts < TIMESTAMP '{snap}', cash, 0)) AS in_pre,
            sum(IF(NOT is_buy AND ts < TIMESTAMP '{snap}', cash, 0)) AS out_pre,
            sum(IF(is_buy AND ts < TIMESTAMP '{snap}', tok, 0)) AS tok_buy_pre,
            sum(IF(NOT is_buy AND ts < TIMESTAMP '{snap}', tok, 0)) AS tok_sell_pre,
-           sum(f_cb) AS f_cb, sum(f_bb) AS f_bb, count_if(f_cb IS NULL) AS n_cb_null,
+           sum(f_cb) AS f_cb, sum(f_bb) AS f_bb,
            min(IF(NOT is_buy, ARRAY[slot, txi, oix, iix])) < max(IF(is_buy, ARRAY[slot, txi, oix, iix])) AS sb,
-           to_unixtime(min(ts)) AS first_t, to_unixtime(max(ts)) AS last_t
+           to_unixtime(min(ts)) AS first_t
     FROM e1
     GROUP BY 1, 2
 ),
@@ -125,16 +124,30 @@ wb AS (
     WHERE is_buy
 ),
 fb AS (SELECT * FROM wb WHERE rb = 1),
+cmp AS (
+    /* 毕业事件所在交易（A 的自身触发：首笔买入就在毕业交易里） */
+    SELECT e.mint, min_by(e.evt_tx_id, e.evt_block_time) AS comp_tx
+    FROM pumpdotfun_solana.pump_evt_completeevent e
+    JOIN coins k ON k.mint = e.mint
+    WHERE e.evt_block_date BETWEEN DATE '{c0}' AND DATE '{e1}'
+      AND e.evt_block_time >= k.created_at AND e.evt_block_time < k.created_at + INTERVAL '{hz}' DAY
+      AND e.evt_block_time < TIMESTAMP '{cutoff} 00:00:00'
+    GROUP BY 1
+),
 y AS (
+    /* 10-14 冒烟后精简（取数附录 v2 §3）：首笔买入只留分箱、K、命中与自身触发要用的字段 */
     SELECT a.*, f.slot AS fb_slot, f.txi AS fb_txi, f.oix AS fb_oix, f.iix AS fb_iix, to_unixtime(f.ts) AS fb_t,
-           f.tx_id AS fb_tx, f.cash AS fb_cash, f.amt AS fb_amt, f.tok AS fb_tok,
-           f.r1 AS fb_r1, f.r2 AS fb_r2, f.r3 AS fb_r3, f.r4 AS fb_r4,
-           CASE WHEN f.usr IS NOT NULL THEN COALESCE(f.cum_x, 0) - COALESCE(f.cum_60, 0) END AS fb_net60, f.p99_prior AS fb_p99, f.n_prior AS fb_nprior
+           f.cash AS fb_cash, f.tok AS fb_tok,
+           CASE WHEN f.usr IS NOT NULL THEN {fb_state} END AS fb_r,
+           CASE WHEN f.usr IS NOT NULL THEN COALESCE(f.cum_x, 0) - COALESCE(f.cum_60, 0) END AS fb_net60,
+           CASE WHEN f.n_prior > 0 THEN f.cash >= f.p99_prior END AS fb_k,
+           CASE WHEN f.usr IS NOT NULL THEN f.tx_id = c.comp_tx END AS fb_comp
     FROM ag a
-    LEFT JOIN fb f ON f.usr = a.usr AND f.mint = a.mint{yslice}
+    LEFT JOIN fb f ON f.usr = a.usr AND f.mint = a.mint
+    LEFT JOIN cmp c ON c.mint = a.mint{yslice}
 ),
 z AS (
-    /* 每币两个时点的定价状态：S＝快照截点之前最后一笔成交后，E＝观察窗内最后一笔成交后；另附本阶段费用合计 */
+    /* 每币两个时点的定价状态：S＝快照截点之前最后一笔成交后，E＝观察窗内最后一笔成交后；E 另附本阶段费用合计与笔数 */
     SELECT mint, 'S' AS z_cut, slot, txi, oix, iix, ts, r1, r2, r3, r4, bps1, bps2, bps3,
            CAST(NULL AS DECIMAL(38,0)) AS zf_pr, CAST(NULL AS DECIMAL(38,0)) AS zf_cr, CAST(NULL AS DECIMAL(38,0)) AS zf_lp,
            CAST(NULL AS BIGINT) AS z_n
@@ -150,17 +163,14 @@ z AS (
     WHERE rz = 1
 ),
 out AS (
-    SELECT 'solana' AS chain, 'Y' AS kind, '{stage}' AS stage, mint, usr,
+    /* 币号取 mint 前 12 位（58^12 种，母体内唯一性由 COIN 层在 Python 里核）；阶段记 c／a */
+    SELECT 'Y' AS kind, '{st1}' AS stage, substr(mint, 1, 12) AS m12, usr,
            n_buy, n_sell, CAST(in_cash AS varchar) AS in_cash, CAST(out_cash AS varchar) AS out_cash,
            CAST(tok_buy AS varchar) AS tok_buy, CAST(tok_sell AS varchar) AS tok_sell,
-           CAST(amt_buy AS varchar) AS amt_buy, CAST(amt_sell AS varchar) AS amt_sell,
-           CAST(in_pre AS varchar) AS in_pre, CAST(out_pre AS varchar) AS out_pre,
-           CAST(tok_buy_pre AS varchar) AS tok_buy_pre, CAST(tok_sell_pre AS varchar) AS tok_sell_pre,
-           CAST(f_cb AS varchar) AS f_cb, CAST(f_bb AS varchar) AS f_bb, n_cb_null, sb, first_t, last_t,
-           fb_slot, fb_txi, fb_oix, fb_iix, fb_t, fb_tx, CAST(fb_cash AS varchar) AS fb_cash, CAST(fb_amt AS varchar) AS fb_amt,
-           CAST(fb_tok AS varchar) AS fb_tok, CAST(fb_r1 AS varchar) AS fb_r1, CAST(fb_r2 AS varchar) AS fb_r2,
-           CAST(fb_r3 AS varchar) AS fb_r3, CAST(fb_r4 AS varchar) AS fb_r4, CAST(fb_net60 AS varchar) AS fb_net60,
-           fb_p99, fb_nprior,
+           {pre_cols},
+           CAST(f_cb AS varchar) AS f_cb, CAST(f_bb AS varchar) AS f_bb, sb, first_t,
+           fb_slot, fb_txi, fb_oix, fb_iix, fb_t, CAST(fb_cash AS varchar) AS fb_cash, CAST(fb_tok AS varchar) AS fb_tok,
+           CAST(fb_r AS varchar) AS fb_r, CAST(fb_net60 AS varchar) AS fb_net60, fb_k, fb_comp,
            CAST(NULL AS varchar) AS z_cut, CAST(NULL AS BIGINT) AS z_slot, CAST(NULL AS BIGINT) AS z_txi,
            CAST(NULL AS BIGINT) AS z_oix, CAST(NULL AS BIGINT) AS z_iix, CAST(NULL AS double) AS z_t,
            CAST(NULL AS varchar) AS z_r1, CAST(NULL AS varchar) AS z_r2, CAST(NULL AS varchar) AS z_r3, CAST(NULL AS varchar) AS z_r4,
@@ -170,11 +180,18 @@ out AS (
     FROM y{zpart}
 )"""
 
+CYC_PRE = """CAST(in_pre AS varchar) AS in_pre, CAST(out_pre AS varchar) AS out_pre,
+           CAST(tok_buy_pre AS varchar) AS tok_buy_pre, CAST(tok_sell_pre AS varchar) AS tok_sell_pre"""
+CYC_NO_PRE = """CAST(NULL AS varchar) AS in_pre, CAST(NULL AS varchar) AS out_pre,
+           CAST(NULL AS varchar) AS tok_buy_pre, CAST(NULL AS varchar) AS tok_sell_pre"""
+# 首笔买入的状态：曲线＝成交后的真实代币储备（成交前＝它＋本笔代币，进度＝1−成交前÷初始）；PumpSwap＝成交前的池报价储备
+FB_STATE = {"curve": "f.r4", "amm": "f.r1"}
+
 CYC_Z_PART = """
     UNION ALL
-    SELECT 'solana', 'P', '{stage}', mint, NULL,
-           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+    SELECT 'P', '{st1}', substr(mint, 1, 12), NULL,
+           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
            z_cut, slot, txi, oix, iix, to_unixtime(ts),
            CAST(r1 AS varchar), CAST(r2 AS varchar), CAST(r3 AS varchar), CAST(r4 AS varchar),
            CAST(bps1 AS varchar), CAST(bps2 AS varchar), CAST(bps3 AS varchar),
@@ -183,10 +200,9 @@ CYC_Z_PART = """
     FROM z"""
 
 CYC_COLS = (
-    "chain kind stage mint usr n_buy n_sell in_cash out_cash tok_buy tok_sell amt_buy amt_sell in_pre out_pre "
-    "tok_buy_pre tok_sell_pre f_cb f_bb n_cb_null sb first_t last_t fb_slot fb_txi fb_oix fb_iix fb_t fb_tx fb_cash fb_amt "
-    "fb_tok fb_r1 fb_r2 fb_r3 fb_r4 fb_net60 fb_p99 fb_nprior z_cut z_slot z_txi z_oix z_iix z_t z_r1 z_r2 z_r3 z_r4 "
-    "z_bps1 z_bps2 z_bps3 zf_pr zf_cr zf_lp z_n n_key"
+    "kind stage m12 usr n_buy n_sell in_cash out_cash tok_buy tok_sell in_pre out_pre tok_buy_pre tok_sell_pre "
+    "f_cb f_bb sb first_t fb_slot fb_txi fb_oix fb_iix fb_t fb_cash fb_tok fb_r fb_net60 fb_k fb_comp "
+    "z_cut z_slot z_txi z_oix z_iix z_t z_r1 z_r2 z_r3 z_r4 z_bps1 z_bps2 z_bps3 zf_pr zf_cr zf_lp z_n n_key"
 )
 
 # ---------- COSTF：交易成本（成功与失败，一天一条，交易表只扫一次） ----------
@@ -330,8 +346,8 @@ v AS (
     CROSS JOIN UNNEST(CASE WHEN g.success THEN g.slegs ELSE g.flegs END) AS lv(leg)
 ),
 out AS (
-    SELECT 'solana' AS chain, CASE WHEN success THEN 'K' ELSE 'F' END AS kind, '{e0}' AS day, '{t0}' AS t_from,
-           signer, mint, stage, count(*) AS n_tx,
+    SELECT CASE WHEN success THEN 'K' ELSE 'F' END AS kind, '{e0}' AS day, '{t0}' AS t_from,
+           signer, substr(mint, 1, 12) AS m12, CASE stage WHEN 'curve' THEN 'c' ELSE 'a' END AS stage, count(*) AS n_tx,
            CAST(sum((c_tot - mod(c_tot, n)) / n + IF(first_leg, mod(c_tot, n), 0)) AS varchar) AS cost,
            CAST(sum((c_net - mod(c_net, n)) / n + IF(first_leg, mod(c_net, n), 0)) AS varchar) AS cost_net,
            CAST(sum((c_tip - mod(c_tip, n)) / n + IF(first_leg, mod(c_tip, n), 0)) AS varchar) AS cost_tip,
@@ -342,7 +358,7 @@ out AS (
     GROUP BY success, signer, mint, stage
 )"""
 
-COSTF_COLS = "chain kind day t_from signer mint stage n_tx cost cost_net cost_tip res_neg n_tx_clean n_tx_unclean n_key"
+COSTF_COLS = "kind day t_from signer m12 stage n_tx cost cost_net cost_tip res_neg n_tx_clean n_tx_unclean n_key"
 
 # ---------- VQ：每池的虚拟报价储备 ----------
 

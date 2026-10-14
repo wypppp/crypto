@@ -707,8 +707,8 @@ NULL_CHECK = {
     "TX": "fee priority_fee d_trader",
     "FAIL": "fee priority_fee",
     "EDGE": "from_owner",
-    "CYCC": "mint",
-    "CYCA": "mint",
+    "CYCC": "m12",
+    "CYCA": "m12",
     "COSTF": "signer cost",
     "VQ": "pool_tx",
 }
@@ -725,9 +725,10 @@ SMOKE_EXTRA = {
     "FAIL": ", count(DISTINCT signer) AS n_signers, sum(n_mints) AS n_mint_links",
     "EDGE": ", count_if(kind = 'S') AS n_sol_edges, count_if(kind = 'F') AS n_funders, count_if(kind = 'F' AND fanout > 200) AS n_service, "
     "count_if(kind = 'C') AS n_creator_edges, count_if(kind = 'T') AS n_tok_edges, sum(n) AS n_transfers",
-    "CYCC": ", count_if(kind = 'Y') AS n_y, count_if(kind = 'P') AS n_p, count(DISTINCT mint) AS n_coins, "
+    "CYCC": ", count_if(kind = 'Y') AS n_y, count_if(kind = 'P') AS n_p, "
     "count(DISTINCT usr) AS n_wallets, count_if(kind = 'Y' AND n_buy > 0 AND fb_slot IS NULL) AS n_fb_missing, "
-    "count_if(kind = 'Y' AND fb_nprior > 0 AND fb_p99 IS NULL) AS n_p99_missing, count_if(sb) AS n_sell_before_buy, "
+    "count_if(kind = 'Y' AND fb_slot IS NOT NULL AND fb_k IS NULL) AS n_k_noprior, count_if(fb_k) AS n_k, "
+    "count_if(fb_comp) AS n_fb_in_comp_tx, count_if(sb) AS n_sell_before_buy, count(DISTINCT m12) AS n_m12, "
     "count_if(kind = 'Y' AND CAST(tok_sell AS DECIMAL(38,0)) > CAST(tok_buy AS DECIMAL(38,0))) AS n_sell_gt_buy, "
     "count_if(kind = 'Y' AND (in_cash IS NULL OR out_cash IS NULL)) AS n_cash_null, "
     "count_if(kind = 'P' AND z_cut = 'S') AS n_p_snap, count_if(kind = 'P' AND z_cut = 'E') AS n_p_end",
@@ -739,6 +740,7 @@ SMOKE_EXTRA = {
     "sum(n_pool_mismatch) AS n_pool_mismatch, sum(n_ovf) AS n_vq_ovf, count_if(vq_min <> vq_max) AS n_vq_varies, "
     "count_if(layout0) AS n_layout0",
 }
+SMOKE_EXTRA["CYCA"] = SMOKE_EXTRA["CYCC"]
 
 
 def edge_window(c0, c1, e1, edge_from=None, edge_cut=None):
@@ -806,8 +808,10 @@ def build(
     snap=None,
     part=(0, 1),
     tpart=(0, 1),
+    with_pre=True,
 ):
-    """snap：CYC 的快照截点（默认创建止日次日 00:00，即 W+1 周一）；part：CYC 输出按钱包分片；
+    """snap：CYC 的快照截点（默认创建止日次日 00:00，即 W+1 周一）；with_pre：是否输出截点前合计（W+1 的币不用）；
+    part：CYC 输出按钱包分片；
     tpart：COSTF 把一个事件日按小时等分（第几段, 共几段），只许单日。"""
     if layer not in LAYERS:
         raise SystemExit("层只能是 %s" % "、".join(LAYERS))
@@ -841,8 +845,11 @@ def build(
         g = dict(
             snap="%s 00:00:00" % snap.isoformat(),
             stage=stage,
+            st1=stage[0],
+            fb_state=AG.FB_STATE[stage],
+            pre_cols=AG.CYC_PRE if with_pre else AG.CYC_NO_PRE,
             yslice=slice_where("a.usr", part),
-            zpart=AG.CYC_Z_PART.format(stage=stage) if part[0] == 0 else "",
+            zpart=AG.CYC_Z_PART.format(st1=stage[0]) if part[0] == 0 else "",
             **f,
         )
         if layer == "CYCC":
