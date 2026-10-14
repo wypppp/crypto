@@ -10,6 +10,7 @@ python run_dune.py <标签> <sql 文件> --approve=<批准编号> [--engine=medi
 - 预算只看用量接口的实时读数：读不到，或“已用＋本条执行费上限”超过本期额度，都不跑。
 - 运行中每 10 秒读已扣费用，超过批准的上限就在 Dune 上取消；按时间取消只作第二道。
 - 结果大于批准的下载上限（MB）就不下载，只报大小。
+- 总控第七轮：同来源的已实耗＋本条执行上限＋下载上限 5 超过 50 就不提交；实耗缺失也拒绝。
 """
 
 import csv
@@ -84,6 +85,9 @@ def main() -> None:
         why = budget_gate(u0, ap["cap"])
         if why:
             raise SystemExit(why)
+        why = PG.round_gate(approval)
+        if why:
+            raise SystemExit(why)
         sql = (H / sql_file).read_text()
         qid = call(
             "POST",
@@ -95,51 +99,60 @@ def main() -> None:
         ]
         PG.mark_used(approval, eid, "执行中")
         print(label, "批准", approval, "query", qid, "execution", eid, flush=True)
-        t0, cancelled = time.time(), ""
-        while True:
-            st = get(f"/execution/{eid}/status")
-            if st["state"] not in ("QUERY_STATE_PENDING", "QUERY_STATE_EXECUTING"):
-                break
-            spent = float(st.get("execution_cost_credits") or 0)
-            if not cancelled and spent > ap["cap"]:
-                call("POST", f"/execution/{eid}/cancel", {})
-                cancelled = "运行中费用超过批准上限，主动取消"
-                print(
-                    label,
-                    "已扣 %.1f，超过批准上限 %.0f，已请求取消" % (spent, ap["cap"]),
-                    flush=True,
+        cost = None
+        try:
+            t0, cancelled = time.time(), ""
+            while True:
+                st = get(f"/execution/{eid}/status")
+                if st["state"] not in ("QUERY_STATE_PENDING", "QUERY_STATE_EXECUTING"):
+                    break
+                spent = float(st.get("execution_cost_credits") or 0)
+                if not cancelled and spent > ap["cap"]:
+                    call("POST", f"/execution/{eid}/cancel", {})
+                    cancelled = "运行中费用超过批准上限，主动取消"
+                    print(
+                        label,
+                        "已扣 %.1f，超过批准上限 %.0f，已请求取消" % (spent, ap["cap"]),
+                        flush=True,
+                    )
+                elif not cancelled and time.time() - t0 > max_min * 60:
+                    call("POST", f"/execution/{eid}/cancel", {})
+                    cancelled = "超时主动取消"
+                    print(label, f"超过 {max_min:g} 分钟，已请求取消", flush=True)
+                time.sleep(10)
+            cost = st.get("execution_cost_credits")
+            with open(H / "runs" / "dune_ledger.csv", "a", newline="") as f:
+                note = "公开查询；引擎 %s；批准 %s%s；执行前用量 %.3f" % (
+                    engine,
+                    approval,
+                    "；" + cancelled if cancelled else "",
+                    u0[0],
                 )
-            elif not cancelled and time.time() - t0 > max_min * 60:
-                call("POST", f"/execution/{eid}/cancel", {})
-                cancelled = "超时主动取消"
-                print(label, f"超过 {max_min:g} 分钟，已请求取消", flush=True)
-            time.sleep(10)
-        cost = st.get("execution_cost_credits")
-        with open(H / "runs" / "dune_ledger.csv", "a", newline="") as f:
-            note = "公开查询；引擎 %s；批准 %s%s；执行前用量 %.3f" % (
-                engine,
-                approval,
-                "；" + cancelled if cancelled else "",
-                u0[0],
+                csv.writer(f).writerow(
+                    [qid, sql_file, eid, st["state"], cost, "", note]
+                )
+            print(label, qid, st["state"], cost, flush=True)
+            if st["state"] != "QUERY_STATE_COMPLETED":
+                print(json.dumps(st.get("error"), ensure_ascii=False), flush=True)
+                sys.exit(1)
+            mb = (
+                float((st.get("result_metadata") or {}).get("result_set_bytes") or 0)
+                / 1e6
             )
-            csv.writer(f).writerow([qid, sql_file, eid, st["state"], cost, "", note])
-        print(label, qid, st["state"], cost, flush=True)
-        if st["state"] != "QUERY_STATE_COMPLETED":
-            print(json.dumps(st.get("error"), ensure_ascii=False), flush=True)
-            sys.exit(1)
-        mb = float((st.get("result_metadata") or {}).get("result_set_bytes") or 0) / 1e6
-        if mb > ap["max_mb"]:
-            raise SystemExit(
-                "结果 %.1f MB 超过批准的下载上限 %.1f MB，不下载；先报批"
-                % (mb, ap["max_mb"])
+            if mb > ap["max_mb"]:
+                raise SystemExit(
+                    "结果 %.1f MB 超过批准的下载上限 %.1f MB，不下载；先报批"
+                    % (mb, ap["max_mb"])
+                )
+            fetch(str(qid), label, sql_file, ap)
+        finally:
+            u1 = usage()
+            PG.record_actual(approval, eid, u0[0], None if u1 is None else u1[0], cost)
+            print(
+                label,
+                "用量 %.3f → %s" % (u0[0], "读不到" if u1 is None else "%.3f" % u1[0]),
+                flush=True,
             )
-        fetch(str(qid), label, sql_file, ap)
-        u1 = usage()
-        print(
-            label,
-            "用量 %.3f → %s" % (u0[0], "读不到" if u1 is None else "%.3f" % u1[0]),
-            flush=True,
-        )
 
 
 if __name__ == "__main__":

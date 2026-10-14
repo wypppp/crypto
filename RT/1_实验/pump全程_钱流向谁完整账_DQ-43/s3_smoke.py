@@ -67,7 +67,9 @@ def prep():
         w = csv.writer(fh)
         for k, f, note in new:
             if k not in have:
-                w.writerow([k, "2026-10-14", SRC, f, PG.sha(H / f), "10", "2", note])
+                w.writerow(
+                    [k, "2026-10-14", SRC, f, PG.sha(H / f), "10", "2", note, "15"]
+                )
     print(json.dumps(n, ensure_ascii=False))
     for k, label, run in (
         ("A7-04", STATS, "r1"),

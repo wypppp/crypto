@@ -24,11 +24,13 @@ import hashlib
 import json
 import re
 import urllib.request
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 H = Path(__file__).resolve().parent
 APPROVALS = H / "runs" / "付费批准.csv"
 USED = H / "runs" / "付费批准_已用.csv"
+ACTUAL = H / "runs" / "付费实耗.csv"
 LOCK = Path.home() / ".cache" / "rt_dune_paid.lock"
 ENV = H.parents[2] / ".env"
 KEY_NAME = "DUNE_KEY_VIA_PAID_GUARD"
@@ -50,7 +52,80 @@ FIELDS = [
     "执行费上限",
     "下载上限MB",
     "范围说明",
+    "预计 credits",
 ]
+
+
+def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
+    """总控第七轮：已实耗（执行与下载）＋本条批准上限 ≤50。须在提交前的锁内调用。"""
+    approvals = APPROVALS if approvals is None else approvals
+    used = USED if used is None else used
+    actual = ACTUAL if actual is None else actual
+    group = {
+        r["编号"]: r for r in _rows(approvals) if r["批准来源"].startswith("总控第七轮")
+    }
+    if approval not in group:
+        return ""
+    spent = {r["编号"]: r for r in _rows(actual)}
+    total = Decimal(0)
+    for k in {r["编号"] for r in _rows(used)} & group.keys():
+        try:
+            value = Decimal(spent[k]["合计实耗"])
+            if not value.is_finite() or value < 0:
+                raise ValueError
+        except (KeyError, InvalidOperation, ValueError):
+            return "批准 %s 的实耗未核清，不跑" % k
+        total += value
+    # 第七轮明确批准下载费 ≤5。预计值不作为批准上限。
+    cap = Decimal(group[approval]["执行费上限"]) + Decimal(5)
+    if not cap.is_finite() or cap < 5:
+        return "本条上限无效，不跑"
+    if total + cap > 50:
+        return "总控第七轮已实耗 %s＋本条上限 %s 超过 50，不跑" % (total, cap)
+    return ""
+
+
+def record_actual(approval, execution_id, before, after, cost, actual=None):
+    """按用量接口增量记执行与下载实耗；用量或执行费缺失时留空，阻止下一条。"""
+    actual = ACTUAL if actual is None else actual
+    delta = None if after is None else Decimal(str(after)) - Decimal(str(before))
+    exec_cost = None if cost is None else Decimal(str(cost))
+    known = (
+        delta is not None
+        and delta.is_finite()
+        and exec_cost is not None
+        and exec_cost.is_finite()
+        and delta >= 0
+        and exec_cost >= 0
+        and delta + Decimal("0.01") >= exec_cost
+    )
+    new = not actual.exists()
+    with open(actual, "a", newline="") as f:
+        w = csv.writer(f)
+        if new:
+            w.writerow(
+                [
+                    "编号",
+                    "execution_id",
+                    "用量前",
+                    "用量后",
+                    "执行费",
+                    "下载费",
+                    "合计实耗",
+                ]
+            )
+        total = max(delta, exec_cost) if known else ""
+        w.writerow(
+            [
+                approval,
+                execution_id,
+                before,
+                after,
+                cost,
+                total - exec_cost if known else "",
+                total,
+            ]
+        )
 
 
 class Refused(SystemExit):
