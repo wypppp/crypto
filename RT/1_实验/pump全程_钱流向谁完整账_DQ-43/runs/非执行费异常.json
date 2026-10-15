@@ -1,6 +1,6 @@
 {
   "at_utc": "2026-10-15T07:35:12.989018+00:00",
-  "active": true,
+  "active": false,
   "reason": "执行接口连续三次HTTP500，最后一次复用已存在查询仍失败；停止付费尝试",
   "approval": "A12-F04",
   "query_id": 8950956,
@@ -18,5 +18,6 @@
   "financial_unknown_resolved": true,
   "actual_credits": 0,
   "user_confirmation": "只有原成功的一条",
-  "resume_condition": "接口稳定后人工接续原≤25范围并登记新批准；本轮不再提交；无需重复送总控"
+  "resume_condition": "接口稳定后人工接续原≤25范围并登记新批准；本轮不再提交；无需重复送总控",
+  "resolution": "用户要求自主排查后继续；两路免费接口核查通过，启用直连与错误诊断，原25预算内接续F05"
 }

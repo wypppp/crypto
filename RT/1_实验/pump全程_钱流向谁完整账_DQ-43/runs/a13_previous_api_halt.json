@@ -1,0 +1,22 @@
+{
+  "at_utc": "2026-10-15T07:35:12.989018+00:00",
+  "active": true,
+  "reason": "执行接口连续三次HTTP500，最后一次复用已存在查询仍失败；停止付费尝试",
+  "approval": "A12-F04",
+  "query_id": 8950956,
+  "sql_sha256": "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
+  "before": [
+    1541.725,
+    2500.0
+  ],
+  "after": [
+    1541.725,
+    2500.0
+  ],
+  "error_type": "HTTPError",
+  "http_status": 500,
+  "financial_unknown_resolved": true,
+  "actual_credits": 0,
+  "user_confirmation": "只有原成功的一条",
+  "resume_condition": "接口稳定后人工接续原≤25范围并登记新批准；本轮不再提交；无需重复送总控"
+}

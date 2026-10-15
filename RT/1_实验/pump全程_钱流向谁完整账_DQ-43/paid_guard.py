@@ -24,6 +24,8 @@ import hashlib
 import json
 import math
 import re
+import time
+import urllib.error
 import urllib.request
 from urllib.parse import parse_qs, unquote, urlsplit
 from decimal import Decimal, InvalidOperation
@@ -289,7 +291,7 @@ def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
     cap = max_bytes if max_bytes is not None else int(ticket["max_mb"] * 2e6) + 65536
     part = destination.with_suffix(destination.suffix + ".part")
     total = 0
-    with urllib.request.urlopen(req, timeout=90) as r, part.open("wb") as f:
+    with open_http(req, timeout=90) as r, part.open("wb") as f:
         headers = {
             k.lower(): v
             for k, v in r.headers.items()
@@ -384,6 +386,84 @@ def _key() -> str:
     return m.group(1)
 
 
+def open_http(req, timeout=90):
+    """仅改变到同一官方HTTPS主机的传输路由；不重试、不回落、不关TLS验证。"""
+    policy = json.loads(S3_POLICY.read_text()) if S3_POLICY.exists() else {}
+    route = policy.get("http_transport", "system")
+    if route == "direct":
+        return urllib.request.build_opener(urllib.request.ProxyHandler({})).open(
+            req, timeout=timeout
+        )
+    if route != "system":
+        raise Refused("HTTP传输路由无效")
+    return urllib.request.urlopen(req, timeout=timeout)
+
+
+def http_failure(exc, method, path, api_key):
+    """保留服务端错误证据，密钥脱敏；正文仅放raw，公开日志只留错误字段。"""
+    record = {
+        "at_utc": dt.datetime.now(dt.UTC).isoformat(),
+        "method": method,
+        "path": path,
+        "error_type": type(exc).__name__,
+        "http_status": getattr(exc, "code", None),
+    }
+    if isinstance(exc, urllib.error.HTTPError):
+        body = exc.read(16385)
+        safe = body[:16384].decode(errors="replace").replace(api_key, "[REDACTED]")
+        record["response_headers"] = {
+            k.lower(): v.replace(api_key, "[REDACTED]")
+            for k, v in (exc.headers or {}).items()
+            if k.lower()
+            in {
+                "server",
+                "date",
+                "content-type",
+                "via",
+                "cf-ray",
+                "retry-after",
+                "x-request-id",
+                "x-correlation-id",
+                "x-amzn-trace-id",
+                "x-cache",
+            }
+        }
+        record["body_truncated"] = len(body) > 16384
+        try:
+            parsed = json.loads(safe)
+        except ValueError:
+            parsed = {}
+        if isinstance(parsed, dict):
+            record["error_fields"] = {
+                k: v[:2048]
+                for k, v in parsed.items()
+                if k
+                in {"error", "message", "detail", "type", "request_id", "execution_id"}
+                and isinstance(v, str)
+            }
+        if not record.get("error_fields"):
+            title = re.search(r"<title[^>]*>(.*?)</title>", safe, re.I | re.S)
+            record["response_title"] = title[1][:150] if title else ""
+        destination = H / "raw/dune/http_errors" / f"{time.time_ns()}.txt"
+        try:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(safe)
+            record["private_response"] = str(destination.relative_to(H))
+            record["private_response_sha256"] = sha(destination)
+        except OSError:
+            record["private_response_save_failed"] = True
+    else:
+        record["transport_error"] = str(exc).replace(api_key, "[REDACTED]")[:512]
+    exc.dune_diagnostic = record
+    try:
+        log = H / "runs/dune_http_failures.jsonl"
+        log.parent.mkdir(parents=True, exist_ok=True)
+        with log.open("a") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except OSError:
+        pass  # 日志失败不能吞掉原始网络异常。
+
+
 def request(method: str, path: str, body=None, ticket=None):
     """访问 Dune 的唯一入口。付费接口要有效批准（check() 发出、且在锁内）；不重试。"""
     csv_gate(path)
@@ -401,14 +481,19 @@ def request(method: str, path: str, body=None, ticket=None):
                 raise Refused("第十轮JSON下载须用分段核账入口，禁用旧直接分页")
             else:
                 raise Refused("其他付费接口不在第十轮批准内")
+    api_key = _key()
     req = urllib.request.Request(
         API + path,
         data=None if body is None else json.dumps(body).encode(),
         method=method,
-        headers={"X-Dune-API-Key": _key(), "Content-Type": "application/json"},
+        headers={"X-Dune-API-Key": api_key, "Content-Type": "application/json"},
     )
-    with urllib.request.urlopen(req, timeout=90) as r:
-        return json.load(r)
+    try:
+        with open_http(req, timeout=90) as r:
+            return json.load(r)
+    except (OSError, ValueError) as exc:
+        http_failure(exc, method, path, api_key)
+        raise
 
 
 def sha(path: Path) -> str:

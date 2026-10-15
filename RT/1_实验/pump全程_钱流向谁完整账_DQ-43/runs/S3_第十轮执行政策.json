@@ -28,8 +28,8 @@
     "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
   ],
   "old_trial_authority_superseded_by": "总控第十一轮；不复活第十轮原三条批准",
-  "current_user_scope": "用户直接授权三条验收≤25仍有效；本轮实耗1.866，因连续HTTP500停止，三次失败提交已核清0；全量未批准",
-  "paid_halt_still_active": true,
+  "current_user_scope": "用户要求先排查后继续原≤25小页验收；保留400累计和全量未批准边界",
+  "paid_halt_still_active": false,
   "active_paid_source_prefix": "用户小页试跑",
   "download_bindings": {
     "A12-D01": {
@@ -41,5 +41,6 @@
       "page_rows": 1000
     }
   },
-  "user_authority_report": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/第十二轮_小页平台验收.md"
+  "user_authority_report": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/第十二轮_小页平台验收.md",
+  "http_transport": "direct"
 }

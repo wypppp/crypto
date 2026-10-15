@@ -190,6 +190,7 @@ def main() -> None:
                     "after": after,
                     "error_type": type(exc).__name__,
                     "http_status": getattr(exc, "code", None),
+                    "http_diagnostic": getattr(exc, "dune_diagnostic", None),
                 }
                 PG.HALT.write_text(json.dumps(unknown, ensure_ascii=False, indent=2))
                 (H / "runs" / (label + "_submission_unknown.json")).write_text(
@@ -202,6 +203,21 @@ def main() -> None:
             raise
         if not small_trial:
             PG.mark_used(approval, eid, "执行中")
+        else:
+            (H / "runs" / (label + "_started.json")).write_text(
+                json.dumps(
+                    {
+                        "approval": approval,
+                        "query_id": qid,
+                        "execution_id": eid,
+                        "sql_file": sql_file,
+                        "sql_sha256": ap.sql_sha,
+                        "usage_before": u0,
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
         print(label, "批准", approval, "query", qid, "execution", eid, flush=True)
         cost, settled = None, False
         try:

@@ -7,7 +7,9 @@
 4. paid_guard.request 对付费接口：没有批准、或批准不在锁内，都拒绝，且不发出请求。
 """
 
+import io
 import re
+from urllib.error import HTTPError
 from pathlib import Path
 
 import pytest
@@ -115,3 +117,25 @@ def test_free_endpoints_hand():
         assert PG.is_free(m, p)
     assert not PG.is_free("GET", "/usage")
     assert not PG.is_free("POST", "/query/123")
+
+
+def test_request_records_error_and_never_retries(tmp_path, monkeypatch):
+    monkeypatch.setattr(PG, "H", tmp_path)
+    monkeypatch.setattr(PG, "_key", lambda: "test-secret")
+    calls = []
+
+    def fail(req, timeout):
+        calls.append(req.full_url)
+        raise HTTPError(
+            req.full_url,
+            404,
+            "not found",
+            {},
+            io.BytesIO(b'{"error":"Object not found"}'),
+        )
+
+    monkeypatch.setattr(PG.urllib.request, "urlopen", fail)
+    with pytest.raises(HTTPError) as caught:
+        PG.request("GET", "/query/2147483647")
+    assert len(calls) == 1
+    assert caught.value.dune_diagnostic["error_fields"]["error"] == "Object not found"
