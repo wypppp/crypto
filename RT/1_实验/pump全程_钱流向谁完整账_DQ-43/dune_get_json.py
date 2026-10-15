@@ -39,7 +39,9 @@ def wait_seconds():
     )
 
 
-def observe(before, label, save, wait_sec=None, execution_cost=None):
+def observe(
+    before, label, save, wait_sec=None, execution_cost=None, expected_download=0
+):
     seconds = wait_seconds() if wait_sec is None else wait_sec
     start = time.monotonic()
     samples = []
@@ -58,10 +60,11 @@ def observe(before, label, save, wait_sec=None, execution_cost=None):
             "before": before,
             "wait_seconds": seconds,
             "observations": samples,
+            "expected_download_credits": str(expected_download),
         }
         atomic(save, out)
         if execution_cost is None:
-            PG.check_download_usage(before, current, label)
+            PG.check_download_usage(before, current, label, expected=expected_download)
         else:
             if before is None or current is None:
                 raise PG.Refused("执行结算用量缺失，停止")
@@ -148,6 +151,11 @@ def validate(page, identity, offset):
 def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
     if Path(label).name != label:
         raise ValueError("标签只能是文件名")
+    binding = PG.small_download_binding(ticket, eid=eid, qid=qid)
+    page_rows = binding["page_rows"] if binding else PAGE
+    expected_total = (
+        Decimal(str(binding["expected_credits"])) if binding else Decimal(0)
+    )
     q = get(f"/query/{qid}")
     if norm(q.get("query_sql", "")) != norm((H / sql_file).read_text()):
         raise ValueError("远端SQL与批准不同")
@@ -169,9 +177,11 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         or not types
         or len(types) != len(cols)
         or size is None
-        or size > ticket["max_mb"] * 1e6
+        or Decimal(str(size)) > Decimal(str(ticket["max_mb"])) * 1_000_000
     ):
         raise ValueError("元数据缺失或结果超过批准大小")
+    if binding and size != binding["metadata_bytes"]:
+        raise ValueError("平台结果字节与下载批准不同")
     identity = {
         "execution_id": eid,
         "query_id": str(qid),
@@ -182,6 +192,8 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         "bytes": size,
         "encoding": encoding,
     }
+    if binding:
+        identity["page_rows"] = page_rows
     root = H / "raw/dune" / (label + ".json-pages")
     root.mkdir(parents=True, exist_ok=True)
     manifest = root / "identity.json"
@@ -192,21 +204,26 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         atomic(manifest, identity)
     before = usage()
     PG.idle_usage_gate(before)
+    original_before = before
     offset, segment_bytes, wire, unpacked = 0, 0, 0, 0
     pages, segments = [], []
     started = time.monotonic()
+    segment_expected = Decimal(0)
 
     def checkpoint():
-        nonlocal segment_bytes, before
+        nonlocal segment_bytes, before, segment_expected
         if not segment_bytes:
             return
         observed_bytes, segment_bytes = segment_bytes, 0
+        extra = {"expected_download": segment_expected} if binding else {}
         after, observation = observe(
             before,
             label,
             H / "runs" / (label + f"_segment_{len(segments):03d}.json"),
             wait_sec,
+            **extra,
         )
+        PG.check_download_usage(original_before, after, label, expected=expected_total)
         segments.append(
             {
                 "wire_bytes": observed_bytes,
@@ -215,6 +232,7 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
             }
         )
         before = after
+        segment_expected = Decimal(0)
 
     try:
         while offset < n:
@@ -227,11 +245,17 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
             else:
                 if segment_bytes + PAGE_WIRE_CAP > SEGMENT_CAP:
                     checkpoint()
-                PG.check_download_usage(before, usage(), label)
+                PG.check_download_usage(
+                    original_before, usage(), label, expected=expected_total
+                )
                 # 请求失败仍留一页最大传输量，finally隔离核账；成功后换成实收。
                 segment_bytes += PAGE_WIRE_CAP
+                # 出错的付费请求也要结账；未知页大小时只容许已登记的总预计。
+                previous_expected = segment_expected
+                if binding:
+                    segment_expected = expected_total
                 headers = PG.request_bytes(
-                    f"/execution/{eid}/results?limit={PAGE}&offset={offset}",
+                    f"/execution/{eid}/results?limit={page_rows}&offset={offset}",
                     ticket,
                     path,
                     encoding=encoding,
@@ -241,13 +265,38 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
                 segment_bytes += headers["wire_bytes"] - PAGE_WIRE_CAP
                 page, decoded_bytes = decode(path.read_bytes(), headers)
                 _, end = validate(page, identity, offset)
+                page_metadata_bytes = (
+                    (page.get("result") or {})
+                    .get("metadata", {})
+                    .get("result_set_bytes")
+                )
+                if binding:
+                    if (
+                        not isinstance(page_metadata_bytes, int)
+                        or isinstance(page_metadata_bytes, bool)
+                        or page_metadata_bytes <= 0
+                    ):
+                        raise ValueError("分页计费字节缺失，停止")
+                    segment_expected = (
+                        previous_expected + Decimal(page_metadata_bytes) * 2 / 1_000_000
+                    )
                 unpacked += decoded_bytes
+                page_usage = usage() if binding else None
                 saved = {
                     "headers": headers,
                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                     "rows": end - offset,
                 }
+                if binding:
+                    saved.update(
+                        metadata_bytes=page_metadata_bytes,
+                        immediate_used=None if page_usage is None else page_usage[0],
+                    )
                 atomic(mark, saved)
+                if binding:
+                    PG.check_download_usage(
+                        original_before, page_usage, label, expected=expected_total
+                    )
                 print(
                     "JSON页",
                     offset,
@@ -287,6 +336,8 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         ],
         elapsed_seconds=time.monotonic() - started,
         download_did_not_execute_sql=True,
+        page_rows=page_rows,
+        expected_download_credits=str(expected_total),
     )
     atomic(H / "runs" / (label + "_transport.json"), result)
     return result

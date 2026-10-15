@@ -25,7 +25,7 @@ import json
 import math
 import re
 import urllib.request
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -80,7 +80,13 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
     source = next(
         (
             s
-            for s in ("总控第七轮", "总控第八轮", "总控第九轮", "总控第十轮")
+            for s in (
+                "总控第七轮",
+                "总控第八轮",
+                "总控第九轮",
+                "总控第十轮",
+                "用户小页试跑",
+            )
             if hit[0]["批准来源"].startswith(s)
         ),
         None,
@@ -108,7 +114,7 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
         or download_cap < 0
     ):
         return "本条上限无效，不跑"
-    limit = 25 if source in ("总控第九轮", "总控第十轮") else 50
+    limit = 25 if source in ("总控第九轮", "总控第十轮", "用户小页试跑") else 50
     if total + cap > limit:
         return f"{source}已实耗 {total}＋本条上限 {cap} 超过 {limit}，不跑"
     return ""
@@ -131,12 +137,53 @@ def csv_gate(path):
         raise Refused("总控第十轮：CSV导出禁用，只用JSON结果接口")
 
 
+def active_source(ticket):
+    policy = json.loads(S3_POLICY.read_text()) if S3_POLICY.exists() else {}
+    return ticket.source.startswith(
+        policy.get("active_paid_source_prefix", "总控第十轮")
+    )
+
+
+def small_download_binding(ticket, eid=None, qid=None):
+    """小页批准还须绑定固定查询、执行、结果体积和预计费用。"""
+    if not ticket.source.startswith("用户小页试跑"):
+        return None
+    if not S3_POLICY.exists() or not active_source(ticket):
+        raise Refused("小页批准不是当前付费来源")
+    policy = json.loads(S3_POLICY.read_text())
+    binding = policy.get("download_bindings", {}).get(ticket.approval)
+    if not binding or ticket["cap"] != 0 or binding.get("sql_sha256") != ticket.sql_sha:
+        raise Refused("下载批准缺少SQL/固定执行绑定")
+    if (eid is not None and str(eid) != binding["execution_id"]) or (
+        qid is not None and str(qid) != str(binding["query_id"])
+    ):
+        raise Refused("下载执行号或查询号与批准不同")
+    expected = Decimal(str(binding["expected_credits"]))
+    size = binding["metadata_bytes"]
+    if (
+        not expected.is_finite()
+        or expected < 0
+        or not isinstance(size, int)
+        or isinstance(size, bool)
+        or size <= 0
+        or expected != Decimal(size) * 2 / 1_000_000
+        or expected * 2 != Decimal(str(ticket.download_cap))
+        or binding.get("page_rows") != 1000
+    ):
+        raise Refused("下载预算须为2/MB、上限预计乘2、每页1000行")
+    return binding
+
+
 def execution_review_gate(ticket):
     if not S3_POLICY.exists():
         return
     policy = json.loads(S3_POLICY.read_text())
-    if not ticket.source.startswith("总控第十轮") or ticket["cap"] <= 0:
-        raise Refused("当前只准第十轮登记的三条执行；旧批准不再使用")
+    if not active_source(ticket) or ticket["cap"] <= 0:
+        raise Refused("当前只准现行来源登记的执行；旧批准不再使用")
+    if ticket.source.startswith("用户小页试跑") and (
+        ticket.download_cap or ticket["max_mb"]
+    ):
+        raise Refused("小页试跑执行和下载须分开批准")
     if not policy.get("gpt_review_passed"):
         raise Refused("GPT三处复审尚未通过，不创建或提交查询")
     if ticket.sql_sha not in policy.get("reviewed_trial_sql_sha256", []):
@@ -160,12 +207,15 @@ def s3_period_gate(current, cap):
     return ""
 
 
-def check_download_usage(before, after, label):
-    """无执行的下载区间：任何可辨识的正增量立刻封住后续付费动作。"""
+def check_download_usage(before, after, label, expected=0):
+    """下载区间实扣超出登记预计就封锁；跨动作未知增量仍按0容许。"""
     if before is None or after is None:
         raise Refused("下载前后用量缺失，停下报告")
     delta = Decimal(str(after[0])) - Decimal(str(before[0]))
-    if delta > 0:
+    allowance = Decimal(str(expected))
+    if not allowance.is_finite() or allowance < 0:
+        raise Refused("下载预计费用无效，停止")
+    if delta > allowance:
         HALT.write_text(
             json.dumps(
                 {
@@ -174,12 +224,15 @@ def check_download_usage(before, after, label):
                     "before": before[0],
                     "after": after[0],
                     "non_execution_delta": str(delta),
+                    "expected_credits": str(allowance),
                 },
                 ensure_ascii=False,
                 indent=2,
             )
         )
-        raise Refused(f"下载区间出现非执行费增量 {delta}，停止并报告")
+        raise Refused(
+            f"下载区间出现非执行费增量 {delta}，超预计 {allowance}，停止并报告"
+        )
     if delta < 0:
         raise Refused("账户用量倒退，停下核对")
 
@@ -209,8 +262,19 @@ def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
         raise Refused("传输下载没有锁内批准")
     if not re.fullmatch(r"/execution/[^/?]+/results\?.+", path):
         raise Refused("只允许已有执行的分页下载路径")
-    if S3_POLICY.exists() and not ticket.source.startswith("总控第十轮"):
-        raise Refused("JSON通道只对第十轮的新批准解除异常封锁")
+    if S3_POLICY.exists() and not active_source(ticket):
+        raise Refused("JSON通道只对现行来源的新批准解除异常封锁")
+    if ticket.source.startswith("用户小页试跑"):
+        parts = urlsplit(path)
+        eid = parts.path.split("/")[2]
+        small_download_binding(ticket, eid=eid)
+        args = parse_qs(parts.query)
+        if (
+            set(args) != {"limit", "offset"}
+            or args["limit"] != ["1000"]
+            or not (len(args["offset"]) == 1 and args["offset"][0].isdigit())
+        ):
+            raise Refused("小页通道只许固定1000行及非负offset，不允许部分结果")
     if encoding not in ("gzip", "identity"):
         raise Refused("传输编码无效")
     if halt_gate():
@@ -327,8 +391,8 @@ def request(method: str, path: str, body=None, ticket=None):
         if not isinstance(ticket, Ticket) or not ticket.locked:
             raise Refused("%s %s 是付费接口：没有锁内的批准，不访问" % (method, path))
         if S3_POLICY.exists():
-            if not ticket.source.startswith("总控第十轮"):
-                raise Refused("当前通道只允许第十轮新批准")
+            if not active_source(ticket):
+                raise Refused("当前通道只允许现行来源新批准")
             if re.fullmatch(r"/query/\d+/execute", path):
                 execution_review_gate(ticket)
             elif re.fullmatch(r"/execution/[^/?]+/results\?.+", path):

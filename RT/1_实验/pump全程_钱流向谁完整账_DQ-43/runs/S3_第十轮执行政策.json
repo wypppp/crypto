@@ -1,5 +1,5 @@
 {
-  "authority": "总控第十轮第一、三、四节；用户本轮转交",
+  "authority": "用户2026-10-15：覆盖禁令、优先小页；无需提交总控、继续推进",
   "baseline_at_utc": "2026-10-15T01:28:05.346376+00:00",
   "period_start": "2026-10-14",
   "period_end": "2026-10-28",
@@ -11,7 +11,10 @@
   "settlement_wait_seconds": 120,
   "segment_max_wire_bytes": 20000000,
   "gpt_review_passed": true,
-  "reviewed_trial_sql_sha256": [],
+  "reviewed_trial_sql_sha256": [
+    "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
+    "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
+  ],
   "pending_trial_sql_sha256": [
     "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
     "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
@@ -25,6 +28,9 @@
     "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
   ],
   "old_trial_authority_superseded_by": "总控第十一轮；不复活第十轮原三条批准",
-  "current_user_scope": "覆盖小页禁令；优先小页；本轮仅零费用方案与预算",
-  "paid_halt_still_active": true
+  "current_user_scope": "三条新版平台验收及分别登记下载；本组合计≤25；全量不在批准内",
+  "paid_halt_still_active": false,
+  "active_paid_source_prefix": "用户小页试跑",
+  "download_bindings": {},
+  "user_authority_report": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/第十二轮_小页平台验收.md"
 }

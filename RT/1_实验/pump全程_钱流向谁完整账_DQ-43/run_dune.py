@@ -128,7 +128,7 @@ def main() -> None:
             execution_state(approval, "", "SKIPPED", why)
             raise SystemExit(why)
         u0 = usage()
-        if ap.source.startswith(("总控第九轮", "总控第十轮")):
+        if ap.source.startswith(("总控第九轮", "总控第十轮", "用户小页试跑")):
             PG.idle_usage_gate(u0)
         why = budget_gate(u0, ap["cap"] + ap.download_cap)
         why = why or PG.s3_period_gate(u0, ap["cap"] + ap.download_cap)
@@ -138,7 +138,7 @@ def main() -> None:
         if why:
             raise SystemExit(why)
         sql = (H / sql_file).read_text()
-        if ap.source.startswith(("总控第九轮", "总控第十轮")):
+        if ap.source.startswith(("总控第九轮", "总控第十轮", "用户小页试跑")):
             from sql_determinism import check
 
             check(sql)
@@ -147,12 +147,29 @@ def main() -> None:
             "/query",
             {"name": f"DQ-43 {label}", "query_sql": sql, "is_private": False},
         )["query_id"]
+        small_trial = ap.source.startswith("用户小页试跑")
+        if small_trial:
+            # 提交超时也不能复用批准；先落查询号，随后只作人工恢复。
+            PG.mark_used(approval, "待返回执行号", "执行提交中；不自动重试")
+            (H / "runs" / (label + "_submission.json")).write_text(
+                json.dumps(
+                    {
+                        "approval": approval,
+                        "query_id": qid,
+                        "sql_file": sql_file,
+                        "sql_sha256": ap.sql_sha,
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
         eid = call("POST", f"/query/{qid}/execute", {"performance": engine}, ap)[
             "execution_id"
         ]
-        PG.mark_used(approval, eid, "执行中")
+        if not small_trial:
+            PG.mark_used(approval, eid, "执行中")
         print(label, "批准", approval, "query", qid, "execution", eid, flush=True)
-        cost = None
+        cost, settled = None, False
         try:
             t0, cancelled, cause = time.time(), "", ""
             while True:
@@ -197,6 +214,35 @@ def main() -> None:
                 sys.exit(1)
             if cost is None or float(cost) > ap["cap"]:
                 raise SystemExit("完成费用未知或超过批准上限，停止下载并报告")
+            if small_trial:
+                from dune_get_json import settle_execution
+
+                settle_execution(u0, cost, label)
+                settled = True
+                metadata = st.get("result_metadata") or {}
+                (H / "runs" / (label + "_completed.json")).write_text(
+                    json.dumps(
+                        {
+                            "approval": approval,
+                            "query_id": qid,
+                            "execution_id": eid,
+                            "sql_file": sql_file,
+                            "sql_sha256": ap.sql_sha,
+                            "state": st["state"],
+                            "execution_cost_credits": cost,
+                            "result_metadata": metadata,
+                            "downloaded": False,
+                        },
+                        ensure_ascii=False,
+                        indent=2,
+                    )
+                )
+                print(
+                    label,
+                    "执行费已核到账；结果元数据已存；下载须另登记批准",
+                    flush=True,
+                )
+                return
             mb = (
                 float((st.get("result_metadata") or {}).get("result_set_bytes") or 0)
                 / 1e6
@@ -217,13 +263,22 @@ def main() -> None:
             else:
                 fetch(str(qid), label, sql_file, ap)
         finally:
-            u1 = usage()
-            PG.record_actual(approval, eid, u0[0], None if u1 is None else u1[0], cost)
-            print(
-                label,
-                "用量 %.3f → %s" % (u0[0], "读不到" if u1 is None else "%.3f" % u1[0]),
-                flush=True,
-            )
+            try:
+                if small_trial and cost is not None and not settled:
+                    from dune_get_json import settle_execution
+
+                    settle_execution(u0, cost, label)
+            finally:
+                u1 = usage()
+                PG.record_actual(
+                    approval, eid, u0[0], None if u1 is None else u1[0], cost
+                )
+                print(
+                    label,
+                    "用量 %.3f → %s"
+                    % (u0[0], "读不到" if u1 is None else "%.3f" % u1[0]),
+                    flush=True,
+                )
 
 
 if __name__ == "__main__":
