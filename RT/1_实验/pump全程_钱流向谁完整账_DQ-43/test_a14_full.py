@@ -226,3 +226,34 @@ def test_full_execution_terminal_overrun_latches_halt(monkeypatch, tmp_path):
     RUN.main()
     assert "1.5倍" in PG.halt_gate()
     assert PG._rows(PG.ACTUAL)[-1]["下载费"] == "0"
+
+
+def test_streaming_quality_checks_sorted_unique_keys_and_seed_roster(tmp_path):
+    import gzip
+
+    import a14_edge_check as CHECK
+
+    path = tmp_path / "edges.csv.gz"
+    with gzip.open(path, "wt", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["kind", "a", "b", "x"])
+        writer.writerows(
+            [
+                ["S", "2" * 32, "3" * 32, ""],
+                ["V", "2" * 32, "", ""],
+                ["V", "4" * 32, "", ""],
+            ]
+        )
+    rows = CHECK.Rows(path)
+    assert CHECK.quality(rows, 3)["kind_rows"] == {"S": 1, "V": 2}
+    result = F.concentration(rows)
+    assert result["W_seed_wallets"] == 2
+    assert result["top10_W_seed_wallets"] == [1, 1]
+    assert result["multiwallet_size_histogram_with_W_seeds"] == {2: 1}
+    with pytest.raises(ValueError, match="一次性"):
+        F.concentration(iter(rows))
+    first = next(iter(rows))
+    with pytest.raises(ValueError, match="重复"):
+        CHECK.quality([first, first], 2)
+    with pytest.raises(ValueError, match="自环"):
+        CHECK.quality([first | {"b": first["a"]}], 1)

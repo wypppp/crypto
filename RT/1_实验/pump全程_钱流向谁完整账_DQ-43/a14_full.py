@@ -94,23 +94,32 @@ def concentration(rows, cex=()):
     """分母只用完整 W 种子；代表与成员来自冻结 entities()。"""
     import s3_ref as REF
 
-    seeds, edges = set(), []
+    if iter(rows) is rows:
+        raise ValueError("图输入须能重复读取，禁止耗尽一次性迭代器")
+    seeds = set()
     for row in rows:
         if row["kind"] == "V":
             if not row["a"] or row["a"] in seeds or row["b"] or row["x"]:
                 raise ValueError("种子名册为空、重复或列格式有误")
             seeds.add(row["a"])
-        elif row["kind"] in ("S", "G", "T"):
-            edges.append(row)
-        else:
+        elif row["kind"] not in ("S", "G", "T"):
             raise ValueError("未知 EDGE 行类型")
     if not seeds:
         raise ValueError("缺少完整 W 种子，不能计算集中度")
-    emap, _ = REF.entities(edges, set(cex))
+
+    class Edges:
+        def __iter__(self):
+            return (row for row in rows if row["kind"] != "V")
+
+    emap, _ = REF.entities(Edges(), set(cex))
     counts = Counter(emap.get(seed, seed) for seed in seeds)
-    top = sorted(counts.values(), reverse=True)[:10]
-    n = len(seeds)
     full_sizes = Counter(emap.values())
+    top_entities = sorted(
+        counts,
+        key=lambda entity: (-counts[entity], -full_sizes.get(entity, 1), entity),
+    )[:10]
+    top = [counts[entity] for entity in top_entities]
+    n = len(seeds)
     sizes_with_seeds = [full_sizes[e] for e in counts if full_sizes[e] > 1]
     return {
         "W_seed_wallets": n,
@@ -119,6 +128,8 @@ def concentration(rows, cex=()):
         "top10_W_seed_wallets": top,
         "top10_W_seed_fractions": [v / n for v in top],
         "top10_W_seed_fraction_sum": sum(top) / n,
+        "top10_total_wallets": [full_sizes.get(entity, 1) for entity in top_entities],
+        "all_multiwallet_entities": len(full_sizes),
         "multiwallet_entities_with_W_seeds": len(sizes_with_seeds),
         "multiwallet_size_histogram_with_W_seeds": dict(Counter(sizes_with_seeds)),
         "all_multiwallet_size_histogram": dict(Counter(full_sizes.values())),
