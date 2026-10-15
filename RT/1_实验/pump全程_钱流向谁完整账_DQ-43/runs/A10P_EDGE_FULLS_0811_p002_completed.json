@@ -1,0 +1,31 @@
+{
+  "approval": "A12-E01",
+  "query_id": 8951148,
+  "execution_id": "01M4Z9E0SSMA5DJ31W1Y71AV0E",
+  "sql_file": "sql/A10P_EDGE_FULLS_0811_p002_v6.sql",
+  "sql_sha256": "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe",
+  "state": "QUERY_STATE_COMPLETED",
+  "execution_cost_credits": 3.687205883,
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "a",
+      "b",
+      "x"
+    ],
+    "column_types": [
+      "varchar(1)",
+      "varchar",
+      "varchar",
+      "bigint"
+    ],
+    "row_count": 4022,
+    "result_set_bytes": 361906,
+    "total_row_count": 4022,
+    "total_result_set_bytes": 361906,
+    "datapoint_count": 16088,
+    "pending_time_millis": 1652,
+    "execution_time_millis": 47060
+  },
+  "downloaded": false
+}

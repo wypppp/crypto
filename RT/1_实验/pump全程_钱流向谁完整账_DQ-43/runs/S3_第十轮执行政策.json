@@ -47,6 +47,14 @@
       "metadata_bytes": 1087329,
       "expected_credits": "2.174658",
       "page_rows": 1000
+    },
+    "A12-D03": {
+      "query_id": 8951148,
+      "execution_id": "01M4Z9E0SSMA5DJ31W1Y71AV0E",
+      "sql_sha256": "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe",
+      "metadata_bytes": 361906,
+      "expected_credits": "0.723812",
+      "page_rows": 1000
     }
   },
   "user_authority_report": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/第十二轮_小页平台验收.md",
