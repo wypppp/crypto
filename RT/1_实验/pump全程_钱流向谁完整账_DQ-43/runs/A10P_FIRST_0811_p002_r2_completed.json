@@ -1,0 +1,49 @@
+{
+  "approval": "A12-F05",
+  "query_id": 8950956,
+  "execution_id": "01M4Z91546YMNXESHT76W8RRZW",
+  "sql_file": "sql/A10P_FIRST_0811_p002_v6.sql",
+  "sql_sha256": "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
+  "state": "QUERY_STATE_COMPLETED",
+  "execution_cost_credits": 0.750735295,
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "mint",
+      "usr",
+      "t",
+      "slot",
+      "txi",
+      "oix",
+      "iix",
+      "tx",
+      "pre",
+      "net60",
+      "sz",
+      "q"
+    ],
+    "column_types": [
+      "varchar(1)",
+      "varchar",
+      "varchar",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "bigint",
+      "varchar",
+      "varchar",
+      "varchar",
+      "varchar",
+      "varchar"
+    ],
+    "row_count": 4540,
+    "result_set_bytes": 1087329,
+    "total_row_count": 4540,
+    "total_result_set_bytes": 1087329,
+    "datapoint_count": 59020,
+    "pending_time_millis": 1558,
+    "execution_time_millis": 27696
+  },
+  "downloaded": false
+}
