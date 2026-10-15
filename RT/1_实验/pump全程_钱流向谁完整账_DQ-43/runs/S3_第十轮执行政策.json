@@ -31,6 +31,15 @@
   "current_user_scope": "三条新版平台验收及分别登记下载；本组合计≤25；全量不在批准内",
   "paid_halt_still_active": false,
   "active_paid_source_prefix": "用户小页试跑",
-  "download_bindings": {},
+  "download_bindings": {
+    "A12-D01": {
+      "query_id": 8950956,
+      "execution_id": "01M4Z6M0RYZNJM940AWSN7KRRH",
+      "sql_sha256": "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
+      "metadata_bytes": 1087329,
+      "expected_credits": "2.174658",
+      "page_rows": 1000
+    }
+  },
   "user_authority_report": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/第十二轮_小页平台验收.md"
 }
