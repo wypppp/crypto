@@ -1,0 +1,34 @@
+{
+  "pytest_tests": 87,
+  "pytest_passed": 87,
+  "pytest_seconds": 20.05,
+  "pytest_files": [
+    "test_s3_first_v5.py",
+    "test_dune_get_csv.py",
+    "test_run_dune_gate.py",
+    "test_no_direct_dune.py",
+    "test_edge_sgt_min_download.py",
+    "test_wm2_semantic.py",
+    "test_s3_real_replay.py"
+  ],
+  "ruff_new_files_check": "passed, no ignores",
+  "ruff_existing_files_check": "passed after excluding only existing rule findings",
+  "existing_rules_excluded": [
+    "UP031",
+    "UP017",
+    "FURB167",
+    "BLE001",
+    "SIM117",
+    "SIM905",
+    "I001"
+  ],
+  "ruff_format_check": "13 files passed",
+  "python": "3.12",
+  "sqlglot": "30.18.0",
+  "pytest": "9.1.1",
+  "ruff": "0.17.0",
+  "operational_halt_file_preserved": true,
+  "pytest_command": "/home/ancillary/.venv/bin/python -m pytest -q test_s3_first_v5.py test_dune_get_csv.py test_run_dune_gate.py test_no_direct_dune.py test_edge_sgt_min_download.py test_wm2_semantic.py test_s3_real_replay.py",
+  "ruff_new_command": "/home/ancillary/.venv/bin/ruff check s3_first_v5.py edge_sgt_v5.py wm2_deterministic.py sql_determinism.py dune_get_csv.py test_s3_first_v5.py test_dune_get_csv.py a9_check.py",
+  "ruff_existing_command": "/home/ancillary/.venv/bin/ruff check paid_guard.py run_dune.py test_run_dune_gate.py test_no_direct_dune.py s3_real_replay.py --ignore UP031,UP017,FURB167,BLE001,SIM117,SIM905,I001"
+}

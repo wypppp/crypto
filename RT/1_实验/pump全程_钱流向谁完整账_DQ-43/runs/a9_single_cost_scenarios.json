@@ -1,0 +1,33 @@
+{
+  "status": "not_recalibrated_execution; approved trials halted by non-execution fee",
+  "full_runs": 1,
+  "full_p": 0.1,
+  "three_pairs": 3,
+  "old_execution_once_scenario": [
+    "209.01189720600001",
+    "342.06235228831264"
+  ],
+  "old_csv_MB_scenario": [
+    "1452.4891499999999",
+    "5949.65385"
+  ],
+  "official_plus_2_per_MB_download_scenario": [
+    "2904.9782999999998",
+    "11899.30770"
+  ],
+  "official_plus_single_total_scenario": [
+    "3113.99019720599981",
+    "12241.37005228831264"
+  ],
+  "gzip_wire_ratio_on_A7_06": "0.3382756783672933011330439258",
+  "gzip_wire_reduction_pct": "66.17243216327066988669560742",
+  "conditional_transfer_MB_if_ratio_transfers_to_new_shape": [
+    "491.3417525373832009358611720",
+    "2012.623192159328303165424155"
+  ],
+  "download_actual_credits": 12,
+  "fee_not_observed_to_shrink_with_gzip": true,
+  "billing_size_basis_and_rounding": "not verified; usage endpoint has totals only",
+  "not_completion_quote": true,
+  "old_double_run_forecasts_withdrawn": true
+}

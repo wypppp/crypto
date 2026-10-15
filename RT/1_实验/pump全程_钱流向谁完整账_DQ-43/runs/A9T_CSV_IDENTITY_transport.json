@@ -1,0 +1,49 @@
+{
+  "execution_id": "01M4WRPTY8WDKX1NVCQJNCAW8R",
+  "query_id": "8945017",
+  "sql_sha256": "d8847d275a9bee733064c7c21b08928e47d280bb33eca9aaed64eac97f81141d",
+  "rows": 16145,
+  "cols": [
+    "kind",
+    "mint",
+    "usr",
+    "t",
+    "slot",
+    "txi",
+    "oix",
+    "iix",
+    "tx",
+    "b",
+    "amt",
+    "tok",
+    "cash",
+    "r4"
+  ],
+  "types": [
+    "varchar(1)",
+    "varchar",
+    "varchar",
+    "bigint",
+    "bigint",
+    "bigint",
+    "bigint",
+    "bigint",
+    "varchar",
+    "integer",
+    "varchar",
+    "varchar",
+    "varchar",
+    "varchar"
+  ],
+  "bytes": 2952326,
+  "encoding": "identity",
+  "downloaded_wire_bytes": 3104734,
+  "all_pages_wire_bytes": 3104734,
+  "page_encodings": [
+    "identity"
+  ],
+  "page_count": 1,
+  "local_gzip_bytes": 978029,
+  "local_gzip_bytes_is_pre_normalization": true,
+  "normalization_record": "runs/a9_csv_equality.json"
+}

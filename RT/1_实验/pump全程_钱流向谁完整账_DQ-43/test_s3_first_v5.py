@@ -99,3 +99,22 @@ def test_static_v5_family_accepts_integer_sql():
 def test_static_mutations_are_rejected(sql):
     with pytest.raises(ValueError):
         D.check(sql)
+
+
+def test_standalone_import_does_not_select_legacy_runner():
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import a9_check; import run_dune; print(run_dune.__file__)",
+        ],
+        cwd=Path(__file__).resolve().parent,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert proc.stdout.strip() == str(Path(__file__).resolve().parent / "run_dune.py")

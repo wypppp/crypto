@@ -5,8 +5,8 @@ import gzip
 import json
 from collections import Counter, defaultdict
 
+import s3_first_v5 as V  # isort: skip -- establish local module path before legacy imports
 import s3_first_local as L
-import s3_first_v5 as V
 import s3_real_replay as RP
 import s3_ref as R
 import s3_smoke as SM

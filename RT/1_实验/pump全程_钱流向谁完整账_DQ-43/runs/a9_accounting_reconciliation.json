@@ -1,0 +1,14 @@
+{
+  "baseline": 1523.859,
+  "identity_immediate_after": 1523.859,
+  "gzip_before": 1529.859,
+  "gzip_after": 1535.859,
+  "execution_credits": 0,
+  "observed_non_execution_increment": 12,
+  "identity_delayed_increment": 6,
+  "gzip_interval_increment": 6,
+  "fee_classification": "no SQL execution in these intervals; billing-component breakdown not returned; attribution by timing",
+  "halted": true,
+  "three_trial_queries_submitted": false,
+  "source": "saved page usage + run ledger; no raw rows or key"
+}

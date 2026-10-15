@@ -1,0 +1,56 @@
+[
+  {
+    "file": "sql/S3V5_REVIEW_FIRST_20260525_p10.sql",
+    "sha256": "e0913605f26aa9d2e274d97457b501ff35459a28195e431fa9dc81775447b5c9",
+    "W": "2026-05-25",
+    "cut": "2026-06-01",
+    "W1_end": "2026-06-08",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V5_REVIEW_EDGE_20260525_p10.sql",
+    "sha256": "a151146c0e5051d10135555b035fa913129fa33ff088ffb519d5f846941dabd7",
+    "W": "2026-05-25",
+    "cut": "2026-06-01",
+    "W1_end": "2026-06-08",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V5_REVIEW_FIRST_20260727_p10.sql",
+    "sha256": "cc29fceaeb5482c347fa07200f6c6a529f4ce9bc592986f305a2efa851e7b001",
+    "W": "2026-07-27",
+    "cut": "2026-08-03",
+    "W1_end": "2026-08-10",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V5_REVIEW_EDGE_20260727_p10.sql",
+    "sha256": "33a396d4589c711f7b1c00ee49687babacd33efdafc71879925c94239d4d73a2",
+    "W": "2026-07-27",
+    "cut": "2026-08-03",
+    "W1_end": "2026-08-10",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V5_REVIEW_FIRST_20260810_p10.sql",
+    "sha256": "586d4ea9b4b95d93d76c01bf0107fc9223ac9685a1be26c9c1b6ede8c87bd86a",
+    "W": "2026-08-10",
+    "cut": "2026-08-17",
+    "W1_end": "2026-08-24",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V5_REVIEW_EDGE_20260810_p10.sql",
+    "sha256": "a6838e30726b1560d442a633a525dedfc41724ae35c809681982cb83e0766257",
+    "W": "2026-08-10",
+    "cut": "2026-08-17",
+    "W1_end": "2026-08-24",
+    "p": 0.1,
+    "approved": false
+  }
+]

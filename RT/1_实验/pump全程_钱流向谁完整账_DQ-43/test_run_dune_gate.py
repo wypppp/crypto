@@ -8,6 +8,11 @@ import paid_guard as PG
 import run_dune as R
 
 
+@pytest.fixture(autouse=True)
+def isolate_operational_halt(tmp_path, monkeypatch):
+    monkeypatch.setattr(PG, "HALT", tmp_path / "halt.json")
+
+
 def test_budget_gate_uses_live_usage_only_hand():
     assert R.budget_gate(None, 10) != ""  # 读不到即停
     assert R.budget_gate((1468.8, 2500.0), 1031.2) == ""  # 恰好用满额度

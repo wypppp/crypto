@@ -2,9 +2,11 @@
 
 import datetime as dt
 
-import build_wm2_sql as B
+import wm2_deterministic as D  # isort: skip -- restore builder path before legacy imports
+
 import edge_sgt_min_download as M
-import wm2_deterministic as D
+
+B = D.B
 
 
 def build(c0, c1, event_end, edge_from, edge_cut, p=None):

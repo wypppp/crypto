@@ -6,11 +6,13 @@
 
 import datetime as dt
 
-import build_wm2_sql as B
+import wm2_deterministic as D  # isort: skip -- restore builder path before legacy imports
+
 import s3_first_extract as OLD
 import s3_first_local as L
 import s3_sql as S
-import wm2_deterministic as D
+
+B = D.B
 
 COLS = OLD.COLS + ["q"]
 OUT = """,

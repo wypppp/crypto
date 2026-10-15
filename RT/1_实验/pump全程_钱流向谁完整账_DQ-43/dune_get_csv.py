@@ -10,6 +10,7 @@ import gzip
 import hashlib
 import io
 import json
+from decimal import Decimal
 from pathlib import Path
 
 import paid_guard as PG
@@ -26,7 +27,7 @@ def write_json(path, value):
     part.replace(path)
 
 
-def decode(body, headers, cols):
+def decode(body, headers, cols, types=None):
     encoding = headers.get("content-encoding", "identity").lower()
     if encoding == "gzip":
         body = gzip.decompress(body)
@@ -38,6 +39,20 @@ def decode(body, headers, cols):
     rows = list(reader)
     if any(len(r) != len(cols) for r in rows):
         raise ValueError("CSV 字段数不符")
+    for row in rows:
+        for i, value in enumerate(row):
+            # 本实验只有身份、整数与质量标志；<nil>不可能是合法原值。
+            if value == "<nil>":
+                row[i] = ""
+            elif (
+                types
+                and types[i] in ("bigint", "integer", "smallint", "tinyint")
+                and value
+            ):
+                n = Decimal(value)
+                if not n.is_finite() or n != n.to_integral_value() or abs(n) >= 2**53:
+                    raise ValueError("CSV整数无法无损核对；须改文本列或另批JSON下载")
+                row[i] = str(int(n))
     return rows
 
 
@@ -114,7 +129,7 @@ def fetch(qid, label, sql_file, ticket, execution_id, encoding="gzip"):
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             }
             write_json(path.with_suffix(".attempt.json"), saved)
-            rows = decode(path.read_bytes(), headers, cols)
+            rows = decode(path.read_bytes(), headers, cols, identity["types"])
             validate(rows, offset, n, headers)
             write_json(mark, saved)
             wire += headers["wire_bytes"]
@@ -129,7 +144,7 @@ def fetch(qid, label, sql_file, ticket, execution_id, encoding="gzip"):
                 headers.get("content-encoding", "identity"),
                 flush=True,
             )
-        rows = decode(path.read_bytes(), saved["headers"], cols)
+        rows = decode(path.read_bytes(), saved["headers"], cols, identity["types"])
         offset = validate(rows, offset, n, saved["headers"])
         pages.append((path, saved))
     out = H / "raw/dune" / (label + ".csv.gz")
@@ -138,7 +153,9 @@ def fetch(qid, label, sql_file, ticket, execution_id, encoding="gzip"):
         writer = csv.writer(f)
         writer.writerow(cols)
         for path, saved in pages:
-            writer.writerows(decode(path.read_bytes(), saved["headers"], cols))
+            writer.writerows(
+                decode(path.read_bytes(), saved["headers"], cols, identity["types"])
+            )
     part.replace(out)
     measurement = dict(
         identity,
@@ -173,6 +190,7 @@ def main():
         )
         if why:
             raise PG.Refused(why)
+        PG.idle_usage_gate(u0)
         PG.mark_used(a.approve, a.execution, "CSV 传输测量；不执行 SQL")
         try:
             fetch(a.query_id, a.label, a.sql_file, ticket, a.execution, a.encoding)

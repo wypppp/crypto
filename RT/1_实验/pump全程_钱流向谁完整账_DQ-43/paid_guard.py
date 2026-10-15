@@ -135,6 +135,24 @@ def check_download_usage(before, after, label):
         raise Refused("账户用量倒退，停下核对")
 
 
+def idle_usage_gate(current):
+    """同计费期连续操作：前条末值到本条初值也必须核对，堵住延迟计费。
+
+    余额变化来源尚未核清时先停；跨计费期须重新登记账户基线。
+    """
+    if current is None:
+        raise Refused("读不到提交前用量")
+    previous = _rows(ACTUAL)
+    if not previous:
+        return
+    last = previous[-1].get("用量后")
+    if last in (None, ""):
+        raise Refused("前条末用量缺失，停下核对")
+    check_download_usage(
+        (float(last), current[1]), current, "跨动作延迟计费或未核清增量"
+    )
+
+
 def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
     """CSV/JSON 响应体按原始传输编码落盘，记录字节与分页头；不重试。"""
     if not isinstance(ticket, Ticket) or not ticket.locked:

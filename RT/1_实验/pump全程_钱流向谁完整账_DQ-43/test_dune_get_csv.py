@@ -63,7 +63,7 @@ def test_fault_resume_downloads_only_missing_pages(tmp_path, monkeypatch):
     metadata = {
         "total_row_count": 3,
         "column_names": ["amt"],
-        "column_types": ["bigint"],
+        "column_types": ["varchar"],
         "result_set_bytes": 100,
     }
     monkeypatch.setattr(
@@ -109,3 +109,59 @@ def test_fault_resume_downloads_only_missing_pages(tmp_path, monkeypatch):
     assert out["page_count"] == 2
     with gzip.open(tmp_path / "raw/dune/probe.csv.gz", "rt", newline="") as f:
         assert list(csv.reader(f)) == [["amt"], ["9007199254740993"], ["2"], ["3"]]
+
+
+def test_csv_endpoint_decimal_seconds_and_nil_normalize_exactly():
+    body = (
+        b"t,slot,amt,usr\n1786456126.000000,400000000.000000,9007199254740993,<nil>\n"
+    )
+    assert C.decode(
+        body,
+        {},
+        ["t", "slot", "amt", "usr"],
+        ["bigint", "bigint", "varchar", "varchar"],
+    ) == [["1786456126", "400000000", "9007199254740993", ""]]
+
+
+@pytest.mark.parametrize("text", ["1.5", "NaN", "9007199254740992", "9007199254740993"])
+def test_csv_numeric_column_unsafe_or_fractional_value_rejected(text):
+    with pytest.raises(ValueError, match="CSV整数"):
+        C.decode(("slot\n" + text + "\n").encode(), {}, ["slot"], ["bigint"])
+
+
+def test_gap_fee_latches_before_next_action(tmp_path, monkeypatch):
+    monkeypatch.setattr(PG, "HALT", tmp_path / "halt.json")
+    monkeypatch.setattr(PG, "ACTUAL", tmp_path / "actual.csv")
+    PG.record_actual("prior", "eid", 100, 100, 0)
+    PG.idle_usage_gate((100, 2500))
+    with pytest.raises(PG.Refused, match="非执行费增量"):
+        PG.idle_usage_gate((106, 2500))
+    assert PG.halt_gate()
+
+
+def test_latched_csv_command_does_not_mark_or_fetch(tmp_path, monkeypatch):
+    import sys
+
+    monkeypatch.setattr(PG, "HALT", tmp_path / "halt.json")
+    PG.HALT.write_text("{}")
+    monkeypatch.setattr(PG, "check", lambda *a: PG.Ticket("next", 0, 3))
+    lock = PG.one_at_a_time
+    monkeypatch.setattr(PG, "one_at_a_time", lambda t: lock(t, tmp_path / "lock"))
+    monkeypatch.setattr(C, "usage", lambda: (106, 2500))
+    monkeypatch.setattr(PG, "mark_used", lambda *a: pytest.fail("已封锁仍消耗批准"))
+    monkeypatch.setattr(C, "fetch", lambda *a: pytest.fail("已封锁仍下载"))
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "dune_get_csv.py",
+            "1",
+            "x",
+            "s.sql",
+            "--execution=eid",
+            "--approve=next",
+            "--encoding=gzip",
+        ],
+    )
+    with pytest.raises(PG.Refused, match="非执行费增量"):
+        C.main()

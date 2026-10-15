@@ -4,6 +4,18 @@
 池只取允许的首次创建时刻，不带用不到的任意首行字段。
 """
 
+import sys
+
+__all__ = ["B"]
+
+# 旧生成器加载冻结 weeks 时临时加入 DQ-37 路径。
+# 保留调用者路径，避免随后误导入同名的旧 run_dune/dune_get。
+_path_before = sys.path[:]
+try:
+    import build_wm2_sql as B
+finally:
+    sys.path[:] = _path_before
+
 KEY = "ARRAY[evt_block_slot,evt_tx_index,evt_outer_instruction_index,COALESCE(evt_inner_instruction_index,-1)]"
 
 

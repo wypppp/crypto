@@ -120,11 +120,15 @@ def main() -> None:
         )
     ap = PG.check(approval, sql_file)
     with PG.one_at_a_time(ap):
-        why = PG.halt_gate() or pair_gate(approval)
+        if PG.halt_gate():
+            raise PG.Refused(PG.halt_gate())
+        why = pair_gate(approval)
         if why:
             execution_state(approval, "", "SKIPPED", why)
             raise SystemExit(why)
         u0 = usage()
+        if ap.source.startswith("总控第九轮"):
+            PG.idle_usage_gate(u0)
         why = budget_gate(u0, ap["cap"] + ap.download_cap)
         if why:
             raise SystemExit(why)

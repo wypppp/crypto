@@ -19,6 +19,11 @@ DIRECT = re.compile(r"api\.dune\.com|dune_client|DuneClient")
 DUNE_KEYS = re.compile(r"DUNE[A-Za-z0-9_]*")
 
 
+@pytest.fixture(autouse=True)
+def isolate_operational_halt(tmp_path, monkeypatch):
+    monkeypatch.setattr(PG, "HALT", tmp_path / "halt.json")
+
+
 def _py_files():
     """RT 下全部 .py，本测试文件除外（它为了扫描而写出这些模式）。"""
     me = Path(__file__).resolve()
