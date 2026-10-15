@@ -88,6 +88,7 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
                 "总控第九轮",
                 "总控第十轮",
                 "用户小页试跑",
+                "总控第十四轮",
             )
             if hit[0]["批准来源"].startswith(s)
         ),
@@ -117,6 +118,8 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
     ):
         return "本条上限无效，不跑"
     limit = 25 if source in ("总控第九轮", "总控第十轮", "用户小页试跑") else 50
+    if source == "总控第十四轮":
+        limit = 380
     if total + cap > limit:
         return f"{source}已实耗 {total}＋本条上限 {cap} 超过 {limit}，不跑"
     return ""
@@ -184,13 +187,26 @@ def execution_review_gate(ticket):
     policy = json.loads(S3_POLICY.read_text())
     if not active_source(ticket) or ticket["cap"] <= 0:
         raise Refused("当前只准现行来源登记的执行；旧批准不再使用")
-    if ticket.source.startswith("用户小页试跑") and (
+    if ticket.source.startswith(("用户小页试跑", "总控第十四轮")) and (
         ticket.download_cap or ticket["max_mb"]
     ):
         raise Refused("小页试跑执行和下载须分开批准")
     if not policy.get("gpt_review_passed"):
         raise Refused("GPT三处复审尚未通过，不创建或提交查询")
-    if ticket.sql_sha not in policy.get("reviewed_trial_sql_sha256", []):
+    reviewed = policy.get("reviewed_trial_sql_sha256", [])
+    if ticket.source.startswith("总控第十四轮"):
+        from a14_full import expected_gate
+
+        if not policy.get("full_approved") or ticket.approval not in policy.get(
+            "allowed_execution_approvals", []
+        ):
+            raise Refused("第十四轮当前分段条件未通过，不执行后续层")
+        try:
+            expected_gate(ticket.expected, ticket["cap"])
+        except ValueError as exc:
+            raise Refused(str(exc)) from exc
+        reviewed = policy.get("full_execution_sql_sha256", [])
+    if ticket.sql_sha not in reviewed:
         raise Refused("SQL不在已通过复审的清单里")
 
 
@@ -394,6 +410,30 @@ def _key() -> str:
 def open_http(req, timeout=90):
     """仅改变到同一官方HTTPS主机的传输路由；不重试、不回落、不关TLS验证。"""
     policy = json.loads(S3_POLICY.read_text()) if S3_POLICY.exists() else {}
+    interval = policy.get("http_min_interval_seconds", 0)
+    if interval:
+        # 跨进程串行节流；每秒至多一条，低于 Plus 70/200 rpm。
+        clock = LOCK.with_name("rt_dune_http_clock.json")
+        clock.parent.mkdir(parents=True, exist_ok=True)
+        with clock.open("a+") as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.seek(0)
+            previous = json.loads(f.read() or "{}")
+            delay = (
+                max(
+                    previous.get("last", 0) + interval,
+                    previous.get("not_before", 0),
+                )
+                - time.time()
+            )
+            if delay > 60:
+                raise Refused("Dune限速退避窗口未到；保留断点，不重试或换通道")
+            if delay > 0:
+                time.sleep(delay)
+            previous["last"] = time.time()
+            f.seek(0)
+            f.truncate()
+            json.dump(previous, f)
     route = policy.get("http_transport", "system")
     if route == "direct":
         return urllib.request.build_opener(urllib.request.ProxyHandler({})).open(
@@ -414,6 +454,30 @@ def http_failure(exc, method, path, api_key):
         "http_status": getattr(exc, "code", None),
     }
     if isinstance(exc, urllib.error.HTTPError):
+        if exc.code == 429:
+            # 不重发原请求。后续独立动作须遵守服务端 Retry-After。
+            from email.utils import parsedate_to_datetime
+
+            retry = (exc.headers or {}).get("Retry-After", "60")
+            try:
+                until = time.time() + max(60, float(retry))
+            except ValueError:
+                try:
+                    until = max(
+                        time.time() + 60, parsedate_to_datetime(retry).timestamp()
+                    )
+                except (ValueError, TypeError):
+                    until = time.time() + 60
+            clock = LOCK.with_name("rt_dune_http_clock.json")
+            clock.parent.mkdir(parents=True, exist_ok=True)
+            with clock.open("a+") as f:
+                fcntl.flock(f, fcntl.LOCK_EX)
+                f.seek(0)
+                prior = json.loads(f.read() or "{}")
+                prior["not_before"] = max(until, prior.get("not_before", 0))
+                f.seek(0)
+                f.truncate()
+                json.dump(prior, f)
         body = exc.read(16385)
         safe = body[:16384].decode(errors="replace").replace(api_key, "[REDACTED]")
         record["response_headers"] = {
@@ -532,6 +596,7 @@ def check(
     ticket.download_cap = float(r.get("下载费上限") or "5")
     ticket.source = r["批准来源"]
     ticket.sql_sha = r["SQL_sha256"]
+    ticket.expected = r.get("预计 credits")
     if not all(
         math.isfinite(v) and v >= 0
         for v in (ticket["cap"], ticket["max_mb"], ticket.download_cap)

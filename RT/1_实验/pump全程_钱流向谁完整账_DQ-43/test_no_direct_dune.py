@@ -8,6 +8,7 @@
 """
 
 import io
+import json
 import re
 from urllib.error import HTTPError
 from pathlib import Path
@@ -139,3 +140,54 @@ def test_request_records_error_and_never_retries(tmp_path, monkeypatch):
         PG.request("GET", "/query/2147483647")
     assert len(calls) == 1
     assert caught.value.dune_diagnostic["error_fields"]["error"] == "Object not found"
+
+
+def test_429_persists_retry_after_without_resubmission(tmp_path, monkeypatch):
+    monkeypatch.setattr(PG, "H", tmp_path)
+    monkeypatch.setattr(PG, "LOCK", tmp_path / "paid.lock")
+    monkeypatch.setattr(PG, "_key", lambda: "test-secret")
+    calls = []
+
+    def fail(req, timeout):
+        calls.append(req.full_url)
+        raise HTTPError(
+            req.full_url,
+            429,
+            "limited",
+            {"Retry-After": "180"},
+            io.BytesIO(b'{"error":"rate limited"}'),
+        )
+
+    monkeypatch.setattr(PG.urllib.request, "urlopen", fail)
+    before = PG.time.time()
+    with pytest.raises(HTTPError):
+        PG.request("GET", "/query/123")
+    assert len(calls) == 1
+    clock = json.loads((tmp_path / "rt_dune_http_clock.json").read_text())
+    assert clock["not_before"] >= before + 180
+
+
+def test_global_rate_gate_applies_to_direct_transport(tmp_path, monkeypatch):
+    monkeypatch.setattr(PG, "LOCK", tmp_path / "paid.lock")
+    PG.S3_POLICY.write_text(
+        json.dumps({"http_min_interval_seconds": 1.05, "http_transport": "direct"})
+    )
+    now, sleeps, opened = [100.0], [], []
+    monkeypatch.setattr(PG.time, "time", lambda: now[0])
+
+    def sleep(seconds):
+        sleeps.append(seconds)
+        now[0] += seconds
+
+    monkeypatch.setattr(PG.time, "sleep", sleep)
+
+    class Opener:
+        def open(self, req, timeout):
+            opened.append(req)
+            return object()
+
+    monkeypatch.setattr(PG.urllib.request, "build_opener", lambda *_: Opener())
+    PG.open_http(object())
+    PG.open_http(object())
+    assert len(opened) == 2
+    assert sleeps == pytest.approx([1.05])

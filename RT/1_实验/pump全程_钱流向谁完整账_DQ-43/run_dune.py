@@ -57,8 +57,13 @@ def pair_gate(approval):
     return ""
 
 
-def cancel_threshold(cap):
-    return Decimal(str(cap)) * Decimal("0.85")
+def cancel_threshold(cap, expected=None):
+    cap_threshold = Decimal(str(cap)) * Decimal("0.85")
+    if expected is not None:
+        from a14_full import expected_gate
+
+        return min(cap_threshold, expected_gate(expected, cap) * Decimal("1.5"))
+    return cap_threshold
 
 
 def call(method: str, path: str, body: dict, ticket=None) -> dict:
@@ -128,7 +133,9 @@ def main() -> None:
             execution_state(approval, "", "SKIPPED", why)
             raise SystemExit(why)
         u0 = usage()
-        if ap.source.startswith(("总控第九轮", "总控第十轮", "用户小页试跑")):
+        if ap.source.startswith(
+            ("总控第九轮", "总控第十轮", "用户小页试跑", "总控第十四轮")
+        ):
             PG.idle_usage_gate(u0)
         why = budget_gate(u0, ap["cap"] + ap.download_cap)
         why = why or PG.s3_period_gate(u0, ap["cap"] + ap.download_cap)
@@ -138,7 +145,9 @@ def main() -> None:
         if why:
             raise SystemExit(why)
         sql = (H / sql_file).read_text()
-        if ap.source.startswith(("总控第九轮", "总控第十轮", "用户小页试跑")):
+        if ap.source.startswith(
+            ("总控第九轮", "总控第十轮", "用户小页试跑", "总控第十四轮")
+        ):
             from sql_determinism import check
 
             check(sql)
@@ -155,7 +164,9 @@ def main() -> None:
                 "/query",
                 {"name": f"DQ-43 {label}", "query_sql": sql, "is_private": False},
             )["query_id"]
-        small_trial = ap.source.startswith("用户小页试跑")
+        small_trial = ap.source.startswith(("用户小页试跑", "总控第十四轮"))
+        full_expected = ap.expected if ap.source.startswith("总控第十四轮") else None
+        threshold = cancel_threshold(ap["cap"], full_expected)
         if small_trial:
             # 提交超时也不能复用批准；先落查询号，随后只作人工恢复。
             PG.mark_used(approval, "待返回执行号", "执行提交中；不自动重试")
@@ -227,15 +238,14 @@ def main() -> None:
                 if st["state"] not in ("QUERY_STATE_PENDING", "QUERY_STATE_EXECUTING"):
                     break
                 spent = float(st.get("execution_cost_credits") or 0)
-                if not cancelled and Decimal(str(spent)) >= cancel_threshold(ap["cap"]):
+                if not cancelled and Decimal(str(spent)) >= threshold:
                     call("POST", f"/execution/{eid}/cancel", {})
                     cause = "费用取消"
-                    cancelled = "运行中费用到批准上限85%，主动取消"
+                    cancelled = "运行中费用达到停止阈值，主动取消"
                     execution_state(approval, eid, st["state"], cause)
                     print(
                         label,
-                        "已扣 %.3f，触发点 %s，已请求取消"
-                        % (spent, cancel_threshold(ap["cap"])),
+                        "已扣 %.3f，触发点 %s，已请求取消" % (spent, threshold),
                         flush=True,
                     )
                 elif not cancelled and time.time() - t0 > max_min * 60:
@@ -328,6 +338,24 @@ def main() -> None:
                     cost,
                     execution_only=small_trial,
                 )
+                if full_expected is not None and (
+                    cause == "费用取消"
+                    or (cost is not None and Decimal(str(cost)) > threshold)
+                ):
+                    PG.HALT.write_text(
+                        json.dumps(
+                            {
+                                "active": True,
+                                "reason": "第十四轮单层实耗超过预计1.5倍或触发费用取消",
+                                "approval": approval,
+                                "execution_id": eid,
+                                "cost": cost,
+                                "threshold": str(threshold),
+                            },
+                            ensure_ascii=False,
+                            indent=2,
+                        )
+                    )
                 print(
                     label,
                     "用量 %.3f → %s"

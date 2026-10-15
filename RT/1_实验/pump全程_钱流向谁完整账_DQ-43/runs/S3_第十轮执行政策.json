@@ -1,5 +1,5 @@
 {
-  "authority": "用户2026-10-15：覆盖禁令、优先小页；无需提交总控、继续推进",
+  "authority": "RT/3_审计/2026-10-13_WM2取数_冒烟与SQL审阅/review原文_第十四轮.md",
   "baseline_at_utc": "2026-10-15T01:28:05.346376+00:00",
   "period_start": "2026-10-14",
   "period_end": "2026-10-28",
@@ -19,7 +19,7 @@
     "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
     "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
   ],
-  "full_approved": false,
+  "full_approved": true,
   "no_sample_reduction": true,
   "old_halt_sha256": "5c0ccde20ca6fd933146bc84baeed87864c23f0a7b26db8c2c9c218de1f49e96",
   "v6_technical_review_source": "RT/3_审计/2026-10-13_WM2取数_冒烟与SQL审阅/review原文_总控第十一轮与GPT复核.md",
@@ -28,9 +28,9 @@
     "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
   ],
   "old_trial_authority_superseded_by": "总控第十一轮；不复活第十轮原三条批准",
-  "current_user_scope": "三条v6试跑与固定执行1000行下载均完成；组实耗6.304/25，停止本轮；全量未批准",
+  "current_user_scope": "第三对EDGE；超过10000000行先停止；集中度通过前不准FIRST",
   "paid_halt_still_active": false,
-  "active_paid_source_prefix": "用户小页试跑",
+  "active_paid_source_prefix": "总控第十四轮",
   "download_bindings": {
     "A12-D01": {
       "query_id": 8950956,
@@ -59,5 +59,22 @@
   },
   "user_authority_report": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/第十二轮_小页平台验收.md",
   "http_transport": "direct",
-  "trial_scope_complete": true
+  "trial_scope_complete": true,
+  "allowed_execution_approvals": [
+    "A14-E03"
+  ],
+  "full_execution_limit": 380,
+  "full_execution_baseline": 1546.163,
+  "full_execution_sql_sha256": [
+    "d7410943cf76dff22689d56c31db9a6bc630970ba30b2cc4f14f85299a3b569f",
+    "e7df7f6ceace67c1769f79828de0ae9f17c658183115fd3c65e4df3ab0f619a5",
+    "84cd5e971169c0d5239f41af2b4e3847fbf9a2981ff9d03b0d523786bc9d5da9",
+    "77b53856194ec2585725d097fa688feb2e05e588f8723d8bcd9f4d9001e52d2e",
+    "cbc501e0b2435fcae827171270c3d7361000be633467f5b45fc903c3392ba144",
+    "98d1a05c7b0f4193d875a938d677d2c4bd7e43150916cf696b41c10cdbbf443d",
+    "5831b0d05556a1c500200801e21b2cb89ef896725bbe4f366a138d5827a40cb1"
+  ],
+  "full_plan": "runs/a14_execution_plan.json",
+  "http_min_interval_seconds": 1.05,
+  "download_zero_tolerance": true
 }

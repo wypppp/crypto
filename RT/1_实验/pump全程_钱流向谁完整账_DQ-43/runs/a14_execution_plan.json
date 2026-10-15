@@ -1,0 +1,30 @@
+{
+  "authority": "总控第十四轮",
+  "review_source": "RT/3_审计/2026-10-13_WM2取数_冒烟与SQL审阅/review原文_第十四轮.md",
+  "review_sha256": "97a97048e34d9feb9818a752e8053099056330fa5cada2d9f941c301c40cf413",
+  "baseline_used": 1546.163,
+  "full_execution_limit": 380,
+  "full_execution_expected": 327,
+  "download_expected": 0,
+  "phase": "第三对EDGE；超过10000000行先停止；集中度通过前不准FIRST",
+  "W": "2026-08-10",
+  "cut": "2026-08-17",
+  "W1_end": "2026-08-24",
+  "original_sql": "sql/S3V6_REVIEW_EDGE_20260810_p10.sql",
+  "original_sha256": "5831b0d05556a1c500200801e21b2cb89ef896725bbe4f366a138d5827a40cb1",
+  "seed_envelope_sql": "sql/A14_EDGE_SEEDS_20260810_p10.sql",
+  "seed_envelope_sha256": "d7410943cf76dff22689d56c31db9a6bc630970ba30b2cc4f14f85299a3b569f",
+  "engineering_addition": "只追加原seed CTE的V名册；原CTE与SGT最终选择逐字保留。GPT未单独审此输出封装。",
+  "expected_credits": 67,
+  "cap_credits": 134,
+  "cost_stop_threshold": 100.5,
+  "extrapolation": {
+    "EDGE": "3.687205883*14*1.292996358774625=66.7456129308，上取67/对",
+    "FIRST": "1.866029412/2*44=41.052647064，上取42/对",
+    "total": "3*(67+42)=327；不重复乘创建日；新V输出及跨月负载未实测。"
+  },
+  "full_original_manifest": "runs/a10_full_sql_review_manifest.json",
+  "new_paid_approvals": [
+    "A14-E03"
+  ]
+}
