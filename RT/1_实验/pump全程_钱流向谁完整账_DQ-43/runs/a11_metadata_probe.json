@@ -1,0 +1,19 @@
+{
+  "authority": "总控第十一轮第二节0 credits第1项",
+  "metadata_only": true,
+  "no_query_created_or_executed": true,
+  "no_mv_created_or_refreshed": true,
+  "at_utc": "2026-10-15T03:07:48.897851+00:00",
+  "before_used": 1539.859,
+  "included": 2500.0,
+  "storage_bytes_used": 0,
+  "storage_bytes_allowed": 15000000000,
+  "mv_list_http": 200,
+  "mv_count_first_page": 0,
+  "mv_has_next": false,
+  "owned_mv_bytes_first_page": 0,
+  "can_list_mv_metadata": true,
+  "after_used": 1539.859,
+  "increment": 0.0,
+  "creation_entitlement_not_proven_by_list": true
+}

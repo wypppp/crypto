@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-15T03:29:03.220278+00:00",
+  "scope": "用户覆盖小页禁令后，仅零费用方案与预算",
+  "used": 1539.859,
+  "included": 2500.0,
+  "remaining": 960.141,
+  "this_round_credits": 0,
+  "S3_since_round_10_spent": 4,
+  "S3_limit_remaining": 396,
+  "no_sql_executed": true,
+  "no_results_downloaded": true,
+  "no_mv_created_or_refreshed": true,
+  "paid_halt_active": true,
+  "MV_trial_20_unused": true,
+  "proposed_small_page_trial_25_not_approved": true
+}

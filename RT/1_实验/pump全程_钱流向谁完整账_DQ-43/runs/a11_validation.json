@@ -1,0 +1,12 @@
+{
+  "pytest_unique_tests_passed": 53,
+  "pytest_commands": [
+    "python -m pytest -q test_a11_mv_sql.py test_a11_mv_metadata.py test_no_direct_dune.py (47 passed, 26.05s)",
+    "python -m pytest -q test_a11_small_page_plan.py (6 passed, 0.70s)"
+  ],
+  "ruff_new_files": "passed without ignores",
+  "ruff_legacy_paid_guard": "passed excluding existing UP031,UP017,FURB167,BLE001,SIM117,SIM905,I001 only",
+  "offline_replay": "16,145 detail rows -> 4,540 first rows, N/C/G all equal under old map; C/G empty; creator/pool quality flags assumed good",
+  "platform_execution": false,
+  "user_scope": "small page plan and budget only; no paid operations"
+}

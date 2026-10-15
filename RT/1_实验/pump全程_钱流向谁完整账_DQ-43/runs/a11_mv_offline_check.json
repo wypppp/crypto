@@ -1,0 +1,11 @@
+{
+  "scope": "offline old already-filtered A7-06 detail; old map expressed as a spanning forest; not v6 raw source, new S mapping, or Trino validation",
+  "detail_rows": 16145,
+  "compressed_rows": 4540,
+  "label_rounds_for_old_map_forest": 1,
+  "N_C_G_diff_count": 0,
+  "n_C": 0,
+  "n_G": 0,
+  "source_K_flags_assumed_good_due_absent_raw_metadata": true,
+  "no_network": true
+}

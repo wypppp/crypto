@@ -46,6 +46,13 @@ FREE = (
     ("POST", re.compile(r"^/execution/[^/?]+/cancel$")),
     ("POST", re.compile(r"^/query$")),
     ("GET", re.compile(r"^/query/\d+$")),
+    # 第十一轮零费用可行性核查：这里只读MV元数据，不创建、不刷新。
+    (
+        "GET",
+        re.compile(
+            r"^/materialized-views(?:/[^/?]+)?(?:\?limit=\d+(?:&offset=\d+)?)?$"
+        ),
+    ),
 )
 FIELDS = [
     "编号",

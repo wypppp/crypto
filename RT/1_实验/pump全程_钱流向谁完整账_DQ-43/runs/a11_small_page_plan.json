@@ -1,0 +1,114 @@
+{
+  "authority": "用户本轮覆盖第十一轮禁止小页条款；仅零费用方案与预算",
+  "scope": "existing A7-06 cached pages only; not a new FIRST/EDGE size calibration",
+  "no_network": true,
+  "cached_rows": 16145,
+  "page_rows": 1000,
+  "planned_pages": [
+    {
+      "offset": 0,
+      "limit": 1000
+    },
+    {
+      "offset": 1000,
+      "limit": 1000
+    },
+    {
+      "offset": 2000,
+      "limit": 1000
+    },
+    {
+      "offset": 3000,
+      "limit": 1000
+    },
+    {
+      "offset": 4000,
+      "limit": 1000
+    },
+    {
+      "offset": 5000,
+      "limit": 1000
+    },
+    {
+      "offset": 6000,
+      "limit": 1000
+    },
+    {
+      "offset": 7000,
+      "limit": 1000
+    },
+    {
+      "offset": 8000,
+      "limit": 1000
+    },
+    {
+      "offset": 9000,
+      "limit": 1000
+    },
+    {
+      "offset": 10000,
+      "limit": 1000
+    },
+    {
+      "offset": 11000,
+      "limit": 1000
+    },
+    {
+      "offset": 12000,
+      "limit": 1000
+    },
+    {
+      "offset": 13000,
+      "limit": 1000
+    },
+    {
+      "offset": 14000,
+      "limit": 1000
+    },
+    {
+      "offset": 15000,
+      "limit": 1000
+    },
+    {
+      "offset": 16000,
+      "limit": 145
+    }
+  ],
+  "local_normalized_row_array_bytes": [
+    203945,
+    218152,
+    219578,
+    219428,
+    219189,
+    218004,
+    219068,
+    207589,
+    182433,
+    182408,
+    182513,
+    199547,
+    219612,
+    218834,
+    219627,
+    219420,
+    31809
+  ],
+  "local_sizes_are_not_platform_billable_bytes": true,
+  "hypothetical_free_threshold_decimal_bytes_strictly_below": 500000,
+  "budget_credits_per_decimal_MB": 2,
+  "execution_estimates_not_recalibrated": {
+    "FIRST_r1": 2,
+    "FIRST_r2": 2,
+    "EDGE": 4
+  },
+  "execution_caps_estimate_times_two": {
+    "FIRST_r1": 4,
+    "FIRST_r2": 4,
+    "EDGE": 8
+  },
+  "proposed_trial_total_limit_not_approved": 25,
+  "next_download_cap_formula": "4 * platform_result_metadata_bytes / 1000000; check actual spent plus this cap before starting",
+  "no_old_approval_reactivated": true,
+  "no_paid_permission_granted_by_this_plan": true,
+  "full_not_approved": true
+}
