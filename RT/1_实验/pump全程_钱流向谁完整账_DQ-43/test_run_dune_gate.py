@@ -156,6 +156,17 @@ def test_actual_usage_includes_failed_execution_and_download_hand(tmp_path):
     assert PG._rows(p)[-1]["合计实耗"] == ""
 
 
+def test_execution_only_rounding_is_not_download_and_excess_stays_unknown(tmp_path):
+    p = tmp_path / "actual.csv"
+    PG.record_actual(
+        "execute", "eid", 100, 100.751, 0.750735295, p, execution_only=True
+    )
+    assert PG._rows(p)[-1]["下载费"] == "0"
+    assert PG._rows(p)[-1]["合计实耗"] == "0.751"
+    PG.record_actual("excess", "eid", 100, 101.751, 0.750735295, p, execution_only=True)
+    assert PG._rows(p)[-1]["合计实耗"] == ""
+
+
 def test_runner_round_gate_refuses_before_any_query_request(tmp_path, monkeypatch):
     paths = _round_files(tmp_path, {"old1": "36"})
     ap, used, actual = paths

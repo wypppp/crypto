@@ -321,7 +321,12 @@ def main() -> None:
             finally:
                 u1 = usage()
                 PG.record_actual(
-                    approval, eid, u0[0], None if u1 is None else u1[0], cost
+                    approval,
+                    eid,
+                    u0[0],
+                    None if u1 is None else u1[0],
+                    cost,
+                    execution_only=small_trial,
                 )
                 print(
                     label,

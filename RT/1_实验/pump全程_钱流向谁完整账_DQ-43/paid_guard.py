@@ -316,7 +316,9 @@ def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
     return dict(headers, wire_bytes=total)
 
 
-def record_actual(approval, execution_id, before, after, cost, actual=None):
+def record_actual(
+    approval, execution_id, before, after, cost, actual=None, *, execution_only=False
+):
     """按用量接口增量记执行与下载实耗；用量或执行费缺失时留空，阻止下一条。"""
     actual = ACTUAL if actual is None else actual
     delta = None if after is None else Decimal(str(after)) - Decimal(str(before))
@@ -330,6 +332,9 @@ def record_actual(approval, execution_id, before, after, cost, actual=None):
         and exec_cost >= 0
         and delta + Decimal("0.01") >= exec_cost
     )
+    if execution_only and known:
+        # 用量仅三位小数，执行费用精度更高；小额舍入差不是下载。
+        known = abs(delta - exec_cost) <= Decimal("0.001")
     new = not actual.exists()
     with open(actual, "a", newline="") as f:
         w = csv.writer(f)
@@ -353,7 +358,7 @@ def record_actual(approval, execution_id, before, after, cost, actual=None):
                 before,
                 after,
                 cost,
-                total - exec_cost if known else "",
+                (0 if execution_only else total - exec_cost) if known else "",
                 total,
             ]
         )

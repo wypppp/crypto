@@ -1,0 +1,13 @@
+{
+  "platform_double_row_identical": true,
+  "rows": 4540,
+  "query_id": 8950956,
+  "executions": [
+    "01M4Z6M0RYZNJM940AWSN7KRRH",
+    "01M4Z91546YMNXESHT76W8RRZW"
+  ],
+  "same_sql_sha256": true,
+  "first_r2_validation_passed": true,
+  "download_r2_credits": 0,
+  "scope": "完整S映射仍待EDGE；此处只验平台FIRST双跑"
+}
