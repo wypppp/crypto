@@ -15,6 +15,55 @@ from test_edge_sgt_v6 import exported, sql
 from test_wm2_semantic import coin, trade, xfer
 
 
+def test_generated_service_reduction_keeps_all_wallet_representatives():
+    import s3_ref as REF
+
+    data = {
+        "pumpdotfun_solana.pump_evt_createevent": [coin("m", dt.datetime(2026, 8, 11))],
+        "pumpdotfun_solana.pump_evt_tradeevent": [
+            trade("m", u, 12) for u in ("h", "b", "c")
+        ],
+        "tokens_solana.transfers": [
+            xfer("h", u, 12) for u in ["b", "c"] + [f"n{i}" for i in range(199)]
+        ]
+        + [xfer("a_nonseed_min", "b", 12), xfer("a_nonseed_min", "c", 12)],
+    }
+    con = integer_db(data)
+    original = exported(con, F.with_seeds(sql()))
+    reduced = exported(con, F.without_service_nodes(sql()))
+    ref = F.service_reduction_reference(original)
+    assert sorted(tuple(r.values()) for r in reduced) == sorted(
+        tuple(r.values()) for r in ref
+    )
+    edges = lambda rs: [r for r in rs if r["kind"] != "V"]
+    full_map = REF.entities(edges(original))[0]
+    assert full_map == REF.entities(edges(reduced))[0]
+    assert full_map["b"] == full_map["c"] == "a_nonseed_min"
+    assert "a_nonseed_min" in full_map
+
+
+def test_service_hubs_are_per_class_and_cex_and_g_stay_identical():
+    import s3_ref as REF
+
+    rows = [{"kind": "S", "a": "h", "b": f"n{i}", "x": None} for i in range(201)] + [
+        {"kind": "T", "a": "h", "b": "a", "x": None},
+        {"kind": "S", "a": "cex", "b": "a", "x": None},
+        {"kind": "S", "a": "b", "b": "a", "x": None},
+        {"kind": "G", "a": "f", "b": "b", "x": 200},
+        {"kind": "G", "a": "f", "b": "c", "x": 200},
+        {"kind": "G", "a": "bad", "b": "d", "x": 201},
+        {"kind": "G", "a": "bad", "b": "a", "x": 201},
+    ]
+    reduced = F.service_reduction_reference(rows)
+    assert len(reduced) == 7
+    full_map = REF.entities(rows, {"cex"})[0]
+    assert (
+        full_map
+        == REF.entities(reduced, {"cex"})[0]
+        == {"a": "a", "b": "a", "c": "a", "h": "a"}
+    )
+
+
 def test_export_keeps_edges_and_includes_isolated_seeds_before_cut():
     day = dt.datetime(2026, 8, 11)
     late = trade("m", "future", 18)
@@ -134,3 +183,46 @@ def test_expected_cap_stop_threshold_and_stage_binding(monkeypatch):
     t.approval = "A14-F03"
     with pytest.raises(PG.Refused, match="分段"):
         PG.execution_review_gate(t)
+
+
+def test_full_execution_terminal_overrun_latches_halt(monkeypatch, tmp_path):
+    import dune_get_json as J
+    from test_run_dune_gate import runner_fixture
+
+    t = runner_fixture(tmp_path, monkeypatch)
+    t.source, t.download_cap, t["max_mb"], t.sql_sha = "总控第十四轮", 0, 0, "sha"
+    t.expected = "5"
+    PG.S3_POLICY.write_text(
+        json.dumps(
+            {
+                "active_paid_source_prefix": t.source,
+                "gpt_review_passed": True,
+                "full_approved": True,
+                "allowed_execution_approvals": ["next"],
+                "full_execution_sql_sha256": ["sha"],
+                "period_start": "2026-01-01",
+                "period_end": "2100-01-01",
+                "baseline_used": 100,
+                "limit_credits": 400,
+            }
+        )
+    )
+    current = [100]
+    monkeypatch.setattr(RUN, "usage", lambda: (current[0], 2500))
+    monkeypatch.setattr(
+        RUN,
+        "call",
+        lambda m, p, b, t=None: (
+            {"query_id": 1} if p == "/query" else {"execution_id": "eid"}
+        ),
+    )
+    monkeypatch.setattr(
+        RUN,
+        "get",
+        lambda *_: {"state": "QUERY_STATE_COMPLETED", "execution_cost_credits": 8},
+    )
+    monkeypatch.setattr(J, "settle_execution", lambda *_: current.__setitem__(0, 108))
+    monkeypatch.setattr(RUN, "fetch", lambda *_: pytest.fail("不得自动下载"))
+    RUN.main()
+    assert "1.5倍" in PG.halt_gate()
+    assert PG._rows(PG.ACTUAL)[-1]["下载费"] == "0"

@@ -28,7 +28,7 @@
     "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
   ],
   "old_trial_authority_superseded_by": "总控第十一轮；不复活第十轮原三条批准",
-  "current_user_scope": "第三对EDGE；超过10000000行先停止；集中度通过前不准FIRST",
+  "current_user_scope": "第三对EDGE下载及实体集中度；不准FIRST，不计算S3或逐对C/G/N",
   "paid_halt_still_active": false,
   "active_paid_source_prefix": "总控第十四轮",
   "download_bindings": {
@@ -55,14 +55,26 @@
       "metadata_bytes": 361906,
       "expected_credits": "0.723812",
       "page_rows": 1000
+    },
+    "A14-D03": {
+      "query_id": 8951402,
+      "execution_id": "01M4ZCDATQ6831GRQ0N6DAQGTW",
+      "sql_sha256": "d7410943cf76dff22689d56c31db9a6bc630970ba30b2cc4f14f85299a3b569f",
+      "metadata_bytes": 353426281,
+      "expected_credits": "0",
+      "page_rows": 1000,
+      "metadata_gate_passed": true,
+      "row_count": 4092254,
+      "max_page_billed_bytes": 250000,
+      "usage_check_every_page": true,
+      "worst_page_credits_at_2_per_MB_and_round_up": "1",
+      "risk_cap_between_usage_checks": 5
     }
   },
   "user_authority_report": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/第十二轮_小页平台验收.md",
   "http_transport": "direct",
   "trial_scope_complete": true,
-  "allowed_execution_approvals": [
-    "A14-E03"
-  ],
+  "allowed_execution_approvals": [],
   "full_execution_limit": 380,
   "full_execution_baseline": 1546.163,
   "full_execution_sql_sha256": [
@@ -75,6 +87,7 @@
     "5831b0d05556a1c500200801e21b2cb89ef896725bbe4f366a138d5827a40cb1"
   ],
   "full_plan": "runs/a14_execution_plan.json",
-  "http_min_interval_seconds": 1.05,
-  "download_zero_tolerance": true
+  "http_min_interval_seconds": 0.35,
+  "download_zero_tolerance": true,
+  "http_low_min_interval_seconds": 1.05
 }

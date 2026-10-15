@@ -153,7 +153,8 @@ def active_source(ticket):
 
 def small_download_binding(ticket, eid=None, qid=None):
     """小页批准还须绑定固定查询、执行、结果体积和预计费用。"""
-    if not ticket.source.startswith("用户小页试跑"):
+    full = ticket.source.startswith("总控第十四轮")
+    if not ticket.source.startswith(("用户小页试跑", "总控第十四轮")):
         return None
     if not S3_POLICY.exists() or not active_source(ticket):
         raise Refused("小页批准不是当前付费来源")
@@ -173,11 +174,18 @@ def small_download_binding(ticket, eid=None, qid=None):
         or not isinstance(size, int)
         or isinstance(size, bool)
         or size <= 0
-        or expected != Decimal(size) * 2 / 1_000_000
-        or expected * 2 != Decimal(str(ticket.download_cap))
+        or (not full and expected != Decimal(size) * 2 / 1_000_000)
+        or (not full and expected * 2 != Decimal(str(ticket.download_cap)))
+        or (full and (expected != 0 or not 0 < ticket.download_cap <= 5))
         or binding.get("page_rows") != 1000
     ):
         raise Refused("下载预算须为2/MB、上限预计乘2、每页1000行")
+    if full and (
+        binding.get("metadata_gate_passed") is not True
+        or not 0 < binding.get("row_count", 0) <= 10_000_000
+        or binding.get("max_page_billed_bytes") != 250_000
+    ):
+        raise Refused("全量下载缺少千万行闸门或单页字节预算")
     return binding
 
 
@@ -284,7 +292,7 @@ def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
         raise Refused("只允许已有执行的分页下载路径")
     if S3_POLICY.exists() and not active_source(ticket):
         raise Refused("JSON通道只对现行来源的新批准解除异常封锁")
-    if ticket.source.startswith("用户小页试跑"):
+    if ticket.source.startswith(("用户小页试跑", "总控第十四轮")):
         parts = urlsplit(path)
         eid = parts.path.split("/")[2]
         small_download_binding(ticket, eid=eid)
@@ -412,16 +420,21 @@ def open_http(req, timeout=90):
     policy = json.loads(S3_POLICY.read_text()) if S3_POLICY.exists() else {}
     interval = policy.get("http_min_interval_seconds", 0)
     if interval:
-        # 跨进程串行节流；每秒至多一条，低于 Plus 70/200 rpm。
+        # 跨进程串行节流；读、写分别低于 Plus 200/70 rpm。
         clock = LOCK.with_name("rt_dune_http_clock.json")
         clock.parent.mkdir(parents=True, exist_ok=True)
         with clock.open("a+") as f:
             fcntl.flock(f, fcntl.LOCK_EX)
             f.seek(0)
             previous = json.loads(f.read() or "{}")
+            low = getattr(req, "method", "GET") != "GET" and not urlsplit(
+                getattr(req, "full_url", "")
+            ).path.endswith("/cancel")
+            low_interval = policy.get("http_low_min_interval_seconds", interval)
             delay = (
                 max(
                     previous.get("last", 0) + interval,
+                    previous.get("low_last", 0) + low_interval if low else 0,
                     previous.get("not_before", 0),
                 )
                 - time.time()
@@ -431,6 +444,8 @@ def open_http(req, timeout=90):
             if delay > 0:
                 time.sleep(delay)
             previous["last"] = time.time()
+            if low:
+                previous["low_last"] = previous["last"]
             f.seek(0)
             f.truncate()
             json.dump(previous, f)

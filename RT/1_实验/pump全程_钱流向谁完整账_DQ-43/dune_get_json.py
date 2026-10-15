@@ -152,6 +152,7 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
     if Path(label).name != label:
         raise ValueError("标签只能是文件名")
     binding = PG.small_download_binding(ticket, eid=eid, qid=qid)
+    full = ticket.source.startswith("总控第十四轮")
     page_rows = binding["page_rows"] if binding else PAGE
     expected_total = (
         Decimal(str(binding["expected_credits"])) if binding else Decimal(0)
@@ -182,6 +183,8 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         raise ValueError("元数据缺失或结果超过批准大小")
     if binding and size != binding["metadata_bytes"]:
         raise ValueError("平台结果字节与下载批准不同")
+    if full and n != binding["row_count"]:
+        raise ValueError("全量结果行数与下载批准不同")
     identity = {
         "execution_id": eid,
         "query_id": str(qid),
@@ -209,9 +212,10 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
     pages, segments = [], []
     started = time.monotonic()
     segment_expected = Decimal(0)
+    last_page_usage = before
 
     def checkpoint():
-        nonlocal segment_bytes, before, segment_expected
+        nonlocal segment_bytes, before, segment_expected, last_page_usage
         if not segment_bytes:
             return
         observed_bytes, segment_bytes = segment_bytes, 0
@@ -232,6 +236,7 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
             }
         )
         before = after
+        last_page_usage = after
         segment_expected = Decimal(0)
 
     try:
@@ -246,7 +251,10 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
                 if segment_bytes + PAGE_WIRE_CAP > SEGMENT_CAP:
                     checkpoint()
                 PG.check_download_usage(
-                    original_before, usage(), label, expected=expected_total
+                    original_before,
+                    last_page_usage if full else usage(),
+                    label,
+                    expected=expected_total,
                 )
                 # 请求失败仍留一页最大传输量，finally隔离核账；成功后换成实收。
                 segment_bytes += PAGE_WIRE_CAP
@@ -277,11 +285,22 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
                         or page_metadata_bytes <= 0
                     ):
                         raise ValueError("分页计费字节缺失，停止")
+                    if (
+                        full
+                        and max(decoded_bytes, page_metadata_bytes)
+                        > binding["max_page_billed_bytes"]
+                    ):
+                        raise ValueError("全量单页超预登记250KB，停止核账，不自动缩页")
                     segment_expected = (
-                        previous_expected + Decimal(page_metadata_bytes) * 2 / 1_000_000
+                        Decimal(0)
+                        if full
+                        else previous_expected
+                        + Decimal(page_metadata_bytes) * 2 / 1_000_000
                     )
                 unpacked += decoded_bytes
                 page_usage = usage() if binding else None
+                if full:
+                    last_page_usage = page_usage
                 saved = {
                     "headers": headers,
                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),

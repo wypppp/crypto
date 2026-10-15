@@ -118,8 +118,11 @@ def test_query_binding_and_fee_budget_are_not_optional():
         PG.small_download_binding(t)
 
 
+@pytest.mark.parametrize(
+    "full,delayed_fee", [(False, False), (True, False), (True, True)]
+)
 def test_small_fetch_1000_rows_exact_bytes_cached_and_delayed_settlement(
-    monkeypatch, tmp_path
+    monkeypatch, tmp_path, full, delayed_fee
 ):
     (tmp_path / "runs").mkdir()
     (tmp_path / "s.sql").write_text("SELECT 1")
@@ -127,9 +130,21 @@ def test_small_fetch_1000_rows_exact_bytes_cached_and_delayed_settlement(
     p, t = policy(), ticket()
     t.sql_sha = PG.sha(tmp_path / "s.sql")
     bind(p, t)
+    if full:
+        t.source, t.download_cap = "总控第十四轮", 5
+        p["active_paid_source_prefix"] = t.source
+        p["download_bindings"][t.approval].update(
+            expected_credits=0,
+            metadata_gate_passed=True,
+            row_count=1001,
+            max_page_billed_bytes=250_000,
+        )
+        PG.S3_POLICY.write_text(json.dumps(p))
     monkeypatch.setattr(PG, "idle_usage_gate", lambda *a: None)
-    monkeypatch.setattr(J, "usage", lambda: (100, 2500))
     tick = [0]
+    monkeypatch.setattr(
+        J, "usage", lambda: (100.001 if delayed_fee and tick[0] >= 60 else 100, 2500)
+    )
     monkeypatch.setattr(J.time, "monotonic", lambda: tick[0])
     monkeypatch.setattr(J.time, "sleep", lambda s: tick.__setitem__(0, tick[0] + s))
     st = {
@@ -174,9 +189,17 @@ def test_small_fetch_1000_rows_exact_bytes_cached_and_delayed_settlement(
         return {"wire_bytes": len(body), "content-encoding": "gzip"}
 
     monkeypatch.setattr(PG, "request_bytes", download)
+    if delayed_fee:
+        with pytest.raises(PG.Refused, match="超预计 0"):
+            J.fetch("1", "small", "s.sql", t, "eid")
+        assert tick[0] < 120  # 延迟费第一次出现就停，不等观察期结束。
+        assert not (tmp_path / "raw/dune/small.csv.gz").exists()
+        return
     out = J.fetch("1", "small", "s.sql", t, "eid")
     assert calls == [0, 1000] and out["page_rows"] == 1000
     assert tick[0] >= 120 and out["download_did_not_execute_sql"]
+    if full:
+        assert out["expected_download_credits"] == "0"
     calls.clear()
     J.fetch("1", "small", "s.sql", t, "eid")
     assert calls == []  # 恢复只核缓存，不能为已核页再付钱。

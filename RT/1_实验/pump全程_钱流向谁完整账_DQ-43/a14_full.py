@@ -1,6 +1,6 @@
 """第十四轮工程闸门；只做取数与实体集中度，不计算 S3 的 N/C/G。"""
 
-from collections import Counter
+from collections import Counter, defaultdict
 from decimal import Decimal
 
 EDGE_END = (
@@ -21,6 +21,46 @@ def with_seeds(sql):
         + "SELECT 'V',usr,CAST(NULL AS varchar),CAST(NULL AS bigint) FROM seed\n"
         + "ORDER BY kind,a,b,x\n"
     )
+
+
+def without_service_nodes(sql):
+    """待用户选择才可付费重跑：在原完整边上计算度数，再删必跳过的边。"""
+    if not sql.endswith(EDGE_END):
+        raise ValueError("原 EDGE 尾部改变，须重新核查派生")
+    return (
+        sql[: -len(EDGE_END)]
+        + ",\nsgt_export AS (\n"
+        + EDGE_END.split("\n\nORDER BY")[0]
+        + "),\ncomplete_neighbors AS (\n"
+        + " SELECT kind,a AS wallet,b AS neighbor FROM sgt_export WHERE kind IN ('S','T')\n"
+        + " UNION\n SELECT kind,b,a FROM sgt_export WHERE kind IN ('S','T')\n"
+        + "),\ncomplete_hubs AS (\n"
+        + " SELECT kind,wallet FROM complete_neighbors GROUP BY kind,wallet\n"
+        + " HAVING count(DISTINCT neighbor)>200\n)\n"
+        + "SELECT e.kind,e.a,e.b,e.x FROM sgt_export e\n"
+        + "LEFT JOIN complete_hubs ha ON ha.kind=e.kind AND ha.wallet=e.a\n"
+        + "LEFT JOIN complete_hubs hb ON hb.kind=e.kind AND hb.wallet=e.b\n"
+        + "WHERE e.kind='G' OR (ha.wallet IS NULL AND hb.wallet IS NULL)\n"
+        + "UNION ALL\n"
+        + "SELECT 'V',usr,CAST(NULL AS varchar),CAST(NULL AS bigint) FROM seed\n"
+        + "ORDER BY kind,a,b,x\n"
+    )
+
+
+def service_reduction_reference(rows):
+    """可审 SQL 的独立本机操作；不使用任何 W+1 信息。"""
+    neighbors = defaultdict(set)
+    for row in rows:
+        if row["kind"] in ("S", "T"):
+            neighbors[row["kind"], row["a"]].add(row["b"])
+            neighbors[row["kind"], row["b"]].add(row["a"])
+    hubs = {key for key, values in neighbors.items() if len(values) > 200}
+    return [
+        row
+        for row in rows
+        if row["kind"] not in ("S", "T")
+        or not ({(row["kind"], row["a"]), (row["kind"], row["b"])} & hubs)
+    ]
 
 
 def expected_gate(expected, cap):

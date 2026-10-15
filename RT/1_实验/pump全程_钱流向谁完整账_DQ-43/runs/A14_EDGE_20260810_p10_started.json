@@ -1,0 +1,11 @@
+{
+  "approval": "A14-E03",
+  "query_id": 8951402,
+  "execution_id": "01M4ZCDATQ6831GRQ0N6DAQGTW",
+  "sql_file": "sql/A14_EDGE_SEEDS_20260810_p10.sql",
+  "sql_sha256": "d7410943cf76dff22689d56c31db9a6bc630970ba30b2cc4f14f85299a3b569f",
+  "usage_before": [
+    1546.163,
+    2500.0
+  ]
+}

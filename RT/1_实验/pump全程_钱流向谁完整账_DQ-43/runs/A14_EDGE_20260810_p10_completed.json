@@ -1,0 +1,31 @@
+{
+  "approval": "A14-E03",
+  "query_id": 8951402,
+  "execution_id": "01M4ZCDATQ6831GRQ0N6DAQGTW",
+  "sql_file": "sql/A14_EDGE_SEEDS_20260810_p10.sql",
+  "sql_sha256": "d7410943cf76dff22689d56c31db9a6bc630970ba30b2cc4f14f85299a3b569f",
+  "state": "QUERY_STATE_COMPLETED",
+  "execution_cost_credits": 45.743676471,
+  "result_metadata": {
+    "column_names": [
+      "kind",
+      "a",
+      "b",
+      "x"
+    ],
+    "column_types": [
+      "varchar(1)",
+      "varchar",
+      "varchar",
+      "bigint"
+    ],
+    "row_count": 4092254,
+    "result_set_bytes": 353426281,
+    "total_row_count": 4092254,
+    "total_result_set_bytes": 353426281,
+    "datapoint_count": 16369016,
+    "pending_time_millis": 2416,
+    "execution_time_millis": 304775
+  },
+  "downloaded": false
+}

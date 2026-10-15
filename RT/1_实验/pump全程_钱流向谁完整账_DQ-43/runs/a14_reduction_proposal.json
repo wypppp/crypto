@@ -1,0 +1,9 @@
+{
+  "SQL": "sql/A14_PROPOSAL_EDGE_SERVICE_REDUCED_20260810_p10.sql",
+  "sha256": "46139baeea2f919a3284ab7512a203d23630ea52f4cf757eebb7093f38f38e31",
+  "paid_approved": false,
+  "kind": "超千万行后的待选精确缩减；无执行票，不自行重跑",
+  "proof": "完整S/T分别计不同双向邻居，度>200所有关联边同时移除；其他边及G/V不变；冻结有效union关系集合完全相同，故所有钱包分区与字典序最小代表相同。",
+  "tests": "test_generated_service_reduction_keeps_all_wallet_representatives; test_service_hubs_are_per_class_and_cex_and_g_stay_identical",
+  "remaining_risk": "缩减后行数和费用未知；不能声称必省。非种子叶子保留。"
+}

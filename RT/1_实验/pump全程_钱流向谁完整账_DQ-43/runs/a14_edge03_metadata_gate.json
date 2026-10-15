@@ -1,0 +1,19 @@
+{
+  "rows": 4092254,
+  "result_set_bytes": 353426281,
+  "pages_1000": 4093,
+  "download_hours_at_4_seconds_per_page": 4.547777777777778,
+  "download_allowed_by_row_gate": true,
+  "includes_seed_roster": true,
+  "query_id": 8951402,
+  "execution_id": "01M4ZCDATQ6831GRQ0N6DAQGTW",
+  "execution_cost_credits": 45.743676471,
+  "sql_sha256": "d7410943cf76dff22689d56c31db9a6bc630970ba30b2cc4f14f85299a3b569f",
+  "execution_seconds": 304.775,
+  "download_expected_credits": 0,
+  "estimated_download_hours": [
+    1.5,
+    5.0
+  ],
+  "time_estimate_basis": "4093页；串行JSON GET与免费usage，读最短0.35秒、POST最短1.05秒；另有120秒分段观察。4秒/页的敏感情景为4.548小时，不是保证。"
+}
