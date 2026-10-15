@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """DQ-43：执行一条已入库、已获批准的 Dune SQL（公开查询）→ 台账 → 流式下载。
 
-python run_dune.py <标签> <sql 文件> --approve=<批准编号> [--engine=medium|large] [--max-min=12]
+python run_dune.py <标签> <sql 文件> --approve=<批准编号> [--engine=medium|large] [--max-min=12] [--query-id=已核查询号]
 结果 raw/dune/<标签>.csv.gz；费用记 runs/dune_ledger.csv；批准与使用记 runs/付费批准.csv、runs/付费批准_已用.csv。
 
 10-14 总控第六轮（EDGE 冒烟白扣 1,241.8 credits 之后）：
@@ -142,11 +142,19 @@ def main() -> None:
             from sql_determinism import check
 
             check(sql)
-        qid = call(
-            "POST",
-            "/query",
-            {"name": f"DQ-43 {label}", "query_sql": sql, "is_private": False},
-        )["query_id"]
+        query_id = opt.get("--query-id")
+        if query_id is not None:
+            if not query_id.isdigit() or int(query_id) <= 0:
+                raise PG.Refused("复用查询号须为正整数")
+            qid = int(query_id)
+            if get(f"/query/{qid}").get("query_sql") != sql:
+                raise PG.Refused("复用查询SQL与批准文本逐字不同，不提交")
+        else:
+            qid = call(
+                "POST",
+                "/query",
+                {"name": f"DQ-43 {label}", "query_sql": sql, "is_private": False},
+            )["query_id"]
         small_trial = ap.source.startswith("用户小页试跑")
         if small_trial:
             # 提交超时也不能复用批准；先落查询号，随后只作人工恢复。

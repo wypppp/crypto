@@ -16,7 +16,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import paid_guard as PG
-from dune_get import get, norm
+from dune_get import get
 from run_dune import budget_gate, usage
 
 H = PG.H
@@ -157,7 +157,7 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         Decimal(str(binding["expected_credits"])) if binding else Decimal(0)
     )
     q = get(f"/query/{qid}")
-    if norm(q.get("query_sql", "")) != norm((H / sql_file).read_text()):
+    if q.get("query_sql", "") != (H / sql_file).read_text():
         raise ValueError("远端SQL与批准不同")
     st = get(f"/execution/{eid}/status")
     meta = st.get("result_metadata") or {}

@@ -249,3 +249,36 @@ def test_unknown_submission_latches_halt_and_keeps_cost_unknown(monkeypatch, tmp
     assert json.loads(PG.HALT.read_text())["http_status"] == 500
     assert PG._rows(PG.ACTUAL)[-1]["合计实耗"] == ""
     assert (tmp_path / "runs/fixture_submission_unknown.json").exists()
+
+
+@pytest.mark.parametrize("sql", ["SELECT 1", "SELECT 2"])
+def test_reuse_checks_exact_sql_and_never_creates_query(monkeypatch, tmp_path, sql):
+    import sys
+    from urllib.error import HTTPError
+
+    t = runner_fixture(tmp_path, monkeypatch)
+    t.source, t.download_cap, t["max_mb"], t.sql_sha = SOURCE, 0, 0, "sha"
+    policy()
+    monkeypatch.setattr(sys, "argv", [*sys.argv, "--query-id=123"])
+    monkeypatch.setattr(R, "get", lambda p: {"query_sql": sql})
+    calls = []
+
+    def call(method, path, body, ticket=None):
+        calls.append(path)
+        assert path == "/query/123/execute"
+        raise HTTPError("unused", 500, "Internal Server Error", {}, None)
+
+    monkeypatch.setattr(R, "call", call)
+    with pytest.raises(HTTPError if sql == "SELECT 1" else PG.Refused):
+        R.main()
+    assert calls == (["/query/123/execute"] if sql == "SELECT 1" else [])
+
+
+def test_download_sql_comparison_preserves_whitespace_inside_literal(
+    monkeypatch, tmp_path
+):
+    (tmp_path / "s.sql").write_text("SELECT 'a b'")
+    monkeypatch.setattr(J, "H", tmp_path)
+    monkeypatch.setattr(J, "get", lambda p: {"query_sql": "SELECT 'ab'"})
+    with pytest.raises(ValueError, match="远端SQL与批准不同"):
+        J.fetch("1", "unused", "s.sql", PG.Ticket("old", 0, 1), "eid")

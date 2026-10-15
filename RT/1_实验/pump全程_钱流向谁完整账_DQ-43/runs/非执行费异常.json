@@ -1,10 +1,20 @@
 {
-  "at_utc": "2026-10-15T01:38:02.920151+00:00",
-  "label": "A10T_JSON_GZIP",
-  "before": 1535.859,
-  "after": 1539.859,
-  "non_execution_delta": "4.000",
+  "at_utc": "2026-10-15T07:26:01.995166+00:00",
   "active": false,
-  "resolution": "用户账单确认4 credits为API Result Read；本轮用户授权小页试跑，仅开放当前来源",
-  "active_paid_source_prefix": "用户小页试跑"
+  "reason": "执行提交未返回执行号；禁止重试，须找回原执行",
+  "approval": "A12-F03",
+  "query_id": 8951008,
+  "sql_sha256": "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
+  "before": [
+    1541.725,
+    2500.0
+  ],
+  "after": [
+    1541.725,
+    2500.0
+  ],
+  "error_type": "HTTPError",
+  "http_status": 500,
+  "user_confirmation": "无执行记录，是出什么问题了吗",
+  "resolution": "用户核实无执行记录；用量1541.725保持；仅人工另登记F04复用已完成查询一次"
 }
