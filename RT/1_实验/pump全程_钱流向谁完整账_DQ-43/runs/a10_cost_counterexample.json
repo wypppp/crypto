@@ -1,0 +1,18 @@
+{
+  "scope": "counterexample after fixed JSON charge; no new execution calibration",
+  "observed_download_credits": 4.0,
+  "observed_result_metadata_MB": 2.952326,
+  "empirical_credits_per_metadata_MB": 1.3548639276285885,
+  "old_first_csv_MB_baseline": 1121.20995,
+  "conditional_first_download_credits_if_metadata_MB_basis_transfers": 1519.0869165532533,
+  "old_execution_once_scenario": [
+    209.01189720600001,
+    342.06235228831264
+  ],
+  "billing_basis_not_verified": true,
+  "new_full_S_bytes_not_calibrated": true,
+  "not_completion_quote": true,
+  "current_total_limit": 400,
+  "paid_work_stopped": true,
+  "user_reported_API_Result_Read_credits": 4
+}

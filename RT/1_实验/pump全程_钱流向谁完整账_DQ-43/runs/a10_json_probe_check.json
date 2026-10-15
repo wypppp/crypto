@@ -1,0 +1,37 @@
+{
+  "scope": "existing A7-06 execution only, fixed JSON; no SQL executed",
+  "execution_id": "01M4WRPTY8WDKX1NVCQJNCAW8R",
+  "query_id": "8945017",
+  "rows": 16145,
+  "ordered_rows_equal_original": true,
+  "wire_bytes": 1225964,
+  "decoded_json_bytes": 4516047,
+  "pages": 4,
+  "encodings": [
+    "gzip",
+    "gzip",
+    "gzip",
+    "gzip"
+  ],
+  "wire_to_decoded_ratio": 0.2714683881722223,
+  "fee_anomaly_stopped": true,
+  "completed_full_120_second_window": false,
+  "early_stopped_at_observed_positive_increment": true,
+  "source_quality_or_new_S_mapping_revalidated": false,
+  "user_reported_billing": {
+    "source": "用户2026-10-15本轮消息；未另取账单原件",
+    "time_as_reported": "2026-10-15 09:37",
+    "query_id": "8945017",
+    "category": "API Result Read",
+    "items_credits": [
+      1,
+      1,
+      2,
+      0
+    ],
+    "total_credits": 4,
+    "supports_result_read_attribution": true,
+    "per_request_mapping_or_billable_bytes_unknown": true,
+    "item_order_not_mapped_to_page_order": true
+  }
+}

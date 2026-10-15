@@ -1,0 +1,37 @@
+{
+  "evidence": "offline page metadata and user-reported account billing; no new API calls",
+  "query_id": "8945017",
+  "old_A8_01_page_rows": 1000,
+  "new_A10_D01_page_rows": 5000,
+  "new_offsets": [
+    0,
+    5000,
+    10000,
+    15000
+  ],
+  "new_page_result_set_bytes": [
+    1016581,
+    944577,
+    975208,
+    236422
+  ],
+  "user_reported_billing_credits_unmapped": [
+    1,
+    1,
+    2,
+    0
+  ],
+  "hypothesis_only": true,
+  "hypothesis": "2 credits per decimal metadata MB, independently floored per result request",
+  "predicted_credits_in_page_order": [
+    2,
+    1,
+    1,
+    0
+  ],
+  "unordered_items_match": true,
+  "does_not_establish_billing_basis_or_rounding": true,
+  "does_not_authorize_new_requests_or_page_size_change": true,
+  "gzip_wire_bytes_are_not_established_billable_bytes": true,
+  "old_1000_row_page_metadata_not_saved": true
+}

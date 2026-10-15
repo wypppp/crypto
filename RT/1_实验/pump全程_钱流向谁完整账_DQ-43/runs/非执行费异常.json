@@ -1,8 +1,7 @@
 {
-  "active": false,
-  "resolved_by": "总控第十轮第一节",
-  "allowed_download_channel": "fixed execution JSON only; CSV globally disabled",
-  "previous_anomaly_archive": "runs/非执行费异常_第九轮存档.json",
-  "previous_anomaly_sha256": "5c0ccde20ca6fd933146bc84baeed87864c23f0a7b26db8c2c9c218de1f49e96",
-  "gpt_review_required_before_new_execution": true
+  "at_utc": "2026-10-15T01:38:02.920151+00:00",
+  "label": "A10T_JSON_GZIP",
+  "before": 1535.859,
+  "after": 1539.859,
+  "non_execution_delta": "4.000"
 }
