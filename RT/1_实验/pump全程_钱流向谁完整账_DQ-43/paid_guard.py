@@ -126,6 +126,8 @@ def halt_gate():
             resolved = json.loads(HALT.read_text())
             if resolved.get("active") is False and S3_POLICY.exists():
                 return ""
+            if resolved.get("reason"):
+                return resolved["reason"] + "；停止付费并报告"
         except (ValueError, OSError):
             pass
         return "存在未核清的非执行费增量，停止付费并报告"

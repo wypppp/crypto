@@ -247,6 +247,7 @@ def test_unknown_submission_latches_halt_and_keeps_cost_unknown(monkeypatch, tmp
         R.main()
     assert events == ["consumed", "submitted"]  # 不重试，不接着提交下一条。
     assert json.loads(PG.HALT.read_text())["http_status"] == 500
+    assert "执行提交未返回执行号" in PG.halt_gate()
     assert PG._rows(PG.ACTUAL)[-1]["合计实耗"] == ""
     assert (tmp_path / "runs/fixture_submission_unknown.json").exists()
 
