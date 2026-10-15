@@ -1,0 +1,46 @@
+{
+  "scope": "三对单次条件情景；非完成价、非全量授权",
+  "actual_first_trial": {
+    "cost_credits": "1.866029412",
+    "metadata_bytes": "1087329",
+    "source_trade_calendar_days": 2,
+    "creation_calendar_days": 2,
+    "p": "0.002"
+  },
+  "full_first_scan_day_only_scenario": {
+    "formula": "trial_cost / 2 * 44 * 3",
+    "credits": "123.157941192",
+    "assumptions": [
+      "成本随成交扫描日期线性变化",
+      "暂忽略抽样从0.002到0.1带来的连接及聚合增幅",
+      "创建与建池分支扫描范围不同，尚未分离开销",
+      "单次，三个窗口，不乘全量双跑"
+    ]
+  },
+  "full_first_download_scenario": {
+    "formula": "trial_metadata_bytes * (0.1/0.002) * (14/2) * 3 / 1000000",
+    "decimal_MB": "1141.69545",
+    "rate2_credits": "2283.39090",
+    "zero_page_fee_conditional": "0",
+    "age_multiplier_3_sensitivity_MB": "3425.08635",
+    "age_multiplier_3_rate2_credits": "6850.17270",
+    "assumptions": [
+      "假设每创建日币数和单币首笔数与当前样本相同",
+      "真实W+1观察更长，三倍只是敏感性，不是上界",
+      "元数据字节不是已核实的最终计费基数"
+    ]
+  },
+  "new_full_S_EDGE": "未完成新版平台执行，不作伪造的新标定",
+  "legacy_EDGE_reference": {
+    "execution_credits_range": [
+      76.4,
+      177.0
+    ],
+    "minimal_export_scenario_MB": "331.2792",
+    "is_new_v6_floor": false
+  },
+  "round_paid_used_observed": "1.866",
+  "s3_since_round10_used_observed": "5.866",
+  "s3_remaining_observed": "394.134",
+  "full_approved": false
+}

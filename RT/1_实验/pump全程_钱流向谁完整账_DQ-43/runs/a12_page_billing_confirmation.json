@@ -1,0 +1,42 @@
+{
+  "query_id": 8950956,
+  "time_local": "2026-10-15 15:18",
+  "user_reported_type": "API Result Read",
+  "user_reported_credits": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "page_rows": [
+    1000,
+    1000,
+    1000,
+    1000,
+    540
+  ],
+  "page_metadata_bytes": [
+    242245,
+    266118,
+    267298,
+    266689,
+    123147
+  ],
+  "page_gzip_wire_bytes": [
+    124479,
+    152087,
+    151697,
+    151517,
+    65441
+  ],
+  "page_immediate_used": [
+    1541.725,
+    1541.725,
+    1541.725,
+    1541.725,
+    1541.725
+  ],
+  "attribution": "本轮5个固定执行JSON请求；账单金额均0，单笔页序未核实",
+  "total_rows": 4540
+}

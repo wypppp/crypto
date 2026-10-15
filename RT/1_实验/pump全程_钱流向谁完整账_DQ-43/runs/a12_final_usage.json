@@ -1,0 +1,22 @@
+{
+  "at_utc": "2026-10-15T07:35:12.998816+00:00",
+  "period_start": "2026-10-14",
+  "period_end": "2026-10-28",
+  "used": 1541.725,
+  "included": 2500.0,
+  "remaining": 958.275,
+  "round_start_used": 1539.859,
+  "round_actual": 1.866,
+  "round_execution_reported": 1.866029412,
+  "round_download": 0,
+  "round_limit": 25,
+  "s3_baseline": 1535.859,
+  "s3_actual": 5.866,
+  "s3_limit": 400,
+  "s3_remaining": 394.134,
+  "api_submit_http500": 3,
+  "unknown_execution_cost_resolved": true,
+  "full_approved": false,
+  "paid_halt_active": true,
+  "tests_passed": 68
+}
