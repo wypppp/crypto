@@ -25,6 +25,7 @@ import json
 import math
 import re
 import urllib.request
+from urllib.parse import unquote, urlsplit
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -33,6 +34,7 @@ APPROVALS = H / "runs" / "付费批准.csv"
 USED = H / "runs" / "付费批准_已用.csv"
 ACTUAL = H / "runs" / "付费实耗.csv"
 HALT = H / "runs" / "非执行费异常.json"
+S3_POLICY = H / "runs" / "S3_第十轮执行政策.json"
 LOCK = Path.home() / ".cache" / "rt_dune_paid.lock"
 ENV = H.parents[2] / ".env"
 KEY_NAME = "DUNE_KEY_VIA_PAID_GUARD"
@@ -71,7 +73,7 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
     source = next(
         (
             s
-            for s in ("总控第七轮", "总控第八轮", "总控第九轮")
+            for s in ("总控第七轮", "总控第八轮", "总控第九轮", "总控第十轮")
             if hit[0]["批准来源"].startswith(s)
         ),
         None,
@@ -99,7 +101,7 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
         or download_cap < 0
     ):
         return "本条上限无效，不跑"
-    limit = 25 if source == "总控第九轮" else 50
+    limit = 25 if source in ("总控第九轮", "总控第十轮") else 50
     if total + cap > limit:
         return f"{source}已实耗 {total}＋本条上限 {cap} 超过 {limit}，不跑"
     return ""
@@ -107,7 +109,47 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
 
 def halt_gate():
     if HALT.exists():
+        try:
+            resolved = json.loads(HALT.read_text())
+            if resolved.get("active") is False and S3_POLICY.exists():
+                return ""
+        except (ValueError, OSError):
+            pass
         return "存在未核清的非执行费增量，停止付费并报告"
+    return ""
+
+
+def csv_gate(path):
+    if "/results/csv" in unquote(urlsplit(path).path):
+        raise Refused("总控第十轮：CSV导出禁用，只用JSON结果接口")
+
+
+def execution_review_gate(ticket):
+    if not S3_POLICY.exists():
+        return
+    policy = json.loads(S3_POLICY.read_text())
+    if not ticket.source.startswith("总控第十轮") or ticket["cap"] <= 0:
+        raise Refused("当前只准第十轮登记的三条执行；旧批准不再使用")
+    if not policy.get("gpt_review_passed"):
+        raise Refused("GPT三处复审尚未通过，不创建或提交查询")
+    if ticket.sql_sha not in policy.get("reviewed_trial_sql_sha256", []):
+        raise Refused("SQL不在已通过复审的清单里")
+
+
+def s3_period_gate(current, cap):
+    if not S3_POLICY.exists():
+        return ""
+    p = json.loads(S3_POLICY.read_text())
+    today = dt.datetime.now(dt.UTC).date().isoformat()
+    if not p["period_start"] <= today < p["period_end"]:
+        return "第十轮400 credits政策已跨计费期，停下报告"
+    if current is None:
+        return "读不到用量，不能核S3本期上限"
+    used = Decimal(str(current[0])) - Decimal(str(p["baseline_used"]))
+    if not used.is_finite() or used < 0:
+        return "S3本期基线无效，停下报告"
+    if used + Decimal(str(cap)) > Decimal(str(p["limit_credits"])):
+        return "S3从第十轮起已用加本条上限超过400，停下报告"
     return ""
 
 
@@ -155,10 +197,13 @@ def idle_usage_gate(current):
 
 def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
     """CSV/JSON 响应体按原始传输编码落盘，记录字节与分页头；不重试。"""
+    csv_gate(path)
     if not isinstance(ticket, Ticket) or not ticket.locked:
         raise Refused("传输下载没有锁内批准")
-    if not re.fullmatch(r"/execution/[^/?]+/results(?:/csv)?\?.+", path):
+    if not re.fullmatch(r"/execution/[^/?]+/results\?.+", path):
         raise Refused("只允许已有执行的分页下载路径")
+    if S3_POLICY.exists() and not ticket.source.startswith("总控第十轮"):
+        raise Refused("JSON通道只对第十轮的新批准解除异常封锁")
     if encoding not in ("gzip", "identity"):
         raise Refused("传输编码无效")
     if halt_gate():
@@ -181,12 +226,16 @@ def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
                 "content-type",
                 "content-length",
                 "x-dune-next-offset",
+                "date",
             )
         }
-        while chunk := r.read(65536):
+        while True:
+            if total >= cap:
+                raise Refused("HTTP响应体达到保护上限，停止，不读更多字节")
+            chunk = r.read(min(65536, cap - total))
+            if not chunk:
+                break
             total += len(chunk)
-            if total > cap:
-                raise Refused("HTTP响应体超过传输保护上限")
             f.write(chunk)
     part.replace(destination)
     return dict(headers, wire_bytes=total)
@@ -248,6 +297,7 @@ class Ticket(dict):
         self.locked = False
         self.download_cap = 5.0
         self.source = ""
+        self.sql_sha = ""
 
 
 def is_free(method: str, path: str) -> bool:
@@ -263,11 +313,21 @@ def _key() -> str:
 
 def request(method: str, path: str, body=None, ticket=None):
     """访问 Dune 的唯一入口。付费接口要有效批准（check() 发出、且在锁内）；不重试。"""
+    csv_gate(path)
     if not is_free(method, path):
         if halt_gate():
             raise Refused(halt_gate())
         if not isinstance(ticket, Ticket) or not ticket.locked:
             raise Refused("%s %s 是付费接口：没有锁内的批准，不访问" % (method, path))
+        if S3_POLICY.exists():
+            if not ticket.source.startswith("总控第十轮"):
+                raise Refused("当前通道只允许第十轮新批准")
+            if re.fullmatch(r"/query/\d+/execute", path):
+                execution_review_gate(ticket)
+            elif re.fullmatch(r"/execution/[^/?]+/results\?.+", path):
+                raise Refused("第十轮JSON下载须用分段核账入口，禁用旧直接分页")
+            else:
+                raise Refused("其他付费接口不在第十轮批准内")
     req = urllib.request.Request(
         API + path,
         data=None if body is None else json.dumps(body).encode(),
@@ -308,6 +368,7 @@ def check(
     ticket = Ticket(approval, float(r["执行费上限"]), float(r["下载上限MB"]))
     ticket.download_cap = float(r.get("下载费上限") or "5")
     ticket.source = r["批准来源"]
+    ticket.sql_sha = r["SQL_sha256"]
     if not all(
         math.isfinite(v) and v >= 0
         for v in (ticket["cap"], ticket["max_mb"], ticket.download_cap)

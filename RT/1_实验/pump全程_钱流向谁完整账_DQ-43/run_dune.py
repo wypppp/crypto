@@ -120,6 +120,7 @@ def main() -> None:
         )
     ap = PG.check(approval, sql_file)
     with PG.one_at_a_time(ap):
+        PG.execution_review_gate(ap)
         if PG.halt_gate():
             raise PG.Refused(PG.halt_gate())
         why = pair_gate(approval)
@@ -127,16 +128,17 @@ def main() -> None:
             execution_state(approval, "", "SKIPPED", why)
             raise SystemExit(why)
         u0 = usage()
-        if ap.source.startswith("总控第九轮"):
+        if ap.source.startswith(("总控第九轮", "总控第十轮")):
             PG.idle_usage_gate(u0)
         why = budget_gate(u0, ap["cap"] + ap.download_cap)
+        why = why or PG.s3_period_gate(u0, ap["cap"] + ap.download_cap)
         if why:
             raise SystemExit(why)
         why = PG.round_gate(approval)
         if why:
             raise SystemExit(why)
         sql = (H / sql_file).read_text()
-        if ap.source.startswith("总控第九轮"):
+        if ap.source.startswith(("总控第九轮", "总控第十轮")):
             from sql_determinism import check
 
             check(sql)
@@ -204,17 +206,14 @@ def main() -> None:
                     "结果 %.1f MB 超过批准的下载上限 %.1f MB，不下载；先报批"
                     % (mb, ap["max_mb"])
                 )
-            if ap.source.startswith("总控第九轮"):
-                from dune_get_csv import fetch as fetch_csv
+            if ap.source.startswith("总控第十轮"):
+                from dune_get_json import fetch as fetch_json
+                from dune_get_json import settle_execution
 
-                fetch_csv(
-                    str(qid),
-                    label,
-                    sql_file,
-                    ap,
-                    eid,
-                    encoding=opt.get("--encoding", "gzip"),
-                )
+                settle_execution(u0, cost, label)
+                fetch_json(str(qid), label, sql_file, ap, eid)
+            elif ap.source.startswith("总控第九轮"):
+                raise PG.Refused("旧CSV路线已停用，不下载")
             else:
                 fetch(str(qid), label, sql_file, ap)
         finally:

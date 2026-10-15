@@ -49,7 +49,7 @@ def test_download_anomaly_latches_and_blocks_paid_but_allows_cancel(
 def test_byte_download_requires_locked_ticket_before_network(tmp_path):
     with pytest.raises(PG.Refused, match="锁内批准"):
         PG.request_bytes(
-            "/execution/x/results/csv?limit=10", PG.Ticket("x", 0, 3), tmp_path / "a"
+            "/execution/x/results?limit=10", PG.Ticket("x", 0, 3), tmp_path / "a"
         )
 
 

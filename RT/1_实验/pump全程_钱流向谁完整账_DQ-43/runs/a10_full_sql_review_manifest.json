@@ -1,0 +1,56 @@
+[
+  {
+    "file": "sql/S3V6_REVIEW_FIRST_20260525_p10.sql",
+    "sha256": "e7df7f6ceace67c1769f79828de0ae9f17c658183115fd3c65e4df3ab0f619a5",
+    "W": "2026-05-25",
+    "cut": "2026-06-01",
+    "W1_end": "2026-06-08",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V6_REVIEW_EDGE_20260525_p10.sql",
+    "sha256": "84cd5e971169c0d5239f41af2b4e3847fbf9a2981ff9d03b0d523786bc9d5da9",
+    "W": "2026-05-25",
+    "cut": "2026-06-01",
+    "W1_end": "2026-06-08",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V6_REVIEW_FIRST_20260727_p10.sql",
+    "sha256": "77b53856194ec2585725d097fa688feb2e05e588f8723d8bcd9f4d9001e52d2e",
+    "W": "2026-07-27",
+    "cut": "2026-08-03",
+    "W1_end": "2026-08-10",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V6_REVIEW_EDGE_20260727_p10.sql",
+    "sha256": "cbc501e0b2435fcae827171270c3d7361000be633467f5b45fc903c3392ba144",
+    "W": "2026-07-27",
+    "cut": "2026-08-03",
+    "W1_end": "2026-08-10",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V6_REVIEW_FIRST_20260810_p10.sql",
+    "sha256": "98d1a05c7b0f4193d875a938d677d2c4bd7e43150916cf696b41c10cdbbf443d",
+    "W": "2026-08-10",
+    "cut": "2026-08-17",
+    "W1_end": "2026-08-24",
+    "p": 0.1,
+    "approved": false
+  },
+  {
+    "file": "sql/S3V6_REVIEW_EDGE_20260810_p10.sql",
+    "sha256": "5831b0d05556a1c500200801e21b2cb89ef896725bbe4f366a138d5827a40cb1",
+    "W": "2026-08-10",
+    "cut": "2026-08-17",
+    "W1_end": "2026-08-24",
+    "p": 0.1,
+    "approved": false
+  }
+]

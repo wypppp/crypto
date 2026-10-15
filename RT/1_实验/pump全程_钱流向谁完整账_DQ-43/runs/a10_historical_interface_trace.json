@@ -1,0 +1,34 @@
+{
+  "source": "local Claude session tool inputs; only exact download command extracted",
+  "matches": [
+    {
+      "at": "2026-10-14T02:42:23.528Z",
+      "tool": "Bash",
+      "matched_download_command": "python3 dune_get_stream.py 8942875 WM2AGG_COIN_LIST_20260812 sql/WM2AGG_COIN_LIST_20260812.sql",
+      "mentions_csv_endpoint": false,
+      "mentions_json_endpoint": false,
+      "interface_paths": [],
+      "command_sha256": "b094fef13e61d2d19f6d1358c8714e9e6b32914fa5b354f5cbeab91af116c1d3"
+    },
+    {
+      "at": "2026-10-14T02:44:13.666Z",
+      "tool": "Bash",
+      "matched_download_command": "python3 dune_get_stream.py 8942875 WM2AGG_COIN_LIST_20260812_dl2 sql/WM2AGG_COIN_LIST_20260812.sql",
+      "mentions_csv_endpoint": false,
+      "mentions_json_endpoint": false,
+      "interface_paths": [],
+      "command_sha256": "83133d252704a9bad0314dc9ccae1f2e00668e666da870b39ee3f98d852ea03e"
+    }
+  ],
+  "script_snapshot_commit": "126865fa",
+  "script_uses_query_results_json": true,
+  "page_uses_execution_results_json": true,
+  "csv_endpoint_in_script_or_page": false,
+  "event_date": "2026-10-14, not 10-13",
+  "isolated_usage_interval_missing": true,
+  "usage_values_found_in_local_session": [],
+  "endpoint_sequence": [
+    "GET /query/8942875/results?limit=1 (latest JSON)",
+    "GET /execution/01M4W4GQQB14X971ENSHNBQK56/results?limit=1000&offset=... (fixed JSON)"
+  ]
+}

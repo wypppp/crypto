@@ -1,0 +1,12 @@
+{
+  "pytest_tests": 89,
+  "pytest_passed": 89,
+  "pytest_seconds": 25.47,
+  "pytest_command": "/home/ancillary/.venv/bin/python -m pytest -q test_dune_get_json.py test_s3_first_v6.py test_edge_sgt_v6.py test_run_dune_gate.py test_no_direct_dune.py test_dune_get_csv.py",
+  "ruff_new_files": "passed without ignores",
+  "ruff_legacy_files": "passed excluding existing UP031,UP017,FURB167,BLE001,SIM117,SIM905,I001 only",
+  "ruff_format_check": "12 modified Python files",
+  "sqlglot": "30.18.0",
+  "platform_v6_queries_executed": false,
+  "wait_seconds": 120
+}
