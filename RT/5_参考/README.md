@@ -8,6 +8,10 @@
 |---|---|
 | [helius_credits.md](helius_credits.md) | Helius 官方 Credits 文档快照（用户 09-30 放入）：gTFA 完整交易每返回 100 笔 10 credits、最低 10，只返回签名 10、失败免费；`getTransfersByAddress` 10；Developer $49/月 10M credits。本账户单价仍以控制台增量为准（02 §10.12） |
 
+- [dune_price.md](dune_price.md)：用户10-15提供的官方文档快照，原内容保留。
+- 10-15核验：[Billing](https://docs.dune.com/api-reference/overview/billing)、[Enterprise dbt Pricing](https://docs.dune.com/api-reference/connectors/dbt/pricing-best-practices)。前者Plus导出2/MB、写入最低1；后者写入最低3、存储4/GB/月。功能范围不同且文档有冲突，不能覆盖当前账户实测。
+- [CSV接口](https://docs.dune.com/api-reference/executions/endpoint/get-execution-result-csv)：固定执行下载与分页头。gzip传输以实测响应编码为准。
+
 ## 检索记录/
 
 网页与文档检索的整理稿。其中的数字进入判断前，都已在 [事实库](../01_事实库.md) 登记并核对过来源；这里的原文只用于追溯。

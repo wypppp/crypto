@@ -32,6 +32,7 @@ H = Path(__file__).resolve().parent
 APPROVALS = H / "runs" / "付费批准.csv"
 USED = H / "runs" / "付费批准_已用.csv"
 ACTUAL = H / "runs" / "付费实耗.csv"
+HALT = H / "runs" / "非执行费异常.json"
 LOCK = Path.home() / ".cache" / "rt_dune_paid.lock"
 ENV = H.parents[2] / ".env"
 KEY_NAME = "DUNE_KEY_VIA_PAID_GUARD"
@@ -59,7 +60,7 @@ FIELDS = [
 
 
 def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
-    """总控第七、八轮各自 ≤50：已实耗＋本条执行与下载上限。锁内调用。"""
+    """各轮独立：第七、八轮50，第九轮25；实耗＋本条上限。锁内调用。"""
     approvals = APPROVALS if approvals is None else approvals
     used = USED if used is None else used
     actual = ACTUAL if actual is None else actual
@@ -68,7 +69,11 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
     if len(hit) != 1:
         return "批准编号不存在或重复，不跑"
     source = next(
-        (s for s in ("总控第七轮", "总控第八轮") if hit[0]["批准来源"].startswith(s)),
+        (
+            s
+            for s in ("总控第七轮", "总控第八轮", "总控第九轮")
+            if hit[0]["批准来源"].startswith(s)
+        ),
         None,
     )
     if source is None:
@@ -94,9 +99,79 @@ def round_gate(approval: str, approvals=None, used=None, actual=None) -> str:
         or download_cap < 0
     ):
         return "本条上限无效，不跑"
-    if total + cap > 50:
-        return "%s已实耗 %s＋本条上限 %s 超过 50，不跑" % (source, total, cap)
+    limit = 25 if source == "总控第九轮" else 50
+    if total + cap > limit:
+        return f"{source}已实耗 {total}＋本条上限 {cap} 超过 {limit}，不跑"
     return ""
+
+
+def halt_gate():
+    if HALT.exists():
+        return "存在未核清的非执行费增量，停止付费并报告"
+    return ""
+
+
+def check_download_usage(before, after, label):
+    """无执行的下载区间：任何可辨识的正增量立刻封住后续付费动作。"""
+    if before is None or after is None:
+        raise Refused("下载前后用量缺失，停下报告")
+    delta = Decimal(str(after[0])) - Decimal(str(before[0]))
+    if delta > 0:
+        HALT.write_text(
+            json.dumps(
+                {
+                    "at_utc": dt.datetime.now(dt.UTC).isoformat(),
+                    "label": label,
+                    "before": before[0],
+                    "after": after[0],
+                    "non_execution_delta": str(delta),
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        raise Refused(f"下载区间出现非执行费增量 {delta}，停止并报告")
+    if delta < 0:
+        raise Refused("账户用量倒退，停下核对")
+
+
+def request_bytes(path, ticket, destination, encoding="gzip", max_bytes=None):
+    """CSV/JSON 响应体按原始传输编码落盘，记录字节与分页头；不重试。"""
+    if not isinstance(ticket, Ticket) or not ticket.locked:
+        raise Refused("传输下载没有锁内批准")
+    if not re.fullmatch(r"/execution/[^/?]+/results(?:/csv)?\?.+", path):
+        raise Refused("只允许已有执行的分页下载路径")
+    if encoding not in ("gzip", "identity"):
+        raise Refused("传输编码无效")
+    if halt_gate():
+        raise Refused(halt_gate())
+    req = urllib.request.Request(
+        API + path,
+        method="GET",
+        headers={"X-Dune-API-Key": _key(), "Accept-Encoding": encoding},
+    )
+    cap = max_bytes if max_bytes is not None else int(ticket["max_mb"] * 2e6) + 65536
+    part = destination.with_suffix(destination.suffix + ".part")
+    total = 0
+    with urllib.request.urlopen(req, timeout=90) as r, part.open("wb") as f:
+        headers = {
+            k.lower(): v
+            for k, v in r.headers.items()
+            if k.lower()
+            in (
+                "content-encoding",
+                "content-type",
+                "content-length",
+                "x-dune-next-offset",
+            )
+        }
+        while chunk := r.read(65536):
+            total += len(chunk)
+            if total > cap:
+                raise Refused("HTTP响应体超过传输保护上限")
+            f.write(chunk)
+    part.replace(destination)
+    return dict(headers, wire_bytes=total)
 
 
 def record_actual(approval, execution_id, before, after, cost, actual=None):
@@ -154,6 +229,7 @@ class Ticket(dict):
         self.approval = approval
         self.locked = False
         self.download_cap = 5.0
+        self.source = ""
 
 
 def is_free(method: str, path: str) -> bool:
@@ -170,6 +246,8 @@ def _key() -> str:
 def request(method: str, path: str, body=None, ticket=None):
     """访问 Dune 的唯一入口。付费接口要有效批准（check() 发出、且在锁内）；不重试。"""
     if not is_free(method, path):
+        if halt_gate():
+            raise Refused(halt_gate())
         if not isinstance(ticket, Ticket) or not ticket.locked:
             raise Refused("%s %s 是付费接口：没有锁内的批准，不访问" % (method, path))
     req = urllib.request.Request(
@@ -211,6 +289,7 @@ def check(
         raise Refused("批准 %s 已经用过；一条批准只用一次" % approval)
     ticket = Ticket(approval, float(r["执行费上限"]), float(r["下载上限MB"]))
     ticket.download_cap = float(r.get("下载费上限") or "5")
+    ticket.source = r["批准来源"]
     if not all(
         math.isfinite(v) and v >= 0
         for v in (ticket["cap"], ticket["max_mb"], ticket.download_cap)

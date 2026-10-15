@@ -247,3 +247,18 @@ def test_85_percent_requests_cancel_once_and_waits_for_terminal(tmp_path, monkey
 def test_threshold_hand():
     assert R.cancel_threshold(10) == 8.5
     assert R.cancel_threshold(14.95) == __import__("decimal").Decimal("12.7075")
+
+
+def test_round_nine_25_and_zero_download_fee(tmp_path):
+    paths = _round_files(tmp_path, {"old1": "17", "old2": "900"})
+    rows = PG._rows(paths[0])
+    for row in rows:
+        if row["编号"] in ("old1", "next"):
+            row.update({"批准来源": "总控第九轮", "执行费上限": "8", "下载费上限": "0"})
+    with paths[0].open("w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=PG.FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+    assert PG.round_gate("next", *paths) == ""  # 17+8=25，别轮900不计
+    _csv(paths[2], ["编号", "合计实耗"], [["old1", "17.001"], ["old2", "900"]])
+    assert "超过 25" in PG.round_gate("next", *paths)

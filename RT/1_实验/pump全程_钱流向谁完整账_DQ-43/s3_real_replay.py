@@ -19,7 +19,7 @@ import s3_sql as S
 from test_s3_sql import run
 
 
-def replay(rows, emap):
+def source_db(rows):
     con = duckdb.connect()
     con.execute("SET TimeZone='UTC'")
     frame = (
@@ -67,6 +67,11 @@ def replay(rows, emap):
         SELECT mint, %s FROM inp WHERE kind='E'"""
         % common
     )
+    return con, fields
+
+
+def replay(rows, emap):
+    con, fields = source_db(rows)
     sql = S.build_s3(SM.W0, SM.CUT, SM.W1E, None, S.emap_values(emap), obs_cap=SM.CAP)
     # 母体已由明细查询过滤。只复放原生成器从 emap 开始的统计核心。
     sql = "WITH\nemap(usr, ent) AS (" + sql.split(",\nemap(usr, ent) AS (", 1)[1]

@@ -120,7 +120,7 @@ def main() -> None:
         )
     ap = PG.check(approval, sql_file)
     with PG.one_at_a_time(ap):
-        why = pair_gate(approval)
+        why = PG.halt_gate() or pair_gate(approval)
         if why:
             execution_state(approval, "", "SKIPPED", why)
             raise SystemExit(why)
@@ -132,6 +132,10 @@ def main() -> None:
         if why:
             raise SystemExit(why)
         sql = (H / sql_file).read_text()
+        if ap.source.startswith("总控第九轮"):
+            from sql_determinism import check
+
+            check(sql)
         qid = call(
             "POST",
             "/query",
@@ -196,7 +200,19 @@ def main() -> None:
                     "结果 %.1f MB 超过批准的下载上限 %.1f MB，不下载；先报批"
                     % (mb, ap["max_mb"])
                 )
-            fetch(str(qid), label, sql_file, ap)
+            if ap.source.startswith("总控第九轮"):
+                from dune_get_csv import fetch as fetch_csv
+
+                fetch_csv(
+                    str(qid),
+                    label,
+                    sql_file,
+                    ap,
+                    eid,
+                    encoding=opt.get("--encoding", "gzip"),
+                )
+            else:
+                fetch(str(qid), label, sql_file, ap)
         finally:
             u1 = usage()
             PG.record_actual(approval, eid, u0[0], None if u1 is None else u1[0], cost)
