@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-10-15T08:12:20.698704+00:00",
+  "used": 1546.163,
+  "included": 2500.0,
+  "remaining": 953.837,
+  "this_turn_baseline": 1541.725,
+  "this_turn_actual": 4.438,
+  "small_page_group_baseline": 1539.859,
+  "small_page_group_actual": 6.304,
+  "small_page_group_limit": 25,
+  "s3_baseline": 1535.859,
+  "s3_actual": 10.304,
+  "s3_limit": 400,
+  "s3_remaining": 389.696,
+  "this_turn_download_actual": 0,
+  "all_three_trial_downloads_actual": 0,
+  "free_diagnostics_actual": 0,
+  "tests_passed": 73,
+  "paid_requests_finished": true,
+  "full_approved": false
+}

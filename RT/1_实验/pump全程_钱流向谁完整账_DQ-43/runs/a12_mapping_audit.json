@@ -1,0 +1,14 @@
+{
+  "independent_graph_equals_frozen_reference": true,
+  "added_legal_links": 3406,
+  "removed_legal_links": 0,
+  "mapping_difference_wallets": 3022,
+  "explained_wallets": 3022,
+  "unexplained_wallets": 0,
+  "added_link_kinds": [
+    "S"
+  ],
+  "removed_link_kinds": [],
+  "private_evidence": "raw/dune/a12_mapping_path_evidence.json.gz",
+  "private_evidence_sha256": "e3943be6eecbf9f2d9fdefe1c37ba330b8403859ae6ee32566d5373a744eb827"
+}

@@ -1,0 +1,51 @@
+{
+  "first_kinds": {
+    "A": 903,
+    "B": 3483,
+    "E": 3,
+    "K": 151
+  },
+  "compressed_rows_equal_old_detail_projection": true,
+  "full_tx_prefix_collisions": 0,
+  "diff_N_C_G": {},
+  "n_C": 0,
+  "n_G": 0,
+  "remove_W1_keeps_selection": true,
+  "frozen_selection_same": true,
+  "N_structure": {
+    "n_el": 5,
+    "k_sel": 1,
+    "n_ent_w": 1322,
+    "n_rows_w": 1564,
+    "n_rows_w1": 1963,
+    "n_amm_rows": 606,
+    "chk_amm_event": 0,
+    "chk_state_null": 0,
+    "chk_hit_and_slf": 0,
+    "n_coins_w": 82,
+    "n_coins_w1": 69,
+    "n_events": 3,
+    "n_mapped_w": 662
+  },
+  "scope": "Dune/Trino trials only; not full result",
+  "platform_double_row_identical": true,
+  "edge_rows": 4022,
+  "edge_kinds": {
+    "G": 81,
+    "S": 3912,
+    "T": 29
+  },
+  "entity_map_equals_A7_03": false,
+  "entity_counts": {
+    "used_G": 81,
+    "used_S": 3752,
+    "skip_S": 160,
+    "used_T": 29,
+    "multi_entities": 671,
+    "mapped_wallets": 3717
+  },
+  "mapping_difference_wallets": 3022,
+  "private_mapping_difference_file": "raw/dune/a10_mapping_differences.csv.gz",
+  "private_mapping_difference_sha256": "19453a087e977482adf0e03b56facd2a3005f28efb21c1d209c5e53f1d3ed122",
+  "status": "mapping_explanations_required"
+}

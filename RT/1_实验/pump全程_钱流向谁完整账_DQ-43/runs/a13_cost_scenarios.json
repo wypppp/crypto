@@ -1,0 +1,57 @@
+{
+  "scope": "三对p10单次条件情景；非费用上限/非完成价/非全量授权",
+  "first_trial_costs": [
+    "0.750735295",
+    "1.866029412"
+  ],
+  "edge_trial_cost": "3.687205883",
+  "first_execution_once": {
+    "formula": "试跑费用/2日 ×44日 ×3对",
+    "credits": [
+      "49.548529470",
+      "123.157941192"
+    ]
+  },
+  "edge_execution_once": {
+    "formula": "试跑费用/1日 ×14日 ×3对；高情景另乘旧10%费率比",
+    "credits": [
+      "154.862647086",
+      "200.236838792397790786992750"
+    ],
+    "legacy_seed_uplift": "1.292996358774625"
+  },
+  "combined_execution_once": [
+    "204.411176556",
+    "323.394779984397790786992750"
+  ],
+  "download_metadata_volume_scenario": {
+    "FIRST_MB": "1141.695450",
+    "FIRST_formula": "1.087329MB ×50抽样比 ×7创建日比 ×3对",
+    "EDGE_MB": "5320.018200",
+    "EDGE_formula": "0.361906MB ×50抽样比 ×7种子创建日比 ×14建边日比 ×3对",
+    "combined_MB": "6461.713650",
+    "FIRST_age3_sensitivity_MB": "3425.086350",
+    "combined_age3_sensitivity_MB": "8745.104550"
+  },
+  "download_zero_conditional_credits": "0",
+  "download_2_per_MB_scenario_credits": "12923.427300",
+  "zero_download_total_once": [
+    "204.411176556",
+    "323.394779984397790786992750"
+  ],
+  "rate2_total_once": [
+    "13127.838476556",
+    "13246.82207998439779078699275"
+  ],
+  "assumptions_and_limits": [
+    "执行费不重复乘创建日；全量只单跑",
+    "扫描日线性与旧抽样费率比均只是情景；未标定p10完整S的CPU和不同月份负载",
+    "FIRST两次价格差异已保留，未将低价视为可保证的缓存费用",
+    "EDGE体积假设种子和新地址对随创建日及窗口线性，去重和重尾会改变比例",
+    "旧10% T边远比0.2%线性放大多，下载体积情景不构成上界",
+    "FIRST更长币龄的三倍仅为敏感性，不是覆盖承诺",
+    "0下载费只在取整规则及每页体积持续满足时成立",
+    "按2/MB保守情景超过剩余S3预算；不据零费条件情景自动开全量"
+  ],
+  "full_approved": false
+}

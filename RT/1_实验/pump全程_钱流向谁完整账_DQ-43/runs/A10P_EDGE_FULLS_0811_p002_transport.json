@@ -1,0 +1,45 @@
+{
+  "execution_id": "01M4Z9E0SSMA5DJ31W1Y71AV0E",
+  "query_id": "8951148",
+  "sql_sha256": "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe",
+  "rows": 4022,
+  "cols": [
+    "kind",
+    "a",
+    "b",
+    "x"
+  ],
+  "types": [
+    "varchar(1)",
+    "varchar",
+    "varchar",
+    "bigint"
+  ],
+  "bytes": 361906,
+  "encoding": "gzip",
+  "page_rows": 1000,
+  "downloaded_wire_bytes": 197128,
+  "decoded_json_bytes": 501516,
+  "page_count": 5,
+  "segment_count": 1,
+  "segments": [
+    {
+      "wire_bytes": 197128,
+      "after": [
+        1546.163,
+        2500.0
+      ],
+      "wait_seconds": 120
+    }
+  ],
+  "page_encodings": [
+    "gzip",
+    "gzip",
+    "gzip",
+    "gzip",
+    "gzip"
+  ],
+  "elapsed_seconds": 136.53982151899982,
+  "download_did_not_execute_sql": true,
+  "expected_download_credits": "0.723812"
+}

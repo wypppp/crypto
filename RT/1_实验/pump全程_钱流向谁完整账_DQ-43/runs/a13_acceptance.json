@@ -1,0 +1,59 @@
+{
+  "at_utc": "2026-10-15T08:12:20.698187+00:00",
+  "status": "passed_with_coverage_limits",
+  "platform_first_double_identical": true,
+  "first_projection_matches_real_detail": true,
+  "stats_N_C_G_differences": {},
+  "mapping_differences_explained": 3022,
+  "unexplained_mapping_differences": 0,
+  "independent_graph_equals_frozen_reference": true,
+  "remove_W1_keeps_selection": true,
+  "frozen_selection_same": true,
+  "coverage_limits": [
+    "C/G在真实样本为空",
+    "旧明细tx只16字符，已核无当前前缀碰撞",
+    "EDGE按本次明确批准仅单跑",
+    "这是一日0.2%试跑，不认证全量费率或结果"
+  ],
+  "sql_review_commit": "2ddf13af",
+  "execution_code_commit": "3498a620",
+  "trials": [
+    {
+      "label": "A10P_FIRST_0811_p002_r1",
+      "query_id": 8950956,
+      "execution_id": "01M4Z6M0RYZNJM940AWSN7KRRH",
+      "sql_sha256": "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
+      "execution_cost_credits": 1.866029412,
+      "rows": 4540,
+      "metadata_bytes": 1087329,
+      "gzip_wire_bytes": 645221,
+      "pages": 5,
+      "download_credits": 0
+    },
+    {
+      "label": "A10P_FIRST_0811_p002_r2",
+      "query_id": 8950956,
+      "execution_id": "01M4Z91546YMNXESHT76W8RRZW",
+      "sql_sha256": "dfbb03c22ee1af16adb388ffc04b615b327e95b7071fed305ff6e9b23785fcec",
+      "execution_cost_credits": 0.750735295,
+      "rows": 4540,
+      "metadata_bytes": 1087329,
+      "gzip_wire_bytes": 645217,
+      "pages": 5,
+      "download_credits": 0
+    },
+    {
+      "label": "A10P_EDGE_FULLS_0811_p002",
+      "query_id": 8951148,
+      "execution_id": "01M4Z9E0SSMA5DJ31W1Y71AV0E",
+      "sql_sha256": "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe",
+      "execution_cost_credits": 3.687205883,
+      "rows": 4022,
+      "metadata_bytes": 361906,
+      "gzip_wire_bytes": 197128,
+      "pages": 5,
+      "download_credits": 0
+    }
+  ],
+  "full_approved": false
+}

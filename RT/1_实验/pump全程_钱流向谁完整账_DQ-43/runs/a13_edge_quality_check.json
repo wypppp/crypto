@@ -1,0 +1,12 @@
+{
+  "rows": 4022,
+  "edge_kinds": {
+    "G": 81,
+    "S": 3912,
+    "T": 29
+  },
+  "allowed_kinds": true,
+  "nonblank_base58_endpoints": true,
+  "no_self_edges": true,
+  "duplicate_rows": 0
+}
