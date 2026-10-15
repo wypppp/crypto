@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-15T07:25:28.231046+00:00",
+  "query_id": 8950987,
+  "approval": "A12-F02",
+  "http_status": 500,
+  "execution_id": null,
+  "user_confirmation": "无执行记录",
+  "usage_before": 1541.725,
+  "usage_after": 1541.725,
+  "actual_credits": 0,
+  "old_approval_consumed": true,
+  "manual_replacement": "A12-F03"
+}

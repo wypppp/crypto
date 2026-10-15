@@ -163,9 +163,35 @@ def main() -> None:
                     indent=2,
                 )
             )
-        eid = call("POST", f"/query/{qid}/execute", {"performance": engine}, ap)[
-            "execution_id"
-        ]
+        try:
+            eid = call("POST", f"/query/{qid}/execute", {"performance": engine}, ap)[
+                "execution_id"
+            ]
+        except Exception as exc:
+            if small_trial:
+                # HTTP 500/超时不等于未执行。保留未知实耗并封锁下一条。
+                after = usage()
+                unknown = {
+                    "at_utc": dt.datetime.now(dt.UTC).isoformat(),
+                    "active": True,
+                    "reason": "执行提交未返回执行号；禁止重试，须找回原执行",
+                    "approval": approval,
+                    "query_id": qid,
+                    "sql_sha256": ap.sql_sha,
+                    "before": u0,
+                    "after": after,
+                    "error_type": type(exc).__name__,
+                    "http_status": getattr(exc, "code", None),
+                }
+                PG.HALT.write_text(json.dumps(unknown, ensure_ascii=False, indent=2))
+                (H / "runs" / (label + "_submission_unknown.json")).write_text(
+                    json.dumps(unknown, ensure_ascii=False, indent=2)
+                )
+                execution_state(approval, "", "SUBMISSION_UNKNOWN", unknown["reason"])
+                PG.record_actual(
+                    approval, "", u0[0], None if after is None else after[0], None
+                )
+            raise
         if not small_trial:
             PG.mark_used(approval, eid, "执行中")
         print(label, "批准", approval, "query", qid, "execution", eid, flush=True)

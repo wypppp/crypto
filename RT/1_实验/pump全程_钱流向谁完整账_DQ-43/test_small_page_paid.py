@@ -223,3 +223,29 @@ def test_execute_consumes_approval_before_submit_and_never_downloads(
         json.loads((tmp_path / "runs/fixture_completed.json").read_text())["downloaded"]
         is False
     )
+
+
+def test_unknown_submission_latches_halt_and_keeps_cost_unknown(monkeypatch, tmp_path):
+    from urllib.error import HTTPError
+
+    t = runner_fixture(tmp_path, monkeypatch)
+    t.source, t.download_cap, t["max_mb"], t.sql_sha = SOURCE, 0, 0, "sha"
+    policy()
+    events = []
+    monkeypatch.setattr(R, "usage", lambda: (100, 2500))
+    monkeypatch.setattr(PG, "mark_used", lambda *a: events.append("consumed"))
+
+    def call(method, path, body, ticket=None):
+        if path == "/query":
+            return {"query_id": 1}
+        assert events == ["consumed"]
+        events.append("submitted")
+        raise HTTPError("unused", 500, "Internal Server Error", {}, None)
+
+    monkeypatch.setattr(R, "call", call)
+    with pytest.raises(HTTPError):
+        R.main()
+    assert events == ["consumed", "submitted"]  # 不重试，不接着提交下一条。
+    assert json.loads(PG.HALT.read_text())["http_status"] == 500
+    assert PG._rows(PG.ACTUAL)[-1]["合计实耗"] == ""
+    assert (tmp_path / "runs/fixture_submission_unknown.json").exists()
