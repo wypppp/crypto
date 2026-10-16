@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-17",
+  "interrupted_by": "执行方为减少核账调用主动暂停",
+  "old_approval": "A14-D03",
+  "new_approval": "A14-D04",
+  "cache_pages": 292,
+  "old_before": 1591.907,
+  "old_after": 1591.907,
+  "current_free_usage": 1591.907,
+  "non_execution_increment": 0,
+  "old_observation_limit": "退出观察中免费usage读取超时；当前余额复核与退出末值一致，费用为0",
+  "no_sql_reexecution": true,
+  "cache_validation": "续页前逐页验证已有哈希与游标，已核页不再读取远端"
+}

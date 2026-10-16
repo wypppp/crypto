@@ -186,6 +186,10 @@ def small_download_binding(ticket, eid=None, qid=None):
         or binding.get("max_page_billed_bytes") != 250_000
     ):
         raise Refused("全量下载缺少千万行闸门或单页字节预算")
+    if full:
+        count = binding.get("max_unchecked_pages", 1)
+        if type(count) is not int or not 1 <= count <= 5:
+            raise Refused("未核账页数须为1到5，逐页最坏1 credit")
     return binding
 
 

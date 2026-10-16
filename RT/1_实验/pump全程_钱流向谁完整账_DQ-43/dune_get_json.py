@@ -153,6 +153,7 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         raise ValueError("标签只能是文件名")
     binding = PG.small_download_binding(ticket, eid=eid, qid=qid)
     full = ticket.source.startswith("总控第十四轮")
+    check_pages = binding.get("max_unchecked_pages", 1) if full else 1
     page_rows = binding["page_rows"] if binding else PAGE
     expected_total = (
         Decimal(str(binding["expected_credits"])) if binding else Decimal(0)
@@ -213,9 +214,10 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
     started = time.monotonic()
     segment_expected = Decimal(0)
     last_page_usage = before
+    pending_pages = 0
 
     def checkpoint():
-        nonlocal segment_bytes, before, segment_expected, last_page_usage
+        nonlocal segment_bytes, before, segment_expected, last_page_usage, pending_pages
         if not segment_bytes:
             return
         observed_bytes, segment_bytes = segment_bytes, 0
@@ -237,6 +239,7 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
         )
         before = after
         last_page_usage = after
+        pending_pages = 0
         segment_expected = Decimal(0)
 
     try:
@@ -298,9 +301,14 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
                         + Decimal(page_metadata_bytes) * 2 / 1_000_000
                     )
                 unpacked += decoded_bytes
-                page_usage = usage() if binding else None
                 if full:
-                    last_page_usage = page_usage
+                    pending_pages += 1
+                check_now = not full or pending_pages >= check_pages or end == n
+                page_usage = usage() if binding and check_now else None
+                if full:
+                    if check_now:
+                        last_page_usage = page_usage
+                        pending_pages = 0
                 saved = {
                     "headers": headers,
                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
@@ -310,9 +318,10 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
                     saved.update(
                         metadata_bytes=page_metadata_bytes,
                         immediate_used=None if page_usage is None else page_usage[0],
+                        usage_checked_through=end if page_usage is not None else None,
                     )
                 atomic(mark, saved)
-                if binding:
+                if binding and check_now:
                     PG.check_download_usage(
                         original_before, page_usage, label, expected=expected_total
                     )

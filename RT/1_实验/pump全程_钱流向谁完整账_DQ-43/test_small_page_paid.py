@@ -119,15 +119,23 @@ def test_query_binding_and_fee_budget_are_not_optional():
 
 
 @pytest.mark.parametrize(
-    "full,delayed_fee", [(False, False), (True, False), (True, True)]
+    "full,delayed_fee,unchecked",
+    [
+        (False, False, 1),
+        (True, False, 1),
+        (True, True, 1),
+        (True, False, 5),
+        (True, True, 5),
+    ],
 )
 def test_small_fetch_1000_rows_exact_bytes_cached_and_delayed_settlement(
-    monkeypatch, tmp_path, full, delayed_fee
+    monkeypatch, tmp_path, full, delayed_fee, unchecked
 ):
     (tmp_path / "runs").mkdir()
     (tmp_path / "s.sql").write_text("SELECT 1")
     monkeypatch.setattr(J, "H", tmp_path)
     p, t = policy(), ticket()
+    total_rows = 5001 if unchecked == 5 else 1001
     t.sql_sha = PG.sha(tmp_path / "s.sql")
     bind(p, t)
     if full:
@@ -136,25 +144,32 @@ def test_small_fetch_1000_rows_exact_bytes_cached_and_delayed_settlement(
         p["download_bindings"][t.approval].update(
             expected_credits=0,
             metadata_gate_passed=True,
-            row_count=1001,
+            row_count=total_rows,
             max_page_billed_bytes=250_000,
+            max_unchecked_pages=unchecked,
+            metadata_bytes=total_rows * 200,
         )
+        t["max_mb"] = total_rows * 200 / 1_000_000
         PG.S3_POLICY.write_text(json.dumps(p))
     monkeypatch.setattr(PG, "idle_usage_gate", lambda *a: None)
     tick = [0]
-    monkeypatch.setattr(
-        J, "usage", lambda: (100.001 if delayed_fee and tick[0] >= 60 else 100, 2500)
-    )
+    checks = []
+
+    def usage():
+        checks.append(len(calls))
+        return (100.001 if delayed_fee and tick[0] >= 60 else 100, 2500)
+
+    monkeypatch.setattr(J, "usage", usage)
     monkeypatch.setattr(J.time, "monotonic", lambda: tick[0])
     monkeypatch.setattr(J.time, "sleep", lambda s: tick.__setitem__(0, tick[0] + s))
     st = {
         "query_id": 1,
         "state": "QUERY_STATE_COMPLETED",
         "result_metadata": {
-            "total_row_count": 1001,
+            "total_row_count": total_rows,
             "column_names": ["x"],
             "column_types": ["bigint"],
-            "result_set_bytes": 200200,
+            "result_set_bytes": total_rows * 200,
         },
     }
     monkeypatch.setattr(
@@ -168,21 +183,21 @@ def test_small_fetch_1000_rows_exact_bytes_cached_and_delayed_settlement(
         assert "limit=1000&offset=" in path
         offset = int(path.rsplit("=", 1)[-1])
         calls.append(offset)
-        n = min(1000, 1001 - offset)
+        n = min(1000, total_rows - offset)
         page = {
             "execution_id": "eid",
             "query_id": 1,
             "state": "QUERY_STATE_COMPLETED",
             "result": {
                 "metadata": {
-                    "total_row_count": 1001,
+                    "total_row_count": total_rows,
                     "column_names": ["x"],
                     "result_set_bytes": n * 200,
                 },
                 "rows": [{"x": i} for i in range(offset, offset + n)],
             },
         }
-        if offset + n < 1001:
+        if offset + n < total_rows:
             page["next_offset"] = offset + n
         body = gzip.compress(json.dumps(page).encode())
         destination.write_bytes(body)
@@ -196,10 +211,12 @@ def test_small_fetch_1000_rows_exact_bytes_cached_and_delayed_settlement(
         assert not (tmp_path / "raw/dune/small.csv.gz").exists()
         return
     out = J.fetch("1", "small", "s.sql", t, "eid")
-    assert calls == [0, 1000] and out["page_rows"] == 1000
+    assert calls == list(range(0, total_rows, 1000)) and out["page_rows"] == 1000
     assert tick[0] >= 120 and out["download_did_not_execute_sql"]
     if full:
         assert out["expected_download_credits"] == "0"
+        if unchecked == 5:
+            assert checks[:3] == [0, 5, 6]
     calls.clear()
     J.fetch("1", "small", "s.sql", t, "eid")
     assert calls == []  # 恢复只核缓存，不能为已核页再付钱。
