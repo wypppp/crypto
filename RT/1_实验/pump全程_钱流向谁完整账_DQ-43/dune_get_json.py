@@ -305,10 +305,9 @@ def fetch(qid, label, sql_file, ticket, eid, encoding="gzip", wait_sec=None):
                     pending_pages += 1
                 check_now = not full or pending_pages >= check_pages or end == n
                 page_usage = usage() if binding and check_now else None
-                if full:
-                    if check_now:
-                        last_page_usage = page_usage
-                        pending_pages = 0
+                if full and check_now:
+                    last_page_usage = page_usage
+                    pending_pages = 0
                 saved = {
                     "headers": headers,
                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
