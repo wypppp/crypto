@@ -1,0 +1,18 @@
+{
+  "at_utc": "2026-10-16T23:12:36.265914+00:00",
+  "status": "download_running",
+  "label": "A14_EDGE_20260810_p10",
+  "execution_id": "01M4ZCDATQ6831GRQ0N6DAQGTW",
+  "cached_pages": 1269,
+  "last_offset": 1268000,
+  "last_checked": {
+    "offset": 1268000,
+    "used": 1591.907,
+    "usage_checked_through": 1269000
+  },
+  "s3_statistics_computed": false,
+  "entity_gate_computed": false,
+  "review_target": "68f4491abaf707d35286aba4365a6bfd4be42d7d",
+  "download_finally_settled": false,
+  "next_paid_layer_auto_submit": false
+}
