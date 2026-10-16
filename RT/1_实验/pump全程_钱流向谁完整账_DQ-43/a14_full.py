@@ -131,6 +131,7 @@ def concentration(rows, cex=()):
         "top10_total_wallets": [full_sizes.get(entity, 1) for entity in top_entities],
         "all_multiwallet_entities": len(full_sizes),
         "multiwallet_entities_with_W_seeds": len(sizes_with_seeds),
+        "singlewallet_entities_with_W_seeds": sum(full_sizes[e] <= 1 for e in counts),
         "multiwallet_size_histogram_with_W_seeds": dict(Counter(sizes_with_seeds)),
         "all_multiwallet_size_histogram": dict(Counter(full_sizes.values())),
         "concentration_passed": 20 * top[0] <= n and 20 * sum(top) <= 3 * n,

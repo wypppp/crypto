@@ -10,6 +10,7 @@ from collections import Counter
 from pathlib import Path
 
 import a14_full as F
+from wm2_identity_v5 import StrongRows, size_bins
 
 H = Path(__file__).resolve().parent
 ADDRESS = re.compile(r"[1-9A-HJ-NP-Za-km-z]{32,44}\Z")
@@ -84,8 +85,21 @@ def main():
     cex_path = H.parent / "pump曲线_资金关系可构造性_DQ-21/raw/dune/Q_cex_all.csv.gz"
     with gzip.open(cex_path, "rt", newline="") as f:
         cex = {r["address"] for r in csv.DictReader(f)}
+    main_distribution = F.concentration(rows, cex)
+    strong_distribution = F.concentration(StrongRows(rows, cex), cex)
+    for distribution in (main_distribution, strong_distribution):
+        distribution["multiwallet_size_bins_with_W_seeds"] = size_bins(
+            distribution["multiwallet_size_histogram_with_W_seeds"]
+        )
+        distribution["all_multiwallet_size_bins"] = size_bins(
+            distribution["all_multiwallet_size_histogram"]
+        )
     out.update(
-        concentration=F.concentration(rows, cex),
+        concentration=main_distribution,
+        strong_sensitivity_concentration=strong_distribution,
+        next_paid_layer_allowed_by_entity_gate=main_distribution[
+            "concentration_passed"
+        ],
         raw_sha256=sha(path),
         cex_sha256=sha(cex_path),
         execution_id=completed["execution_id"],
