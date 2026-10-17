@@ -1,0 +1,633 @@
+{
+  "before_commit": "4749686c^",
+  "comparison": "same inputs; original builder import block versus isolated import block",
+  "cases": [
+    {
+      "W": "2026-05-25",
+      "layer": "COIN",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "13df6b56f3bc6e0e99ca3ebd21af2cca59dad86141d414850ece6a1c49890b2f",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "COIN",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "92020c75e567206af24f36abf4c8f308fd0e7e1cfd5430a78d4a602fbb7ec322",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CTRADE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "fbd7900294dd5450b441b122a4e6de8de6cd0886b17c0c6578e73bc555232db1",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CTRADE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "3bb7d2bd04a09c76199dd7d4848e4b12b8afc10fb448b20db28a5f6ca2d03e1e",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "MAY",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "469fb3b2abe8e4ea2726076a00e39471aee0cbf613d94e0c318fab8e92fca56b",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "MAY",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "bcdf773b1819e00ed4328be896195d60bcc2d89470c90b1db8580a03a128fdcb",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "ATRADE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "715954b83dde7e6cd31fd92ba90c3418f0464f9d6f96520f733c8c2c49ba0b5f",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "ATRADE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "d6e89fa38f77807060d99955ba858353e1a53d198a1a3d77504cfc10b2017b7b",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "TX",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "c5649f0e54c7673431aa0112573e1354400cc5f1b2a36e789b2dd0b90ac98bc7",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "TX",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "48769e2c857b39522935dfc932986ac5bb6f2cdfc5a20a2b9965fc4644aa6102",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "FAIL",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "3361857af2ef3e76b47223fb18b398e5c44e79946ab881817fe766b5153470b8",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "FAIL",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "a1973b271d2f3f1c92d1f8c569abc09538d4cd26b5230e59c3ae5843ebb6fa51",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "EDGE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "141f4552db70a7258a10bdf6b7cbcf8a0fa603744872e4deb852a08e4d624fd9",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "EDGE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "88d986a2fcd20cdf09f9f752e4fec2c2b0bfc720744eaf85d72ca3393951e3e3",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCC",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "5c06c69d31ed2b72cff5dc1eaafd4963384396a967a3f75d6a5c551a55418894",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCC",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "41909907f0772cc656cc742052f783c2ecb8ad1f2740dc9210684dfe6024ff4a",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCA",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "12de17c90e489db67d89594d970895ea091ff1bbad8f4b96a7b1ab579aa76f79",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCA",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "8ddad7903b78d4627a6afb3bb67cd90d37a5e82c1d9cb2ac4a62453483f89085",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCCP",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "b5e932f847564490c122e019d5f30ff81b4ccec2c465a23bbc5530254682f329",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCCP",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "0fc24102ec08ff6749d079d962bcd77b217fecbae70ca4ab326bb59b9316eb71",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCAP",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "3a27f7eeb59de64b836b22ab3daee490f2dfc2130b6e82e02ecfd4ae82dec840",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "CYCAP",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "bcb29662d2d4dda1a03128239655547e04935d4c00059f04d39540138af64a56",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "COSTF",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "00fba770a803c6ec3fb99a677a652fc4f0a50b9ea2a678f831256b584a440f1d",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "COSTF",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "cb6d55288c42921ce3185c168563f28c6bf0d612371df47914653cb15614bbbb",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "VQ",
+      "smoke": true,
+      "status": "refused",
+      "sha256": "cb0dc8fea99bd75bea9e9816dae55edc1add40be32ba0e429ea021c56d23f273",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-05-25",
+      "layer": "VQ",
+      "smoke": false,
+      "status": "refused",
+      "sha256": "cb0dc8fea99bd75bea9e9816dae55edc1add40be32ba0e429ea021c56d23f273",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "COIN",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "a709c740f1261e9d1b2ac63231aecd2d34302f5c53189eec4081fad3fbbc227f",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "COIN",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "325ce6b69926ba85ed966416fa3e8ceed32a9b1101fb42269da6bd71f1022dfa",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CTRADE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "65cbe9347987a96749089b7dfed9cfeb3fd60c00570db1c4d2f2ce001efb4b3b",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CTRADE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "48d3df153e492997de1ab669484c58b3871982d0bd116d9a2b49c3dd0949b6de",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "MAY",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "5b95c4694d8a63f05393e256c4f86a77812f693743d8aad764a7834b1b0070f6",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "MAY",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "bbd942558b10f37d9f16680a95d22e96e53dee14c02a19eba68860f3997dae3b",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "ATRADE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "97f0470533c4287898e44c4ce8487d0088f0030331f1bebe02455d97af20b649",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "ATRADE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "bedada52557459c0f6e28ffc84288033e9b81c2963766ab3038278501e0019f7",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "TX",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "44fdc077e57c51eb5ad649e0f772fa4b6d7d54b1b19325d19d121f6f487bf573",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "TX",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "6252c1b95878c07eeda6221c9a3ce3ce3caa59ae759524a55730b29fc2c662b7",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "FAIL",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "1789229abdacfa41c1e6794198a9881e801d255601b6315328cda24292b394c1",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "FAIL",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "afc69205c62c191761854b0f07630431be921c67bb543e44b0a8c294dc2836bd",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "EDGE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "5b9d2fdc85370f954808fa6914a486966510164bf3de713e6dee5152179da5c2",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "EDGE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "26a28eae398293e3904363793ee15e2bc08628216c34887b1520be687a2015c3",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCC",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "97efb2e78a03d024b3937f9a47bae2ede50afca4959d9faa6dc5416e2cc969c3",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCC",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "c3adc751a0998311304d610b4e1d1d08146be4552495ebf9757dd53b647728e4",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCA",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "1fdbafc0b52156f034aa764ea368b02da36c112a37d9fe5a295fc4c01ec1b553",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCA",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "af98387948c5bc082a223b3ba77729aee35caf18fdb74901135043033164f3be",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCCP",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "e5a3bc0c49936dbdf4658a188777d7735269ca120a166b10f5d02f61f7043487",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCCP",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "f9fa155c2d534a1b9d6abf479b0a2eb48d7dbddb9574558acacbe778ca0b2feb",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCAP",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "b7e64bf38fdd9d42f8946e91154cb9ff4ccc85d862ead453ba9edb5ee79d36a3",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "CYCAP",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "9dca9bd70461afbf9cdcef2d0ae5a48ceba9a3ed31c289623d6792050aad7c71",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "COSTF",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "36a5526ffdab86bae698bbcdc5359b9bdece0c026421c5303db781cb149d7078",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "COSTF",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "d602fc7234e1361d14763d05a962556aca31684873d4b60588ed2baf563c7445",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "VQ",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "bc10a89e773f75e8ca19199cd7b87a4c4e09240241e08e1b421b6a77285da73a",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-07-27",
+      "layer": "VQ",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "1a6fe7f1e92272a01b5e0c5676832eeb81f311fe880ca9ecf4ec34d86c77bc92",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "COIN",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "8482bc52a1aa0afa6d96f19878abc7d79a3e626e9c75a73fb48ca663917d7e98",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "COIN",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "fd242ecd27f0cfabb064bf1fe29841769d304b27af99f4f75a45230890eb8284",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CTRADE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "3e07e0542fd980d4af0cca8d7d5365df1fc3e715dd0aee226e81ff882455a3f1",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CTRADE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "ada85653bb940c22d633023c3e5d2057e033b8bab48304a36e8e8531b34f474c",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "MAY",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "2266a8bcbe6398f16cf7d2dcdd613067b7d3a146592165088bcb5a902404a570",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "MAY",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "49f4d594f2fe19fd624457524cc9478a90a02c8ced62c69eef210b8772203b24",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "ATRADE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "79e5657f0848956d45ab7c59f341134a7f106a0481514cc4cf1e7af32402b0b9",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "ATRADE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "802bf004cac7d775e06df59818acd6243c0c9a9a4857059fb90e45d1db20fb74",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "TX",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "9c0827ea956a6f616b97c8a819b914dbe3fdd584f1bdc5f328894b6d35bf8c2a",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "TX",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "38cb4041c294066a39994b34c536c40887c043cdca00054edf89aebd5b60f0b0",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "FAIL",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "e26c989686fd0dede0928c6914824a5922d30c740e2ab5bb2c41b13e8236880c",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "FAIL",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "c0a9c15b13ad26232655703332ee717e7bdef3d4bcd63fdacde21903dadaff69",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "EDGE",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "81498f8d545ef1598676de6dd1345056a4ba62eec97b80bb9f0ae60b5225376b",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "EDGE",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "0d62c81d1edbe57e247c1fe360e57bfe33d90a2a2b173f55d3f706f14b8bd702",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCC",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "8e4cf51fa90dc5ae40911416dda717dda79936aae4f44c6c2a51fb620a637b85",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCC",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "53770834bf23ff04f89dab0dfe5b0dbd9913c1a08c02762b8848e083d5e7d903",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCA",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "9825aadd8e58f45ad4749bcbadc946cf311b997eed0bb83112c512524c9e3d03",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCA",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "4e0e2c9458af31e115a77f46c0968fae2cb3ed4c6d7f8c2077b736c7ba1194dc",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCCP",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "4e116830fd99df30bbacfea421903f1ecb4065ec887933d8efa628ac5ddb7746",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCCP",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "1bb295cd517b1bf4e1be7717cc27238741eceb27130bf42621710b48ca5677a4",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCAP",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "55458225841d0ce74157fea0ae6644f2675b0150b228b025d1223fce260bc023",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "CYCAP",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "bb28cc6f82d6f9d249b379e6c3a313fd091c3a33f17bf1c5023e9cbcf1410410",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "COSTF",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "a9283522411aabd568f0f52bab4937935fd755e46ac718e510d8652116e923af",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "COSTF",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "b777d5212fce157293c1cd8db05222a9db9c9c93f4293a25320c9e7554ccdae5",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "VQ",
+      "smoke": true,
+      "status": "sql",
+      "sha256": "fb010a3fd500c3cb340c988f4fd3f47e705013dd81549e6a0fcb500419f018a6",
+      "equal_before_after": true
+    },
+    {
+      "W": "2026-08-10",
+      "layer": "VQ",
+      "smoke": false,
+      "status": "sql",
+      "sha256": "141df34819efa2f29106df431a12c7c74bee2f72671d32ecc2b6b3bc2a1def01",
+      "equal_before_after": true
+    }
+  ],
+  "all_equal": true,
+  "network_requests": 0,
+  "s3_statistics_computed": false
+}
