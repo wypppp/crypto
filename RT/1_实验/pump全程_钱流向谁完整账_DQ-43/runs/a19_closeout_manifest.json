@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-17",
+  "state": "暂停，待新设计重新排序",
+  "download_complete": true,
+  "rows": 4092254,
+  "pages": 4093,
+  "quality_passed": true,
+  "main_entity_threshold_passed": false,
+  "threshold_triggers": [
+    "最大实体占W种子超过5%",
+    "前十实体合计占W种子超过15%"
+  ],
+  "main_largest_W_seed_fraction": 0.08842675082070875,
+  "main_top10_W_seed_fraction_sum": 0.1896509439258688,
+  "strong_largest_W_seed_fraction": 0.013855277504454432,
+  "strong_top10_W_seed_fraction_sum": 0.035351789307590704,
+  "new_executions": 0,
+  "S3_computed": false,
+  "GPT_prompt_sent": false,
+  "round_new_credits": 0,
+  "period_used": 1591.907,
+  "period_included": 2500,
+  "reference_commit": "6cbbddadbc37d1d1eed6b92af5916abed6743dcb",
+  "raw_in_repo": false
+}

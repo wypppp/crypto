@@ -28,9 +28,9 @@
     "63e85e24ce6841968479230155fb108489641a951907edc6e0981d23386d84fe"
   ],
   "old_trial_authority_superseded_by": "总控第十一轮；不复活第十轮原三条批准",
-  "current_user_scope": "第十九轮：仅完成第三对既有EDGE下载、质量及双口径实体分布；禁止新付费执行与S3；v5红队暂不发送",
+  "current_user_scope": "WM2暂停，待新设计重新排序；A14下载/质量/双图规模已完成；禁止新付费执行、S3与v5红队发送",
   "paid_halt_still_active": false,
-  "active_paid_source_prefix": "总控第十四轮",
+  "active_paid_source_prefix": "第十九轮收口完成：无活动付费批准",
   "download_bindings": {
     "A12-D01": {
       "query_id": 8950956,
@@ -123,5 +123,6 @@
   "closeout_authority": "RT/3_审计/2026-10-13_WM2取数_冒烟与SQL审阅/总控原文_第十九轮_用户转达.md",
   "execution_prohibited": true,
   "s3_computation_prohibited": true,
-  "review_handoff_suspended": true
+  "review_handoff_suspended": true,
+  "closeout_completed": true
 }

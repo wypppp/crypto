@@ -6,7 +6,7 @@
   "full_execution_limit": 380,
   "full_execution_expected": 327,
   "download_expected": 0,
-  "phase": "第十九轮：仅完成第三对既有EDGE下载、质量与双图规模；禁止后续执行和S3",
+  "phase": "第十九轮已收尾：A14下载与质量/双图规模完成；WM2暂停",
   "W": "2026-08-10",
   "cut": "2026-08-17",
   "W1_end": "2026-08-24",
@@ -25,7 +25,7 @@
   },
   "full_original_manifest": "runs/a10_full_sql_review_manifest.json",
   "new_paid_approvals": [],
-  "current_download_approval": "A14-D05",
+  "current_download_approval": null,
   "execution_authority_retracted_by": "总控第十九轮，2026-10-17",
   "old_cost_extrapolation_historical_only": true
 }
