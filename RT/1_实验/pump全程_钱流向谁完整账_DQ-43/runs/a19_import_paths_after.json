@@ -1,0 +1,206 @@
+[
+  {
+    "entry": "contract_filter_isolated",
+    "entry_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/contract_filter_isolated.py",
+    "path_head_after_entry": [
+      "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43",
+      "",
+      "/usr/lib/python312.zip",
+      "/usr/lib/python3.12",
+      "/usr/lib/python3.12/lib-dynload"
+    ],
+    "modules": {
+      "run_dune": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "import_ok": true
+      },
+      "dune_get": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "import_ok": true
+      },
+      "dune_get_stream": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "import_ok": true
+      },
+      "forward": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'forward'"
+      },
+      "weeks": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'weeks'"
+      },
+      "paid_guard": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "import_ok": true
+      },
+      "s3_ref": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "import_ok": true
+      },
+      "frozen_F": {
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+        "import_ok": true
+      },
+      "frozen_W": {
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "import_ok": true
+      }
+    }
+  },
+  {
+    "entry": "contract_pairs_isolated",
+    "entry_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/contract_pairs_isolated.py",
+    "path_head_after_entry": [
+      "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43",
+      "",
+      "/usr/lib/python312.zip",
+      "/usr/lib/python3.12",
+      "/usr/lib/python3.12/lib-dynload"
+    ],
+    "modules": {
+      "run_dune": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "import_ok": true
+      },
+      "dune_get": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "import_ok": true
+      },
+      "dune_get_stream": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "import_ok": true
+      },
+      "forward": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'forward'"
+      },
+      "weeks": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'weeks'"
+      },
+      "paid_guard": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "import_ok": true
+      },
+      "s3_ref": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "import_ok": true
+      },
+      "frozen_W": {
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "import_ok": true
+      }
+    }
+  },
+  {
+    "entry": "build_wm2_sql",
+    "entry_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/build_wm2_sql.py",
+    "path_head_after_entry": [
+      "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43",
+      "",
+      "/usr/lib/python312.zip",
+      "/usr/lib/python3.12",
+      "/usr/lib/python3.12/lib-dynload"
+    ],
+    "modules": {
+      "run_dune": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "import_ok": true
+      },
+      "dune_get": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "import_ok": true
+      },
+      "dune_get_stream": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "import_ok": true
+      },
+      "forward": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'forward'"
+      },
+      "weeks": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'weeks'"
+      },
+      "paid_guard": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "import_ok": true
+      },
+      "s3_ref": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "import_ok": true
+      }
+    }
+  },
+  {
+    "entry": "s3_ref",
+    "entry_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+    "path_head_after_entry": [
+      "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43",
+      "",
+      "/usr/lib/python312.zip",
+      "/usr/lib/python3.12",
+      "/usr/lib/python3.12/lib-dynload"
+    ],
+    "modules": {
+      "run_dune": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/run_dune.py",
+        "import_ok": true
+      },
+      "dune_get": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get.py",
+        "import_ok": true
+      },
+      "dune_get_stream": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/dune_get_stream.py",
+        "import_ok": true
+      },
+      "forward": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'forward'"
+      },
+      "weeks": {
+        "resolved": null,
+        "import_ok": false,
+        "error": "No module named 'weeks'"
+      },
+      "paid_guard": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "import_ok": true
+      },
+      "s3_ref": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "import_ok": true
+      }
+    }
+  }
+]

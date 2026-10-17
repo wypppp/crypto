@@ -36,14 +36,14 @@ import datetime as dt
 import sys
 from pathlib import Path
 
+import contract_pairs_isolated as CP
+import wm2_agg_sql as AG
+from frozen_contract_imports import DQ35, DQ37, source_module
+
 H = Path(__file__).resolve().parent
-sys.path.insert(0, str(H.parents[0] / "pump毕业币_数据留存_DQ-35"))
-sys.path.insert(0, str(H.parents[0] / "发射台_前期右尾评测底座_DQ-37"))
-import build_curve_sql_v1 as C37  # noqa: E402
-import build_grad_sql_v22 as G35  # noqa: E402
-import contract_pairs as CP  # noqa: E402
-import weeks as W  # noqa: E402
-import wm2_agg_sql as AG  # noqa: E402
+C37 = source_module(DQ37 / "build_curve_sql_v1.py")
+G35 = source_module(DQ35 / "build_grad_sql_v22.py")
+W = CP.W
 
 CUTOFF = dt.date(2026, 10, 5)
 LAST_EVENT_DAY = dt.date(2026, 10, 4)

@@ -97,9 +97,8 @@ def main():
     out.update(
         concentration=main_distribution,
         strong_sensitivity_concentration=strong_distribution,
-        next_paid_layer_allowed_by_entity_gate=main_distribution[
-            "concentration_passed"
-        ],
+        entity_threshold_passed=main_distribution["concentration_passed"],
+        new_paid_execution_allowed=False,
         raw_sha256=sha(path),
         cex_sha256=sha(cex_path),
         execution_id=completed["execution_id"],

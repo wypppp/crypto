@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-17",
+  "previous_download": "A14-D04",
+  "stopped_reason": "POST /usage TimeoutError",
+  "cached_rows": 2580000,
+  "last_segment_120_seconds_used": 1591.907,
+  "fresh_POST_usage_used": 1591.907,
+  "included": 2500,
+  "download_delta_verified": 0,
+  "resume_approval": "A14-D05",
+  "same_execution_id": "01M4ZCDATQ6831GRQ0N6DAQGTW",
+  "new_execution_allowed": false,
+  "s3_allowed": false
+}

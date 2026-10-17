@@ -6,7 +6,7 @@
   "full_execution_limit": 380,
   "full_execution_expected": 327,
   "download_expected": 0,
-  "phase": "第三对EDGE；超过10000000行先停止；集中度通过前不准FIRST",
+  "phase": "第十九轮：仅完成第三对既有EDGE下载、质量与双图规模；禁止后续执行和S3",
   "W": "2026-08-10",
   "cut": "2026-08-17",
   "W1_end": "2026-08-24",
@@ -24,7 +24,8 @@
     "total": "3*(67+42)=327；不重复乘创建日；新V输出及跨月负载未实测。"
   },
   "full_original_manifest": "runs/a10_full_sql_review_manifest.json",
-  "new_paid_approvals": [
-    "A14-E03"
-  ]
+  "new_paid_approvals": [],
+  "current_download_approval": "A14-D05",
+  "execution_authority_retracted_by": "总控第十九轮，2026-10-17",
+  "old_cost_extrapolation_historical_only": true
 }

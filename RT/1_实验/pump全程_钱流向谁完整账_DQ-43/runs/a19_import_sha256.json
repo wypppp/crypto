@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-17",
+  "scope": "module identity and frozen source hashes; no network/no data statistics",
+  "start_HEAD": "d1adceea270693296e71d0b70e87e3d45248441b",
+  "files": [
+    {
+      "file": "RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+      "sha256": "1b626872aae6f30cf31e83bba8bc4a09915490d42bc216b4212be7c97edc34a6",
+      "unchanged_from_start_HEAD": true
+    },
+    {
+      "file": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+      "sha256": "7bbd90a113f4084ec8279538feef7178e2b695f6ae437c60ee2b70501ca1ed47",
+      "unchanged_from_start_HEAD": true
+    },
+    {
+      "file": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+      "sha256": "666c38d8175c754d9f36502929f0c157221e2997fc5d01c3d62b0680ed5f60f5",
+      "unchanged_from_start_HEAD": true
+    },
+    {
+      "file": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/contract_filter.py",
+      "sha256": "33c4bd15b64aef6b4593762db26f6206ea13955185ef98efdf00ccf7b0acb69f",
+      "unchanged_from_start_HEAD": true
+    },
+    {
+      "file": "RT/1_实验/pump全程_钱流向谁完整账_DQ-43/contract_pairs.py",
+      "sha256": "b107ef2fa50aecc33298c9025df98aeed5c0692e0695f24c1a8034647abe70dc",
+      "unchanged_from_start_HEAD": true
+    }
+  ],
+  "tests_passed": 47,
+  "new_modules_full_ruff_passed": true,
+  "legacy_builder_ruff_baseline_ignores": [
+    "UP031",
+    "UP017",
+    "FURB167",
+    "BLE001",
+    "SIM117",
+    "SIM905",
+    "I001",
+    "C408"
+  ],
+  "source_contracts_not_modified": true
+}

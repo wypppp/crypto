@@ -1,0 +1,146 @@
+[
+  {
+    "entry": "contract_filter",
+    "entry_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/contract_filter.py",
+    "path_head_after_entry": [
+      "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37",
+      "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37",
+      "/home/ancillary/RT/1_实验/pump毕业币_数据留存_DQ-35",
+      "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37",
+      "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43"
+    ],
+    "modules": {
+      "run_dune": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/run_dune.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "dune_get": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/dune_get.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "dune_get_stream": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/dune_get_stream.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "forward": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+        "import_ok": true
+      },
+      "weeks": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "import_ok": true
+      },
+      "paid_guard": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "import_ok": true
+      },
+      "s3_ref": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "import_ok": true
+      }
+    }
+  },
+  {
+    "entry": "contract_pairs",
+    "entry_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/contract_pairs.py",
+    "path_head_after_entry": [
+      "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37",
+      "/home/ancillary/RT/1_实验/pump毕业币_数据留存_DQ-35",
+      "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37",
+      "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43",
+      ""
+    ],
+    "modules": {
+      "run_dune": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/run_dune.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "dune_get": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/dune_get.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "dune_get_stream": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/dune_get_stream.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "forward": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+        "import_ok": true
+      },
+      "weeks": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "import_ok": true
+      },
+      "paid_guard": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "import_ok": true
+      },
+      "s3_ref": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "import_ok": true
+      }
+    }
+  },
+  {
+    "entry": "build_wm2_sql",
+    "entry_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/build_wm2_sql.py",
+    "path_head_after_entry": [
+      "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37",
+      "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37",
+      "/home/ancillary/RT/1_实验/pump毕业币_数据留存_DQ-35",
+      "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43",
+      ""
+    ],
+    "modules": {
+      "run_dune": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/run_dune.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "dune_get": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/dune_get.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "dune_get_stream": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/dune_get_stream.py",
+        "import_ok": false,
+        "error": "DUNE_API_KEY not found"
+      },
+      "forward": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/forward.py",
+        "import_ok": true
+      },
+      "weeks": {
+        "resolved": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "actual_file": "/home/ancillary/RT/1_实验/发射台_前期右尾评测底座_DQ-37/weeks.py",
+        "import_ok": true
+      },
+      "paid_guard": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/paid_guard.py",
+        "import_ok": true
+      },
+      "s3_ref": {
+        "resolved": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "actual_file": "/home/ancillary/RT/1_实验/pump全程_钱流向谁完整账_DQ-43/s3_ref.py",
+        "import_ok": true
+      }
+    }
+  }
+]
